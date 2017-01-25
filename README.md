@@ -14,17 +14,19 @@ technologies/programs:
 
 You will need the following technologies/programs:
 
-- C++11 compiler - `g++` (or similar; preferably the GNU C++ Compiler)
-- GNU `make` - (or similar; preferably, GNU Make)
-- Doxygen `doxygen` - (no alternative)
-- POSIX-compatible environment shell (preferably, `bash` or `zsh`)
+- **C++11 compiler** - `g++` (or similar; preferably the GNU C++ Compiler)
+- **GNU Make** `make` - (or similar)
+- **Doxygen** `doxygen` - (no alternative)
+- **POSIX-compatible environment shell** (preferably, `bash` or `zsh`)
     - On Windows, a suitable substitute is the `msys2` project, which also
       includes a package manager to download common packages.
     - On Mac OS X, common packages can be acquired through Homebrew `brew`.
     - On Linux, defer to your distribution package manager
       (e.g. `yum`, `pacman`, `apt-get`, etc.).
 
-- Boost.Variant (from the Boost C++ Libraries)
+- **Boost.Variant** `<boost/variant.hpp>` (from the Boost C++ Libraries)
+- **Google Test** (with the root project directory embedded in the `dep/`
+  dependencies directory, and built before starting to build Shaka Scheme).
 
 # Building the REPL
 
