@@ -48,6 +48,10 @@ or sent the termination signal.
 
 # Generating the Doxygen Documentation
 
+Doxygen is a source code documentation generation program that is compatible
+with C++. It is being adopted for this project to provide a framework for creating
+structured in-code documentation.
+
 Go into the `doc/` directory, and then use the `doxygen_config_file` to run the
 following command:
 
@@ -57,5 +61,5 @@ The Doxygen documentation generation settings are already set to the currently
 preferred settings.
 
 The documentation generation settings are currently setup to generate HTML and
-LaTeX files.
+LaTeX files. They will be generated in the `doc/html/` and `doc/latex/` directories.
 
