@@ -1,0 +1,6 @@
+scratchwork/
+googletest/*
+doc/*
+dep/*
+bin/*
+basics/*
