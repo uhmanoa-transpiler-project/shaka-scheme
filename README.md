@@ -49,7 +49,7 @@ or sent the termination signal.
 Go into the `doc/` directory, and then use the `doxygen_config_file` to run the
 following command:
 
-    doxygen doxygen_config_file
+    doxygen ../doxygen_config_file
 
 The Doxygen documentation generation settings are already set to the currently
 preferred settings.
