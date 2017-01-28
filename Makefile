@@ -37,5 +37,11 @@ clean:
 	rm obj/*.o
 	rm bin/main
 
+clean-all: clean
+	rm -rf docs/*
+
 run:
 	cd bin; ./main; cd ../
+
+docs:
+	cd docs; doxygen ../doxygen_config_file; cd ../
