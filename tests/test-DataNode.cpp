@@ -5,7 +5,7 @@ TEST(DataNode, assign_and_get_int) {
     shaka::DataNode node;
     node.data = 1;
 
-    auto i = shaka::get<int>(node.data);
+    int i = shaka::get<int>(node.data);
 
     ASSERT_EQ(i, static_cast<int>(1));
 }
@@ -15,9 +15,9 @@ TEST(DataNode, assign_and_get_int) {
 TEST(DataNode, construct_with_bool) {
     shaka::DataNode node(true);
 
-    auto b = shaka::get<bool>(node.data);
+    bool b = shaka::get<bool>(node.data);
 
-    ASSERT_EQ(i, static_cast<bool>(true)));
+    ASSERT_EQ(b, static_cast<bool>(true));
 }
 
 
