@@ -5,6 +5,8 @@
 
 #include "ITree.h"
 
+namespace shaka {
+
 /// @brief A basic implementation of the `ITree` interface.
 template <typename T>
 struct Tree : public ITree<T> {
@@ -102,6 +104,8 @@ private:
         }
     }
 };
+
+} // namespace shaka
 
 
 #endif // SHAKA_TREE_H

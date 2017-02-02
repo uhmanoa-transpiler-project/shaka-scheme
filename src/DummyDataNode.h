@@ -5,6 +5,8 @@
 
 #include "IDataNode.h"
 
+namespace shaka {
+
 struct DummyDataNode : public IDataNode {
     enum class DummyMetaTag : int {
         SET,
@@ -25,5 +27,7 @@ struct DummyDataNode : public IDataNode {
     DummyMetaTag    type_tag;
     DummyData            data;
 };
+
+} // namespace shaka
 
 #endif // SHAKA_DUMMYDATANODE_H

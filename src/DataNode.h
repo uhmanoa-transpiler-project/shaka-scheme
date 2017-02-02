@@ -5,6 +5,10 @@
 
 #include "IDataNode.h"
 
+namespace shaka {
+
+
+
 /// @brief The central data structure for a Scheme object.
 ///
 /// The Shaka Scheme data node implements the core data structure
@@ -24,6 +28,10 @@
 
 
 struct DataNode : public IDataNode {
+
+    template <typename... Args>
+    DataNode(Args... args) :
+        data(std::forward<Args>(args)...) {}
 
     /// @brief Auxillary "type-tags" used to decide whether the
     /// contained type should have children, according to the sematnics
@@ -69,5 +77,7 @@ struct DataNode : public IDataNode {
 // struct Environment {
 //     std::map<std::string, DataNode> symbol_table;
 // };
+
+} // namespace shaka
 
 #endif // SHAKA_DATANODE_H

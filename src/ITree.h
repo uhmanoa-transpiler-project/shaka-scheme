@@ -3,6 +3,8 @@
 
 #include <memory>
 
+namespace shaka {
+
 /// @brief The interface for our internal `Tree` data structure.
 ///
 /// The `ITree` requires use of `std::shared_ptr` for thread safety.
@@ -23,5 +25,7 @@ struct ITree {
     virtual std::shared_ptr<T>        get_data() = 0;
     virtual std::shared_ptr<T>        set_data(T data) = 0;
 };
+
+} // namespace shaka
 
 #endif // SHAKA_ITREE_H

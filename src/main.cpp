@@ -9,6 +9,8 @@
 
 #include "Tree.h"
 
+using namespace shaka;
+
 /// @brief The main Read-Eval-Print Loop (REPL) function.
 ///
 /// Currently only a skeleton.
@@ -42,6 +44,18 @@ bool REPL(std::istream& in, std::ostream& out, ITree<DummyDataNode>& tree) {
         std::cout << buffer << std::endl;
         return true;
     }
+    /// @todo REMOVE THIS
+    //asdfasdf
+    //asdf
+    //sadf
+    //as
+    //df
+    //s
+    //sa
+    //fd
+    //sa
+    //
+    //
 }
 
 

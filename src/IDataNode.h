@@ -3,6 +3,8 @@
 
 #include <boost/variant/get.hpp>
 
+namespace shaka {
+
 class IDataNode {
 public:
     ~IDataNode() {}
@@ -10,6 +12,8 @@ public:
 };
 
 using boost::get;
+
+} // namespace shaka
 
 
 #endif // SHAKA_IDATANODE_H
