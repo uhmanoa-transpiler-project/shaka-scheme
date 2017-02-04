@@ -1,6 +1,7 @@
 scratchwork/
 googletest/*
-doc/*
+docs/*
+tests-docs/*
 dep/*
 bin/*
 basics/*
