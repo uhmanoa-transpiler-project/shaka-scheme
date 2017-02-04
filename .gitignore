@@ -4,3 +4,4 @@ doc/*
 dep/*
 bin/*
 basics/*
+**/*.out
