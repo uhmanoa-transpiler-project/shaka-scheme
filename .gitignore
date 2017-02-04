@@ -4,3 +4,5 @@ doc/*
 dep/*
 bin/*
 basics/*
+*.out
+tests-docs/*

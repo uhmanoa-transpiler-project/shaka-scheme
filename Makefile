@@ -1,3 +1,5 @@
+CXX := g++
+
 # Find all the names of CPP files in the src directory.
 CPP_FILES := $(wildcard src/*.cpp)
 H_FILES := $(wildcard src/*.h)
@@ -38,19 +40,27 @@ all: bin/main
 
 # Build the main executable and place inside the (bin)ary directory..
 bin/main: $(OBJ_FILES)
-	g++ -o $@ $^ $(CXX_FLAGS)
+	$(CXX) -o $@ $^ $(CXX_FLAGS)
 
 # A rule to build all the object files from the source files.
 obj/%.o: src/%.cpp
-	g++ $(CXX_FLAGS) -c -o $@ $<
+	$(CXX) $(CXX_FLAGS) -c -o $@ $<
 
 # A POSIX-compliant clean command
 clean: 
 	rm obj/*.o
 	rm bin/main
 
-clean-all: clean
+clean-all: clean clean-tests clean-docs clean-tests-docs
+
+clean-docs:
 	rm -rf docs/*
+
+clean-tests-docs:
+	rm -rf tests-docs/*
+
+clean-tests:
+	rm -rf tests/*.out
 
 run:
 	cd bin; ./main; cd ../
@@ -61,4 +71,4 @@ docs: $(CPP_FILES)
 tests: $(TEST_EXECUTABLES)
 
 tests/%.out: tests/%.cpp
-	g++ -o $@ $^ $(TEST_FLAGS)
+	$(CXX) -o $@ $^ $(TEST_FLAGS)
