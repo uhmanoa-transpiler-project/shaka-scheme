@@ -5,4 +5,8 @@ tests-docs/*
 dep/*
 bin/*
 basics/*
+<<<<<<< Updated upstream
 **/*.out
+=======
+*.out
+>>>>>>> Stashed changes
