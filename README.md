@@ -3,12 +3,14 @@
 This is the repository for the Transpiler Project's Scheme interpreter,
 Shaka Scheme.
 
+Shaka Scheme hopes to be fully R7RS Small-compliant.
+
 # Native Technologies
 
-The primary build environment is the `msys2` emulated POSIX-compatible shell
-on the Windows 10 platform. The project software should thus be buildable
-in any POSIX-compatible that provides the following pre-requisite
-technologies/programs:
+The primary build environment for the project is the `msys2` emulated
+POSIX-compatible shell on the Windows 10 platform. The project software should
+thus be buildable in any POSIX-compatible that provides the following
+pre-requisite technologies/programs:
 
 # Building - Pre-requisite Programs/Technology
 
@@ -62,4 +64,33 @@ preferred settings.
 
 The documentation generation settings are currently setup to generate HTML and
 LaTeX files. They will be generated in the `doc/html/` and `doc/latex/` directories.
+
+# Building the Google Test Test Cases
+
+Google Test is the test case framework being used for the project.
+
+- Each `.cpp` file in the `tests/` directory is automatically built into a
+corresponding `.out` file.
+- Each `.cpp` file contains its own `main` function, and is therefore a
+self-encapsulated program. 
+- Each program is linked with the `-lgtest` flag for `g++` and `clang++`.
+- The source files for each test case program is also documented with Doxygen.
+
+To build the tests cases in a POSIX-compatible shell, please make sure to first
+install Google Test in the `dep/` directory for Shaka Scheme. Then, run the
+following command:
+
+    make tests
+
+To genereate the documentation for the test cases:
+
+    cd tests-docs/
+    doxygen ../doxygen_config_file_tests
+
+Doxygen will generate the documentation for the entire project, with the test
+cases included as additional files. 
+
+To remove the documentation, run:
+
+    make clean-tests-docs
 
