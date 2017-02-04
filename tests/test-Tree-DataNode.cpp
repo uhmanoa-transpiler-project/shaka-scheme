@@ -245,11 +245,14 @@ TEST(Tree_DataNode, traverse_tree_post_order_sum) {
         sum
     );
 }
-/// @todo Reducing a subtree to a single node.
 
+/// @todo In-order traversal of a tree.
 
+/// @todo Test get_parent()
 
+/// @todo Test node insertion with insert_node()
 
+/// @todo Test set_node()
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
