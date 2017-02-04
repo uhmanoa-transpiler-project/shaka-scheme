@@ -51,8 +51,11 @@ clean:
 	rm obj/*.o
 	rm bin/main
 
-clean-all: clean
+clean-all: clean clean-tests
 	rm -rf docs/*
+
+clean-tests:
+	rm -rf tests/*.out
 
 run:
 	cd bin; ./main; cd ../
