@@ -1,3 +1,4 @@
+/*
 #ifndef SHAKA_ITREE_H
 #define SHAKA_ITREE_H
 
@@ -30,3 +31,5 @@ struct ITree {
 } // namespace shaka
 
 #endif // SHAKA_ITREE_H
+
+*/

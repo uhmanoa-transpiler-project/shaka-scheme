@@ -23,7 +23,8 @@ using namespace shaka;
 /// @return
 ///         - \c true if the REPL needs to continue reading
 ///         - \c false if the REPL is done reading
-bool REPL(std::istream& in, std::ostream& out, ITree<DummyDataNode>& tree) {
+/*
+bool REPL(std::istream& in, std::ostream& out, ITree<>& tree) {
 
     // Stores the input string line.
     std::string buffer;
@@ -57,6 +58,7 @@ bool REPL(std::istream& in, std::ostream& out, ITree<DummyDataNode>& tree) {
     //
     //
 }
+*/
 
 
 /// @brief The main function. Implements the REPL.
@@ -64,9 +66,18 @@ int main() {
     // The main REPL loop. 
     // Will stop only when it returns false (quits).
     /// @see REPL
-    Tree<DummyDataNode> root("root");
+    /*
+    using Data = boost::variant<
+        bool,
+        int,
+        std::string,
+        MetaTag
+    >;
+    */
 
-    while (REPL(std::cin, std::cout, root)) {}
+    //DummyDataNode< root("root");
+
+    //while (REPL(std::cin, std::cout, root)) {}
 
     return 0;
 }

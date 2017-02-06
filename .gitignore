@@ -1,8 +1,10 @@
 scratchwork/
 googletest/*
+obj/*.o
 doc/*
 dep/*
 bin/*
 basics/*
 *.out
 tests-docs/*
+.vscode/*

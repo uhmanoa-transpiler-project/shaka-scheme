@@ -5,6 +5,7 @@
 
 #include "ITree.h"
 
+/*
 namespace shaka {
 
 /// @brief A basic implementation of the `ITree` interface.
@@ -128,6 +129,7 @@ private:
 };
 
 } // namespace shaka
+*/
 
 
 #endif // SHAKA_TREE_H
