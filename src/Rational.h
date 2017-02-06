@@ -1,41 +1,77 @@
 #ifndef RATIONAL_H
 #define RATIONAL_H
+
 #include "Real.h"
-class Rational : public Real {
+
+class Rational {
 public:
-	// constructors and destructor
-	~Rational() {}
+	// constructor
 	Rational(int n, int d) : numer(n), denom(d) {}
-	Rational(Rational& r) : numer(r.numer), denom(r.denom) {}
 	
-	// getters
-	int get_numerator() {}
-	int get_denominator() {}
-	
-	// max and min builtins
-	virtual Rational max(const Rational& other) const override {}
-	virtual Rational min(const Rational& other) const override {}
-	
-	// rounding methods
-	virtual Rational floor() const override {}
-	virtual Rational ceiling() const override {}
-	virtual Rational truncate() const override {}
-	virtual Rational round() const override {}
+	// implicit type conversion operator for Rational -> Real
+	// a rational number is just a real number written as a / b
+	// where a and b are whole integers
+	// Therefore, to convert to real, we just evaluate the numerator
+	// divided by the denominator, casting our numer and denom to
+	// doubles prior to executing the division
+	operator Real() {
+		Real result((double)numer / (double) denom);
+		return result;
+	}
+
+	// implicit type conversion operator for Rational -> Complex
+	// a rational number is just a complex number with an
+	// imaginary part that is equal to zero
+	operator Complex() {
+		Complex result((double)numer / (double) denom, 0);
+		return result;
+	}
+
+
+	// getters for supporting unit testing
+	int get_numerator();
+	int get_denominator();
 	
 	// arithmetic operators
-	virtual Rational operator+(const Rational& lhs, const Rational& rhs) const override {}
-	virtual Rational operator-(const Rational& lhs, const Rational& rhs) const override {}
-	virtual Rational operator*(const Rational& lhs, const Rational& rhs) const override {}
-	virtual Rational operator/(const Rational& lhs, const Rational& rhs) const override {}
+	 friend Rational operator+(const Rational& lhs, const Rational& rhs);
+	 friend Rational operator-(const Rational& lhs, const Rational& rhs);
+	 friend Rational operator*(const Rational& lhs, const Rational& rhs);
+	 friend Rational operator/(const Rational& lhs, const Rational& rhs);
 	
-	// comparison operators
-	virtual bool operator==(const Rational& lhs, const Rational& rhs) const override {}
-	virtual bool operator>(const Rational& lhs, const Rational& rhs) const override {}
-	virtual bool operator<(const Rational& lhs, const Rational& rhs) const override {}
-	virtual bool operator>=(const Rational& lhs, const Rational& rhs) const override {}
-	virtual bool operator<=(const Rational& lhs, const Rational& rhs) const override {}
-	virtual bool operator!=(const Rational& lhs, const Rational& rhs) const override {}
+
 private:
 	int numer, denom;
 };
+
+int Rational::get_numerator() {
+	return numer;
+}
+
+int Rational::get_denominator() {
+	return denom;
+}
+
+Rational operator+(const Rational& lhs, const Rational& rhs) {
+	double new_numer = lhs.numer * rhs.denom + rhs.numer * lhs.denom;
+	double new_denom = lhs.denom * rhs.denom;
+	Rational result(new_numer, new_denom);
+	return result;
+}
+
+Rational operator-(const Rational& lhs, const Rational& rhs) {
+	double new_numer = lhs.numer * rhs.denom - rhs.numer * lhs.denom;
+	double new_denom = lhs.denom * rhs.denom;
+	Rational result(new_numer, new_denom);
+	return result;
+}
+
+Rational operator*(const Rational& lhs, const Rational& rhs) {
+	Rational result(lhs.numer * rhs.numer, lhs.denom * rhs.denom);
+	return result;
+}
+
+Rational operator/(const Rational& lhs, const Rational& rhs) {
+	Rational result(lhs.numer * rhs.denom, lhs.denom * rhs.numer);
+	return result;
+}
 #endif
