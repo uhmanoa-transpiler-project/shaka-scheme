@@ -21,7 +21,7 @@ INCLUDEDIR = -Isrc/
 LIBSDIR = 
 LIBS = 
 TESTLIBSDIR = -Ldep/googletest/build/googlemock/gtest
-TESTLIBS = -lgtest
+TESTLIBS = -lgtest -lpthread
 
 # Flags for the linker step.
 LD_FLAGS  := $(INCLUDEDIR) $(LIBSDIR) $(LIBS)
