@@ -1,3 +1,4 @@
+/*
 #ifndef SHAKA_ITREE_H
 #define SHAKA_ITREE_H
 
@@ -22,10 +23,13 @@ struct ITree {
     virtual std::shared_ptr<ITree> remove_child(int index) = 0;
     virtual std::shared_ptr<ITree> get_child(int index) = 0;
     virtual std::shared_ptr<ITree> get_last_child() = 0;
-    virtual std::shared_ptr<T>        get_data() = 0;
-    virtual std::shared_ptr<T>        set_data(T data) = 0;
+    virtual std::size_t            get_num_children() = 0;
+    virtual std::shared_ptr<T>     get_node() = 0;
+    virtual std::shared_ptr<T>     set_node(T data) = 0;
 };
 
 } // namespace shaka
 
 #endif // SHAKA_ITREE_H
+
+*/

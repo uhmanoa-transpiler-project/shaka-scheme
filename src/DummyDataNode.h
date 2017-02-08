@@ -6,27 +6,28 @@
 #include "IDataNode.h"
 
 namespace shaka {
+    /*
 
-struct DummyDataNode : public IDataNode {
-    enum class DummyMetaTag : int {
-        SET,
-        GET
-    };
+enum class DummyMetaTag : int {
+    SET,
+    GET
+};
 
-    using DummyData = boost::variant<
-        std::string,
-        DummyMetaTag
-    >;
+using DummyData = boost::variant<
+    std::string,
+    DummyMetaTag
+>;
+
+template <>
+struct DummyDataNode : public IDataNode<DummyData> {
 
     DummyDataNode(std::string str) :
         data(str) {}
 
     DummyDataNode(DummyMetaTag metatag) :
         data(metatag) {}
-
-    DummyMetaTag    type_tag;
-    DummyData            data;
 };
+*/
 
 } // namespace shaka
 

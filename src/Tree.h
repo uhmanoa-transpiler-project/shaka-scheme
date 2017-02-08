@@ -5,6 +5,7 @@
 
 #include "ITree.h"
 
+/*
 namespace shaka {
 
 /// @brief A basic implementation of the `ITree` interface.
@@ -12,10 +13,13 @@ template <typename T>
 struct Tree : public ITree<T> {
     virtual ~Tree() {}
 
+    /// @brief Forwards argument to the T constructor
     template <typename... Args>
     Tree(Args&&... args) :
-        data(std::make_shared<T>(std::forward<Args&&...>(args)...)) {}
+        node(std::make_shared<T>(std::forward<Args&&...>(args)...)) {}
 
+    /// @brief Returns a shared_ptr to the parent if it exists.
+    ///        Otherwise, it's just a nullptr.
     virtual std::shared_ptr<ITree<T>> get_parent() {
         // If we can get the parent from the weak pointer,
         // then return it.
@@ -30,7 +34,7 @@ struct Tree : public ITree<T> {
         }
     }
 
-
+    /// @brief Inserts a pointer to child in the internal vector<ptr>
     virtual std::shared_ptr<ITree<T>> insert_child(
         int                         index,
         std::shared_ptr<ITree<T>>   node
@@ -45,6 +49,9 @@ struct Tree : public ITree<T> {
         }
     }
 
+    /// @brief Removes a child by 0-based index.
+    ///
+    /// If the index is out of bounds, it will return `nullptr`.
     virtual std::shared_ptr<ITree<T>> remove_child(int index) {
         try {
             return *(this->children.erase(this->children.begin() + valid_index(index)));
@@ -53,11 +60,13 @@ struct Tree : public ITree<T> {
         }
     }
 
-    virtual std::shared_ptr<ITree<T>> push_child(T data) {
-        this->children.push_back(std::make_shared<Tree<T>>(data));
+    /// @brief Pushs a child onto the vector of children using `push_back()`
+    virtual std::shared_ptr<ITree<T>> push_child(T node) {
+        this->children.push_back(std::make_shared<Tree<T>>(node));
         return this->children[this->children.size() - 1];
     }
 
+    /// @brief Tries to get a child at the index.
     virtual std::shared_ptr<ITree<T>> get_child(int index) {
         try {
             return this->children[valid_index(index)];
@@ -66,6 +75,9 @@ struct Tree : public ITree<T> {
         }
     }
 
+    /// @brief Returns the child at the end of the list.
+    ///
+    /// If there are no children, returns `nullptr`.
     virtual std::shared_ptr<ITree<T>> get_last_child() {
         if (this->children.size() > 0) {
             return this->children[this->children.size() - 1];
@@ -73,21 +85,32 @@ struct Tree : public ITree<T> {
             return nullptr;
         }
     }
-
-    virtual std::shared_ptr<T>        get_data() {
-        return this->data;
+    
+    /// @brief Returns the number of direct children of the current tree.
+    virtual std::size_t get_num_children() {
+        return this->children.size();
     }
 
-    virtual std::shared_ptr<T>        set_data(T data) {
-        *this->data = data;
-        return this->data;
+    /// @brief Gets the internal node.
+    virtual std::shared_ptr<T>        get_node() {
+        return this->node;
+    }
+
+    /// @brief Sets the internal node pointer to the argument.
+    virtual std::shared_ptr<T>        set_node(T node) {
+        *this->node = node;
+        return this->node;
     }
 
     std::vector<std::shared_ptr<ITree<T>>>   children;
     std::weak_ptr<ITree<T>>                  parent;    
-    std::shared_ptr<T>                       data;
+    std::shared_ptr<T>                       node;
 
 private:
+
+    /// @brief Checks for a valid index for the children vector.
+    ///
+    /// If it detects a problem, an exception will be thrown.
     size_t valid_index(int index) {
         if (index >= 0) {
             const size_t pos_index = static_cast<size_t>(index);
@@ -106,6 +129,7 @@ private:
 };
 
 } // namespace shaka
+*/
 
 
 #endif // SHAKA_TREE_H
