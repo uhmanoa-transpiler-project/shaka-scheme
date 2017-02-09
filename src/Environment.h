@@ -46,7 +46,4 @@ class Environment {
     std::map<std::string, char> local;
 
 };
-int main() {
-    
-	return 0;
-}   
+   
