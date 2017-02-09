@@ -14,6 +14,9 @@ public:
 	friend Complex operator-(const Complex& lhs, const Complex& rhs);
 	friend Complex operator*(const Complex& lhs, const Complex& rhs);
 	friend Complex operator/(const Complex& lhs, const Complex& rhs);
+
+	// numeric equality operator
+	friend bool operator==(const Complex& lhs, const Complex& rhs);	
 	
 	// getter methods, for unit testing support
 	double get_real();
@@ -49,7 +52,7 @@ Complex operator*(const Complex& lhs, const Complex& rhs) {
         Complex result(f + l, o + i);
         return result;
         
-    }
+}
 
 Complex operator/(const Complex& lhs, const Complex& rhs) { 
        	Complex conjugate(rhs.real, rhs.imag * -1.0);
@@ -60,9 +63,11 @@ Complex operator/(const Complex& lhs, const Complex& rhs) {
 
             
 	return result;
-    }       
+}       
 
-
+bool operator==(const Complex& lhs, const Complex& rhs) {
+	return (lhs.real == rhs.real) && (lhs.imag == rhs.imag);
+}
 #endif
 
 

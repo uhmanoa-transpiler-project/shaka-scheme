@@ -31,17 +31,29 @@ public:
 		Complex result((double)value, 0);
 		return result;
 	}
-
+	
+	// arithmetic operators for Integers
 	friend Integer operator+(const Integer& lhs, const Integer& rhs);
 	friend Integer operator-(const Integer& lhs, const Integer& rhs);
 	friend Integer operator*(const Integer& lhs, const Integer& rhs);
 	friend Integer operator/(const Integer& lhs, const Integer& rhs);
 
+	// comparison operators for Integers
+	friend bool operator==(const Integer& lhs, const Integer& rhs);
+	friend bool operator>(const Integer& lhs, const Integer& rhs);
+	friend bool operator<(const Integer& lhs, const Integer& rhs);
+	friend bool operator>=(const Integer& lhs, const Integer& rhs);
+	friend bool operator<=(const Integer& lhs, const Integer& rhs);
+	friend bool operator!=(const Integer& lhs, const Integer& rhs);
 
-
+	int get_value();
 private:
 	int value;
 };
+
+int Integer::get_value() {
+	return value;
+}
 
 Integer operator+(const Integer& lhs, const Integer& rhs) {
 	Integer result(lhs.value + rhs.value);
@@ -62,6 +74,31 @@ Integer operator/(const Integer& lhs, const Integer& rhs) {
 	Integer result(lhs.value / rhs.value);
 	return result;
 }
+
+bool operator==(const Integer& lhs, const Integer& rhs) {
+	return lhs.value == rhs.value;
+}
+
+bool operator>(const Integer& lhs, const Integer& rhs) {
+	return lhs.value > rhs.value;
+}
+
+bool operator<(const Integer& lhs, const Integer& rhs) {
+	return lhs.value < rhs.value;
+}
+
+bool operator>=(const Integer& lhs, const Integer& rhs) {
+	return lhs.value >= rhs.value;
+}
+
+bool operator<=(const Integer& lhs, const Integer& rhs) {
+	return lhs.value <= rhs.value;
+}
+
+bool operator!=(const Integer& lhs, const Integer& rhs) {
+	return lhs.value != rhs.value;
+}
+
 
 
 #endif

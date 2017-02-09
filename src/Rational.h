@@ -33,21 +33,30 @@ public:
 	int get_denominator();
 	
 	// arithmetic operators
-	 friend Rational operator+(const Rational& lhs, const Rational& rhs);
-	 friend Rational operator-(const Rational& lhs, const Rational& rhs);
-	 friend Rational operator*(const Rational& lhs, const Rational& rhs);
-	 friend Rational operator/(const Rational& lhs, const Rational& rhs);
-	
+	friend Rational operator+(const Rational& lhs, const Rational& rhs);
+	friend Rational operator-(const Rational& lhs, const Rational& rhs);
+	friend Rational operator*(const Rational& lhs, const Rational& rhs);
+	friend Rational operator/(const Rational& lhs, const Rational& rhs);
+
+	 // comparison operators
+	friend bool operator==(const Rational& lhs, const Rational& rhs);
+	friend bool operator>(const Rational& lhs, const Rational& rhs);
+	friend bool operator<(const Rational& lhs, const Rational& rhs);
+	friend bool operator>=(const Rational& lhs, const Rational& rhs);
+	friend bool operator<=(const Rational& lhs, const Rational& rhs);
+	friend bool operator!=(const Rational& lhs, const Rational& rhs);	
 
 private:
+		
 	int numer, denom;
 };
 
-int Rational::get_numerator() {
+
+int Rational::get_numerator() const {
 	return numer;
 }
 
-int Rational::get_denominator() {
+int Rational::get_denominator() const {
 	return denom;
 }
 
@@ -74,4 +83,45 @@ Rational operator/(const Rational& lhs, const Rational& rhs) {
 	Rational result(lhs.numer * rhs.denom, lhs.denom * rhs.numer);
 	return result;
 }
+
+bool operator==(const Rational& lhs, const Rational& rhs) {
+	if (lhs.denom == rhs.denom) {
+		return lhs.numer == rhs.numer;
+	}
+	else {
+		int left_numer = lhs.numer * rhs.denom;
+		int right_numer = rhs.numer * lhs.denom;
+		return left_numer == right_numer;
+	}
+}
+
+bool operator>(const Rational& lhs, const Rational& rhs) {
+	if (lhs.denom == rhs.denom) {
+		return lhs.numer > rhs.numer;
+	}
+	else {
+		int left_numer = lhs.numer * rhs.denom;
+		int right_numer = rhs.numer * lhs.denom;
+		return left_numer > right_numer;
+	}
+}
+
+bool operator<(const Rational& lhs, const Rational& rhs) {
+	return !(lhs == rhs) && !(lhs > rhs);
+}
+
+bool operator>=(const Rational& lhs, const Rational& rhs) {
+	return (lhs > rhs) || (lhs == rhs);
+}
+
+bool operator<=(const Rational& lhs, const Rational& rhs) {
+	return (lhs < rhs) || (lhs == rhs);
+}
+
+bool operator!=(const Rational& lhs, const Rational& rhs) {
+	return !(lhs == rhs);
+}
+
+
+
 #endif
