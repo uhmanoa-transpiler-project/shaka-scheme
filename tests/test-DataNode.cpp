@@ -250,8 +250,43 @@ TEST(DataNode, traverse_tree_post_order_sum) {
 
 /// @todo In-order traversal of a tree.
 
-/// @todo Test get_parent()
+/// @brief Pushes, and then removes a child by index.
+TEST(DataNode, get_parent) {
+    // Initialize the root node with a boolean value.
+    auto root = std::make_shared<DataTree>(true);
 
+    // Push a child node, initialized with a value.
+    auto child = root->push_child(false);
+
+    // Push a grandchild node to the child
+    auto grandchild = child->push_child(true);
+
+    // See if the child's parent is the same as the root
+    ASSERT_EQ(
+        root,
+        root->get_child(0)->get_parent()
+    );
+
+    // See if the grandchild's parent is the same as the root's child
+    ASSERT_EQ(
+        grandchild->get_parent(),
+        child
+    );
+
+    // Remove the only child of the root, but it should remain alive.
+    root->remove_child(0);
+
+    /// @note Children that are removed from a parent's list are
+    ///       are not necessarily deleted from the program.
+    ///       Nodes that need a reference to the grandparent
+    ///       will still keep their deleted parent alive.
+    // Check that we can still reach the parent though nodes that
+    // reference it.
+    ASSERT_EQ(
+        grandchild->get_parent()->get_parent(),
+        root
+    );
+}
 /// @todo Test node insertion with insert_node()
 
 /// @todo Test set_node()
