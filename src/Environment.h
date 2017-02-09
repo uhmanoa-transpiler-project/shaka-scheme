@@ -21,10 +21,12 @@ class Environment {
     void setParent(Environment* e){
         parent = e;
     };
-    void define(char key, int data){
+
+    void define(std::string key, int data){
         local[key]=data;
     };
-    char* find(char key){
+
+    char* find(std::string key){
         if(local.find(key)!= local.end()){
             // std::cout<< "local  "<<&local[key]<<std::endl;
             return &local[key];
@@ -40,7 +42,7 @@ class Environment {
 
     private:
     Environment* parent;
-    std::map<char, char> local;
+    std::map<std::string, char> local;
 
 };
 int main() {
