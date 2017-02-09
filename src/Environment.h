@@ -4,6 +4,8 @@
 #include <map>
 #include <string>
 
+namespace shaka {
+
 class Environment {
     public:
     Environment(){    
@@ -46,4 +48,6 @@ class Environment {
     std::map<std::string, char> local;
 
 };
+
+} // namespace shaka
    
