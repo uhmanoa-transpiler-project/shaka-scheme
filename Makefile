@@ -1,4 +1,4 @@
-CXX := g++
+CXX := c++
 
 # Find all the names of CPP files in the src directory.
 CPP_FILES := $(wildcard src/*.cpp)

@@ -111,7 +111,13 @@ struct DataNode : public IDataNode<T> {
     /// If the index is out of bounds, it will return `nullptr`.
     virtual std::shared_ptr<IDataNode<T>> remove_child(int index) {
         try {
-            return *(this->children.erase(this->children.begin() + valid_index(index)));
+            /// @note vector::erase returns the iterator to the next element
+            ///       after the deleted one. So if the vector is empty,
+            ///       it becomes invalid to dereference it.
+            (this->children.erase(this->children.begin() + valid_index(index)));
+
+            /// @todo Refactor interface for remove_child so that it return void.
+            return nullptr;
         } catch (std::runtime_error& e) {
             return nullptr;
         }
