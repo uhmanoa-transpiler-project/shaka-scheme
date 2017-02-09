@@ -52,11 +52,11 @@ private:
 };
 
 
-int Rational::get_numerator() const {
+int Rational::get_numerator() {
 	return numer;
 }
 
-int Rational::get_denominator() const {
+int Rational::get_denominator() {
 	return denom;
 }
 
