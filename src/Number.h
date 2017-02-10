@@ -1,74 +1,117 @@
 #ifndef NUMBER_H
 #define NUMBER_H
+#include <cmath>
 
-#include <cassert>
-#include "Integer.h"
+namespace shaka {
 
-// Tagged union wrapper over all of the numeric types in our
-// numeric tower: Complex, Real, Rational, and Integer
-// The rest of the builtin numeric procedures will be built
-// over this wrapper (i.e. anything that isn't an arithmetic or comparison operator)
 class Number {
 public:
 
-	enum Type {
-		COMPLEX,
-		REAL,
-		RATIONAL,
-		INTEGER
-	};
+	using Value = double;
 
-	Number(const Complex& value) : type(COMPLEX), value(value) {}
-	Number(const Real& value) : type(REAL), value(value) {}
-	Number(const Rational& value) : type(RATIONAL), value(value) {}
-	Number(const Integer& value) : type(INTEGER), value(value) {}
+	Number() : value(0) {}	
+	Number(Value v) : value(v) {}
+	
 
-	Type getType() const {return type;}
-	Complex getComplex() const {
-		assert(type == COMPLEX);
-		return value.getComplex();
-	}
+	Value get_Value() {return value;}
+	// arithmetic operators
+	friend Number operator+(const Number& n1, const Number& n2);
+	friend Number operator-(const Number& n1, const Number& n2);
+	friend Number operator*(const Number& n1, const Number& n2);
+	friend Number operator/(const Number& n1, const Number& n2);
 
-	Real getReal() const {
-		assert(type == REAL);
-		return value.getReal();
-	}
+	// comparison operators
+	friend bool operator==(const Number& n1, const Number& n2);
+	friend bool operator!=(const Number& n1, const Number& n2);
+	friend bool operator>(const Number& n1, const Number& n2);
+	friend bool operator<(const Number& n1, const Number& n2);
+	friend bool operator>=(const Number& n1, const Number& n2);
+	friend bool operator<=(const Number& n1, const Number& n2);
 
-	Rational getRational() const {
-		assert(type == RATIONAL);
-		return value.getRational();
-	}
 
-	Integer getInteger() const {
-		assert(type == INTEGER);
-		return value.getInteger();
-	}
+	friend bool exact_p(const Number& n);
+	friend bool inexact_p(const Number& n);
+	/* 
+	friend bool zero_p(const Number& n);
+	friend bool positive_p(const Number& n);
+	friend bool negative_p(const Number& n);
+	friend bool odd_p(const Number& n);
+	friend bool even_p(const Number& n);
 
+	friend Number max(const Number& n1, const Number& n2);
+	friend Number min(const Number& n1, const Number& n2);
+
+	friend Number abs(const Number& n);
+
+	friend Number floor(const Number& n);
+	friend Number ceiling(const Number& n);
+	friend Number truncate(const Number& n);
+	friend Number round(const Number& n);
+
+	friend Number gcd(const Number& n1, const Number& n2);
+	friend Number lcm(const Number& n1, const Number& n2);
+
+	friend Number square(const Number& n);
+	friend Number sqrt(const Number& n);
+	*/
 
 private:
-	union Value {
-		Value(const Complex& value) : complexValue(value) {}
-		Value(const Real& value) : realValue(value) {}
-		Value(const Rational& value) : rationalValue(value) {}
-		Value(const Integer& value) : integerValue(value) {}
 
-		Complex getComplex() const {return complexValue;}
-		Real getReal() const {return realValue;}
-		Rational getRational() const {return rationalValue;}
-		Integer getInteger() const {return integerValue;}
-
-	private:
-		Complex complexValue;
-		Real realValue;
-		Rational rationalValue;
-		Integer integerValue;
-
-	};
-
-	Type type;
-	Value value;
-	
+	Value value;	
 };
 
 
-#endif
+Number operator+(const Number& n1, const Number& n2) {
+	Number result(n1.value + n2.value);
+	return result;
+}
+
+Number operator-(const Number& n1, const Number& n2) {
+	Number result(n1.value - n2.value);
+	return result;
+}
+
+Number operator*(const Number& n1, const Number& n2) {
+	Number result(n1.value * n2.value);
+	return result;
+}
+
+Number operator/(const Number& n1, const Number& n2) {
+	Number result(n1.value / n2.value);
+	return result;
+}
+
+bool operator==(const Number& n1, const Number& n2) {
+	return n1.value == n2.value;
+}
+
+bool operator!=(const Number& n1, const Number& n2) {
+	return !(n1 == n2);
+}
+
+bool operator>(const Number& n1, const Number& n2) {
+	return n1.value > n2.value;
+}
+
+bool operator<(const Number& n1, const Number& n2) {
+	return n1.value < n2.value;
+}
+
+bool operator>=(const Number& n1, const Number& n2) {
+	return n1.value >= n2.value;
+}
+
+bool operator<=(const Number& n1, const Number& n2) {
+	return n1.value <= n2.value;
+}
+
+bool exact_p(const Number& n) {
+	return n.value == trunc(n.value);
+}
+
+bool inexact_p(const Number& n) {
+	return !(exact_p(n));
+}
+} // namespace shaka
+
+#endif // NUMBER_H
