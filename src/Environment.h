@@ -3,13 +3,16 @@
 #include <iostream>
 #include <map>
 #include <string>
+#include <memory>
 
+#include "DataNode.h"
+#define env_char_map 
 namespace shaka {
 
 class Environment {
     public:
     Environment(){    
-        parent = NULL;
+        parent = nullptr;
     };
     //constructor
     Environment(Environment* par){
@@ -25,17 +28,15 @@ class Environment {
         parent = e;
     };
 
-    void define(std::string key, int data){
+    void define(std::string key, char data){
         local[key]=data;
     };
 
     char* find(std::string key){
         if(local.find(key)!= local.end()){
-            // std::cout<< "local  "<<&local[key]<<std::endl;
             return &local[key];
         }
-        else if(this->parent == NULL){
-            std::cout<<"not found"<<std::endl;
+        else if(this->parent == nullptr){
             return NULL;
         } 
         else {
