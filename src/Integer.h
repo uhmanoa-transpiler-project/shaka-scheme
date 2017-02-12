@@ -36,7 +36,7 @@ public:
 	friend Integer operator+(const Integer& lhs, const Integer& rhs);
 	friend Integer operator-(const Integer& lhs, const Integer& rhs);
 	friend Integer operator*(const Integer& lhs, const Integer& rhs);
-	friend Integer operator/(const Integer& lhs, const Integer& rhs);
+	friend Rational operator/(const Integer& lhs, const Integer& rhs);
 
 	// comparison operators for Integers
 	friend bool operator==(const Integer& lhs, const Integer& rhs);
@@ -70,8 +70,14 @@ Integer operator*(const Integer& lhs, const Integer& rhs) {
 	return result;
 }
 
-Integer operator/(const Integer& lhs, const Integer& rhs) {
-	Integer result(lhs.value / rhs.value);
+Rational operator/(const Integer& lhs, const Integer& rhs) {
+	if (lhs.value % rhs.value == 0) {
+		Rational result(lhs.value / rhs.value, 1);
+	}
+	else {
+
+		Rational result(lhs.value, rhs.value);
+	}
 	return result;
 }
 

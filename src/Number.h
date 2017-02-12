@@ -63,7 +63,9 @@ private:
 	Value value;	
 };
 
-
+//---------------------------------------------------
+// Arithmetic operator overloads
+//---------------------------------------------------
 Number operator+(const Number& n1, const Number& n2) {
 	Number result(n1.value + n2.value);
 	return result;
@@ -84,6 +86,9 @@ Number operator/(const Number& n1, const Number& n2) {
 	return result;
 }
 
+//---------------------------------------------------
+// Comparison operator overloads
+//--------------------------------------------------
 bool operator==(const Number& n1, const Number& n2) {
 	return n1.value == n2.value;
 }
@@ -108,6 +113,9 @@ bool operator<=(const Number& n1, const Number& n2) {
 	return n1.value <= n2.value;
 }
 
+//---------------------------------------------------
+// Built-in Numeric Predicates
+//---------------------------------------------------
 bool exact_p(const Number& n) {
 	return n.value == trunc(n.value);
 }
