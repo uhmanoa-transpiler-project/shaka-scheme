@@ -6,7 +6,6 @@
 #include <memory>
 
 #include "DataNode.h"
-#define env_char_map 
 namespace shaka {
 
 class Environment {
@@ -14,7 +13,6 @@ class Environment {
     Environment(){    
         parent = nullptr;
     };
-    //constructor
     Environment(Environment* par){
         parent = par;
     };

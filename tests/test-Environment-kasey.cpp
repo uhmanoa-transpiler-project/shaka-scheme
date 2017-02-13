@@ -5,7 +5,6 @@
 #include <algorithm>
 #include <numeric>
 
-#ifdef env_char_map
 TEST(Environment, constructor_default) {
     shaka::Environment e;
     ASSERT_EQ(nullptr, e.getParentPtr());
@@ -56,7 +55,6 @@ TEST(Environment, find_in_grandparent){
     grandparent.define("first", 'a');
     ASSERT_EQ(kid.find("first"),parent.find("first"));
 }
-#endif
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
 
