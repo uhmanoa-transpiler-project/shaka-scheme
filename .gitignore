@@ -8,3 +8,4 @@ basics/*
 *.out
 tests-docs/*
 .vscode/*
+**.jpg

@@ -9,6 +9,7 @@ class IEnvironment;
 
 template <typename NodeData>
 class IEvaluatorStrategy {
+public:
     /// @brief Evaluates the current subtree, with the root at the DataNode,
     ///        with the given environment.
     ///

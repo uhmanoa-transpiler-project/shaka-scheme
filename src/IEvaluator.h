@@ -19,6 +19,7 @@ class IEnvironment;
 ///        expressions for the `IDataNode` Scheme expression tree.
 template <typename NodeData>
 class Evaluator {
+public:
     Evaluator(std::shared_ptr<IEnvironment> root_node,
                std::shared_ptr<IDataNode<NodeData>> root_env) :
         root_env(root_env),
@@ -35,7 +36,7 @@ class Evaluator {
         strategy->evaluate(current_node, current_env);
     }
         
-
+private:
     std::shared_ptr<IEnvironment> current_env;
     std::weak_ptr<IDataNode<NodeData>> current_node;
 };
