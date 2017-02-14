@@ -5,6 +5,11 @@
 // #include "IEnvironment.h"
 
 /// @todo Replace IEnvironment stub with the real Environment interface.
+
+namespace shaka {
+
+
+
 class IEnvironment;
 
 template <typename NodeData>
@@ -33,6 +38,10 @@ public:
     ) = 0;
 
 };
+
+
+
+{ // namespace shaka
 
 #endif // SHAKA_IEVALUATORSTRATEGY_H
 
