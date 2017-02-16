@@ -3,7 +3,7 @@
 #include "Environment.h"
 
 TEST(Environment, test_environment_default_constructor) {
-	shaka::Environment<int, int> e(nullptr);
+	shaka::Environment<int, int*> e(nullptr);
 
 	ASSERT_EQ(e.get_parent(), nullptr);
 }
