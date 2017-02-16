@@ -27,7 +27,25 @@ Value operator+(Value v1, Value v2) {
 		}
 	}
 
+}
 
+Value operator-(Value v1, Value v2) {
+	if (v1.type() == typeid(Integer)) {
+		if (v2.type() == typeid(Integer)) {
+			return boost::get<Integer>(v1) - boost::get<Integer>(v2);
+		}
+		else {
+			return boost::get<Integer>(v1) - boost::get<Real>(v2);
+		}
+	}
+	else {
+		if (v2.type() == typeid(Integer)) {
+			return boost::get<Real>(v1) - boost::get<Integer>(v2);
+		}
+		else {
+			return boost::get<Real>(v1) - boost::get<Real>(v2);
+		}
+	}
 }
 
 
@@ -100,12 +118,12 @@ Number operator+(const Number& n1, const Number& n2) {
 	Number result(n1.value + n2.value);
 	return result;
 }
-/*
+
 Number operator-(const Number& n1, const Number& n2) {
 	Number result(n1.value - n2.value);
 	return result;
 }
-
+/*
 Number operator*(const Number& n1, const Number& n2) {
 	Number result(n1.value * n2.value);
 	return result;
