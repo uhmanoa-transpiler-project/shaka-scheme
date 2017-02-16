@@ -5,7 +5,7 @@
 TEST(Environment, test_environment_default_constructor) {
 	shaka::Environment e(nullptr);
 
-	ASSERT_EQ(e.getParentPtr(), nullptr);
+	ASSERT_EQ(e.get_parent(), nullptr);
 
 
 
