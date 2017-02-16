@@ -9,9 +9,15 @@ TEST(Number, test_number_addition) {
 
 	ASSERT_EQ(boost::get<Integer>(n3.get_value()), Integer(35));
 
+}
 
+TEST(Number, test_number_subtraction) {
+	shaka::Number n1(Real(20.5));
+	shaka::Number n2(Integer(10));
 
+	shaka::Number n3(n1 - n2);
 
+	ASSERT_EQ(boost::get<Real>(n3.get_value()), Real(10.5));
 }
 
 
