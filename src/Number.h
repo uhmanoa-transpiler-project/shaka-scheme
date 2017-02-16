@@ -1,22 +1,50 @@
 #ifndef NUMBER_H
 #define NUMBER_H
 #include <cmath>
+#include <boost/variant.hpp>
+#include <typeinfo>
+#include "Integer.h"
 
 namespace shaka {
+
+using Value = boost::variant<Integer, Real>;
+		
+Value operator+(Value v1, Value v2) {
+	if (v1.type() == typeid(Integer)) {
+		if (v2.type() == typeid(Integer)) {
+			return boost::get<Integer>(v1) + boost::get<Integer>(v2);
+		}
+		else {
+			return boost::get<Integer>(v1) + boost::get<Real>(v2);
+		}
+	}
+	else {
+		if (v2.type() == typeid(Integer)) {
+			return boost::get<Real>(v1) + boost::get<Integer>(v2);
+		}
+		else {
+			return boost::get<Real>(v1) + boost::get<Real>(v2);
+		}
+	}
+
+
+}
+
 
 class Number {
 public:
 
-	using Value = double;
+
 	
 	// default and initialization constructors
 	Number() : value(0) {}	
-	Number(Value v) : value(v) {}
+	Number(shaka::Value v) : value(v) {}
+	Number(const Number& other) : value(other.value) {}
 	
-
-	Value get_Value() {return value;}
+    shaka::Value get_value() {return value;}
 	// arithmetic operators R7RS 6.2.6
 	friend Number operator+(const Number& n1, const Number& n2);
+	/*
 	friend Number operator-(const Number& n1, const Number& n2);
 	friend Number operator*(const Number& n1, const Number& n2);
 	friend Number operator/(const Number& n1, const Number& n2);
@@ -44,7 +72,7 @@ public:
 	friend Number max(const Number& n1, const Number& n2);
 	friend Number min(const Number& n1, const Number& n2);
 	
-	/*
+
 	friend Number abs(const Number& n);
 
 	friend Number floor(const Number& n);
@@ -61,8 +89,9 @@ public:
 
 private:
 
-	Value value;	
+	shaka::Value value;	
 };
+
 
 //---------------------------------------------------
 // Arithmetic operator overloads
@@ -71,7 +100,7 @@ Number operator+(const Number& n1, const Number& n2) {
 	Number result(n1.value + n2.value);
 	return result;
 }
-
+/*
 Number operator-(const Number& n1, const Number& n2) {
 	Number result(n1.value - n2.value);
 	return result;
@@ -166,7 +195,7 @@ Number min(const Number& n1, const Number& n2) {
 		return n2;
 	}
 }
-
+*/
 } // namespace shaka
 
 #endif // NUMBER_H
