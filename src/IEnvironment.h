@@ -39,7 +39,8 @@ public:
 
     /// @brief Returns a list of all the keys in the Environment.
     virtual std::vector<Key> get_keys() = 0;
-};
+
+};  
 
 }
 

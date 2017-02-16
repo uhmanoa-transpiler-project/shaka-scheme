@@ -16,11 +16,8 @@ namespace shaka {
 using DataTree =
     DataNode<Data>;
 
-using Impl_IEnvironment =
-    IEnvironment<std::string, std::shared_ptr<DataTree>>;
-
-
-class Environment : public Impl_IEnvironment {
+template <typename Key = std::string, typename Value = std::shared_ptr<DataTree>>
+class Environment : public IEnvironment<Key, Value> {
 public:
 
     Environment(IEnvironment* parent) :
