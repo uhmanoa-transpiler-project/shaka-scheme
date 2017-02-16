@@ -6,6 +6,7 @@
 #include <numeric>
 
 using DataTree = shaka::DataNode<shaka::Data>;
+
 /// @brief Basic default constructor test
 TEST(DataNode, constructor_default) {
     DataTree root(shaka::MetaTag::NULL_LIST);
