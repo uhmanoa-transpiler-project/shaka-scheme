@@ -5,60 +5,53 @@
 #include <functional>
 #include <algorithm>
 #include <numeric>
-
-TEST(Environment, constructor_default) {
-    shaka::Environment e(nullptr);
-    ASSERT_EQ(nullptr, e.get_parent()));
+using Environment = shaka::Environment<std::string, int *>;
+TEST(Environment, constructor_null) {
+    Environment e(nullptr);
+    ASSERT_EQ(nullptr, e.get_parent()); 
 }
 
 TEST(Environment, define_find_key) {
-    shaka::Environment e(nullptr);
-    e.set_value("first", '1');
-    ASSERT_EQ('1', e.get_value("first"));
+    Environment e(nullptr);
+    int num =1;
+    int *value = &num;
+    e.set_value("first", value);
+    ASSERT_EQ(value, e.get_value("first"));
 }
 
-TEST(Environment, costructor_overload){
-    shaka::Environment parent(nullptr);
-    shaka::Environment kid(&parent);
-    ASSERT_EQ(kid.getParentPtr(), &parent);
+TEST(Environment, contains_key) {
+    Environment e(nullptr);
+    int num =1;
+    int *value = &num;
+    e.set_value("first", value);
+    ASSERT_TRUE(e.contains("first"));
 }
 
 TEST(Environment, set_parent){
-    shaka::Environment parent;
-    shaka::Environment child;
-    child.setParent(&parent);
-    ASSERT_EQ(child.getParentPtr(), &parent);
+    Environment parent(nullptr);
+    Environment child(nullptr);
+    child.set_parent(&parent);
+    ASSERT_EQ(child.get_parent(), &parent);
 }
-TEST(Environment, find_key_in_parent){
-    shaka::Environment parent;
-    shaka::Environment kid(&parent);
-    parent.define("first", 'a');
-    ASSERT_EQ(*kid.find("first"),'a');
+TEST(Environment, get_keys){
+    Environment e(nullptr);
+    int num =1;
+    int *value = &num;
+    e.set_value("first", value);
+
+    ASSERT_EQ(static_cast<std::size_t>(1), e.get_keys().size());
+
 }
-TEST(Environment, find_key_in_parent_check){
-    shaka::Environment parent;
-    shaka::Environment kid(&parent);
-    parent.define("first", 'a');
-    ASSERT_EQ(kid.find("first"),parent.find("first"));
+
+TEST(Environment, contains_key_in_parent_check){
+    Environment parent(nullptr);
+    Environment kid(&parent);
+    int num =1;
+    int *value = &num;
+    parent.set_value("first", value);
+    ASSERT_EQ(kid.get_value("first"), parent.get_value("first"));
 }
-TEST(Environment, find_key_in_parent_2children){
-    shaka::Environment parent;
-    shaka::Environment kid(&parent);
-    shaka::Environment kid2(&parent);
-    parent.define("first", 'a');
-    ASSERT_EQ(kid.find("first"),kid2.find("first"));
-}
-TEST(Environment, find_key_not_found){
-    shaka::Environment e;
-    ASSERT_EQ(e.find("first"), nullptr);
-}
-TEST(Environment, find_in_grandparent){
-    shaka::Environment grandparent;
-    shaka::Environment parent(&grandparent);
-    shaka::Environment kid(&parent);
-    grandparent.define("first", 'a');
-    ASSERT_EQ(kid.find("first"),parent.find("first"));
-}
+
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
