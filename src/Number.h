@@ -37,7 +37,7 @@ public:
 
 	
 	// default and initialization constructors
-	Number() : value(0) {}	
+	Number() : value(Integer(0)) {}	
 	Number(shaka::Value v) : value(v) {}
 	Number(const Number& other) : value(other.value) {}
 	

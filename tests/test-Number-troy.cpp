@@ -7,7 +7,7 @@ TEST(Number, test_number_addition) {
 
 	shaka::Number n3(n1 + n2);
 
-	ASSERT_EQ(boost::get<Integer>(n3.get_Value()), Integer(35));
+	ASSERT_EQ(boost::get<Integer>(n3.get_value()), Integer(35));
 
 
 
