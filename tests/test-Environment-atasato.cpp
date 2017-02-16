@@ -1,11 +1,12 @@
 #include "gtest/gtest.h"
+#include "DataNode.h"
 #include "Environment.h"
 
-
+using Environment = shaka::Environment<std::string, shaka::DataNode<boost::variant<int, std::function<int(int, int)>>>>;
 
 TEST(Environment, nullptr_constructor) {
     // Create environment with nullptr parent.
-    shaka::Environment env(nullptr);
+    Environment env(nullptr);
 }
 
 int main(int argc, char** argv) {

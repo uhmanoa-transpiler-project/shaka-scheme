@@ -16,29 +16,30 @@ namespace shaka {
 using DataTree =
     DataNode<Data>;
 
+/// @note Value needs to be a pointer type.
 template <typename Key = std::string, typename Value = std::shared_ptr<DataTree>>
 class Environment : public IEnvironment<Key, Value> {
 public:
 
-    Environment(IEnvironment* parent) :
+    Environment(IEnvironment<Key, Value>* parent) :
         parent(parent) {}
 
     virtual ~Environment() override {}
 
-    virtual IEnvironment* get_parent() override {
+    virtual IEnvironment<Key, Value>* get_parent() override {
         return this->parent;
     }
    
     /// @todo Decide whether this should be virtual or not.
-    void set_parent(std::weak_ptr<IEnvironment> e) {
+    void set_parent(IEnvironment<Key,Value>* e) {
         parent = e;
     }
 
-    virtual void set_value(const std::string& key, std::shared_ptr<DataTree> data) override {
+    virtual void set_value(const Key& key, Value data) override {
         local[key]=data;
     }
 
-    virtual std::shared_ptr<DataTree> get_value(const std::string& key) override {
+    virtual Value get_value(const Key& key) override {
         if (local.find(key)!= local.end()){
             return local[key];
         }
@@ -50,12 +51,12 @@ public:
         }
     }
 
-    virtual bool contains(const std::string& key) {
+    virtual bool contains(const Key& key) {
         return local.find(key) != local.end();
     }
 
-    virtual std::vector<std::string> get_keys() override {
-        std::vector<std::string> v;
+    virtual std::vector<Key> get_keys() override {
+        std::vector<Key> v;
         v.reserve(local.size());
         for (auto it : local) {
             v.push_back(it.first);
@@ -64,8 +65,8 @@ public:
     }
 
 private:
-    IEnvironment* parent;
-    std::map<std::string, std::shared_ptr<DataTree>> local;
+    IEnvironment<Key, Value>* parent;
+    std::map<Key, Value> local;
 
 };
 
