@@ -6,16 +6,18 @@
 #include <numeric>
 
 TEST(Environment, constructor_default) {
-    shaka::Environment e;
-    ASSERT_EQ(nullptr, e.getParentPtr());
+    shaka::Environment e(nullptr);
+    ASSERT_EQ(nullptr, e.get_parent()));
 }
+
 TEST(Environment, define_find_key) {
-    shaka::Environment e;
-    e.define("first", '1');
-    ASSERT_EQ('1', *e.find("first"));
+    shaka::Environment e(nullptr);
+    e.set_value("first", '1');
+    ASSERT_EQ('1', e.get_value("first"));
 }
+
 TEST(Environment, costructor_overload){
-    shaka::Environment parent;
+    shaka::Environment parent(nullptr);
     shaka::Environment kid(&parent);
     ASSERT_EQ(kid.getParentPtr(), &parent);
 }

@@ -1,9 +1,9 @@
 #include "gtest/gtest.h"
 #include "Environment.h"
 
-TEST(Environment, getParent){
-	shaka::Environment a;
-	ASSERT_EQ(a.getParentPtr(), nullptr);
+TEST(Environment, get_parent){
+	shaka::Environment a(nullptr);
+	ASSERT_EQ(a.get_parent(), nullptr);
 	
 }
 

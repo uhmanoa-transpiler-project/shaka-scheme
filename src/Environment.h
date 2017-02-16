@@ -1,52 +1,77 @@
-#include<stdlib.h>
-#include<stdio.h>
+#ifndef SHAKA_ENVIRONMENT_H
+#define SHAKA_ENVIRONMENT_H
+
+#include <stdlib.h>
+#include <stdio.h>
 #include <iostream>
 #include <map>
 #include <string>
 #include <memory>
 
+#include "IEnvironment.h"
 #include "DataNode.h"
+
 namespace shaka {
 
-class Environment {
-    public:
-    Environment(){    
-        parent = nullptr;
-    };
-    Environment(Environment* par){
-        parent = par;
-    };
-    ~Environment(){};
+using DataTree =
+    DataNode<Data>;
 
-    Environment* getParentPtr(){
-        return parent;
+using Impl_IEnvironment =
+    IEnvironment<std::string, std::shared_ptr<DataTree>>;
+
+
+class Environment : public Impl_IEnvironment {
+public:
+
+    Environment(std::weak_ptr<IEnvironment> parent) :
+        parent(parent) {}
+
+    virtual ~Environment() override {}
+
+    virtual std::weak_ptr<IEnvironment> get_parent() override {
+        return this->parent;
+    }
+   
+    /// @todo Decide whether this should be virtual or not.
+    void set_parent(std::weak_ptr<IEnvironment> e) {
+        parent = e;
     }
 
-    void setParent(Environment* e){
-        parent = e;
-    };
-
-    void define(std::string key, char data){
+    virtual void set_value(const std::string& key, std::shared_ptr<DataTree> data) override {
         local[key]=data;
-    };
+    }
 
-    char* find(std::string key){
-        if(local.find(key)!= local.end()){
-            return &local[key];
+    virtual std::shared_ptr<DataTree> get_value(const std::string& key) override {
+        if (local.find(key)!= local.end()){
+            return local[key];
         }
-        else if(this->parent == nullptr){
-            return NULL;
+        else if (this->parent == nullptr){
+            return nullptr;
         } 
         else {
-            return (this->parent)->find(key);
+            return this->parent->get_value(key);
         }
     }
 
-    private:
-    Environment* parent;
-    std::map<std::string, char> local;
+    virtual bool contains(const std::string& key) {
+        return local.find(key) != local.end();
+    }
+
+    virtual std::vector<std::string> get_keys() override {
+        std::vector<std::string> v;
+        v.reserve(local.size());
+        for (auto it : local) {
+            v.push_back(it.first);
+        }
+        return v;
+    }
+
+private:
+    std::weak_ptr<IEnvironment> parent;
+    std::map<std::string, std::shared_ptr<DataTree>> local;
 
 };
 
 } // namespace shaka
    
+#endif // SHAKA_ENVIRONMENT_H
