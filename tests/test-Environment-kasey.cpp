@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 #include "DataNode.h"
 #include "Environment.h"
+
 #include <functional>
 #include <algorithm>
 #include <numeric>
@@ -21,6 +22,7 @@ TEST(Environment, costructor_overload){
     shaka::Environment kid(&parent);
     ASSERT_EQ(kid.getParentPtr(), &parent);
 }
+
 TEST(Environment, set_parent){
     shaka::Environment parent;
     shaka::Environment child;
@@ -57,6 +59,7 @@ TEST(Environment, find_in_grandparent){
     grandparent.define("first", 'a');
     ASSERT_EQ(kid.find("first"),parent.find("first"));
 }
+
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
 

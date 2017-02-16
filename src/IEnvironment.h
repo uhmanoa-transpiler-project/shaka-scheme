@@ -16,7 +16,7 @@ public:
     /// @brief Gets the pointer to the parent environment.
     ///
     /// Will return `nullptr` if there is no parent.
-    virtual std::weak_ptr<IEnvironment> get_parent() = 0;
+    virtual IEnvironment* get_parent() = 0;
 
     /// @brief Returns a reference to the value refered
     ///        to by the key. Note that the key must exist,

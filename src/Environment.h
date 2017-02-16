@@ -23,12 +23,12 @@ using Impl_IEnvironment =
 class Environment : public Impl_IEnvironment {
 public:
 
-    Environment(std::weak_ptr<IEnvironment> parent) :
+    Environment(IEnvironment* parent) :
         parent(parent) {}
 
     virtual ~Environment() override {}
 
-    virtual std::weak_ptr<IEnvironment> get_parent() override {
+    virtual IEnvironment* get_parent() override {
         return this->parent;
     }
    
@@ -67,7 +67,7 @@ public:
     }
 
 private:
-    std::weak_ptr<IEnvironment> parent;
+    IEnvironment* parent;
     std::map<std::string, std::shared_ptr<DataTree>> local;
 
 };
