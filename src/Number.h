@@ -3,6 +3,7 @@
 #include <cmath>
 #include <boost/variant.hpp>
 #include <typeinfo>
+#include <cassert>
 #include "Integer.h"
 
 namespace shaka {
@@ -48,6 +49,51 @@ Value operator-(Value v1, Value v2) {
 	}
 }
 
+Value operator*(Value v1, Value v2) {
+	if (v1.type() == typeid(Integer)) {
+		if (v2.type() == typeid(Integer)) {
+			return boost::get<Integer>(v1) * boost::get<Integer>(v2);
+		}
+		else {
+			return boost::get<Integer>(v1) * boost::get<Real>(v2);}
+	}
+	else {
+		if (v2.type() == typeid(Integer)) {
+			return boost::get<Real>(v1) * boost::get<Integer>(v2);
+		}
+		else {
+			return boost::get<Real>(v1) * boost::get<Real>(v2);
+		}
+	}
+}
+
+Value operator/(Value v1, Value v2) {
+	if (v1.type() == typeid(Integer)) {
+		if (v2.type() == typeid(Integer)) {
+			/// @todo maybe put exception for division by 0
+			assert(boost::get<Integer>(v2) != Integer(0));
+			return boost::get<Integer>(v1) / boost::get<Integer>(v2);
+		}
+		else {
+			/// @todo maybe add exception for division by 0
+			assert(boost::get<Real>(v2) != Real(0.0));
+			return boost::get<Integer>(v1) / boost::get<Real>(v2);
+		}
+	}
+	else {
+		if (v2.type() == typeid(Integer)) {
+			/// @todo maybe add exception for division by 0
+			assert(boost::get<Integer>(v2) != Integer(0));
+			return boost::get<Real>(v1) / boost::get<Integer>(v2);
+		}
+		else {
+			/// @todo maybe add exception for division by 0
+			assert(boost::get<Real>(v2) != Real(0.0));
+			return boost::get<Real>(v1) / boost::get<Real>(v2);
+		}
+	}
+}
+
 
 class Number {
 public:
@@ -62,11 +108,11 @@ public:
     shaka::Value get_value() {return value;}
 	// arithmetic operators R7RS 6.2.6
 	friend Number operator+(const Number& n1, const Number& n2);
-	/*
 	friend Number operator-(const Number& n1, const Number& n2);
 	friend Number operator*(const Number& n1, const Number& n2);
 	friend Number operator/(const Number& n1, const Number& n2);
 	
+	/*	
 	// comparison operators R7RS 6.2.6
 	friend bool operator==(const Number& n1, const Number& n2);
 	friend bool operator!=(const Number& n1, const Number& n2);
@@ -123,7 +169,7 @@ Number operator-(const Number& n1, const Number& n2) {
 	Number result(n1.value - n2.value);
 	return result;
 }
-/*
+
 Number operator*(const Number& n1, const Number& n2) {
 	Number result(n1.value * n2.value);
 	return result;
@@ -133,7 +179,7 @@ Number operator/(const Number& n1, const Number& n2) {
 	Number result(n1.value / n2.value);
 	return result;
 }
-
+/*
 //---------------------------------------------------
 // Comparison operator overloads
 //--------------------------------------------------

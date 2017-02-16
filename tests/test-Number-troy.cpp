@@ -20,6 +20,25 @@ TEST(Number, test_number_subtraction) {
 	ASSERT_EQ(boost::get<Real>(n3.get_value()), Real(10.5));
 }
 
+TEST(Number, test_number_multiplication) {
+	shaka::Number n1(Real(2.0));
+	shaka::Number n2(Real(0.5));
+
+	shaka::Number n3(n1 * n2);
+
+	ASSERT_EQ(boost::get<Real>(n3.get_value()), Real(1.0));
+
+}
+
+TEST(Number, test_number_division) {
+	shaka::Number n1(Integer(10));
+	shaka::Number n2(Real(2.0));
+
+	shaka::Number n3(n1 / n2);
+
+	ASSERT_EQ(boost::get<Real>(n3.get_value()), Real(5.0));
+}
+
 
 int main(int argc, char* argv[]) {
 	::testing::InitGoogleTest(&argc, argv);
