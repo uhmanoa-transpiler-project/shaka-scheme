@@ -17,7 +17,7 @@ using DataTree =
     DataNode<Data>;
 
 /// @note Value needs to be a pointer type.
-template <typename Key = std::string, typename Value = std::shared_ptr<DataTree>>
+template <typename Key, typename Value>
 class Environment : public IEnvironment<Key, Value> {
 public:
 
