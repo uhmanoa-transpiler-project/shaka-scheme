@@ -19,10 +19,14 @@ class PrintTree : public shaka::IEvaluatorStrategy<T, Key, Value> {
         std::shared_ptr<IDataNode<T>> node,
         std::shared_ptr<IEnvironment<Key, Value>> env
     ) {
-        out << node->get_data()->type().name() << std::endl;
+        out << node->get_data()->type().name();
+        if (node->get_data()->type() == typeid(int)) {
+            out << '(' << shaka::get<int>(*node->get_data()) << ')';
+        }
+        out << std::endl;
         for (size_t i = 0; i < node->get_num_children(); ++i) {
             out << '\t';
-            this->evaluate(node->get_child(0), env);
+            this->evaluate(node->get_child(i), env);
         }
         return node;
     }

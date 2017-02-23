@@ -7,6 +7,8 @@
 
 #include "IDataNode.h"
 
+#include "Symbol.h"
+
 namespace shaka {
 
 /// @brief Auxillary "type-tags" used to decide whether the
@@ -28,8 +30,8 @@ enum class MetaTag : int {
 using Data = 
 boost::variant<
     int,
-    std::string,
-    MetaTag
+    shaka::Symbol,
+    shaka::MetaTag
 >;
 
 
