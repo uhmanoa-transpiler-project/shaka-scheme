@@ -94,6 +94,44 @@ Value operator/(Value v1, Value v2) {
 	}
 }
 
+bool value_eq_p(Value v1, Value v2) {
+	if (v1.type() == typeid(Integer)) {
+		if (v2.type() == typeid(Integer)) {
+			return boost::get<Integer>(v1) == boost::get<Integer>(v2);
+		}
+		else {
+			return boost::get<Integer>(v1) == boost::get<Real>(v2);
+		}
+	}
+	else {
+		if (v2.type() == typeid(Integer)) {
+			return boost::get<Real>(v1) == boost::get<Integer>(v2);
+		}
+		else {
+			return boost::get<Real>(v1) == boost::get<Real>(v2);
+		}
+	}
+}
+
+
+bool value_lt_p(Value v1, Value v2) {
+	if (v1.type() == typeid(Integer)) {
+		if (v2.type() == typeid(Integer)) {
+			return boost::get<Integer>(v1) < boost::get<Integer>(v2);
+		}
+		else {
+			return boost::get<Integer>(v1) < boost::get<Real>(v2);
+		}
+	}
+	else {
+		if (v2.type() == typeid(Integer)) {
+			return boost::get<Real>(v1) < boost::get<Integer>(v2);
+		}
+		else {
+			return boost::get<Real>(v1) < boost::get<Real>(v2);
+		}
+	}
+}
 
 class Number {
 public:
@@ -116,7 +154,7 @@ public:
 	friend Number operator*(const Number& n1, const Number& n2);
 	friend Number operator/(const Number& n1, const Number& n2);
 	
-	/*	
+
 	// comparison operators R7RS 6.2.6
 	friend bool operator==(const Number& n1, const Number& n2);
 	friend bool operator!=(const Number& n1, const Number& n2);
@@ -125,6 +163,7 @@ public:
 	friend bool operator>=(const Number& n1, const Number& n2);
 	friend bool operator<=(const Number& n1, const Number& n2);
 	
+	/*
 	// testing for exactness/inexactness R7RS 6.2.2
 	friend bool exact_p(const Number& n);
 	friend bool inexact_p(const Number& n);
@@ -183,34 +222,34 @@ Number operator/(const Number& n1, const Number& n2) {
 	Number result(n1.value / n2.value);
 	return result;
 }
-/*
+
 //---------------------------------------------------
 // Comparison operator overloads
 //--------------------------------------------------
 bool operator==(const Number& n1, const Number& n2) {
-	return n1.value == n2.value;
+	return value_eq_p(n1.value, n2.value);
 }
 
 bool operator!=(const Number& n1, const Number& n2) {
 	return !(n1 == n2);
 }
 
-bool operator>(const Number& n1, const Number& n2) {
-	return n1.value > n2.value;
+bool operator<(const Number& n1, const Number& n2) {
+	return value_lt_p(n1.value, n2.value);
 }
 
-bool operator<(const Number& n1, const Number& n2) {
-	return n1.value < n2.value;
+bool operator>(const Number& n1, const Number& n2) {
+	return !(n1 == n2) && !(n1 < n2);
 }
 
 bool operator>=(const Number& n1, const Number& n2) {
-	return n1.value >= n2.value;
+	return (n1 > n2) || (n1 == n2);
 }
 
 bool operator<=(const Number& n1, const Number& n2) {
-	return n1.value <= n2.value;
+	return (n1 < n2) || (n1 == n2);
 }
-
+/*
 //---------------------------------------------------
 // Built-in Numeric Predicates
 //---------------------------------------------------

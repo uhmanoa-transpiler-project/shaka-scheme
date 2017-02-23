@@ -39,6 +39,20 @@ TEST(Number, test_number_division) {
 	ASSERT_EQ(boost::get<Real>(n3.get_value()), Real(5.0));
 }
 
+TEST(Number, test_number_comparison) {
+	shaka::Number n1(10);
+	shaka::Number n2(10.0);
+	shaka::Number n3(10.000);
+	shaka::Number n4(10.5);
+
+	ASSERT_EQ(n1 == n2, true);
+	ASSERT_EQ(n1 == n3, true);
+	ASSERT_EQ(n1 == n4, false);
+	ASSERT_EQ(n1 < n4, true);
+	ASSERT_EQ(n4 > n1, true);
+	ASSERT_EQ(n1 <= n4, true);
+	ASSERT_EQ(n4 >= n1, true);
+}
 
 int main(int argc, char* argv[]) {
 	::testing::InitGoogleTest(&argc, argv);
