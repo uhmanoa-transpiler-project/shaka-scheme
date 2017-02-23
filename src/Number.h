@@ -104,6 +104,10 @@ public:
 	Number() : value(Integer(0)) {}	
 	Number(shaka::Value v) : value(v) {}
 	Number(const Number& other) : value(other.value) {}
+
+	// conversion constructors
+	Number(int v) : value(Integer(v)) {}
+	Number(double v) : value(Real(v)) {}
 	
     shaka::Value get_value() {return value;}
 	// arithmetic operators R7RS 6.2.6
