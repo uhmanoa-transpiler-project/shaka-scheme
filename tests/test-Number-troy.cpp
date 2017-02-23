@@ -2,8 +2,8 @@
 #include "Number.h"
 
 TEST(Number, test_number_addition) {
-	shaka::Number n1(Integer(10));
-	shaka::Number n2(Integer(25));
+	shaka::Number n1(10);
+	shaka::Number n2(25);
 
 	shaka::Number n3(n1 + n2);
 
@@ -12,8 +12,8 @@ TEST(Number, test_number_addition) {
 }
 
 TEST(Number, test_number_subtraction) {
-	shaka::Number n1(Real(20.5));
-	shaka::Number n2(Integer(10));
+	shaka::Number n1(20.5);
+	shaka::Number n2(10);
 
 	shaka::Number n3(n1 - n2);
 
@@ -21,8 +21,8 @@ TEST(Number, test_number_subtraction) {
 }
 
 TEST(Number, test_number_multiplication) {
-	shaka::Number n1(Real(2.0));
-	shaka::Number n2(Real(0.5));
+	shaka::Number n1(2.0);
+	shaka::Number n2(0.5);
 
 	shaka::Number n3(n1 * n2);
 
@@ -31,8 +31,8 @@ TEST(Number, test_number_multiplication) {
 }
 
 TEST(Number, test_number_division) {
-	shaka::Number n1(Integer(10));
-	shaka::Number n2(Real(2.0));
+	shaka::Number n1(10);
+	shaka::Number n2(2.0);
 
 	shaka::Number n3(n1 / n2);
 
