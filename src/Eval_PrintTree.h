@@ -10,7 +10,7 @@ namespace shaka {
 /// Encapsulates the EvaluatorStrategy classes
 namespace eval {
 
-/// @brief Prints all of the T in the tree.
+/// @brief Prints the types of all of the T in the tree.
 template <typename T, typename Key, typename Value, std::ostream& out>
 class PrintTree : public shaka::IEvaluatorStrategy<T, Key, Value> {
 
