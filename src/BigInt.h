@@ -5,8 +5,8 @@
 #include <typeinfo>
 #include <vector>
 #include <string>
-#include <stdlib>
-
+//#include <stdlib>
+/*
 class BigInt
 {
     ~BigInt() {}
@@ -50,7 +50,7 @@ void BigInt::llint_to_array(long long int v)
 void BigInt::string_to_intarray(string s)
 {
 }
-
+*/
 
 
 #endif // BIGINT_H
