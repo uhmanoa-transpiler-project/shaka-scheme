@@ -19,6 +19,7 @@ public:
 	// hint: == is already overloaded for std::string
 	// != can be defined in terms of ==
 	friend bool operator!=(const Symbol& n1, const Symbol& n2);
+	friend bool operator<(const Symbol& n1, const Symbol& n2);
 
 private:
 	std::string value;
