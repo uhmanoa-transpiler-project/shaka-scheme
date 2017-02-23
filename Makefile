@@ -7,6 +7,9 @@ H_FILES := $(wildcard src/*.h)
 TEST_FILES := $(wildcard tests/*.cpp)
 TEST_EXECUTABLES := $(TEST_FILES:.cpp=.out)
 
+TEST_SINGLE_FILE := $(addprefix tests/, $(addsuffix .cpp, $(TESTCASE)))
+TEST_SINGLE_EXECUTABLE := $(addprefix tests/, $(addsuffix .out, $(TESTCASE)))
+
 # Get the corresponding obj/FILE.o paths for the CPP files.
 OBJ_FILES := $(addprefix obj/, $(notdir $(CPP_FILES:.cpp=.o)))
 
@@ -34,6 +37,9 @@ TEST_FLAGS := -Wall -Wextra -pedantic --std=c++11 -g \
 			  $(INCLUDEDIR) $(TESTINCLUDEDIR) \
 			  $(LIBSDIR) $(TESTLIBSDIR) \
 			  $(LIBS) $(TESTLIBS)
+
+.PHONE: clean clean-all clean-docs clean-tests-docs clean-tests \
+	    run run-test 
 
 # The default rule to be build when just `make` is run.
 all: bin/main
@@ -69,6 +75,14 @@ docs: $(CPP_FILES)
 	cd docs; doxygen ../doxygen_config_file; cd ../
 
 tests: $(TEST_EXECUTABLES)
+
+test: $(TEST_SINGLE_EXECUTABLE)
+
+run-test: $(TEST_SINGLE_EXECUTABLE)
+	$(TEST_SINGLE_EXECUTABLE)
+
+$(TEST_SINGLE_EXECUTABLE): $(TEST_SINGLE_FILE)
+	$(CXX) -o $@ $^ $(TEST_FLAGS)
 
 tests/%.out: tests/%.cpp
 	$(CXX) -o $@ $^ $(TEST_FLAGS)

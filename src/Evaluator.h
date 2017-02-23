@@ -8,29 +8,40 @@
 
 namespace shaka {
 
+/// @note IEvaluatorStrategy class forward declaration is NOT a stub. Do not touch.
+template <typename T, typename Key, typename Value>
+class IEvaluatorStrategy;
 
-/// @todo Include the correct IEnvironment interface
-class IEnvironment;
 
 
 /// @brief Interface for the Evaluator class that will evaluate
 ///        expressions for the `IDataNode` Scheme expression tree.
-template <typename NodeData>
+template <typename T, typename Key, typename Value>
 class Evaluator {
-    Evaluator(std::shared_ptr<IEnvironment> root_node,
-               std::shared_ptr<IDataNode<NodeData>> root_env) :
-        root_env(root_env),
-        current_env(
-        root_node(root_node) {}
+public:
+    Evaluator(std::shared_ptr<IEnvironment<Key, Value>> root_env,
+               std::shared_ptr<IDataNode<T>> root_node) :
+        current_env(root_env),
+        current_node(root_node) {}
 
 
-    void evaluator (IEvaluatorStrategy strategy) {
-        strategy->evaluate(current_node, current_env);
+    /// @brief Delegates the evaluation of a node to a given strategy,
+    ///        which is accessed through the IEvaluatorStrategy interface.
+    /// 
+    /// @note The IEvaluatorStrategy uses polymorphism with a rvalue-reference.
+    ///       This is to avoid the use of pointers.
+    void evaluate(IEvaluatorStrategy<T, Key, Value>&& strategy) {
+        strategy.evaluate(current_node, current_env);
+    }
+
+    /// @brief Returns the `current_node`
+    std::shared_ptr<IDataNode<T>> get_node() {
+        return this->current_node;
     }
         
-
-    std::shared_ptr<IEnvironment> current_env;
-    std::weak_ptr<IDataNode<NodeData>> current_node;
+private:
+    std::shared_ptr<IEnvironment<Key, Value>> current_env;
+    std::shared_ptr<IDataNode<T>> current_node;
 };
 
 

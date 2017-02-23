@@ -2,17 +2,14 @@
 #define SHAKA_IEVALUATORSTRATEGY_H
 
 #include "DataNode.h"
-// #include "IEnvironment.h"
+#include "IEnvironment.h"
 
 /// @todo Replace IEnvironment stub with the real Environment interface.
 
 namespace shaka {
 
 
-
-class IEnvironment;
-
-template <typename NodeData>
+template <typename T, typename Key, typename Value>
 class IEvaluatorStrategy {
 public:
     /// @brief Evaluates the current subtree, with the root at the DataNode,
@@ -32,16 +29,16 @@ public:
     ///     until it reaches the root environment, which has no parent.
     /// 
     /// @return The shared_ptr to the next node that needs to be evaluated.
-    std::shared_ptr<IDataNode<NodeData>> evaluate(
-        std::shared_ptr<IDataNode<NodeData>> node,
-        std::shared_ptr<IEnvironment> env,
+    virtual std::shared_ptr<IDataNode<T>> evaluate(
+        std::shared_ptr<IDataNode<T>> node,
+        std::shared_ptr<IEnvironment<Key, Value>> env
     ) = 0;
 
 };
 
 
 
-{ // namespace shaka
+} // namespace shaka
 
 #endif // SHAKA_IEVALUATORSTRATEGY_H
 
