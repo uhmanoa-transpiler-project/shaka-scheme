@@ -21,7 +21,6 @@ using DataTree = shaka::DataNode<Data>;
 using Environment =
     shaka::Environment<std::string, std::shared_ptr<DataTree>>;
 
-
 TEST(Evaluator_mock, initialization) {
     std::shared_ptr<DataTree> root = std::make_shared<DataTree>([](int left, int right){
         return left + right;
