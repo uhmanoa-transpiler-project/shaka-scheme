@@ -124,6 +124,16 @@ TEST(Number, test_comparison_rationals) {
 	ASSERT_EQ(n4 != n5, true);
 }
 
+TEST(Number, test_modulo) {
+	shaka::Number n1(2);
+	shaka::Number n2(3);
+	shaka::Number n4(4);
+
+	ASSERT_EQ(n2 % n1, shaka::Number(1));
+	ASSERT_EQ(n4 % n1, shaka::Number(0));
+
+}
+
 int main(int argc, char* argv[]) {
 	::testing::InitGoogleTest(&argc, argv);
 

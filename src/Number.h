@@ -24,7 +24,7 @@ public:
 	friend Number operator-(const Number& n1, const Number& n2);
 	friend Number operator*(const Number& n1, const Number& n2);
 	friend Number operator/(const Number& n1, const Number& n2);
-	
+	friend Number operator%(const Number& n1, const Number& n2);	
 
 	// comparison operators R7RS 6.2.6
 	friend bool operator==(const Number& n1, const Number& n2);
@@ -94,6 +94,10 @@ Number operator/(const Number& n1, const Number& n2) {
 	return result;
 }
 
+Number operator%(const Number& n1, const Number& n2) {
+	Number result(n1.value % n2.value);
+	return result;
+}
 //---------------------------------------------------
 // Comparison operator overloads
 //--------------------------------------------------

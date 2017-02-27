@@ -171,6 +171,12 @@ Value operator/(Value v1, Value v2) {
 	}
 }
 
+Value operator%(Value v1, Value v2) {
+	assert(v1.type() != typeid(Real) && v1.type() != typeid(Rational) &&
+			v2.type() != typeid(Real) && v2.type() != typeid(Rational));
+	return boost::get<Integer>(v1) % boost::get<Integer>(v2);
+}
+
 bool value_eq_p(Value v1, Value v2) {
 	if (v1.type() == typeid(Integer)) {
 		if (v2.type() == typeid(Integer)) {
@@ -206,7 +212,6 @@ bool value_eq_p(Value v1, Value v2) {
 		}
 	}
 }
-
 
 bool value_lt_p(Value v1, Value v2) {
 	if (v1.type() == typeid(Integer)) {
