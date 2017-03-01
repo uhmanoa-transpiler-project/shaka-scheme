@@ -31,12 +31,16 @@ public:
 		Complex result((double)value, 0);
 		return result;
 	}
+
+	// All operators are declared as friends to allow for implicit
+	// type conversion of the lhs operand to take place between
+	// the different numeric subtypes
 	
 	// arithmetic operators for Integers
 	friend Integer operator+(const Integer& lhs, const Integer& rhs);
 	friend Integer operator-(const Integer& lhs, const Integer& rhs);
 	friend Integer operator*(const Integer& lhs, const Integer& rhs);
-	friend Real operator/(const Integer& lhs, const Integer& rhs);
+	friend Rational operator/(const Integer& lhs, const Integer& rhs);
 	friend Integer operator%(const Integer& lhs, const Integer& rhs);
 
 	// comparison operators for Integers
@@ -71,16 +75,9 @@ Integer operator*(const Integer& lhs, const Integer& rhs) {
 	return result;
 }
 
-Real operator/(const Integer& lhs, const Integer& rhs) {
-	if (lhs.value % rhs.value == 0) {
-		Real result(lhs.value / rhs.value);
-		return result;
-	}
-	else {
-
-		Real result((double)lhs.value / (double)rhs.value);
-		return result;
-	}
+Rational operator/(const Integer& lhs, const Integer& rhs) {
+	Rational result(lhs.value, rhs.value);
+	return result;
 }
 
 Integer operator%(const Integer& lhs, const Integer& rhs) {

@@ -7,6 +7,8 @@
 
 #include "IDataNode.h"
 
+#include "Symbol.h"
+
 namespace shaka {
 
 /// @brief Auxillary "type-tags" used to decide whether the
@@ -16,25 +18,20 @@ namespace shaka {
 /// For example, an `ATOM` should have no children nodes, but
 /// a `LIST` should have links to its children as a vector of pointers.
 enum class MetaTag : int {
+    DEFINE,
     LIST,
-    PROCEDURE,
-    IF,
-    PAIR,
-    VECTOR,
-    BYTEVECTOR,
-    NULL_LIST,
-    ATOM,
-    RECORD
+    PROC_CALL,
+    QUOTE,
+    LAMBDA
 };
 
 /// @brief `boost::variant` is being re-aliased for the
 /// readability purposes of the project.
 using Data = 
 boost::variant<
-    bool,
     int,
-    std::string,
-    MetaTag
+    shaka::Symbol,
+    shaka::MetaTag
 >;
 
 

@@ -6,7 +6,12 @@
 class Rational {
 public:
 	// constructor
-	Rational(int n, int d) : numer(n), denom(d) {}
+	Rational(int n, int d) : numer(n), denom(d) {
+		if (denom == 0) {
+			throw std::runtime_error("Cannot have zero denominator");
+		}
+		reduce();
+	}
 	
 	// implicit type conversion operator for Rational -> Real
 	// a rational number is just a real number written as a / b
@@ -47,7 +52,16 @@ public:
 	friend bool operator!=(const Rational& lhs, const Rational& rhs);	
 
 private:
-		
+	int gcd(int a, int b) {
+		return b == 0 ? a : gcd(b, a % b);
+	}
+
+	void reduce() {
+		int divisor = gcd(numer, denom);
+		numer /= divisor;
+		denom /= divisor;
+	}
+
 	int numer, denom;
 };
 
