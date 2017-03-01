@@ -1,118 +1,31 @@
 #ifndef NUMBER_H
 #define NUMBER_H
 #include <cmath>
-#include <boost/variant.hpp>
-#include <typeinfo>
-#include <cassert>
-#include "Integer.h"
+#include "Value.h"
 
 namespace shaka {
 
-using Value = boost::variant<Integer, Real>;
-		
-Value operator+(Value v1, Value v2) {
-	if (v1.type() == typeid(Integer)) {
-		if (v2.type() == typeid(Integer)) {
-			return boost::get<Integer>(v1) + boost::get<Integer>(v2);
-		}
-		else {
-			return boost::get<Integer>(v1) + boost::get<Real>(v2);
-		}
-	}
-	else {
-		if (v2.type() == typeid(Integer)) {
-			return boost::get<Real>(v1) + boost::get<Integer>(v2);
-		}
-		else {
-			return boost::get<Real>(v1) + boost::get<Real>(v2);
-		}
-	}
-
-}
-
-Value operator-(Value v1, Value v2) {
-	if (v1.type() == typeid(Integer)) {
-		if (v2.type() == typeid(Integer)) {
-			return boost::get<Integer>(v1) - boost::get<Integer>(v2);
-		}
-		else {
-			return boost::get<Integer>(v1) - boost::get<Real>(v2);
-		}
-	}
-	else {
-		if (v2.type() == typeid(Integer)) {
-			return boost::get<Real>(v1) - boost::get<Integer>(v2);
-		}
-		else {
-			return boost::get<Real>(v1) - boost::get<Real>(v2);
-		}
-	}
-}
-
-Value operator*(Value v1, Value v2) {
-	if (v1.type() == typeid(Integer)) {
-		if (v2.type() == typeid(Integer)) {
-			return boost::get<Integer>(v1) * boost::get<Integer>(v2);
-		}
-		else {
-			return boost::get<Integer>(v1) * boost::get<Real>(v2);}
-	}
-	else {
-		if (v2.type() == typeid(Integer)) {
-			return boost::get<Real>(v1) * boost::get<Integer>(v2);
-		}
-		else {
-			return boost::get<Real>(v1) * boost::get<Real>(v2);
-		}
-	}
-}
-
-Value operator/(Value v1, Value v2) {
-	if (v1.type() == typeid(Integer)) {
-		if (v2.type() == typeid(Integer)) {
-			/// @todo maybe put exception for division by 0
-			assert(boost::get<Integer>(v2) != Integer(0));
-			return boost::get<Integer>(v1) / boost::get<Integer>(v2);
-		}
-		else {
-			/// @todo maybe add exception for division by 0
-			assert(boost::get<Real>(v2) != Real(0.0));
-			return boost::get<Integer>(v1) / boost::get<Real>(v2);
-		}
-	}
-	else {
-		if (v2.type() == typeid(Integer)) {
-			/// @todo maybe add exception for division by 0
-			assert(boost::get<Integer>(v2) != Integer(0));
-			return boost::get<Real>(v1) / boost::get<Integer>(v2);
-		}
-		else {
-			/// @todo maybe add exception for division by 0
-			assert(boost::get<Real>(v2) != Real(0.0));
-			return boost::get<Real>(v1) / boost::get<Real>(v2);
-		}
-	}
-}
-
-
 class Number {
 public:
-
-
 	
 	// default and initialization constructors
 	Number() : value(Integer(0)) {}	
-	Number(shaka::Value v) : value(v) {}
+	Number(Value v) : value(v) {}
 	Number(const Number& other) : value(other.value) {}
+
+	// conversion constructors
+	Number(int v) : value(Integer(v)) {}
+	Number(double v) : value(Real(v)) {}
+	Number(int n, int d) : value(Rational(n, d)) {}
 	
-    shaka::Value get_value() {return value;}
+    Value get_value() {return value;}
 	// arithmetic operators R7RS 6.2.6
 	friend Number operator+(const Number& n1, const Number& n2);
 	friend Number operator-(const Number& n1, const Number& n2);
 	friend Number operator*(const Number& n1, const Number& n2);
 	friend Number operator/(const Number& n1, const Number& n2);
-	
-	/*	
+	friend Number operator%(const Number& n1, const Number& n2);	
+
 	// comparison operators R7RS 6.2.6
 	friend bool operator==(const Number& n1, const Number& n2);
 	friend bool operator!=(const Number& n1, const Number& n2);
@@ -121,6 +34,7 @@ public:
 	friend bool operator>=(const Number& n1, const Number& n2);
 	friend bool operator<=(const Number& n1, const Number& n2);
 	
+	/*
 	// testing for exactness/inexactness R7RS 6.2.2
 	friend bool exact_p(const Number& n);
 	friend bool inexact_p(const Number& n);
@@ -153,7 +67,7 @@ public:
 
 private:
 
-	shaka::Value value;	
+	Value value;	
 };
 
 
@@ -179,34 +93,38 @@ Number operator/(const Number& n1, const Number& n2) {
 	Number result(n1.value / n2.value);
 	return result;
 }
-/*
+
+Number operator%(const Number& n1, const Number& n2) {
+	Number result(n1.value % n2.value);
+	return result;
+}
 //---------------------------------------------------
 // Comparison operator overloads
 //--------------------------------------------------
 bool operator==(const Number& n1, const Number& n2) {
-	return n1.value == n2.value;
+	return value_eq_p(n1.value, n2.value);
 }
 
 bool operator!=(const Number& n1, const Number& n2) {
 	return !(n1 == n2);
 }
 
-bool operator>(const Number& n1, const Number& n2) {
-	return n1.value > n2.value;
+bool operator<(const Number& n1, const Number& n2) {
+	return value_lt_p(n1.value, n2.value);
 }
 
-bool operator<(const Number& n1, const Number& n2) {
-	return n1.value < n2.value;
+bool operator>(const Number& n1, const Number& n2) {
+	return !(n1 == n2) && !(n1 < n2);
 }
 
 bool operator>=(const Number& n1, const Number& n2) {
-	return n1.value >= n2.value;
+	return (n1 > n2) || (n1 == n2);
 }
 
 bool operator<=(const Number& n1, const Number& n2) {
-	return n1.value <= n2.value;
+	return (n1 < n2) || (n1 == n2);
 }
-
+/*
 //---------------------------------------------------
 // Built-in Numeric Predicates
 //---------------------------------------------------
