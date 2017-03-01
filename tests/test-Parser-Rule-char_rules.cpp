@@ -5,6 +5,32 @@
 
 #include "parser/char_rules.h"
 
+TEST(Parser_char_rules, alpha) {
+	std::stringstream ss("z");
+	std::string interm;
+
+	//Assert z is an alpha char
+	ASSERT_TRUE( 
+		shaka::parser::rule::alpha<std::string>(ss, nullptr, interm)
+	);
+}
+
+TEST(Parser_char_rules, alpha_string) {
+	std::stringstream ss("zeta");
+	std::string interm;
+
+	while(auto good = 
+		shaka::parser::rule::alpha<std::string>(ss, nullptr, interm)
+	     ) { }
+	
+	//Assert zeta is a string
+	ASSERT_EQ(interm, "zeta");
+
+	//ASSERT_TRUE( 
+	//	shaka::parser::rule::alpha<std::string>(ss, nullptr, interm)
+	//);
+}
+
 TEST(Parser_char_rules, digit) {
 
     {
