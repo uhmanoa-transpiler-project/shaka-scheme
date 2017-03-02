@@ -20,7 +20,7 @@ template <typename T, typename Key, typename Value>
 class Evaluator {
 public:
     Evaluator(std::shared_ptr<IEnvironment<Key, Value>> root_env,
-               std::shared_ptr<IDataNode<T>> root_node) :
+              std::shared_ptr<IDataNode<T>> root_node) :
         current_env(root_env),
         current_node(root_node) {}
 
