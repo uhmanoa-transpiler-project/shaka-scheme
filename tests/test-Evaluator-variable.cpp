@@ -3,28 +3,50 @@
 #include <functional>
 #include <algorithm>
 #include <numeric>
-
+#include <memory>
 #include <boost/variant.hpp>
 
 #include "DataNode.h"
 #include "Environment.h"
 #include "Evaluator.h"
-#include "Eval_PrintTree.h"
-#include "Symbol.h"
 #include "Eval_Variable.h"
+#include "Symbol.h"
+#include "IDataNode.h"
 
-using Data = boost::variant<
-    int,
-    std::function<int(int,int)>
->;
 
-using DataTree = shaka::DataNode<Data>;
-
+using DataTree = shaka::DataNode<shaka::Data>;
+using IDataTree = shaka::IDataNode<shaka::Data>;
 using Environment =
-    shaka::Environment<std::string, std::shared_ptr<DataTree>>;
+    shaka::Environment<shaka::Symbol, std::shared_ptr<IDataTree>>;
+
+TEST(Evaluator_variable, initializing){
+    std::shared_ptr<DataTree> variable = std::make_shared<DataTree>(shaka::Symbol("x"));
+    int two = 2;
+    std::shared_ptr<DataTree> value = std::make_shared<DataTree>(two);
+
+    std::shared_ptr<Environment> env = std::make_shared<Environment>(nullptr);
+
+    env -> set_value(shaka::Symbol("x"), value);
+
+    shaka::Evaluator<shaka::Data, shaka::Symbol, std::shared_ptr<IDataTree>> evaluator(
+	    env, 
+	    variable
+     );
+evaluator.evaluate(
+                shaka::eval::Variable<shaka::Data, 
+                shaka::Symbol, 
+                std::shared_ptr<IDataTree>>());
+auto result = evaluator.get_node();
+   ASSERT_EQ(shaka::get<int>(*result->get_data()) , 
+   shaka::get<int>(*value->get_data()));
+    
+}
 
 
-TEST(Evaluator_Variable, initialization) {
+
+
+
+/*TEST(Evaluator_mock, initialization) {
     std::shared_ptr<DataTree> root = std::make_shared<DataTree>([](int left, int right){
         return left + right;
     });
@@ -34,19 +56,7 @@ TEST(Evaluator_Variable, initialization) {
     root->push_child(2);
 }
 
-TEST(Evaluator_Variable, get_variable){
-
-    Environment env(nullptr);
-
-    shaka::Symbol n1("hello");
-    env.set_value(n1, 3);
-
-
-    ASSERT_EQ(find_variable(n1, &env), 3);
-	//return find_variable(n1, env) ;
-}
-
-TEST(Evaluator_Variable, test_print_all) {
+TEST(Evaluator_mock, test_print_all) {
 
     // Create a function at the root.
     std::shared_ptr<DataTree> root = std::make_shared<DataTree>([](int left, int right){
@@ -76,7 +86,7 @@ TEST(Evaluator_Variable, test_print_all) {
     auto result = evaluator.get_node();
 
     //shaka::eval::PrintAll strategy(
-}
+}*/
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
