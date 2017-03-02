@@ -1,34 +1,30 @@
-#ifndef SHAKA_Eval_Variable_H
-#define SHAKA_Eval_Variable_H
+#ifndef SHAKA_EVAL_VARIABLE_H
+#define SHAKA_EVAL_VARIABLE_H
 
-#include <memory>
-#include <utility>
-#include <vector>
+#include "IEvaluatorStrategy.h"
 #include "Symbol.h"
-#include "IEnvironment.h"
+#include "DataNode.h"
+#include "IDataNode.h"
+#include "Environment.h"
+#include <memory>
+#include <type_traits>
+namespace shaka{
 
-namespace shaka {
-
+namespace eval{
 template <typename T, typename Key, typename Value>
-class Eval_Variable : public shaka::IEvaluatorStrategy<T, Key, Value> {
+class Variable : public shaka::IEvaluatorStrategy<T, Key, Value> {
+public: 
+	std::shared_ptr<IDataNode<T>> evaluate(
+			std::shared_ptr<IDataNode<T>> &node, 
+			std::shared_ptr<IEnvironment<Key,Value>> env){
+	
+		return node = env->get_value(shaka::get<Key>(*node->get_data()));
+	}
 
 
-    T find_variable(Symbol find_this_one, std::shared_ptr<IEnvironment<Key, Value>> env ){
-
-        std::vector<Key> all_keys = env->get_keys();
-
-        for(int i = 0; i < all_keys.size(); i++ )
-            if(find_this_one == all_keys[i]){
-
-                return all_keys[i]->get_Value();
-            }
-
-
-    }
 
 };
 
-
 }
-
-#endif // SHAKA_Eval_Variable_H
+}
+#endif

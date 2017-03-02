@@ -15,10 +15,10 @@ template <typename T, typename Key, typename Value>
 class Variable : public shaka::IEvaluatorStrategy<T, Key, Value> {
 public: 
 	std::shared_ptr<IDataNode<T>> evaluate(
-			std::shared_ptr<IDataNode<T>> node, 
+			std::shared_ptr<IDataNode<T>> &node, 
 			std::shared_ptr<IEnvironment<Key,Value>> env){
 	
-		return env->get_value(node->get_data());
+		return node = env->get_value(shaka::get<Key>(*node->get_data()));
 	}
 
 
