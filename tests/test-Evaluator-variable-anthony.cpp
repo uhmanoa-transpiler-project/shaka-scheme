@@ -9,28 +9,30 @@
 #include "DataNode.h"
 #include "Environment.h"
 #include "Evaluator.h"
-#include "Eval_variable.h"
+#include "Eval_variable-anthony.h"
 #include "Symbol.h"
 #include "IDataNode.h"
 
 
 using DataTree = shaka::DataNode<shaka::Data>;
-
+using IDataTree = shaka::IDataNode<shaka::Data>;
 using Environment =
-    shaka::Environment<shaka::Symbol, std::shared_ptr<DataTree>>;
+    shaka::Environment<shaka::Symbol, std::shared_ptr<IDataTree>>;
 
 TEST(Evaluator_variable, initializing){
     std::shared_ptr<DataTree> root = std::make_shared<DataTree>(shaka::Symbol("x"));
+    std::shared_ptr<DataTree> root1 = std::make_shared<DataTree>(2);
+
     std::shared_ptr<Environment> env = std::make_shared<Environment>(nullptr);
 
-    root->push_child(2);
+    env -> set_value(shaka::Symbol("x"), root1);
 
     shaka::Evaluator<shaka::Data, shaka::Symbol, std::shared_ptr<DataTree>> evaluator(
 	    env, 
 	    root
      );
 
-   ASSERT_EQ(evaluator.evaluate(shaka::eval::Variable<shaka::Data, shaka::Symbol, std::shared_ptr<DataTree>>()), 2);
+   ASSERT_EQ(evaluator.evaluate(shaka::eval::Variable<shaka::Data, shaka::Symbol, std::shared_ptr<IDataTree>>()), root1);
     
 }
 
