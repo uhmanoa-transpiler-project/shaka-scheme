@@ -6,8 +6,8 @@
 #include <boost/variant.hpp>
 
 #include "IDataNode.h"
-
 #include "Symbol.h"
+#include "Number.h"
 
 namespace shaka {
 
@@ -31,7 +31,8 @@ using Data =
 boost::variant<
     int,
     shaka::Symbol,
-    shaka::MetaTag
+    shaka::MetaTag,
+    shaka::Number
 >;
 
 

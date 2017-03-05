@@ -52,6 +52,7 @@ TEST(Evaluator_mock, test_print_all) {
         root
     );
 
+    /*
     evaluator.evaluate(shaka::eval::PrintTree<
         Data,
         std::string,
@@ -62,6 +63,7 @@ TEST(Evaluator_mock, test_print_all) {
     auto result = evaluator.get_node();
 
     //shaka::eval::PrintAll strategy(
+    */
 }
 
 int main(int argc, char** argv) {
