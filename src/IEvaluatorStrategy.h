@@ -30,7 +30,7 @@ public:
     /// 
     /// @return The shared_ptr to the next node that needs to be evaluated.
     virtual std::shared_ptr<IDataNode<T>> evaluate(
-        std::shared_ptr<IDataNode<T>> node,
+        std::shared_ptr<IDataNode<T>>& node,
         std::shared_ptr<IEnvironment<Key, Value>> env
     ) = 0;
 

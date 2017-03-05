@@ -94,3 +94,17 @@ To remove the documentation, run:
 
     make clean-tests-docs
 
+
+# Motivation
+
+This project serves as an independent study project for the Transpiler
+Project at the University of Hawaii at Manoa.
+
+As there is no prevailing, clear, modern C++ implementation of R7RS
+Scheme, we hope to create an implementation that is clear and able to
+be read quickly by beginners and people who are interested in implementing
+their own interpreters.
+
+The project focuses on simplicity and clarity of design. We are
+currently not concerned with surpassing projects that have had significantly
+more time allotted to optimization of performance.
