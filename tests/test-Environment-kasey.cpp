@@ -44,11 +44,19 @@ TEST(Environment, get_keys){
 }
 
 TEST(Environment, contains_key_in_parent_check){
+
+    /* Construct an environment */
     Environment parent(nullptr);
+
+    /* Construct a child environment with a parent environment */
     Environment kid(&parent);
     int num =1;
     int *value = &num;
+
+    /* Store a value with the key "first" in the parent environment */
     parent.set_value("first", value);
+
+    /* Parent and child environment should return the same value */
     ASSERT_EQ(kid.get_value("first"), parent.get_value("first"));
 }
 
