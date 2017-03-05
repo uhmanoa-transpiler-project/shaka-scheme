@@ -5,34 +5,7 @@ Shaka Scheme.
 
 Shaka Scheme hopes to be fully R7RS Small-compliant.
 
-# Motivation
-
-At the very beginning of the project, after doing some preliminary research,
-it was found that there is no modern C++ implementation of Scheme.
-
-A large body of work exists for studying how to implement simple versions of
-Lisp or Scheme. However, the more complex parts of Scheme, including macros
-and continuations, are considered non-trivial to implement, and are deeply
-connected to the implementation of the system it is done in.
-
-Our hope is that the project will provide a relatively complete, modern
-implementation of R7RS Small Scheme coupled with very clear documentation
-in order to demonstrate how such complex design and implementation problems
-might be handled. 
-
-Note that the goal of the project is not speed or efficiency. Other,
-more established versions of Scheme have years, even decades of work behind
-them. Our principles can best be defined as:
-
-- Simplicity of implementation
-- Clarity of design
-
-This project also is a dual independent study project, working as a vehicle
-for engineering students' sophomore/junior/senior projects at our host
-university. We hope this will be an interesting contribution to those
-who would like to understand the basics of language implementation.
-
-# Building - Overview
+# Native Technologies
 
 The primary build environment for the project is the `msys2` emulated
 POSIX-compatible shell on the Windows 10 platform. The project software should
@@ -120,9 +93,4 @@ cases included as additional files.
 To remove the documentation, run:
 
     make clean-tests-docs
-
-# Additional Documentation
-
-Other README files exist in Markdown format in subdirectories. Please
-explore further if you wish to learn more.
 
