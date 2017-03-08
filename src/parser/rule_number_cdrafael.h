@@ -12,6 +12,8 @@ namespace rule {
 /// @brief Matches to an integer, and then
 ///        appends the string matching the integer
 ///        to interm.
+///     
+/// This will not put the node onto the tree.
 template <typename T>
 bool number_integer(
     InputStream&    in,
@@ -22,6 +24,28 @@ bool number_integer(
     if (digit(in, root, buffer)) {
         while (digit(in, root, buffer));
         interm += buffer;
+        return true;
+    } else {
+        return false;
+    }
+}
+
+template <>
+bool number_integer<std::string>(
+    InputStream&    in,
+    NodePtr         root,
+    std::string&    interm
+) {
+    std::string buffer;
+    if (digit(in, root, buffer)) {
+        while (digit(in, root, buffer));
+        interm += buffer;
+        // Now, we have the number
+        if (root) {
+            root->push_child(
+                shaka::Number(std::stoi(interm))       
+            );
+        }
         return true;
     } else {
         return false;
@@ -41,6 +65,12 @@ bool number_integer<int>(
     if (digit(in, root, buffer)) {
         while (digit(in, root, buffer));
         interm += std::stoi(buffer);
+        // Now, we have the number
+        if (root) {
+            root->push_child(
+                shaka::Number(interm)       
+            );
+        }
         return true;
     } else {
         return false;

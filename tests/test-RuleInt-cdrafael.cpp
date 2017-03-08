@@ -76,7 +76,7 @@ TEST(Parser_integer, decimal) {
 
     ASSERT_TRUE(b);
 
-   ASSERT_EQ(
+    ASSERT_EQ(
         shaka::Number(shaka::Real(std::stod(temp))),
         shaka::Number(shaka::Real(123.456))
     ); 
@@ -96,6 +96,26 @@ TEST(Parser_integer, negative_decimal) {
         std::stod(temp),
         -1.23
     );
+}
+
+TEST(Parser_integer, push_onto_tree) {
+    std::stringstream ss("123");
+    std::string temp;
+
+    using Node = shaka::DataNode<shaka::Data>;
+
+    auto root = std::make_shared<Node>(shaka::MetaTag::LIST);
+
+    bool b = shaka::parser::rule::number_integer
+        <std::string>(ss, root, temp);
+
+    ASSERT_TRUE(b);
+
+    shaka::Number n1 = shaka::get<shaka::Number>(*(root->get_child(0)->get_data()));
+
+    shaka::Number n2(123);
+
+    ASSERT_EQ(n1, n2);
 }
 
 int main(int argc, char** argv) {
