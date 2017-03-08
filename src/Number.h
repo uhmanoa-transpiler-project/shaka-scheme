@@ -19,6 +19,7 @@ public:
 	Number(int n, int d) : value(Rational(n, d)) {}
 	
     Value get_value() {return value;}
+
 	// arithmetic operators R7RS 6.2.6
 	friend Number operator+(const Number& n1, const Number& n2);
 	friend Number operator-(const Number& n1, const Number& n2);
