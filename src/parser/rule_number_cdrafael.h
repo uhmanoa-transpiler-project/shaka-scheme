@@ -13,7 +13,7 @@ namespace rule {
 ///        appends the string matching the integer
 ///        to interm.
 template <typename T>
-bool integer(
+bool number_integer(
     InputStream&    in,
     NodePtr         root,
     T&              interm
@@ -32,7 +32,7 @@ bool integer(
 /// 
 /// Adds the value of the converted string to interm.
 template <>
-bool integer<int>(
+bool number_integer<int>(
     InputStream&    in,
     NodePtr         root,
     int&            interm
@@ -50,7 +50,7 @@ bool integer<int>(
 /// @brief Function that checks if the given is a negative number or decimal 
 /// or a negative decimal
 template <typename T>
-bool real_int(
+bool number_real(
 	InputStream& 	in,
 	NodePtr 	root,
 	T& 		interm
@@ -102,7 +102,7 @@ bool real_int(
 			}
 			else
 				accept = false;
-		}
+	}
 	}	
 	return accept;
 }

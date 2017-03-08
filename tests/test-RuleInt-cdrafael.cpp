@@ -14,7 +14,7 @@ TEST(Parser_integer, single_integer) {
     std::stringstream iss ("123");
     std::string temp;
 
-    auto b = shaka::parser::rule::real_int
+    auto b = shaka::parser::rule::number_real
         <std::string>(iss, nullptr, temp);
 
     ASSERT_TRUE(b);
@@ -33,7 +33,7 @@ TEST(Parser_integer, multiple_integers) {
     size_t index = 0;
 
     while (iss && iss.peek() != std::char_traits<shaka::parser::Char>::eof()) {
-        auto b = shaka::parser::rule::integer
+        auto b = shaka::parser::rule::number_integer
             <std::string>(iss, nullptr, temp);
 
         ASSERT_TRUE(b);
@@ -55,7 +55,7 @@ TEST(Parser_integer, negative_integer) {
     std::stringstream iss ("-123");
     std::string temp;
 
-    auto b = shaka::parser::rule::real_int
+    auto b = shaka::parser::rule::number_real
         <std::string>(iss, nullptr, temp);
 
     ASSERT_TRUE(b);
@@ -71,7 +71,7 @@ TEST(Parser_integer, decimal) {
     std::stringstream iss ("123.456");
     std::string temp;
 
-    auto b = shaka::parser::rule::real_int
+    auto b = shaka::parser::rule::number_real
         <std::string>(iss, nullptr, temp);
 
     ASSERT_TRUE(b);
@@ -87,7 +87,7 @@ TEST(Parser_integer, negative_decimal) {
     std::stringstream iss ("-1.23");
     std::string temp;
 
-    auto b = shaka::parser::rule::real_int
+    auto b = shaka::parser::rule::number_real
         <std::string>(iss, nullptr, temp);
 
     ASSERT_TRUE(b);
