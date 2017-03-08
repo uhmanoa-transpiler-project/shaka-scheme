@@ -74,7 +74,7 @@ TEST(Parser_char_rules, match_char) {
 }
 
 TEST(Parser_char_rules, match_string) {
-	std::stringstream ss("\"");
+	std::stringstream ss("\"words\"");
 	std::string interm;
 
 	ASSERT_TRUE(

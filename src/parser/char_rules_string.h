@@ -80,16 +80,18 @@ bool match_string(
 ) {
 	const char C = '\"';
 	if(in.peek() == C) {
+		interm += in.get();
 		while(in.peek() != C){
 			interm += in.get();
+			if(in.peek() == EOF) return false;
+
 		}
 		
-		if(in.peek() == EOF) {
+		//if(in.peek() == NULL) {
 			return true;
-		}
-
-		else return false;
+		//}
 	}
+	return false;
 }
 
 } // namespace rule
