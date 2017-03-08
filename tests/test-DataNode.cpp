@@ -1,6 +1,8 @@
 #include "gtest/gtest.h"
 #include "DataNode.h"
 
+#include <boost/variant.hpp>
+
 #include <functional>
 #include <algorithm>
 #include <numeric>
@@ -9,20 +11,20 @@ using DataTree = shaka::DataNode<shaka::Data>;
 
 /// @brief Basic default constructor test
 TEST(DataNode, constructor_default) {
-    DataTree root(shaka::MetaTag::NULL_LIST);
+    DataTree root(shaka::MetaTag::LIST);
 
     ASSERT_TRUE(true);
 }
 /// @brief Tests forwarding of arguments to internal data.
 TEST(DataNode, init_int) {
 
-    /// @todo Use the real Number class in the DataNode.
-    DataTree root(1);
+    // Create a number as the root.
+    DataTree root(shaka::Number(1));
 
     // Test getting the same value we initialized the root node tree with.
-    auto result = shaka::get<int>(*root.get_data());
+    auto result = shaka::get<shaka::Number>(*root.get_data());
 
-    ASSERT_EQ(result, 1);
+    ASSERT_EQ(result, shaka::Number(1));
 }
 
 /// @brief Pushes a DataNode to the root's children and compares
@@ -46,8 +48,8 @@ TEST(DataNode, push_and_get_child) {
     root->push_child(*node->get_data());
 
     // Get the child node.
-    auto result_node = shaka::get<std::string>(*node->get_data());
-    auto result_child = shaka::get<std::string>(
+    auto result_node = shaka::get<shaka::Symbol>(*node->get_data());
+    auto result_child = shaka::get<shaka::Symbol>(
         *root->get_last_child()->get_data()
     );
 
@@ -105,7 +107,7 @@ TEST(DataNode, remove_child) {
 
     // See if the child value matches.
     ASSERT_EQ(
-        shaka::get<std::string>(*root->get_child(0)->get_data()),
+        shaka::get<shaka::Symbol>(*root->get_child(0)->get_data()),
         test_value
     );
 
@@ -126,14 +128,14 @@ TEST(DataNode, traverse_tree_pre_order_print) {
     // Create a full tree of depth 2, ordered
     // pre-order.
     std::shared_ptr<DataTree> root =
-        std::make_shared<DataTree>(1);
+        std::make_shared<DataTree>(shaka::Number(1));
 
-    auto left           = root->push_child(2);
-    auto left_left      = left->push_child(3);
-    auto left_right     = left->push_child(4);
-    auto right          = root->push_child(5);
-    auto right_left     = right->push_child(6);
-    auto right_right    = right->push_child(7);
+    auto left           = root->push_child(shaka::Number(2));
+    auto left_left      = left->push_child(shaka::Number(3));
+    auto left_right     = left->push_child(shaka::Number(4));
+    auto right          = root->push_child(shaka::Number(5));
+    auto right_left     = right->push_child(shaka::Number(6));
+    auto right_right    = right->push_child(shaka::Number(7));
 
     using NodeTree = shaka::IDataNode<shaka::Data>;
 
@@ -141,16 +143,16 @@ TEST(DataNode, traverse_tree_pre_order_print) {
     // in order to do a recursive lambda.
     std::function<void(std::shared_ptr<NodeTree>)> pre_order_print;
     // The pre-order printing function.
-    std::vector<int> v;
+    std::vector<shaka::Number> v;
     pre_order_print = [&pre_order_print, &v](std::shared_ptr<NodeTree> tree) -> void {
         if (tree) {
-            if (int* ptr = shaka::get<int>(tree->get_data().get())) {
+            if (shaka::Number* ptr = shaka::get<shaka::Number>(tree->get_data().get())) {
                 v.push_back(*ptr);
                 // std::cout << *ptr << std::endl;
                 pre_order_print(tree->get_child(0));
                 pre_order_print(tree->get_child(1));
             } else {
-                throw std::runtime_error("ERROR: Node data is not an `int`!");
+                throw std::runtime_error("ERROR: Node data is not an `shaka::Number`");
             }
         }
     };
@@ -159,7 +161,7 @@ TEST(DataNode, traverse_tree_pre_order_print) {
     pre_order_print(root);
 
 
-    std::vector<int> correct_traversal_order = {1, 2, 3, 4, 5, 6, 7};
+    std::vector<shaka::Number> correct_traversal_order = {1, 2, 3, 4, 5, 6, 7};
     // Check whether the traversal order was correct, according to the
     // numbers we kept track of by pushing to the vector in the printing function.
     ASSERT_TRUE(
@@ -179,28 +181,28 @@ TEST(DataNode, traverse_tree_post_order_sum) {
     // Create a full tree of depth 2, ordered
     // pre-order.
     std::shared_ptr<DataTree> root =
-        std::make_shared<DataTree>(7);
+        std::make_shared<DataTree>(shaka::Number(7));
 
-    auto left           = root->push_child(3);
-    auto left_left      = left->push_child(1);
-    auto left_right     = left->push_child(2);
-    auto right          = root->push_child(6);
-    auto right_left     = right->push_child(4);
-    auto right_right    = right->push_child(5);
+    auto left           = root->push_child(shaka::Number(3));
+    auto left_left      = left->push_child(shaka::Number(1));
+    auto left_right     = left->push_child(shaka::Number(2));
+    auto right          = root->push_child(shaka::Number(6));
+    auto right_left     = right->push_child(shaka::Number(4));
+    auto right_right    = right->push_child(shaka::Number(5));
 
     using NodeTree = shaka::IDataNode<shaka::Data>;
 
     // Must use std::function and capture by reference
     // in order to do a recursive lambda.
-    std::function<int(std::shared_ptr<NodeTree>)> post_order_sum;
+    std::function<shaka::Number(std::shared_ptr<NodeTree>)> post_order_sum;
 
     // The vector to keep track of which nodes were traversed first.
-    std::vector<int> v;
-    post_order_sum = [&post_order_sum, &v](std::shared_ptr<NodeTree> tree) -> int {
+    std::vector<shaka::Number> v;
+    post_order_sum = [&post_order_sum, &v](std::shared_ptr<NodeTree> tree) -> shaka::Number {
         if (tree) {
-            if (int* ptr = shaka::get<int>(tree->get_data().get())) {
-                int sum_left = post_order_sum(tree->get_child(0));
-                int sum_right = post_order_sum(tree->get_child(1));
+            if (auto* ptr = shaka::get<shaka::Number>(tree->get_data().get())) {
+                auto sum_left = post_order_sum(tree->get_child(0));
+                auto sum_right = post_order_sum(tree->get_child(1));
                 v.push_back(*ptr);
                 // std::cout << *ptr << std::endl;
                 return sum_left + sum_right + *ptr;
@@ -214,10 +216,10 @@ TEST(DataNode, traverse_tree_post_order_sum) {
     };
 
     // Apply the function to the tree.
-    int sum = post_order_sum(root);
+    auto sum = post_order_sum(root);
 
 
-    std::vector<int> correct_traversal_order = {1, 2, 3, 4, 5, 6, 7};
+    std::vector<shaka::Number> correct_traversal_order = {1, 2, 3, 4, 5, 6, 7};
     // Check whether the traversal order was correct, according to the
     // numbers we kept track of by pushing to the vector in the printing function.
     ASSERT_TRUE(
@@ -233,7 +235,7 @@ TEST(DataNode, traverse_tree_post_order_sum) {
         std::accumulate(
             correct_traversal_order.begin(),
             correct_traversal_order.end(),
-            0
+            shaka::Number(0)
         ),
         sum
     );
@@ -243,14 +245,15 @@ TEST(DataNode, traverse_tree_post_order_sum) {
         std::accumulate(
             v.begin(),
             v.end(),
-            0
+            shaka::Number(0)
         ),
-        sum
+        shaka::Number(sum)
     );
 }
 
 /// @todo In-order traversal of a tree.
 
+/*
 /// @brief Pushes, and then removes a child by index.
 TEST(DataNode, get_parent) {
     // Initialize the root node with a boolean value.
@@ -290,6 +293,7 @@ TEST(DataNode, get_parent) {
 }
 /// @todo Test node insertion with insert_node()
 
+*/
 /// @todo Test set_node()
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);

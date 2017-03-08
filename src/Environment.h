@@ -40,12 +40,17 @@ public:
     }
 
     virtual Value get_value(const Key& key) override {
+
+        /* Check if the key exists in local */
         if (local.find(key)!= local.end()){
             return local[key];
         }
+        /* Returns null if does not exist and doesn't have a parent */
         else if (this->parent == nullptr){
             return nullptr;
+
         } 
+        /* Looks for key in the parent environment */
         else {
             return this->parent->get_value(key);
         }
