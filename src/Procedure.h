@@ -6,6 +6,8 @@
 #include "IEnvironment.h"
 #include "EvaluatorStrategies.h"
 #include "Evaluator.h"
+#include "Eval_Expression.h"
+
 
 #include "IProcedure.h"
 
@@ -27,7 +29,11 @@ public:
 
     /// @brief Takes in arguments and then applies the function to them.
     ///
-    /// Can possibly return multiple values as required by Scheme.
+    /// Assumes that the input nodes are already evaluated to their correct,
+    /// desired input forms.
+    ///
+    /// Can possibly return multiple values as required by Scheme,
+    /// which is why they're a vector.
     virtual std::vector<std::shared_ptr<IDataNode<Data>>> 
     call (std::vector<std::shared_ptr<IDataNode<Data>>> v) {
         // Get the arguments, bind them without evaluating to the
@@ -68,20 +74,24 @@ public:
         // Evaluate the body of the procedure on the right side.
         //
         // DO NOT DESTROY THE TREE
-        // auto result = evaluator.evaluate(shaka::eval::Procedure<
-        //      Data,
-        //      Key,
-        //      Value
-        // >());
+        auto result = evaluator.evaluate(shaka::eval::Expression<
+             Data,
+             Key,
+             Value
+        >());
 
         // If the root of the result list is multiple values,
         // then you'll need to get a multiple value list.
         //
         // Tuples, maybe? Hm...
         //
+        auto return_values =
+            std::vector<std::shared_ptr<DataNode<Data>>>();
+
         // Then, return the list.
+        return_values.push_back(result);
         
-        return std::vector<std::shared_ptr<DataNode<Data>>>();
+        return return_values;
     }
 
     virtual std::size_t         get_fixed_arity() const {
