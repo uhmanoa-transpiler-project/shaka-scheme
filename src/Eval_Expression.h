@@ -1,8 +1,8 @@
-#ifndef EVAL_QUOTE_H
-#define EVAL_QUOTE_H
+#ifndef EVAL_EXPRESSION_H
+#define EVAL_EXPRESSION_H
 #include "IEvaluatorStrategy.h"
-#include "EvaluationStrategies.h"
-
+#include "EvaluatorStrategies.h"
+#include "Eval_Quote.h"
 namespace shaka {
 
 /// Encapsulates the EvaluatorStrategy classes
@@ -15,9 +15,19 @@ class Expression : public shaka::IEvaluatorStrategy<T, Key, Value> {
 	std::shared_ptr<IDataNode<T>> evaluate(std::shared_ptr<IDataNode<T>> node,
 			std::shared_ptr<IEnvironment<Key, Value>> env) {
 
-        if (node->get_data(0)->type() == typeid(shaka::Symbol)) {
-
+        if (node->get_data()->type() == typeid(shaka::MetaTag::DEFINE)) {
+			return shaka::eval::Define<T, Key, Value>().evaluate(node, env);
         }
+
+		else if (node->get_data()->type() == typeid(shaka::Symbol)) {
+			return shaka::eval::Variable<T, Key, Value>().evaluate(node, env);
+		}
+
+		else if (node->get_data()->type() == typeid(shaka::MetaTag::QUOTE)) {
+			return shaka::eval::Quote<T, Key, Value>().evaluate(node, env);
+		}
+
+
 		
 
 	}
@@ -28,4 +38,4 @@ class Expression : public shaka::IEvaluatorStrategy<T, Key, Value> {
 
 } // namespace shaka
 
-#endif // EVAL_QUOTE_H
+#endif // EVAL_EXPRESSION_H
