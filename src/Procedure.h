@@ -49,9 +49,10 @@ public:
         ) {
             // Get the child node pointer.
             auto args_symbol_ptr = args_list_root->get_child(i);
+            /*
             // If we have a symbol, bind it.
             if(auto* symbol =
-                shaka::get<shaka::Symbol>(&(*args_symbol_ptr))) {
+                shaka::get<shaka::Symbol>(args_symbol_ptr->get())) {
                 // Set the value in our current environment
                 this->curr_env->set_value(*symbol, v[i]);
             } else {
@@ -60,6 +61,7 @@ public:
                 // Failure
                 return std::vector<std::shared_ptr<DataNode<Data>>>{nullptr};
             }
+            */
         }
 
         // Setup an Evaluator on the current environment and
@@ -86,7 +88,7 @@ public:
         // Tuples, maybe? Hm...
         //
         auto return_values =
-            std::vector<std::shared_ptr<DataNode<Data>>>();
+            std::vector<std::shared_ptr<shaka::IDataNode<Data>>>();
 
         // Then, return the list.
         return_values.push_back(result);
@@ -104,7 +106,7 @@ public:
 
 private:
     std::shared_ptr<IEnvironment<Key, Value>> parent_env;
-    std::shared_ptr<Environment<Key, Value>>  curr_env;
+    std::shared_ptr<IEnvironment<Key, Value>>  curr_env;
     std::shared_ptr<IDataNode<Data>>          body_root;
     std::size_t                               fixed_arity;
     bool                                      variable_arity;
