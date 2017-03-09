@@ -7,8 +7,14 @@ H_FILES := $(wildcard src/*.h)
 TEST_FILES := $(wildcard tests/*.cpp)
 TEST_EXECUTABLES := $(TEST_FILES:.cpp=.out)
 
+ifdef TESTCASE
 TEST_SINGLE_FILE := $(addprefix tests/, $(addsuffix .cpp, $(TESTCASE)))
 TEST_SINGLE_EXECUTABLE := $(addprefix tests/, $(addsuffix .out, $(TESTCASE)))
+else
+TESTCASE := $(shell echo $$TESTCASE)
+TEST_SINGLE_FILE := $(addprefix tests/, $(addsuffix .cpp, $(TESTCASE)))
+TEST_SINGLE_EXECUTABLE := $(addprefix tests/, $(addsuffix .out, $(TESTCASE)))
+endif
 
 # Get the corresponding obj/FILE.o paths for the CPP files.
 OBJ_FILES := $(addprefix obj/, $(notdir $(CPP_FILES:.cpp=.o)))
@@ -77,8 +83,10 @@ docs: $(CPP_FILES)
 tests: $(TEST_EXECUTABLES)
 
 test: $(TEST_SINGLE_EXECUTABLE)
+	@echo "Test case: " $(value TESTCASE)
 
 run-test: $(TEST_SINGLE_EXECUTABLE)
+	@echo "Test case: " $(value TESTCASE)
 	$(TEST_SINGLE_EXECUTABLE)
 
 $(TEST_SINGLE_EXECUTABLE): $(TEST_SINGLE_FILE)

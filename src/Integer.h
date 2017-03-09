@@ -1,6 +1,9 @@
 #ifndef INTEGER_H
 #define INTEGER_H
 #include "Rational.h"
+
+namespace shaka {
+
 class Integer {
 public:
 	~Integer() {}
@@ -108,6 +111,6 @@ bool operator!=(const Integer& lhs, const Integer& rhs) {
 	return lhs.value != rhs.value;
 }
 
-
+} // namespace shaka
 
 #endif

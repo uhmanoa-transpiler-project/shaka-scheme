@@ -3,6 +3,8 @@
 
 #include "Real.h"
 
+namespace shaka {
+
 class Rational {
 public:
 	// constructor
@@ -136,6 +138,6 @@ bool operator!=(const Rational& lhs, const Rational& rhs) {
 	return !(lhs == rhs);
 }
 
-
+} // namespace shaka
 
 #endif
