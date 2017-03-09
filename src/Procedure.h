@@ -5,7 +5,7 @@
 
 #include "IEnvironment.h"
 #include "EvaluatorStrategies.h"
-//#include "Evaluator.h"
+#include "Evaluator.h"
 
 #include "IProcedure.h"
 
@@ -30,7 +30,6 @@ public:
     /// Can possibly return multiple values as required by Scheme.
     virtual std::vector<std::shared_ptr<IDataNode<Data>>> 
     call (std::vector<std::shared_ptr<IDataNode<Data>>> v) {
-        std::cout << "lol Procedure::call" << std::endl;
         // Get the arguments, bind them without evaluating to the
         // names in the arguments subtree (the first child) of this
         // root node.
@@ -74,8 +73,6 @@ public:
         //      Key,
         //      Value
         // >());
-        //
-        
 
         // If the root of the result list is multiple values,
         // then you'll need to get a multiple value list.
@@ -83,7 +80,6 @@ public:
         // Tuples, maybe? Hm...
         //
         // Then, return the list.
-
         
         return std::vector<std::shared_ptr<DataNode<Data>>>();
     }
@@ -98,7 +94,7 @@ public:
 
 private:
     std::shared_ptr<IEnvironment<Key, Value>> parent_env;
-    std::shared_Ptr<Environment<Key, Value>>  curr_env;
+    std::shared_ptr<Environment<Key, Value>>  curr_env;
     std::shared_ptr<IDataNode<Data>>          body_root;
     std::size_t                               fixed_arity;
     bool                                      variable_arity;
