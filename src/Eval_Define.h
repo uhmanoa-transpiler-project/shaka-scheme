@@ -14,7 +14,7 @@ namespace eval {
 /// @brief Prints the types of all of the T in the tree.
 template <typename T, typename Key, typename Value>
 class Define : public shaka::IEvaluatorStrategy<T, Key, Value> {
-
+public:
     /// @brief Prints the type of all the items in the tree recursively.
     std::shared_ptr<IDataNode<T>> evaluate(
         std::shared_ptr<IDataNode<T>> node,
