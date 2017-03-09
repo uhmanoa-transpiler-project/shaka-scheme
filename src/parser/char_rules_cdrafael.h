@@ -59,6 +59,23 @@ bool is_decimal(
 		return false;
 }
 
+/// @brief Rule for '/'
+template <typename T>
+bool is_fraction(
+	InputStream&	in,
+	NodePtr		root,
+	T&		interm
+) {
+	if (in.peek() == '/')
+	{
+		in.get();
+		return true;
+	}
+
+	else
+		return false;
+}
+
 /// @brief Matches an alpha character, and then
 ///        appends it to `interm`.
 template <typename T>
