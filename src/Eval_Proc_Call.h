@@ -20,7 +20,7 @@
 template <typename T, typename Key, typename Value>
 class Proc_Call : public shaka::IEvaluatorStrategy<T, Key, Value> {
 
-	std::shared_ptr<shaka::IDataNode<T>> evaluate(std::shared_ptr<shaka::IDataNode<T>>& node,
+	std::shared_ptr<shaka::IDataNode<T>> evaluate(std::shared_ptr<shaka::IDataNode<T>> node,
 			std::shared_ptr<shaka::IEnvironment<Key, Value>> env) {
 	
 		// get the procedure associated with the symbol in the first child
