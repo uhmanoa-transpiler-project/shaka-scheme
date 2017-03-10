@@ -57,7 +57,7 @@ public:
             }
         }
     }
-
+/*
 //Need to make it case insensitive     
     bool string_equal(String &s1, String &s2){
 
@@ -100,8 +100,25 @@ public:
         }
         return false;
     }
-
-
+*/
+    friend bool operator==(const String& s1, const String& s2){
+        return s1.a_string == s2.a_string;
+    }
+    friend bool operator!=(const String& s1, const String& s2){
+        return !(s1 == s2);
+    }
+    friend bool operator<(const String& s1, const String& s2){
+        return s1.a_string < s2.a_string;
+    }
+    friend bool operator>(const String& s1, const String& s2){
+        return s1.a_string > s2.a_string;
+    }
+    friend bool operator<=(const String& s1, const String& s2){
+        return s1.a_string <= s2.a_string;
+    }
+    friend bool operator>=(const String& s1, const String& s2){
+        return s1.a_string >= s2.a_string;
+    }
 
     std::vector<char> getString(){
         return a_string;
