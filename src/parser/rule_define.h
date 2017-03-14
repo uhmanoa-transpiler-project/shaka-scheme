@@ -44,8 +44,8 @@ bool define(
         if(!alpha(in, topNode, builder))    return false;
         while(alpha(in, topNode, builder));
         NodePtr symbolNode(shaka::Symbol(builder));
+        builder.clear();
 
-        //NodePtr firstChild();
         /* Word must be followed by a space, ignore extras */
         if(!space(in, root, interm))    return false;
         while(space(in, root, c));
@@ -54,7 +54,13 @@ bool define(
         /* Ignore trailing whitespace */
         while(space(in, root, c));
         /* Must have matching closing ')'. */
-        if(match_char<char, ')'>(in, root, c)) return true;
+        if(match_char<char, ')'>(in, root, c)) {
+            NodePtr numberNode(Integer(stoi(builder)));
+            topNode->push_child(symbolNode);
+            topNode->push_child(numberNode);
+            root->push_child(topNode);
+            return true;
+        }
         return false;
     } else {
         return false;
