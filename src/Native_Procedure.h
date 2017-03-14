@@ -27,13 +27,32 @@ public:
 		if (v.size() > fixed_arity) {
 			throw std::runtime_error("Wrong number of args to native procedure");
 		}
-		else if (v[0]) {
-			if (v[0]->get_data()->type() == typeid(shaka::Number)){
+		else {
+			auto args_list_root = this->body_root->get_child(0);
+
+			for (std::size_t i = 0; i < args_list_root->get_num_children(); i++) {
+				auto args_symbol_ptr = args_list_root->get_child(i);
+
+
+			
 			
 			}
 		}
 	
 	}
+	// I don't think this really evaluates a procedure call
+	shaka::Evaluator<Data, Key, Value> evaluator(current_env, body_root);
+	
+	// What is the machine that will be used to execute the actual procedure call
+	// here. This seems to do nothing. Eval_Expression does not have the ability
+	// to evaluate a procedure call. Is it supposed to be Eval_Proc_Call's job?
+	auto result = evaluator.evaluate(shaka::Eval_Expression<Data, Key, Value>());
+
+	auto return_values = std::vector<std::shared_ptr<IDataNode<Data>>>();
+
+	return_values.push_back(result);
+
+	return return_values;
 
 	virtual std::size_t get_fixed_arity() const {
 		return fixed_arity;
@@ -44,6 +63,9 @@ public:
 	}
 
 private:
+	std::shared_ptr<IEnvironment<Key, Data>> parent_env;
+	std::shared_ptr<IEnvironment<Key, Data>> current_env;
+	std::shared_ptr<IDataNode<Data>> body_root;
 	std::size_t fixed_arity;
 	bool variable_arity;
 };
