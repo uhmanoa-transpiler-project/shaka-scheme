@@ -188,9 +188,9 @@ public:
     Token parse_string() {
         // String
         if (in.peek() == '\"') {
-            std::string buffer;
-            // Read in the rest of the string.
             in.get();
+            // Read in the rest of the string.
+            std::string buffer;
             while (in.peek() != '\"') {
                 parse_string_element(buffer);
             } in.get();
@@ -232,14 +232,87 @@ public:
         }
     }
 
-    
+    bool parse_bytevector_byte(std::string& str) {
+        if (std::isdigit(in.peek())) {
+            std::string buffer;
+            while (std::isdigit(in.peek())) {
+                buffer += in.get();
+            }
+            int num = std::stoi(buffer);
+            if (num >= 0 && num <= 255) {
+                str += buffer;
+                return true;
+            } else {
+                if (DEBUG_PRINT) {
+                    std::cerr << "Parser.parse_bytevector_byte: Not in range [0, 255]" << std::endl;
+                }
+                throw std::runtime_error("Parser.parse_bytevector_byte: Not in range [0, 255]");
+                return false;
+            }
+
+        } else {
+            if (DEBUG_PRINT) {
+                std::cerr << "Parser.parse_bytevector_byte: Not a digit" << std::endl;
+            }
+            throw std::runtime_error("Parser.parse_bytevector_byte: Not a digit");
+            return false;
+        }
+    }
 
     bool rule_hash(Token& result) {
         if (in.peek() == '#') {
             in.get();
 
+            // <bytevector> ==> #u8( <byte>* )
+            if (in.peek() == 'u') {
+                in.get();
+                if (in.peek() == '8') {
+                    in.get();
+                    if (in.peek() == '(') {
+                       in.get(); 
+                       std::string buffer = "#u8(";
+                       while (in.peek() != ')') {
+                            if (DEBUG_PRINT) {
+                                std::cerr << "buffer: " << buffer << std::endl;
+                            }
+                            if (std::isspace(in.peek())) {
+                                if (buffer[buffer.size()-1] != ' ') {
+                                    buffer += ' ';
+                                }
+                                in.get();
+                                continue;
+                            }
+                            if (in.peek() == ')') {
+                                break;
+                            } else if (std::isdigit(in.peek())) {
+                                if (!parse_bytevector_byte(buffer)) {
+                                    if (DEBUG_PRINT) {
+                                        std::cerr << "Parser.rule_hash: "
+                                        "Bytevector: Could not parse byte"
+                                        << std::endl;
+                                        throw std::runtime_error(
+                                            "Parser.rule_hash: "
+                                            "Bytevector: Could not parse byte"
+                                        );
+                                        return false;
+                                    }
+                                }
+                            }
+                       } in.get();
+                       buffer += ')';
+                       result = Token(Token::Type::BYTEVECTOR, buffer);
+                       return true;
+                    }
+                } else {
+                    if (DEBUG_PRINT) {
+                        std::cerr << "bytevector: failed to read in 8 after u" << std::endl;
+                    }
+                    throw std::runtime_error("Parser.rule_hash: bytevector invalid prefix");
+                    return false;
+                }
+
             // <character>
-            if (in.peek() == '\\') {
+            } else if (in.peek() == '\\') {
                 in.get();
                 if (DEBUG_PRINT) {
                     std::cerr << "in character" << std::endl;
@@ -424,6 +497,35 @@ public:
 
     }
 
+    Token parse_number(std::string& buffer) {
+        // Parse sign if it's there
+        if (is_explicit_sign(in.peek())) {
+            buffer += in.get();
+        }
+        // Parse the integer part.
+        while (std::isdigit(in.peek())) {
+            buffer += in.get();
+        }
+        // Parse in a dot if it's a float
+        if (in.peek() == '.') {
+            buffer += in.get();
+        }
+        // Parse in the fractional integer part.
+        while (std::isdigit(in.peek())) {
+            buffer += in.get();
+        }
+        // Make sure that it's the end of the number
+        if (is_delimiter(in.peek())) {
+            return Token(Token::Type::NUMBER, buffer);
+        } else {
+            if (DEBUG_PRINT) {
+                std::cerr << "Tokenizer.parse_number: Did not find following delimiter" << std::endl;
+            }
+            throw std::runtime_error("Tokenizer.parse_number: Did not find following delimiter");
+            return Token(Token::Type::INVALID);
+        }
+    }
+
     Token parse_token () {
         bool done = false;
         while (!done) {
@@ -516,11 +618,21 @@ public:
                             buffer += in.get(); 
                         }
                         return Token(Token::Type::IDENTIFIER, buffer);
+
+                    // if it's a digit, it's probably a number
+                    } else if (std::isdigit(in.peek())) {
+                        return parse_number(buffer);
+                        
                     // no <dot subsequent> ==> error!
                     } else {
                         throw "Parser.parse_token: bad dot subsequent identifier";
                         return Token(Token::Type::END_OF_FILE);
                     }
+
+                // Parse in a number
+                } else if (std::isdigit(in.peek())) {
+                    std::string buffer;
+                    return parse_number(buffer);
 
                 // No other identifier? Just <explicit sign> is fine.
                 } else {
@@ -541,6 +653,12 @@ public:
                     throw "Parser.parse_token: bad dot subsequent identifier";
                     return Token(Token::Type::END_OF_FILE);
                 }
+
+            // <number> ==> <num 10> for now
+            /// @todo Add real, rational, complex for different radixes.
+            } else if (std::isdigit(in.peek())) {
+                std::string buffer;
+                return parse_number(buffer);
 
             // NOT A VALID TOKEN!!!
             } else {
