@@ -1,6 +1,12 @@
 #ifndef SHAKA_PARSER_TOKENIZER_H
 #define SHAKA_PARSER_TOKENIZER_H
 
+#ifndef DEBUG_PRINT
+#define DEBUG_PRINT 0
+#else
+#define DEBUG_PRINT 1
+#endif
+
 namespace shaka {
 
 class Tokenizer {
@@ -32,7 +38,10 @@ public:
 
     void read_next_token () {
         Token t = parse_token();
-        std::cout << "Parsed: " << static_cast<int>(t.type) << " :: " << t.str << std::endl;
+        if (DEBUG_PRINT) {
+            std::cerr << "Parsed: " << static_cast<int>(t.type)
+            << " :: " << t.str << std::endl;
+        }
         tokens.push_back(t); 
     }
 
@@ -55,6 +64,127 @@ public:
         }
     }
 
+    void parse_string_element(std::string& str) {
+        if (in.peek() == '\\') {
+            in.get();
+            // what type of escape?
+            if (std::isalpha(in.peek())) {
+                // Any of the mnemonic escapes?
+                if (in.peek() == 'a') {
+                    in.get();
+                    str += '\a';
+                    return;
+                } else if (in.peek() == 'b') {
+                    in.get();
+                    str += '\b';
+                    return;
+                } else if (in.peek() == 't') {
+                    in.get();
+                    str += '\t';
+                    return;
+                } else if (in.peek() == 'n') {
+                    in.get();
+                    str += '\n';
+                    return;
+                } else if (in.peek() == 'r') {
+                    in.get();
+                    str += '\r';
+                    return;
+
+                // If the first letter is 'x', then possibly hex digit
+                } else if (in.peek() == 'x') {
+                    in.get();
+
+                    // If the next character is a hex digit,
+                    // then go into hex scalar value.
+                    if (is_hex_digit(in.peek())) {
+                        Token result(Token::Type::INVALID);
+                        if (parse_hex_scalar_value_character(result)) {
+                            str += result.str;
+                            return;
+                        } else {
+                            str += "x";
+                        }
+
+                    // Otherwise, it's just a literal 'x'
+                    } else {
+                        str += "x";
+                        return;
+                    }
+
+
+                // Otherwise, it's going to either be a single character escape
+                // or a named character escape.
+                } else {
+                    if (DEBUG_PRINT) {
+                        std::cerr << "in single/named char escape" << std::endl;
+                    }
+                    std::string buffer;
+                    while (!is_delimiter(in.peek()) && in.peek() != EOF) {
+                        buffer += in.get();
+                    }
+                    if (DEBUG_PRINT) {
+                        std::cerr << "buffer: " << buffer << std::endl;
+                        std::cerr << "buffer.size(): " << buffer.size() << std::endl;
+                    }
+                    // If escape for whitespace, read in whitespace and then
+                    // continue reading string elements.
+                    if (std::isspace(in.peek()) && buffer.size() == 0) {
+                        while (std::isspace(in.peek())) {
+                            in.get();
+                        }
+                        return;
+
+                    // named character escape?
+                    } else if (buffer == "alarm") {
+                        str += "\a";
+                        return;
+                    } else if (buffer == "backspace") {
+                        str += "\b";
+                        return;
+                    } else if (buffer == "delete") {
+                        str += "\x7F";
+                        return;
+                    } else if (buffer == "escape") {
+                        str += "\x1B";
+                        return;
+                    } else if (buffer == "newline") {
+                        str += "\n";
+                        return;
+                    } else if (buffer == "null") {
+                        str += "\0";
+                        return;
+                    } else if (buffer == "return") {
+                        str += "\r";
+                        return;
+                    } else if (buffer == "space") {
+                        str += " ";
+                        return;
+                    } else if (buffer == "tab") {
+                        str += "\t";
+                        return;
+
+                    // Otherwise, error!
+                    } else {
+                        throw "Parser.parse_token: Bad character escape";
+                        return;
+                    }
+                } // character escape
+            // Else, literal " or etc.
+            } else if (in.peek() == '\"') {
+                in.get();
+                str += "\"";
+                return;
+            } else {
+                str += in.peek();
+                in.get();
+            }
+        } else {
+            str += in.peek();
+            in.get();
+        }
+    }
+
     Token parse_string() {
         // String
         if (in.peek() == '\"') {
@@ -62,8 +192,7 @@ public:
             // Read in the rest of the string.
             in.get();
             while (in.peek() != '\"') {
-                buffer += in.peek();
-                in.get();
+                parse_string_element(buffer);
             } in.get();
             return Token(Token::Type::STRING, buffer);
         } else {
@@ -72,13 +201,38 @@ public:
     }
 
     void parse_line_comment() {
-        std::cout << "What LINE COMMENT is this? \'" << in.peek() << "\'" << std::endl;
+        if (DEBUG_PRINT) {
+            std::cout << "What LINE COMMENT is this? \'" <<
+                in.peek() << "\'" << std::endl;
+        }
         // If it's a comment, read until the
         // end of the lie.
         while (in.peek() != '\n') {
             in.get();
         } in.get();
     }
+
+    bool parse_character(Token& result) {
+
+    }
+
+    bool parse_hex_scalar_value_character(Token& result) {
+        if (is_hex_digit(in.peek())) {
+            std::string buffer;
+            while(is_hex_digit(in.peek())) {
+                buffer += in.get();
+            }
+            int i = std::stoi(buffer, 0, 16);
+            buffer.clear();
+            buffer += static_cast<char>(i);
+            result = Token(Token::Type::CHARACTER, buffer);
+            return true;
+        } else {
+            throw std::runtime_error("Tokenizer: Could not parse CHARACTER.hex_scalar_value");
+        }
+    }
+
+    
 
     bool rule_hash(Token& result) {
         if (in.peek() == '#') {
@@ -87,7 +241,9 @@ public:
             // <character>
             if (in.peek() == '\\') {
                 in.get();
-                std::cout << "in character" << std::endl;
+                if (DEBUG_PRINT) {
+                    std::cerr << "in character" << std::endl;
+                }
 
                 // what type of escape?
                 if (std::isalpha(in.peek())) {
@@ -98,15 +254,7 @@ public:
                         // If the next character is a hex digit,
                         // then go into hex scalar value.
                         if (is_hex_digit(in.peek())) {
-                            std::string buffer;
-                            while(is_hex_digit(in.peek())) {
-                                buffer += in.get();
-                            }
-                            int i = std::stoi(buffer, 0, 16);
-                            buffer.clear();
-                            buffer += static_cast<char>(i);
-                            result = Token(Token::Type::CHARACTER, buffer);
-                            return true;
+                            return parse_hex_scalar_value_character(result);
 
                         // Otherwise, it's just a literal 'x'
                         } else {
@@ -117,13 +265,17 @@ public:
                     // Otherwise, it's going to either be a single character escape
                     // or a named character escape.
                     } else {
-                        std::cout << "in single/named char escape" << std::endl;
+                        if (DEBUG_PRINT) {
+                            std::cerr << "in single/named char escape" << std::endl;
+                        }
                         std::string buffer;
                         while (!is_delimiter(in.peek()) && in.peek() != EOF) {
                             buffer += in.get();
                         }
-                        std::cout << "buffer: " << buffer << std::endl;
-                        std::cout << "buffer.size(): " << buffer.size() << std::endl;
+                        if (DEBUG_PRINT) {
+                            std::cerr << "buffer: " << buffer << std::endl;
+                            std::cerr << "buffer.size(): " << buffer.size() << std::endl;
+                        }
                         // single character escape?
                         if (buffer.size() == 1) {
                             result = Token(Token::Type::CHARACTER, buffer);
@@ -164,8 +316,9 @@ public:
                             return false;
                         }
                     } // character escape
+                }
 
-                // <boolean> #t or #true? 
+            // <boolean> #t or #true? 
             } else if (in.peek() == 't') {
 
                 std::string buffer;
@@ -212,7 +365,10 @@ public:
                             depth_count++;
                         }
                     } else {
-                        std::cout << "What is this? \'" << in.peek() << "\'" << std::endl;
+                        if (DEBUG_PRINT) {
+                            std::cerr << "What is this? \'" << in.peek()
+                                << "\'" << std::endl;
+                        }
                         in.get();
                     }
                 }
@@ -242,25 +398,30 @@ public:
                     result = Token(Token::Type::DIRECTIVE, "no-fold-case");
                     return true;
                 } else {
-                    std::cerr << "BROKE ON: " << in.peek() << std::endl;
+                    if (DEBUG_PRINT) {
+                        std::cerr << "BROKE ON: " << in.peek() << std::endl;
+                    }
                     throw "Parser.parse_token: invalid directive";
                     result = Token(Token::Type::END_OF_FILE);
                     return false;
                 }
             } else {
-                std::cerr << "BROKE ON: " << in.peek() << std::endl;
+                if (DEBUG_PRINT) {
+                    std::cerr << "BROKE ON: " << in.peek() << std::endl;
+                }
                 throw "Parser.parse_token: invalid hash directive";
                 result = Token(Token::Type::END_OF_FILE);
                 return false;
             }
         } else {
-            std::cerr << "BROKE ON: " << in.peek() << std::endl;
+            if (DEBUG_PRINT) {
+                std::cerr << "BROKE ON: " << in.peek() << std::endl;
+            }
             throw "Parser.parse_token: is not a hash? wrong";
             result = Token(Token::Type::END_OF_FILE);
             return false;
-
-            }
         }
+
     }
 
     Token parse_token () {
@@ -286,13 +447,17 @@ public:
 
             // End of file
             } else if (in.peek() == EOF) {
-                std::cout << "What EOF is this? \'" << in.peek() << "\'" << std::endl;
+                if (DEBUG_PRINT) {
+                    std::cerr << "What EOF is this? \'" << in.peek() << "\'" << std::endl;
+                }
                 in.get();
                 return Token(Token::Type::END_OF_FILE);
 
             // Skip whitespace
             } else if (std::isspace(in.peek())) {
-                std::cout << "What space is this? \'" << in.peek() << "\'" << std::endl;
+                if (DEBUG_PRINT) {
+                    std::cerr << "What space is this? \'" << in.peek() << "\'" << std::endl;
+                }
                 in.get();
                 done = false;
 
@@ -307,7 +472,9 @@ public:
 
             // Identifier ==> <initial> <subsequent>*
             } else if (is_initial(in.peek())) {
-                std::cout << "What INITIAL is this? \'" << in.peek() << "\'" << std::endl;
+                if (DEBUG_PRINT) {
+                    std::cout << "What INITIAL is this? \'" << in.peek() << "\'" << std::endl;
+                }
                 std::string buffer;
                 buffer += in.get();
                 // Keep getting subsequent if needed.
@@ -377,7 +544,9 @@ public:
 
             // NOT A VALID TOKEN!!!
             } else {
-                std::cerr << "BROKE ON: " << in.peek() << std::endl;
+                if (DEBUG_PRINT) {
+                    std::cerr << "BROKE ON: " << in.peek() << std::endl;
+                }
                 throw "Parser.parse_token: invalid token";
                 return Token(Token::Type::END_OF_FILE);
             }
@@ -562,10 +731,6 @@ private:
     std::deque<Token> tokens;
 };
 
-std::ostream& operator<< (std::ostream& out, Token rhs) {
-    out << "Token(" << static_cast<int>(rhs.type) << "," << rhs.str << ")";
-    return out;
-}
 
 } // namespace shaka
 

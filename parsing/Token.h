@@ -8,6 +8,7 @@ namespace shaka {
 struct Token {
 public:
     enum class Type : int {
+        INVALID,
         IDENTIFIER,
         BOOLEAN_TRUE,
         BOOLEAN_FALSE,
@@ -50,6 +51,11 @@ public:
         return !(operator==(other));
     }
 };
+
+std::ostream& operator<< (std::ostream& out, Token rhs) {
+    out << "Token(" << static_cast<int>(rhs.type) << ",\"" << rhs.str << "\")";
+    return out;
+}
 
 } // namespace shaka
 
