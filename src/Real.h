@@ -1,7 +1,11 @@
 #ifndef REAL_H
 #define REAL_H
+
 #include "Complex.h"
 #include <cmath>
+
+namespace shaka {
+
 class Real {
 public:
 	Real(double v) : value(v) {}
@@ -82,5 +86,7 @@ bool operator<=(const Real& lhs, const Real& rhs) {
 bool operator!=(const Real& lhs, const Real& rhs) {
 	return lhs.value != rhs.value;
 }
+
+} // namespace shaka
 
 #endif

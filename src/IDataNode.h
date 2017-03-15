@@ -10,16 +10,6 @@ namespace shaka {
 /// @brief The interface for our internal `DataNode` data structure.
 ///
 /// Each IDataNode will have children and parents.
-/// 
-/// IDataNode inherits from std::enable_shared_from_this<IDataNode<T>>
-/// in order to allow setting itself as a node's parent.
-/// 
-/// This capability is important -- otherwise, creating some way of
-/// passing a parent node reference to the child node becomes slightly
-/// harder.
-///
-/// @todo The current interface is a bit too opinionated. Perhaps
-///       change it later.
 template <typename T>
 class IDataNode : public std::enable_shared_from_this<IDataNode<T>> {
 public:
