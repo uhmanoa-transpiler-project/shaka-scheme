@@ -37,6 +37,22 @@ public:
         }
     }
 
+    Token peek () {
+        if (!tokens.empty()) {
+            auto front = tokens.front();
+            return front;
+        } else {
+            try {
+                this->read_next_token();
+            } catch (const char* c) {
+                std::cerr << c << std::endl;
+                throw c;
+            }
+            auto front = tokens.front();
+            return front;
+        }
+    }
+
     void unget (Token t) {
         tokens.push_front(t);
     }
