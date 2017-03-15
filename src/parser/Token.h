@@ -57,11 +57,26 @@ public:
     std::string get_string() const {
         return this->str;
     }
+
+    friend bool operator== (const Token& lhs, const Token& rhs);
+    friend bool operator!= (const Token& lhs, const Token& rhs);
+
 };
 
 std::ostream& operator<< (std::ostream& out, Token rhs) {
     out << "Token(" << static_cast<int>(rhs.type) << ",\"" << rhs.str << "\")";
     return out;
+}
+
+bool operator== (const Token& lhs, const Token& rhs) {
+    return (
+        lhs.type == rhs.type &&
+        lhs.str == rhs.str
+    );
+}
+
+bool operator!= (const Token& lhs, const Token& rhs) {
+    return !operator==(lhs, rhs);
 }
 
 } // namespace shaka
