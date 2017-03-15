@@ -15,7 +15,10 @@ namespace shaka {
 namespace parser {
 namespace rule {
 
-// BNF:
+// BNF
+// Official:
+// 
+//
 // <define> ::= (\s*define\s+<letter>+\s+<number>\s*)
 template <typename T>
 bool define(
