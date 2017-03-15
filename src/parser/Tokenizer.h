@@ -1,6 +1,11 @@
 #ifndef SHAKA_PARSER_TOKENIZER_H
 #define SHAKA_PARSER_TOKENIZER_H
 
+#include "parser/Token.h"
+
+#include <string>
+#include <deque>
+
 #ifndef DEBUG_PRINT
 #define DEBUG_PRINT 0
 #else
@@ -210,10 +215,6 @@ public:
         while (in.peek() != '\n') {
             in.get();
         } in.get();
-    }
-
-    bool parse_character(Token& result) {
-
     }
 
     bool parse_hex_scalar_value_character(Token& result) {
