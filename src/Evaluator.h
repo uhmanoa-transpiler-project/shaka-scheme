@@ -30,10 +30,10 @@ public:
     /// 
     /// @note The IEvaluatorStrategy uses polymorphism with a rvalue-reference.
     ///       This is to avoid the use of pointers.
-    void evaluate(IEvaluatorStrategy<T, Key, Value>&& strategy) {
+    std::shared_ptr<IDataNode<T>> evaluate(IEvaluatorStrategy<T, Key, Value>&& strategy) {
         /// Sets the current node's result to the result of evaluating the
         /// current node.
-        strategy.evaluate(current_node, current_env);
+        return strategy.evaluate(current_node, current_env);
     }
 
     /// @brief Returns the `current_node`

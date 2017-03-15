@@ -10,7 +10,7 @@ TEST(Parser_integer, single_integer) {
     std::stringstream iss ("123");
     std::string temp;
 
-    auto b = shaka::parser::rule::integer
+    bool b = shaka::parser::rule::integer
         <std::string>(iss, nullptr, temp);
 
     ASSERT_TRUE(b);
