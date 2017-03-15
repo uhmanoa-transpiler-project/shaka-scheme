@@ -76,7 +76,7 @@ bool operator== (const Token& lhs, const Token& rhs) {
 }
 
 bool operator!= (const Token& lhs, const Token& rhs) {
-    return operator==(lhs, rhs);
+    return !operator==(lhs, rhs);
 }
 
 } // namespace shaka
