@@ -49,6 +49,14 @@ public:
     bool operator!= (const Token& other) {
         return !(operator==(other));
     }
+
+    shaka::Token::Type get_type() const {
+        return this->type;
+    }
+
+    std::string get_string() const {
+        return this->str;
+    }
 };
 
 std::ostream& operator<< (std::ostream& out, Token rhs) {
