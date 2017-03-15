@@ -11,9 +11,9 @@ namespace eval {
 template <typename T, typename Key, typename Value > 
 class Quote : public shaka::IEvaluatorStrategy<T, Key, Value> {
 
-	std::shared_ptr<IDataNode<T>> evaluate(std::shared_ptr<IDataNode<T>>& node,
+	std::shared_ptr<IDataNode<T>> evaluate(std::shared_ptr<IDataNode<T>> node,
 			std::shared_ptr<IEnvironment<Key, Value>> env) {
-		return node = node->get_child(0);
+		return node->get_child(0);
 
 	}
 
