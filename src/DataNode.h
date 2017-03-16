@@ -8,6 +8,7 @@
 #include "IDataNode.h"
 #include "Symbol.h"
 #include "Number.h"
+#include "Procedure.h"
 
 namespace shaka {
 
