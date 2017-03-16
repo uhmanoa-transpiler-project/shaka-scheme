@@ -32,7 +32,8 @@ boost::variant<
     int,
     shaka::Symbol,
     shaka::MetaTag,
-    shaka::Number
+    shaka::Number,
+    shaka::Procedure
 >;
 
 
