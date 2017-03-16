@@ -1,5 +1,5 @@
-#ifndef EVAL_PROC_CALL_H
-#define EVAL_PROC_CALL_H
+#ifndef SHAKA_EVAL_PROC_CALL_H
+#define SHAKA_EVAL_PROC_CALL_H
 
 #include "IEvaluatorStrategy.h"
 #include "IDataNode.h"
@@ -16,6 +16,7 @@
 // returns a pointer to the list node with its child node(s)
 // updated to be the result(s) of the procedure call
 
+namespace shaka {
 
 template <typename T, typename Key, typename Value>
 class Proc_Call : public shaka::IEvaluatorStrategy<T, Key, Value> {
@@ -69,4 +70,5 @@ class Proc_Call : public shaka::IEvaluatorStrategy<T, Key, Value> {
 
 };
 
-#endif
+} // namespace shaka
+#endif // SHAKA_EVAL_PROC_CALL_H
