@@ -1,9 +1,13 @@
 #include "gtest/gtest.h"
 
-#include "Eval_Quote.h"
 #include "DataNode.h"
 #include "Environment.h"
 #include "Evaluator.h"
+#include "Procedure.h"
+
+#include "Eval_Quote.h"
+
+#include "Eval_Expression_impl.h"
 
 using Data = shaka::Data;
 using DataTree = shaka::DataNode<Data>;
@@ -18,20 +22,11 @@ TEST(Quote, initialize_and_test_quote){
 	root->push_child(shaka::Symbol("a"));
 
 	// /* constructing evaluator */
-	shaka::Evaluator<Data, shaka::Symbol, std::shared_ptr<IDataTree>> evaluator(
-		env,
-		root
-	);
+	shaka::Evaluator evaluator(root, env);
 
-	evaluator.evaluate(shaka::eval::Quote<
-		Data, 
-		shaka::Symbol, 
-		std::shared_ptr<IDataTree>
-	>());
+	auto result = evaluator.evaluate(shaka::eval::Quote());
 
-	auto result = evaluator.get_node();
 	ASSERT_EQ(shaka::Symbol("a"), shaka::get<shaka::Symbol>(*result->get_data()));
-
 
 }
 

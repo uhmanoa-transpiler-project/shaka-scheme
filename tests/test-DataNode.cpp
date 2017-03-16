@@ -1,5 +1,7 @@
 #include "gtest/gtest.h"
 #include "DataNode.h"
+#include "Procedure.h"
+#include "Eval_Expression_impl.h"
 
 #include <boost/variant.hpp>
 
@@ -11,9 +13,97 @@ using DataTree = shaka::DataNode<shaka::Data>;
 
 /// @brief Basic default constructor test
 TEST(DataNode, constructor_default) {
-    DataTree root(shaka::MetaTag::LIST);
+    DataTree root(shaka::Data(shaka::MetaTag::LIST));
 
     ASSERT_TRUE(true);
+}
+
+/// @brief Parameterized typed DataNode test
+TEST(DataNode, parameterized_type) {
+    enum class MetaTag{
+        DEFINE,
+        PROC_CALL
+    };
+
+    using Data = boost::variant<
+        MetaTag,
+        int,
+        std::string
+    >;
+    using DataTree = shaka::DataNode<Data>;
+   
+    // Defined 3 shaka::DataNode<Data>
+    DataTree root0(MetaTag::DEFINE);
+    DataTree root1(5);
+    DataTree root2("Hello World!!");
+
+    // retrieve
+    auto data0 = boost::get<MetaTag>(*root0.get_data());
+    auto data1 = boost::get<int>(*root1.get_data());
+    auto data2 = boost::get<std::string>(*root2.get_data());
+
+    // Here is now to check the type inside the node
+    if(MetaTag* ptr = boost::get<MetaTag>(root0.get_data().get())){
+        std::cout << "Data in Root0 is MetaTag" << std::endl;
+    }
+    else if(int* ptr = boost::get<int>(root0.get_data().get())){
+        std::cout << "Data in Root0 is int" << std::endl;
+    }
+    else if(std::string* ptr = boost::get<std::string>(root0.get_data().get())){
+        std::cout << "Data in Root0 is std::string" << std::endl;
+    }
+
+    //std::shared_ptr<DataTree>
+}
+
+TEST(DataNode, create_list) {
+    // Create a root node with a list
+    auto root = std::make_shared<DataTree>(shaka::MetaTag::LIST);
+
+    // Push children to the root node.
+    root->push_child(shaka::Number(1));
+    root->push_child(shaka::Number(2));
+    root->push_child(shaka::Number(3));
+
+    // Get the pointer to the data of the first child
+    auto first_child_ptr = root->get_child(0);
+
+    // Get an `int` from the data pointer inside the DataNode.
+    auto first_child_data = shaka::get<shaka::Number>( *first_child_ptr->get_data() );
+
+    // Is 1 == first_child_data?
+    ASSERT_EQ(shaka::Number(1), first_child_data);
+
+    // Get the parent of the first child
+    auto first_childs_parent = first_child_ptr->get_parent();
+
+    // Is the first child's parent root?
+    ASSERT_EQ(first_childs_parent, root);
+}
+
+TEST(DataNode, create_and_verify_list) {
+    // Create a LIST root node, and then 
+    // push three ints that should add up to 10.
+    //
+    // Then, using ONLY the root node,
+    // get the three children,
+    // get the ints from them
+    // add them together
+    // and assert that their sum is equal to 10.
+    auto root = std::make_shared<DataTree>(shaka::MetaTag::LIST);
+
+    root->push_child(shaka::Number(0));
+    root->push_child(shaka::Number(1));
+    root->push_child(shaka::Number(9));
+
+    auto var1 = shaka::get<shaka::Number>(*root->get_child(0)->get_data());
+    auto var2 = shaka::get<shaka::Number>(*root->get_child(1)->get_data());
+    auto var3 = shaka::get<shaka::Number>(*root->get_child(2)->get_data());
+
+    ASSERT_EQ(
+        shaka::Number(10),
+        var1+var2+var3
+    );
 }
 
 
@@ -40,12 +130,12 @@ TEST(DataNode, push_and_get_child) {
     // @note YOU NEED TO USE A SHARED_PTR TO HOLD THE ROOT.
     //       OTHERWISE, ADDING CHILDREN WILL NOT WORK!
     auto root = std::make_shared<DataTree>( 
-        std::string("Hello ")
+        shaka::Symbol("Hello ")
     );
 
     // Create a std::shared_ptr to a node.
     auto node = std::make_shared<DataTree>(
-        std::string("world!")
+        shaka::Symbol("world!")
     );
 
     // Add that node to the tree.
@@ -257,7 +347,6 @@ TEST(DataNode, traverse_tree_post_order_sum) {
 
 /// @todo In-order traversal of a tree.
 
-/*
 /// @brief Pushes, and then removes a child by index.
 TEST(DataNode, get_parent) {
     // Initialize the root node with a boolean value.
@@ -297,8 +386,10 @@ TEST(DataNode, get_parent) {
 }
 /// @todo Test node insertion with insert_node()
 
+/*
 */
 /// @todo Test set_node()
+//
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
 
