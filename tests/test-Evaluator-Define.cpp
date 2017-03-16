@@ -6,10 +6,16 @@
 
 #include <boost/variant.hpp>
 
+#include "Data.h"
 #include "DataNode.h"
 #include "Environment.h"
 #include "Evaluator.h"
 #include "Eval_Define.h"
+#include "Procedure.h"
+
+#include "Eval_Define_impl.h"
+#include "Eval_Variable_impl.h"
+#include "Eval_PrintTree.h"
 
 using Data = shaka::Data;
 
@@ -20,7 +26,7 @@ using Environment =
     shaka::Environment<shaka::Symbol, std::shared_ptr<IDataTree>>;
 
 
-TEST(Evaluator_define, define_symbol_int) {
+TEST(Evaluator_define, define_symbol_number) {
     // Made the root node.
     std::shared_ptr<DataTree> root = std::make_shared<DataTree>(shaka::MetaTag::DEFINE);
 
@@ -29,22 +35,28 @@ TEST(Evaluator_define, define_symbol_int) {
     // Pushed the symbol
     root->push_child(shaka::Symbol("a"));
     // Pushed a value
-    root->push_child(1);
+    root->push_child(shaka::Number(1));
+
+    ASSERT_EQ(root->get_num_children(), 2);
 
     // /* constructing evaluator */
-    shaka::Evaluator<Data, shaka::Symbol, std::shared_ptr<IDataTree>> evaluator(
-        env,
-        root
+    shaka::Evaluator evaluator(
+        root,
+        env
     );
 
     // Evaluate the next thing using the Define strategy.
-    evaluator.evaluate(shaka::eval::Define<
-        Data,
-        shaka::Symbol,
-        std::shared_ptr<IDataTree>
-    >());
+    evaluator.evaluate(shaka::eval::Define());
 
-    ASSERT_EQ(1, shaka::get<int>(*env->get_value(shaka::Symbol("a"))->get_data()));
+    for (auto it : env->get_keys()) {
+        std::cout << it.get_value() << std::endl;
+    }
+
+    ASSERT_EQ(root->get_num_children(), 2);
+
+    ASSERT_EQ(typeid(shaka::Number), env->get_value(shaka::Symbol("a"))->get_data()->type());
+
+    ASSERT_EQ(shaka::Number(1), shaka::get<shaka::Number>(*env->get_value(shaka::Symbol("a"))->get_data()));
 }
 
 TEST(Evaluator_define, define_symbol_list) {
@@ -59,27 +71,33 @@ TEST(Evaluator_define, define_symbol_list) {
 
     // Pushed a literal list of values.
     auto list_node = root->push_child(shaka::MetaTag::LIST);
-    list_node->push_child(1);
-    list_node->push_child(2);
-    list_node->push_child(3);
+    list_node->push_child(shaka::Number(1));
+    list_node->push_child(shaka::Number(2));
+    list_node->push_child(shaka::Number(3));
 
     // /* constructing evaluator */
-    shaka::Evaluator<Data, shaka::Symbol, std::shared_ptr<IDataTree>> evaluator(
-        env,
-        root
+    shaka::Evaluator evaluator(
+        root,
+        env
     );
+    std::cout << "asdf" << std::endl;
 
+    evaluator.evaluate(shaka::eval::PrintTree<std::cout>());
     // Evaluate the next thing using the Define strategy.
-    evaluator.evaluate(shaka::eval::Define<
-        Data,
-        shaka::Symbol,
-        std::shared_ptr<IDataTree>
-    >());
+    evaluator.evaluate(shaka::eval::Define());
+    std::cout << "asdf" << std::endl;
+
+    ASSERT_EQ(typeid(shaka::MetaTag), env->get_value(shaka::Symbol("a"))->get_data()->type());
+    std::cout << "asdf" << std::endl;
 
     ASSERT_EQ(shaka::MetaTag::LIST, shaka::get<shaka::MetaTag>(*env->get_value(shaka::Symbol("a"))->get_data()));
-    ASSERT_EQ(1, shaka::get<int>(*env->get_value(shaka::Symbol("a"))->get_child(0)->get_data()));
-    ASSERT_EQ(2, shaka::get<int>(*env->get_value(shaka::Symbol("a"))->get_child(1)->get_data()));
-    ASSERT_EQ(3, shaka::get<int>(*env->get_value(shaka::Symbol("a"))->get_child(2)->get_data()));
+    std::cout << "asdf" << std::endl;
+    ASSERT_EQ(shaka::Number(1), shaka::get<shaka::Number>(*env->get_value(shaka::Symbol("a"))->get_child(0)->get_data()));
+    std::cout << "asdf" << std::endl;
+    ASSERT_EQ(shaka::Number(2), shaka::get<shaka::Number>(*env->get_value(shaka::Symbol("a"))->get_child(1)->get_data()));
+    std::cout << "asdf" << std::endl;
+    ASSERT_EQ(shaka::Number(3), shaka::get<shaka::Number>(*env->get_value(shaka::Symbol("a"))->get_child(2)->get_data()));
+    std::cout << "asdf" << std::endl;
 }
 
 
