@@ -12,6 +12,8 @@
 #include "Symbol.h"
 #include "DataNode.h"
 
+#include "Eval_Expression.h"
+
 #include "EvaluatorStrategyDefinitions.h"
 
 namespace shaka{
@@ -26,12 +28,7 @@ public:
 
 	std::shared_ptr<IDataNode<T>> evaluate(
 			std::shared_ptr<IDataNode<T>> node, 
-			std::shared_ptr<IEnvironment<Key,Value>> env){
-	
-		return env->get_value(shaka::get<Key>(*node->get_data()));
-	}
-
-
+			std::shared_ptr<IEnvironment<Key,Value>> env);
 
 };
 

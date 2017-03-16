@@ -16,11 +16,11 @@ class Procedure;
 /// For example, an `ATOM` should have no children nodes, but
 /// a `LIST` should have links to its children as a vector of pointers.
 enum class MetaTag : int {
-    DEFINE,
-    LIST,
-    PROC_CALL,
-    QUOTE,
-    LAMBDA
+    DEFINE = 0,
+    LIST = 1,
+    PROC_CALL = 2,
+    QUOTE = 3,
+    LAMBDA = 4
 };
 
 using Data = typename

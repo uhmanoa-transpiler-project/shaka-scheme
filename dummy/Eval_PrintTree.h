@@ -29,8 +29,12 @@ public:
         std::shared_ptr<IEnvironment<Key, Value>> env
     ) {
         out << node->get_data()->type().name();
-        if (node->get_data()->type() == typeid(int)) {
-            out << '(' << shaka::get<int>(*node->get_data()) << ')';
+        if (node->get_data()->type() == typeid(shaka::Symbol)) {
+            out << "(" << shaka::get<shaka::Symbol>(*node->get_data()).get_value() << ')';
+        } else if (node->get_data()->type() == typeid(shaka::Number)) {
+            out << "()";
+        } else if (node->get_data()->type() == typeid(shaka::MetaTag)) {
+            out << "(" << static_cast<int>(shaka::get<shaka::MetaTag>(*node->get_data())) << ')';
         }
         out << std::endl;
         for (size_t i = 0; i < node->get_num_children(); ++i) {

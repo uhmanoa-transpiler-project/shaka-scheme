@@ -6,8 +6,6 @@
 #include "Symbol.h"
 #include "DataNode.h"
 
-#include "EvaluatorStrategyDefinitions.h"
-
 namespace shaka {
 
 class IEvaluatorStrategy;

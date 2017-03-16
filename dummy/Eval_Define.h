@@ -30,17 +30,7 @@ public:
     std::shared_ptr<IDataNode<T>> evaluate(
         std::shared_ptr<IDataNode<T>> node,
         std::shared_ptr<IEnvironment<Key, Value>> env
-    ) {
-        // Create an evaluate to evaluate the right child node.
-        shaka::Evaluator evaluator(node->get_child(1), env);
-        // Set the environment[symbol] entry to the result of
-        // evaluation of the expression term.
-        env->set_value(
-            shaka::get<Key>(*node->get_child(0)->get_data()),
-            evaluator.evaluate(shaka::eval::Expression())
-         );
-        return nullptr;
-    }
+    ); 
 };
 
 } // namespace eval

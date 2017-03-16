@@ -30,41 +30,7 @@ public:
 
 	std::shared_ptr<IDataNode<T>> evaluate(
             std::shared_ptr<IDataNode<T>> node,
-			std::shared_ptr<IEnvironment<Key, Value>> env) {
-
-        shaka::Evaluator evaluator(node, env);
-
-        if (node->get_data()->type() == typeid(shaka::MetaTag::DEFINE)) {
-			return evaluator.evaluate(shaka::eval::Define());
-        }
-
-		else if (node->get_data()->type() == typeid(shaka::Symbol)) {
-			return evaluator.evaluate(shaka::eval::Variable());
-		}
-
-		else if (node->get_data()->type() == typeid(shaka::MetaTag::QUOTE)) {
-			return evaluator.evaluate(shaka::eval::Quote());
-		}
-
-
-        /*
-        if (node->get_data()->type() == typeid(shaka::MetaTag::DEFINE)) {
-			return shaka::eval::Define().evaluate(node, env);
-        }
-
-		else if (node->get_data()->type() == typeid(shaka::Symbol)) {
-			return shaka::eval::Variable().evaluate(node, env);
-		}
-
-		else if (node->get_data()->type() == typeid(shaka::MetaTag::QUOTE)) {
-			return shaka::eval::Quote().evaluate(node, env);
-		}
-        */
-
-        return nullptr;
-		
-
-	}
+			std::shared_ptr<IEnvironment<Key, Value>> env); 
 
 };
 

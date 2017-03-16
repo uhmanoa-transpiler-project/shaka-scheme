@@ -3,7 +3,11 @@
 #include "DataNode.h"
 #include "Environment.h"
 #include "Evaluator.h"
+#include "Procedure.h"
+
 #include "Eval_Quote.h"
+
+#include "Eval_Expression_impl.h"
 
 using Data = shaka::Data;
 using DataTree = shaka::DataNode<Data>;
@@ -18,7 +22,7 @@ TEST(Quote, initialize_and_test_quote){
 	root->push_child(shaka::Symbol("a"));
 
 	// /* constructing evaluator */
-	shaka::Evaluator evaluator(env, root);
+	shaka::Evaluator evaluator(root, env);
 
 	auto result = evaluator.evaluate(shaka::eval::Quote());
 
