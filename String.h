@@ -1,5 +1,5 @@
-#ifndef STRING_H
-#define STRING_H
+#ifndef SHAKA_STRING_H
+#define SHAKA_STRING_H
 #include <vector>
 #include <iostream>
 
@@ -37,7 +37,7 @@ public:
 
     //return length of a_string
      int string_length(){
-        return (int)a_string.size();
+        return static_cast<int>(a_string.size());
     }
 
     //takes the index, and returns the value of the index
@@ -51,7 +51,7 @@ public:
         return 'e';
     }
     void substring(String &c, int start, int end){
-	for(int i=start; i!= end; i++){
+	for(int i=start; i < end; i++){
 		a_string[i] = (c.getString())[i];
 	}
     }
@@ -207,4 +207,4 @@ private:
 
 
 }
-#endif
+#endif // SHAKA_STRING_H

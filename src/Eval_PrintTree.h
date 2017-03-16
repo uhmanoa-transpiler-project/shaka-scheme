@@ -17,18 +17,13 @@ namespace shaka {
 namespace eval {
 
 /// @brief Prints the types of all of the T in the tree.
-<<<<<<< HEAD
-template <typename T, typename Key, typename Value, std::ostream& out>
-class PrintTree : public shaka::IEvaluatorStrategy<T, Key, Value> {
-public:
-=======
 template <std::ostream& out>
 class PrintTree : public IEvaluatorStrategy {
 public:
     using T = shaka::Data;
     using Key = shaka::Symbol;
     using Value = std::shared_ptr<shaka::IDataNode<shaka::Data>>;
->>>>>>> core-systems
+
     /// @brief Prints the type of all the items in the tree recursively.
     std::shared_ptr<IDataNode<T>> evaluate(
         std::shared_ptr<IDataNode<T>> node,

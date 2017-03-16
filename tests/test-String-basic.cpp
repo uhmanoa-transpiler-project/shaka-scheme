@@ -1,15 +1,9 @@
-#include "gtest/gtest.h"
-#include "String.h"
-#include <functional>
-#include <algorithm>
-#include <numeric>
-TEST(String, empty_string_constructor){
-	int x = 5;
-	shaka::String a(x);
 
-	ASSERT_EQ(a.string_length(), x);
-}
 /*
+#include <gtest/gtest.h>
+
+TEST(Stringasdf, empty_string_constructor){ }
+
 TEST(String, Single_element_constructor){
 	int size = 5;
 	shaka::String a(size, 'a');
@@ -88,7 +82,11 @@ TEST(String, string_fill){
 	shaka::String b(size, 'b');
 	a.string_fill('b');
 	ASSERT_TRUE(a==b);
-}*/
+}
+
+*/
+
+#include <gtest/gtest.h>
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
 

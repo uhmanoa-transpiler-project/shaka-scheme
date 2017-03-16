@@ -21,9 +21,6 @@ public:
     Environment(std::shared_ptr<IEnvironment<Key, Value>> parent) :
         parent(parent) {}
 
-    Environment(std::shared_ptr<IEnvironment<Key, Value>> parent) :
-        parent(parent.get()) {}
-
     virtual ~Environment() override {}
 
     virtual std::shared_ptr<IEnvironment<Key, Value>> get_parent() override {

@@ -22,14 +22,14 @@ OBJ_FILES := $(addprefix obj/, $(notdir $(CPP_FILES:.cpp=.o)))
 # The directories to search for includes from.
 ### Sometimes, header files are in other directories.
 ### This is where one might place those directory paths.
-TESTINCLUDEDIR = -Idep/googletest/googletest -Idep/googletest/googletest/include
+TESTINCLUDEDIR = 
 INCLUDEDIR = -Isrc/
 
 # These are for including the libraries you want to use.
 ### Ignore these for now; we have not covered libraries yet.
 LIBSDIR = 
 LIBS = 
-TESTLIBSDIR = -Ldep/googletest/build/googlemock/gtest
+TESTLIBSDIR = 
 TESTLIBS = -lgtest -lpthread
 
 # Flags for the linker step.
