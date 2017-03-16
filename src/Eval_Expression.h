@@ -27,9 +27,6 @@ public:
 			return shaka::eval::Quote<T, Key, Value>().evaluate(node, env);
 		}
 
-		else if (node->get_data()->type() == typeid(shaka::MetaTag::PROC_CALL)) {
-			return shaka::eval::Proc_Call<T, Key, Value>().evaluate(node, env);
-		}
 		
 
 	}
