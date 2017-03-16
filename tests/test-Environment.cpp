@@ -5,7 +5,15 @@
 #include <functional>
 #include <algorithm>
 #include <numeric>
+
 using Environment = shaka::Environment<std::string, int *>;
+
+TEST(Environment, test_environment_default_constructor) {
+	shaka::Environment<int, int*> e(nullptr);
+
+	ASSERT_EQ(e.get_parent(), nullptr);
+}
+
 TEST(Environment, constructor_null) {
     Environment e(nullptr);
     ASSERT_EQ(nullptr, e.get_parent()); 
@@ -28,11 +36,12 @@ TEST(Environment, contains_key) {
 }
 
 TEST(Environment, set_parent){
-    Environment parent(nullptr);
+    auto parent = std::make_shared<Environment>(nullptr);
     Environment child(nullptr);
-    child.set_parent(&parent);
-    ASSERT_EQ(child.get_parent(), &parent);
+    child.set_parent(parent);
+    ASSERT_EQ(child.get_parent().get(), parent.get());
 }
+
 TEST(Environment, get_keys){
     Environment e(nullptr);
     int num =1;
@@ -40,26 +49,24 @@ TEST(Environment, get_keys){
     e.set_value("first", value);
 
     ASSERT_EQ(static_cast<std::size_t>(1), e.get_keys().size());
-
 }
 
 TEST(Environment, contains_key_in_parent_check){
 
-    /* Construct an environment */
-    Environment parent(nullptr);
+    // Construct an environment
+    auto parent = std::make_shared<Environment>(nullptr);
 
-    /* Construct a child environment with a parent environment */
-    Environment kid(&parent);
+    // Construct a child environment with a parent environment
+    Environment kid(parent);
     int num =1;
     int *value = &num;
 
-    /* Store a value with the key "first" in the parent environment */
-    parent.set_value("first", value);
+    // Store a value with the key "first" in the parent environment
+    parent->set_value("first", value);
 
-    /* Parent and child environment should return the same value */
-    ASSERT_EQ(kid.get_value("first"), parent.get_value("first"));
+    // Parent and child environment should return the same value
+    ASSERT_EQ(kid.get_value("first"), parent->get_value("first"));
 }
-
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);

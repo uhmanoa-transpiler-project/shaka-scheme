@@ -9,19 +9,16 @@
 #include <memory>
 
 #include "IEnvironment.h"
-#include "DataNode.h"
+#include "IDataNode.h"
 
 namespace shaka {
-
-using DataTree =
-    DataNode<Data>;
 
 /// @note Value needs to be a pointer type.
 template <typename Key, typename Value>
 class Environment : public IEnvironment<Key, Value> {
 public:
 
-    Environment(IEnvironment<Key, Value>* parent) :
+    Environment(std::shared_ptr<IEnvironment<Key, Value>> parent) :
         parent(parent) {}
 
     Environment(std::shared_ptr<IEnvironment<Key, Value>> parent) :
@@ -29,12 +26,12 @@ public:
 
     virtual ~Environment() override {}
 
-    virtual IEnvironment<Key, Value>* get_parent() override {
+    virtual std::shared_ptr<IEnvironment<Key, Value>> get_parent() override {
         return this->parent;
     }
    
     /// @todo Decide whether this should be virtual or not.
-    void set_parent(IEnvironment<Key,Value>* e) {
+    void set_parent(std::shared_ptr<IEnvironment<Key,Value>> e) {
         parent = e;
     }
 
@@ -73,7 +70,7 @@ public:
     }
 
 private:
-    IEnvironment<Key, Value>* parent;
+    std::shared_ptr<IEnvironment<Key, Value>> parent;
     std::map<Key, Value> local;
 
 };
