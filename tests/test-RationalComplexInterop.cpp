@@ -1,6 +1,8 @@
 #include "gtest/gtest.h"
 #include "Rational.h"
 
+using namespace shaka;
+
 TEST(Rational, add_rational_and_complex) {
 	Rational r(1, 2);
 	Complex c(5, 10);
