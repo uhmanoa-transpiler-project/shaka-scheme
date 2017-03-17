@@ -14,16 +14,16 @@ TEST(Tokenizer_comment, constructor) {
 }
 
 TEST(Tokenizer_comment, stringstream) {
-	stringstream ss("\n");
+	stringstream ss("#;comment");
 
 	shaka::Tokenizer tk(ss);
 
 	ASSERT_EQ(
-		tk.get(),
 		shaka::Token(
-			shaka::Token::Type::COMMENT_START,
-			"\n"
-		)
+			shaka::Token::Type::DATUM_COMMENT,
+			"#;"
+		),
+		tk.get()
 	);
 }
 
