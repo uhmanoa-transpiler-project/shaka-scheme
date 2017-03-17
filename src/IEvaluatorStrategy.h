@@ -2,16 +2,23 @@
 #define SHAKA_IEVALUATORSTRATEGY_H
 
 #include "DataNode.h"
-#include "IEnvironment.h"
+#include "Environment.h"
 
 /// @todo Replace IEnvironment stub with the real Environment interface.
 
 namespace shaka {
 
+namespace eval {
 
-template <typename T, typename Key, typename Value>
+class Expression; 
+
+}
+
 class IEvaluatorStrategy {
 public:
+    using T = shaka::Data;
+    using Key = shaka::Symbol;
+    using Value = std::shared_ptr<shaka::IDataNode<shaka::Data>>;
     /// @brief Evaluates the current subtree, with the root at the DataNode,
     ///        with the given environment.
     ///
