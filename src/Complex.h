@@ -1,6 +1,9 @@
 #ifndef COMPLEX_H
 #define COMPLEX_H
 #include <cmath>
+
+namespace shaka {
+
 class Complex {
 public:
 	Complex() {};	
@@ -68,6 +71,8 @@ Complex operator/(const Complex& lhs, const Complex& rhs) {
 bool operator==(const Complex& lhs, const Complex& rhs) {
 	return (lhs.real == rhs.real) && (lhs.imag == rhs.imag);
 }
+
+} // namespace shaka
 #endif
 
 

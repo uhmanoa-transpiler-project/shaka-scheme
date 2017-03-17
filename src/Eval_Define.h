@@ -17,7 +17,7 @@ class Define : public shaka::IEvaluatorStrategy<T, Key, Value> {
 
     /// @brief Prints the type of all the items in the tree recursively.
     std::shared_ptr<IDataNode<T>> evaluate(
-        std::shared_ptr<IDataNode<T>>& node,
+        std::shared_ptr<IDataNode<T>> node,
         std::shared_ptr<IEnvironment<Key, Value>> env
     ) {
         env->set_value(

@@ -15,6 +15,10 @@ TEST(DataNode, constructor_default) {
 
     ASSERT_TRUE(true);
 }
+
+
+
+
 /// @brief Tests forwarding of arguments to internal data.
 TEST(DataNode, init_int) {
 
@@ -144,11 +148,11 @@ TEST(DataNode, traverse_tree_pre_order_print) {
     std::function<void(std::shared_ptr<NodeTree>)> pre_order_print;
     // The pre-order printing function.
     std::vector<shaka::Number> v;
+
     pre_order_print = [&pre_order_print, &v](std::shared_ptr<NodeTree> tree) -> void {
         if (tree) {
             if (shaka::Number* ptr = shaka::get<shaka::Number>(tree->get_data().get())) {
                 v.push_back(*ptr);
-                // std::cout << *ptr << std::endl;
                 pre_order_print(tree->get_child(0));
                 pre_order_print(tree->get_child(1));
             } else {
@@ -160,8 +164,8 @@ TEST(DataNode, traverse_tree_pre_order_print) {
     // Apply the function to the tree.
     pre_order_print(root);
 
-
     std::vector<shaka::Number> correct_traversal_order = {1, 2, 3, 4, 5, 6, 7};
+
     // Check whether the traversal order was correct, according to the
     // numbers we kept track of by pushing to the vector in the printing function.
     ASSERT_TRUE(

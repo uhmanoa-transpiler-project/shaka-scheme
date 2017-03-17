@@ -2,6 +2,7 @@
 #define VALUE_H
 
 #include "Integer.h"
+#include "Real.h"
 #include <typeinfo>
 #include <boost/variant.hpp>
 #include <cassert>
