@@ -8,7 +8,7 @@ namespace shaka {
 struct Token {
 public:
     enum class Type : int {
-        INVALID = 0,
+        INVALID = 255,
         IDENTIFIER = 1,
         BOOLEAN_TRUE = 2,
         BOOLEAN_FALSE = 3,
@@ -16,18 +16,19 @@ public:
         CHARACTER = 5,
         STRING = 6,
         PAREN_START = 7,
-        PAREN_END,
-        BYTEVECTOR,
-        QUOTE,
-        BACKTICK,
-        COMMA,
-        COMMA_ATSIGN,
-        PERIOD,
-        DATUM_COMMENT,
-        COMMENT_START,
-        COMMENT_END,
-        DIRECTIVE,
-        END_OF_FILE
+        VECTOR_START = 8,
+        BYTEVECTOR_START = 9,
+        PAREN_END = 10,
+        QUOTE = 11,
+        BACKTICK = 12,
+        COMMA = 13,
+        COMMA_ATSIGN = 14,
+        PERIOD = 15,
+        DATUM_COMMENT = 16,
+        COMMENT_START = 17,
+        COMMENT_END = 18,
+        DIRECTIVE = 19,
+        END_OF_FILE = 0
     };
 
     Token::Type type;
