@@ -280,44 +280,21 @@ public:
         if (in.peek() == '#') {
             in.get();
 
+            // vector start token
+            if (in.peek() == '(') {
+                in.get();
+                result = Token(Token::Type::VECTOR_START, "#(");
+                return true;
+
             // <bytevector> ==> #u8( <byte>* )
-            if (in.peek() == 'u') {
+            // Just read in the start token.
+            } else if (in.peek() == 'u') {
                 in.get();
                 if (in.peek() == '8') {
                     in.get();
                     if (in.peek() == '(') {
                        in.get(); 
-                       std::string buffer = "#u8(";
-                       while (in.peek() != ')') {
-                            if (DEBUG_PRINT) {
-                                std::cerr << "buffer: " << buffer << std::endl;
-                            }
-                            if (std::isspace(in.peek())) {
-                                if (buffer[buffer.size()-1] != ' ') {
-                                    buffer += ' ';
-                                }
-                                in.get();
-                                continue;
-                            }
-                            if (in.peek() == ')') {
-                                break;
-                            } else if (std::isdigit(in.peek())) {
-                                if (!parse_bytevector_byte(buffer)) {
-                                    if (DEBUG_PRINT) {
-                                        std::cerr << "Parser.rule_hash: "
-                                        "Bytevector: Could not parse byte"
-                                        << std::endl;
-                                        throw std::runtime_error(
-                                            "Parser.rule_hash: "
-                                            "Bytevector: Could not parse byte"
-                                        );
-                                        return false;
-                                    }
-                                }
-                            }
-                       } in.get();
-                       buffer += ')';
-                       result = Token(Token::Type::BYTEVECTOR, buffer);
+                       result = Token(Token::Type::BYTEVECTOR_START, "#u8(");
                        return true;
                     }
                 } else {
@@ -546,8 +523,34 @@ public:
     Token parse_token () {
         bool done = false;
         while (!done) {
+            // Quote
+            if (in.peek() == '\'') {
+                in.get();
+                return Token(Token::Type::QUOTE, "\'");
+
+            // Backtick
+            } else if (in.peek() == '`') {
+                in.get();
+                return Token(Token::Type::BACKTICK, "`");
+
+            // Comma
+            } else if (in.peek() == ',') {
+                in.get();
+                // Comma at-sign.
+                if (in.peek() == '@') {
+                    in.get();
+                    return Token(Token::Type::COMMA_ATSIGN, ",@");
+                } else {
+                    return Token(Token::Type::COMMA, ",");
+                }
+
+
+            } else if (in.peek() == '.') {
+                in.get();
+                return Token(Token::Type::PERIOD, ".");
+            
             // Begin parenthesis
-            if (in.peek() == '(') {
+            } else if (in.peek() == '(') {
                 return parse_paren_start();
 
             // End parenthesis

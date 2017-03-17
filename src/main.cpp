@@ -1,83 +1,41 @@
-#include <iostream>
-#include <string>
-#include <limits>
+#include <gtest/gtest.h>
 
-#include <boost/variant.hpp>
+#include "Data.h"
+#include "Procedure.h"
+
+
+TEST(Data, construct) {
+    std::cout << "hello world" << std::endl;
+
+    shaka::Data d = shaka::Symbol("Hello world!");
+    d = shaka::Number(1);
+
+}
 
 #include "DataNode.h"
-#include "DummyDataNode.h"
+#include <memory>
 
-#include "Tree.h"
+using DataNode = shaka::DataNode<shaka::Data>;
 
-using namespace shaka;
+TEST(DataNode, construct) {
+    auto root = std::make_shared<DataNode>(shaka::MetaTag::LIST);
 
-/// @brief The main Read-Eval-Print Loop (REPL) function.
-///
-/// Currently only a skeleton.
-///
-/// @param in
-///     The input stream to read from. Usually std::cin but can also
-///     be a file.
-/// @param out
-///     The output stream by which we are prompting the user/program for input.
-/// @return
-///         - \c true if the REPL needs to continue reading
-///         - \c false if the REPL is done reading
-/*
-bool REPL(std::istream& in, std::ostream& out, ITree<>& tree) {
+    auto child0 = root->push_child(shaka::Number(1));
 
-    // Stores the input string line.
-    std::string buffer;
+    auto num = shaka::get<shaka::Number>(*root->get_child(0)->get_data());
 
-    /// @todo Make REPL prompt string customizable.
-    out << ">>> ";
+    ASSERT_EQ(num, shaka::Number(1));
 
-    /// @todo Create a more sophisticated buffer function.
-    std::getline(in, buffer, '\n');
+    root->push_child(1);
+    root->push_child(1);
+    root->push_child(1);
+    root->push_child(1);
 
-    std::cout << get<std::string>(tree.get_data()->data) << std::endl;
-
-    // Basic echo if not quit logic.
-    /// @todo Fix the processing/parser logic.
-    if (buffer == "(quit)") {
-        return false;
-    } else {
-        std::cout << buffer << std::endl;
-        return true;
-    }
-    /// @todo REMOVE THIS
-    //asdfasdf
-    //asdf
-    //sadf
-    //as
-    //df
-    //s
-    //sa
-    //fd
-    //sa
-    //
-    //
+    ASSERT_EQ(root->get_num_children(), 5);
 }
-*/
 
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
 
-/// @brief The main function. Implements the REPL.
-int main() {
-    // The main REPL loop. 
-    // Will stop only when it returns false (quits).
-    /// @see REPL
-    /*
-    using Data = boost::variant<
-        bool,
-        int,
-        std::string,
-        MetaTag
-    >;
-    */
-
-    //DummyDataNode< root("root");
-
-    //while (REPL(std::cin, std::cout, root)) {}
-
-    return 0;
+    return RUN_ALL_TESTS();
 }
