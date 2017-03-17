@@ -1,6 +1,8 @@
 #include "gtest/gtest.h"
 #include "Real.h"
 
+using namespace shaka;
+
 TEST(Real, add_real_to_complex) {
 	Complex c1(5.0, 4);
 	Real r1(20);
