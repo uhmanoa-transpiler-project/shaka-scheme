@@ -13,7 +13,7 @@ using DataTree = shaka::DataNode<shaka::Data>;
 
 /// @brief Basic default constructor test
 TEST(DataNode, constructor_default) {
-    DataTree root(shaka::Data(shaka::MetaTag::LIST));
+    DataTree root(shaka::MetaTag::LIST);
 
     ASSERT_TRUE(true);
 }
