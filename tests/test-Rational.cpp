@@ -17,8 +17,8 @@ TEST(Rational, sub_two_rational_numbers) {
 
 	shaka::Rational r3(r1 - r2);
 
-	ASSERT_EQ(r3.get_numerator(), static_cast<float>(2));
-	ASSERT_EQ(r3.get_denominator(), static_cast<float>(8));
+	ASSERT_EQ(r3.get_numerator(), static_cast<float>(1));
+	ASSERT_EQ(r3.get_denominator(), static_cast<float>(4));
 }
 
 TEST(Rational, mul_two_rational_numbers) {
