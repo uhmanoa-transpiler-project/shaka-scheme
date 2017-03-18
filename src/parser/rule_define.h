@@ -5,6 +5,7 @@
 #include <exception>
 #include <functional>
 #include <stack>
+#include <string>
 
 #include "Number.h"
 #include "Symbol.h"
@@ -22,11 +23,12 @@ namespace rule {
 template <typename T>
 bool define(
     InputStream&    in,
-    NodePtr         root,
+    NodePtr         root, // shared ptr to IDataNode<Data>
     T&              interm
 ) {
 
     std::stack<shaka::Token> tokens;
+    std::shared_ptr<Node> defNode;
 
     try {
         // Check if it starts with a open parenthesis
@@ -43,6 +45,9 @@ bool define(
 
         tokens.push(in.get());
         interm += tokens.top().get_string();
+        // add NODE
+        //if(root != nullptr) 
+        //    defNode = root->push_child(shaka::MetaTag::DEFINE);
 
         // Get identifier after 'define'
         if(in.peek().type != shaka::Token::Type::IDENTIFIER)
@@ -50,6 +55,9 @@ bool define(
 
         tokens.push(in.get());
         interm += tokens.top().get_string();
+        // Add Symbol for identifier to tree
+        //if(defNode != nullptr)
+        //    defNode->push_child(shaka::Symbol(tokens.top().get_string));
 
         // Get end expression
         if(in.peek().type != shaka::Token::Type::IDENTIFIER &&
@@ -62,7 +70,34 @@ bool define(
 
         tokens.push(in.get());
         interm += tokens.top().get_string();
+        /*
+        switch(tokens.top().type) {
 
+            case shaka::Token::Type::NUMBER:
+                // Push Number under define node
+                if(defNode != nullptr) {
+                    defNode->push_child(
+                        shaka::Number( 
+                            std::stod( tokens.top().get_string() )
+                        )
+                    );
+                }
+                break;
+            case shaka::Token::Type::IDENTIFIER:
+            case shaka::Token::Type::CHARACTER:
+            case shaka::Token::Type::STRING:
+            case shaka::Token::Type::BOOLEAN_TRUE:
+            case shaka::Token::Type::BOOLEAN_FALSE:
+            default:
+                // push symbol under define node
+                if(defNode != nullptr) {
+                    defNode->push_child(
+                            shaka::Symbol( tokens.top().get_string() )
+                            );
+                }
+                break;
+        }
+        */
         // Get end closing parenthesis
         if(in.peek().type != shaka::Token::Type::PAREN_END)
             throw std::runtime_error("No closing paren");
@@ -81,6 +116,12 @@ bool define(
             in.unget(tokens.top());
             tokens.pop();
         }
+        // delete defNode and children
+        //if(defNode != nullptr) {
+            // TODO: Execute Order 66
+            // AKA Delete all children of defNode
+            //     and delete defNode
+        //}
         return false;
     }
 }

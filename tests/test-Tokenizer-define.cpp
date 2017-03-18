@@ -22,8 +22,7 @@ TEST(Tokenizer_define, tokenizer_test) {
     shaka::Tokenizer tk(ss);
 
     shaka::Token tok1 = tk.get();
-    shaka::Token tok2(shaka::Token::Type::PAREN_START,
-            "(");
+    shaka::Token tok2(shaka::Token::Type::PAREN_START, "(");
 
     ASSERT_EQ(tok1, tok2);
 }
@@ -34,10 +33,8 @@ TEST(Tokenizer_define, define_return) {
     shaka::Tokenizer in(ss);
     std::string interm;
 
-    bool valid = shaka::parser::rule::define(in, nullptr, interm);
+    ASSERT_TRUE( shaka::parser::rule::define(in, nullptr, interm) );
     std::cout << "interm: " << interm << std::endl;
-    
-    ASSERT_TRUE(valid);
 }
 
 TEST(Tokenizer_define, define_number) {
@@ -46,7 +43,7 @@ TEST(Tokenizer_define, define_number) {
     shaka::Tokenizer in(ss);
     std::string interm;
 
-    ASSERT_TRUE(shaka::parser::rule::define(in, nullptr, interm));
+    ASSERT_TRUE( shaka::parser::rule::define(in, nullptr, interm) );
     std::cout << "interm: " << interm << std::endl;
 }
 TEST(Tokenizer_define, define_bool) {
@@ -55,7 +52,7 @@ TEST(Tokenizer_define, define_bool) {
     shaka::Tokenizer in(ss);
     std::string interm;
 
-    ASSERT_TRUE(shaka::parser::rule::define(in, nullptr, interm));
+    ASSERT_TRUE( shaka::parser::rule::define(in, nullptr, interm) );
     std::cout << "interm: " << interm << std::endl;
 }
 
