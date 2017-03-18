@@ -17,9 +17,12 @@
 // updated to be the result(s) of the procedure call
 
 namespace shaka {
+namespace eval {
 
-template <typename T, typename Key, typename Value>
-class Proc_Call : public shaka::IEvaluatorStrategy<T, Key, Value> {
+class Proc_Call : public shaka::IEvaluatorStrategy {
+    using T = shaka::Data;
+    using Key = shaka::Symbol;
+    using Value = std::shared_ptr<shaka::IDataNode<shaka::Data>>;
 
 	std::shared_ptr<shaka::IDataNode<T>> evaluate(std::shared_ptr<shaka::IDataNode<T>> node,
 			std::shared_ptr<shaka::IEnvironment<Key, Value>> env) {
@@ -31,7 +34,6 @@ class Proc_Call : public shaka::IEvaluatorStrategy<T, Key, Value> {
 		
 		// did we successfully get a defined procedure?
 		if (proc) {
-			
 			std::vector<T> args;
 			std::shared_ptr<shaka::IDataNode<T>> list_node = node->get_child(1);
 			std::shared_ptr<shaka::IDataNode<T>> next_argument;
@@ -69,6 +71,6 @@ class Proc_Call : public shaka::IEvaluatorStrategy<T, Key, Value> {
 	}
 
 };
-
+} // namespace eval
 } // namespace shaka
 #endif // SHAKA_EVAL_PROC_CALL_H
