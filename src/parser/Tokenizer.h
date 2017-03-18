@@ -489,6 +489,10 @@ public:
             return false;
         }
 
+        /// @todo Need to make sure why the compiler gives a
+        ///       warning why it doesn't think it may
+        ///       not return a value.
+        return false;
     }
 
     Token parse_number(std::string& buffer) {

@@ -44,8 +44,8 @@ TEST_FLAGS := -Wall -Wextra -pedantic --std=c++11 -g \
 			  $(LIBSDIR) $(TESTLIBSDIR) \
 			  $(LIBS) $(TESTLIBS)
 
-.PHONE: clean clean-all clean-docs clean-tests-docs clean-tests \
-	    run run-test 
+.PHONY: clean clean-all clean-docs clean-tests-docs clean-tests \
+	    run run-test docs
 
 # The default rule to be build when just `make` is run.
 all: bin/main
