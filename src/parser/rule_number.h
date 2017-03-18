@@ -24,64 +24,20 @@ bool number_integer(
     std::string buffer;
 
     shaka::Token token = in.peek();
-
-	    std::cout << "Hi" << std::endl;
     if (token.type == Token::Type::NUMBER) {
 
-	    std::cout << "Hi" << std::endl;
-
-	    while (isdigit(std::stoi(token.str)))
-	    {
-		    in.get();
-		    accept = true;
-	    }
+	    in.get();
+	    accept = true;
 
     	    if (accept == true) {
 		    root -> push_child(
 		    shaka::Number(std::stoi(token.str)));
     	    }
     }
-
-    token = in.peek();
-
-    if (token.type == Token::Type::PERIOD) {
-
-	    in.get();
-
-	    while (isdigit(std::stoi(token.str)))
-	    {
-		    in.get();
-		    accept == true;
-	    }
-    	    if (accept == true) {
-		    root -> push_child(
-		    shaka::Number(std::stoi(token.str)));
-	    }
-    }
-
     return accept;
 }
 
 /*
-/// @brief Template specialization of integer for int.
-/// 
-/// Adds the value of the converted string to interm.
-template <>
-bool number_integer<int>(
-    InputStream&    in,
-    NodePtr         root,
-    int&            interm
-) {
-    
-    if (digit(in, root, buffer)) {
-        while (digit(in, root, buffer));
-        interm += std::stoi(buffer);
-        return true;
-    } else {
-        return false;
-    }
-}
-
 /// @brief Function that checks if the given is a negative number or decimal 
 /// or a negative decimal
 template <typename T>
