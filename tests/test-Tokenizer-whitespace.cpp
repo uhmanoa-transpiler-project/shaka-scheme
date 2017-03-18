@@ -11,15 +11,15 @@
 using namespace std;
 
 //1) Construct a string
-TEST(Tokenizer_Whitespace, constructor_\t) { 
+TEST(Tokenizer_Whitespace, constructor_tab) { 
 	shaka::Token tc(shaka::Token::Type::END_OF_FILE, "\t");
 }
 
-TEST(Tokenizer_Whitespace, constructor_\n) { 
+TEST(Tokenizer_Whitespace, constructor_newline) { 
 	shaka::Token tc(shaka::Token::Type::END_OF_FILE, "\n");
 }
 	
-TEST(Tokenizer_Whitespace, constructor_\r) { 
+TEST(Tokenizer_Whitespace, constructor_carriage_return) { 
 	shaka::Token tc(shaka::Token::Type::END_OF_FILE, "\r");
 }
 

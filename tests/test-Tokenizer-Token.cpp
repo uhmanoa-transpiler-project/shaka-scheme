@@ -4,14 +4,12 @@
 #include "parser/Tokenizer.h"
 #include "parser/Token.h"
 
-TEST(token_base, constructor) {
+TEST(Token_base, constructor) {
     shaka::Token token0(shaka::Token::Type::IDENTIFIER);
     shaka::Token token1(shaka::Token::Type::IDENTIFIER);
-
-    ASSERT_TRUE(true);
 }
 
-TEST(token_base, equality_empty_string) {
+TEST(Token_base, equality_empty_string) {
     shaka::Token token0(shaka::Token::Type::IDENTIFIER);
     shaka::Token token1(shaka::Token::Type::IDENTIFIER);
 
@@ -20,7 +18,7 @@ TEST(token_base, equality_empty_string) {
 }
 
 
-TEST(token_base, equality_different_string) {
+TEST(Token_base, equality_different_string) {
     shaka::Token token0(shaka::Token::Type::IDENTIFIER, "123");
     shaka::Token token1(shaka::Token::Type::IDENTIFIER, "abc");
 
@@ -28,7 +26,7 @@ TEST(token_base, equality_different_string) {
     ASSERT_TRUE(token0 != token1);
 }
 
-TEST(tokenizer, constructor) {
+TEST(Tokenizer, constructor) {
     std::stringstream ss("#f");
     shaka::Tokenizer tokenizer(ss);
     shaka::Token token = tokenizer.get();
@@ -36,7 +34,7 @@ TEST(tokenizer, constructor) {
     ASSERT_TRUE(true);
 }
 
-TEST(tokenizer, get) {
+TEST(Tokenizer, get) {
     std::stringstream ss("#f");
     shaka::Tokenizer tokenizer(ss);
     shaka::Token token0 = tokenizer.get();
