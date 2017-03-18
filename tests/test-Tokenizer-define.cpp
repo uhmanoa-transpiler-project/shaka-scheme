@@ -1,4 +1,7 @@
 #include "gtest/gtest.h"
+#include "Data.h"
+#include "DataNode.h"
+#include "IDataNode.h"
 #include "parser/Tokenizer.h"
 #include "parser/Token.h"
 #include "parser/rule_define.h"
@@ -46,6 +49,7 @@ TEST(Tokenizer_define, define_number) {
     ASSERT_TRUE( shaka::parser::rule::define(in, nullptr, interm) );
     std::cout << "interm: " << interm << std::endl;
 }
+
 TEST(Tokenizer_define, define_bool) {
     
     std::stringstream ss("(define true #true)");
@@ -54,6 +58,34 @@ TEST(Tokenizer_define, define_bool) {
 
     ASSERT_TRUE( shaka::parser::rule::define(in, nullptr, interm) );
     std::cout << "interm: " << interm << std::endl;
+}
+
+TEST(Tokenizer_define, define_fail) {
+
+    std::stringstream ss("( define 123)");
+    shaka::Tokenizer in(ss);
+    std::string interm;
+
+    ASSERT_FALSE( shaka::parser::rule::define(in, nullptr, interm) );
+    std::cout << "interm: " << interm << std::endl;
+}
+
+TEST(Tokenizer_define, define_tree) {
+    
+    std::stringstream ss("(define x 1)");
+    shaka::Tokenizer in(ss);
+    std::string interm;
+
+    std::shared_ptr<shaka::DataNode<shaka::Data>> root = 
+        std::make_shared<shaka::DataNode<shaka::Data>>(shaka::MetaTag::DEFINE);
+
+    ASSERT_TRUE( shaka::parser::rule::define(in, root, interm) );
+    
+    ASSERT_EQ( root->get_num_children(), 1 );
+    auto child = root->get_child(0);
+
+    ASSERT_EQ( child->get_num_children(), 2 );
+
 }
 
 int main(int argc, char** argv) {

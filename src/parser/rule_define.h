@@ -10,6 +10,16 @@
 #include "Number.h"
 #include "Symbol.h"
 #include "Data.h"
+#include "IDataNode.h"
+
+#include "Environment.h"
+#include "Evaluator.h"
+#include "Eval_Define.h"
+#include "Procedure.h"
+#include "Eval_Expression.h"
+#include "Eval_Define_impl.h"
+#include "Eval_Variable_impl.h"
+#include "Eval_PrintTree.h"
 
 #include "parser/primitives.h"
 #include "parser/Tokenizer.h"
@@ -28,7 +38,8 @@ bool define(
 ) {
 
     std::stack<shaka::Token> tokens;
-    std::shared_ptr<Node> defNode;
+    NodePtr defNode;
+    shaka::Data tag = shaka::MetaTag::DEFINE;
 
     try {
         // Check if it starts with a open parenthesis
@@ -46,8 +57,8 @@ bool define(
         tokens.push(in.get());
         interm += tokens.top().get_string();
         // add NODE
-        //if(root != nullptr) 
-        //    defNode = root->push_child(shaka::MetaTag::DEFINE);
+        if(root != nullptr)
+            defNode = root->push_child(shaka::Data{shaka::MetaTag::DEFINE});
 
         // Get identifier after 'define'
         if(in.peek().type != shaka::Token::Type::IDENTIFIER)
@@ -56,8 +67,8 @@ bool define(
         tokens.push(in.get());
         interm += tokens.top().get_string();
         // Add Symbol for identifier to tree
-        //if(defNode != nullptr)
-        //    defNode->push_child(shaka::Symbol(tokens.top().get_string));
+        if(defNode != nullptr)
+            defNode->push_child(shaka::Symbol(tokens.top().get_string()));
 
         // Get end expression
         if(in.peek().type != shaka::Token::Type::IDENTIFIER &&
@@ -70,7 +81,7 @@ bool define(
 
         tokens.push(in.get());
         interm += tokens.top().get_string();
-        /*
+        
         switch(tokens.top().type) {
 
             case shaka::Token::Type::NUMBER:
@@ -97,7 +108,7 @@ bool define(
                 }
                 break;
         }
-        */
+        
         // Get end closing parenthesis
         if(in.peek().type != shaka::Token::Type::PAREN_END)
             throw std::runtime_error("No closing paren");
@@ -116,12 +127,16 @@ bool define(
             in.unget(tokens.top());
             tokens.pop();
         }
+        
         // delete defNode and children
-        //if(defNode != nullptr) {
-            // TODO: Execute Order 66
-            // AKA Delete all children of defNode
-            //     and delete defNode
-        //}
+        if(defNode != nullptr) {
+
+            std::size_t size = defNode->get_num_children();
+            for(std::size_t i = 0; i < size; ++i) {
+                defNode->remove_child(i);
+            }
+        }
+        
         return false;
     }
 }
