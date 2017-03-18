@@ -6,35 +6,9 @@
 #include <boost/variant.hpp>
 
 #include "IDataNode.h"
-#include "Symbol.h"
-#include "Number.h"
+#include "Data.h"
 
 namespace shaka {
-
-/// @brief Auxillary "type-tags" used to decide whether the
-/// contained type should have children, according to the sematnics
-/// of the Meta Tag.
-///
-/// For example, an `ATOM` should have no children nodes, but
-/// a `LIST` should have links to its children as a vector of pointers.
-enum class MetaTag : int {
-    DEFINE,
-    LIST,
-    PROC_CALL,
-    QUOTE,
-    LAMBDA
-};
-
-/// @brief `boost::variant` is being re-aliased for the
-/// readability purposes of the project.
-using Data = 
-boost::variant<
-    int,
-    shaka::Symbol,
-    shaka::MetaTag,
-    shaka::Number,
-    shaka::Procedure
->;
 
 
 /// @brief The central data structure for a Scheme object.

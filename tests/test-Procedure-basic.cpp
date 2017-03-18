@@ -11,6 +11,8 @@
 #include "Procedure.h"
 #include "Evaluator.h"
 
+#include "Eval_Expression_impl.h"
+
 using IDataTree = shaka::IDataNode<shaka::Data>;
 using DataTree = shaka::DataNode<shaka::Data>;
 
@@ -50,11 +52,7 @@ TEST(Procedure_basic, initialization_Procedure) {
 
     // Create the procedure with the parent being the root env,
     // and provide the DataTree tree as the body of the procedure.
-    shaka::Procedure<
-        shaka::Data,
-        shaka::Symbol,
-        std::shared_ptr<shaka::IDataNode<shaka::Data>>
-    > proc(
+    shaka::Procedure proc(
         i_env,
         body_root,
         body_root->get_num_children(),

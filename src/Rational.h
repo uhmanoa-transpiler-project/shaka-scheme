@@ -1,6 +1,8 @@
 #ifndef RATIONAL_H
 #define RATIONAL_H
 
+#include <stdexcept>
+
 #include "Real.h"
 
 namespace shaka {

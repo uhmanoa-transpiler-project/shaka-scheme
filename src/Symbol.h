@@ -13,7 +13,7 @@ public:
 	//TODO implement interface
 	Symbol(Value v) : value(v){}
 
-	Value get_Value() {return value;}	
+	Value get_value() {return value;}	
 	// overload the == and != operator for Symbol
 	friend bool operator==(const Symbol& n1, const Symbol& n2);
 	// hint: == is already overloaded for std::string
