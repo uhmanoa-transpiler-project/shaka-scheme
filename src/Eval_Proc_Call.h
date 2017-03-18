@@ -9,6 +9,9 @@
 #include <vector>
 #include <memory>
 #include <type_traits>
+#include "Data.h"
+#include "DataNode.h"
+#include "Eval_Expression.h"
 
 // attempts to get the procedure bound in the current environment
 // and call it on the arguments condained as the child nodes of the
@@ -26,15 +29,19 @@ class Proc_Call : public shaka::IEvaluatorStrategy {
 
 	std::shared_ptr<shaka::IDataNode<T>> evaluate(std::shared_ptr<shaka::IDataNode<T>> node,
 			std::shared_ptr<shaka::IEnvironment<Key, Value>> env) {
-	
+		
+		// instantiate an evaluator on the child node which should either hold a lambda or
+		// a symbol that refers to a procedure in the environment or its parent env
+		shaka::Evaluator evaluator(node->get_child(0), env);
+
+
 		// get the procedure associated with the symbol in the first child
 		// of the PROC_CALL node in the environment
-		std::shared_ptr<shaka::IProcedure<T>> proc = env->get_value(
-				shaka::get<Key>(*node->get_child(0)->get_data()));
-		
-		// did we successfully get a defined procedure?
-		if (proc) {
-			std::vector<T> args;
+		Value proc = evaluator.evaluate(shaka::eval::Expression()); 
+	
+		//did we successfully get a defined procedure?
+		if (proc->get_data()->type() == typeid(shaka::Procedure)) {
+			std::vector<Value> args;
 			std::shared_ptr<shaka::IDataNode<T>> list_node = node->get_child(1);
 			std::shared_ptr<shaka::IDataNode<T>> next_argument;
 			
@@ -42,12 +49,12 @@ class Proc_Call : public shaka::IEvaluatorStrategy {
 			// LIST node and place them in an argument vector to pass to proc
 			for (int i = 0; i < list_node->get_num_children(); i++) {
 				next_argument = list_node->get_child(i);
-				args.push_back(*next_argument->get_data());
+				args.push_back(next_argument);
 			}
 			
 			// call the proc on the args vector and save the result in a
 			// new vector of results
-			std::vector<T> result = proc->call(args);
+			std::vector<Value> result = shaka::get<shaka::Procedure>(*proc->get_data()).call(args);
 
 			// loop through the number of children in the LIST node and
 			// remove the old children (the arguments to the proc call)
@@ -58,7 +65,7 @@ class Proc_Call : public shaka::IEvaluatorStrategy {
 			// add new children to the LIST node, which are the results
 			// of our procedure call
 			for (int i = 0; i < result.size(); i++) {
-				list_node->insert_child(i, std::make_shared<Value>(result[i]));
+				list_node->insert_child(i, result[i]);
 			}
 			
 			return list_node;
