@@ -2,70 +2,85 @@
 #define SHAKA_PARSER_RULES_RUL_DEFINE_H
 
 #include <cctype>
+#include <exception>
 #include <functional>
-#include <vector>
+#include <stack>
 
 #include "Number.h"
 #include "Symbol.h"
+#include "Data.h"
 
-#include "parser/char_rules.h"
-#include "parser/rule_number.h"
+#include "parser/primitives.h"
+#include "parser/Tokenizer.h"
+#include "parser/Token.h"
 
 namespace shaka {
 namespace parser {
 namespace rule {
 
-// BNF
-// Official:
-// 
-//
-// <define> ::= (\s*define\s+<letter>+\s+<number>\s*)
+// Define using tokens
 template <typename T>
 bool define(
     InputStream&    in,
     NodePtr         root,
     T&              interm
 ) {
-    char c;
 
-    /* Begin to parse if input begins with a '('.
-     * It MUST begin with this, otherwise it cannot be define.
-     */
-    if(match_char<char, '('>(in, root, c)){
-        std::string builder;
-        NodePtr topNode(shaka::MetaTag::DEFINE);
-        
-        /* Ignore leading white space */
-        while(space(in, root, c));
-        /* Parse only enough to find the keyword 'define'. */
-        for(int i = 0; i < 6; i++)      alpha(in, root, interm);
-        if(interm != "define")          return false;
-        /* Check for a space and ignore extra spaces */
-        if(!space(in, root, interm))    return false;
-        while(space(in, root, c));
-        /* Define must be followed by a word */
-        if(!alpha(in, topNode, builder))    return false;
-        while(alpha(in, topNode, builder));
-        NodePtr symbolNode(shaka::Symbol(builder));
-        builder.clear();
+    std::stack<shaka::Token> tokens;
 
-        /* Word must be followed by a space, ignore extras */
-        if(!space(in, root, interm))    return false;
-        while(space(in, root, c));
-        /* Must be followed by an integer */
-        if(!integer(in, root, interm))  return false;
-        /* Ignore trailing whitespace */
-        while(space(in, root, c));
-        /* Must have matching closing ')'. */
-        if(match_char<char, ')'>(in, root, c)) {
-            NodePtr numberNode(Integer(stoi(builder)));
-            topNode->push_child(symbolNode);
-            topNode->push_child(numberNode);
-            root->push_child(topNode);
-            return true;
+    try {
+        // Check if it starts with a open parenthesis
+        if(in.peek().type != shaka::Token::Type::PAREN_START) 
+            throw std::runtime_error("No open parenthesis");
+
+        tokens.push(in.get());
+        interm += tokens.top().get_string();
+
+        // Open parenthesis must be followed by 'define'
+        if(in.peek().type != shaka::Token::Type::IDENTIFIER &&
+           in.peek().get_string() != "define")
+            throw std::runtime_error("No define keyword");
+
+        tokens.push(in.get());
+        interm += tokens.top().get_string();
+
+        // Get identifier after 'define'
+        if(in.peek().type != shaka::Token::Type::IDENTIFIER)
+            throw std::runtime_error("No followup identifier");
+
+        tokens.push(in.get());
+        interm += tokens.top().get_string();
+
+        // Get end expression
+        if(in.peek().type != shaka::Token::Type::IDENTIFIER &&
+           in.peek().type != shaka::Token::Type::NUMBER     &&
+           in.peek().type != shaka::Token::Type::CHARACTER  &&
+           in.peek().type != shaka::Token::Type::STRING     &&
+           in.peek().type != shaka::Token::Type::BOOLEAN_TRUE &&
+           in.peek().type != shaka::Token::Type::BOOLEAN_FALSE)
+            throw std::runtime_error("No followup expression");
+
+        tokens.push(in.get());
+        interm += tokens.top().get_string();
+
+        // Get end closing parenthesis
+        if(in.peek().type != shaka::Token::Type::PAREN_END)
+            throw std::runtime_error("No closing paren");
+
+        tokens.push(in.get());
+        interm += tokens.top().get_string();
+
+        return true;
+
+
+    // If define failed to parse, then put all tokens
+    // back on the Tokenizer for use elsewhere
+    } catch (std::runtime_error& e) {
+
+        while(!tokens.empty()) {
+            in.unget(tokens.top());
+            tokens.pop();
         }
-        return false;
-    } else {
         return false;
     }
 }
