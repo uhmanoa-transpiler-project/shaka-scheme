@@ -25,12 +25,15 @@ bool define(
 ) {
     char c;
 
+    using DataNode = shaka::DataNode<shaka::Data>;
+    using NodeP = std::shared_ptr<shaka::DataNode<shaka::Data>>;
+
     /* Begin to parse if input begins with a '('.
      * It MUST begin with this, otherwise it cannot be define.
      */
     if(match_char<char, '('>(in, root, c)){
         std::string builder;
-        NodePtr topNode(shaka::MetaTag::DEFINE);
+        NodeP topNode = std::make_shared<DataNode>(shaka::MetaTag::DEFINE);
         
         /* Ignore leading white space */
         while(space(in, root, c));
@@ -43,7 +46,7 @@ bool define(
         /* Define must be followed by a word */
         if(!alpha(in, topNode, builder))    return false;
         while(alpha(in, topNode, builder));
-        NodePtr symbolNode(shaka::Symbol(builder));
+        NodeP symbolNode = std::make_shared<DataNode>(shaka::Symbol(builder));
 
         //NodePtr firstChild();
         /* Word must be followed by a space, ignore extras */
