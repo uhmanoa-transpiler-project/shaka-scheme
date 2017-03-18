@@ -5,7 +5,12 @@
 #include <typeinfo>
 #include <vector>
 #include <string>
+<<<<<<< HEAD
 
+=======
+//#include <stdlib>
+/*
+>>>>>>> ad8d2b910341e8d3fac0d065111a0127f1f61b1e
 class BigInt
 {
     public:
@@ -185,7 +190,7 @@ void BigInt::llint_to_array(long long int v)
 void BigInt::string_to_intarray(std::string s)
 {
 }
-
+*/
 
 
 #endif // BIGINT_H
