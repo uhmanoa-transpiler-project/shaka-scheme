@@ -37,7 +37,7 @@ TEST(Procedure_basic, initialization_Procedure) {
 
     // Create the arguments list
     auto args_list = root->push_child(shaka::MetaTag::LIST);
-    args_list->push_child(shaka::MetaTag::LIST)->push_child(shaka::Symbol("a"));
+    args_list->push_child(shaka::Symbol("a"));
     // (lambda (a) ...)
 
     // Create the body expression list
@@ -54,8 +54,8 @@ TEST(Procedure_basic, initialization_Procedure) {
     // and provide the DataTree tree as the body of the procedure.
     shaka::Procedure proc(
         i_env,
-        body_root,
-        body_root->get_num_children(),
+        root,
+        root->get_child(0)->get_num_children(),
         false 
     );
 
@@ -63,8 +63,18 @@ TEST(Procedure_basic, initialization_Procedure) {
         shaka::get<shaka::MetaTag>(*root->get_data()),
         shaka::MetaTag::LAMBDA
     );
-    /*
-    */
+
+    ASSERT_EQ( proc.get_fixed_arity(), 1 );
+    ASSERT_EQ( proc.is_variable_arity(), false );
+
+    std::vector<std::shared_ptr<shaka::IDataNode<shaka::Data>>> args_vector;
+    args_vector.push_back(std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(1)));
+    auto result_vector = proc.call(args_vector);
+
+    ASSERT_EQ(result_vector.size(), std::size_t(1));
+
+    auto result = shaka::get<shaka::Number>(*result_vector[0]->get_data());
+    ASSERT_EQ(shaka::Number(1), result);
 }
 
 int main(int argc, char** argv) {
