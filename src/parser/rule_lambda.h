@@ -18,30 +18,48 @@ namespace rule {
 
 template <typename T>
 bool lambda (InputStream& in, NodePtr root, T& interm) {
-    if(match_char<char, '('>(in, root, c)) {
+    if(match_char<char, '('>(in, root, interm)) {
         std::string builder;
         NodePtr topNode(shaka::MetaTag::LAMBDA);
 
-        while(space(in, root, c));
+        while(space(in, root,interm));
 
         for(int i = 0; i < 6; i++)      alpha(in, root, interm);
         if(interm != "lambda")          return false;
 
         if(!space(in, root, interm))    return false;
-        while(space(in, root, c));
+        while(space(in, root, interm));
 
-        // formals(in, root, interm)
+        if (!formals(in, root, interm)) return false;
         // body(in, root, interm)
 
-        while(space(in, root, c));
-        if(match_char<char, ')'>(in, root, c)) return true;
+        while(space(in, root, interm));
+        if(match_char<char, ')'>(in, root, interm)) return true;
         return false;
   }
      else { return false; }
 }
 
-// <formals> ::= (<identifer>*) | <identifier> | (<identifier>+ . <identifier)
+// <formals> ::= (<identifer>*) | <identifier> | (<identifier>+ . <identifier>)
 bool formals(InputStream& in, NodePtr root, T& interm) {
+  if (match_char<char, '('>(in, root, interm)) {
+    while (true) {
+      while(space(in, root, interm));
+      shaka::Tokenizer tokenizer(in);
+      if (in.peek() == ')') break;
+      else if (tokenizer.parse_string().get_type() != Token::Type::IDENTIFIER) {
+        return false;
+      }
+    }
+    if (match_char<char, ')'>(in, root, interm)) return true;
+    return false;
+  }
+  else {
+    shaka::Tokenizer tokenizer(in);
+    if (tokenizer.parse_string().get_type() == Token::Type::IDENTIFIER) {
+      return true;
+    }
+  }
   return false;
 }
 
@@ -60,6 +78,8 @@ bool command(InputStream& in, NodePtr root, T& interm) {
   return false;
 }
 
-}}}
+}
+}
+}
 
 #endif // SHAKA_PARSER_RULE_RULE_LAMBDA_H
