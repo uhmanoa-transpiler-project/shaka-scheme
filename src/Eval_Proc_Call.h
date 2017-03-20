@@ -34,8 +34,8 @@ class Proc_Call : public shaka::IEvaluatorStrategy {
 		shaka::Evaluator evaluator(node->get_child(0), env);
 
 
-		// get the procedure associated with the symbol in the first child
-		// of the PROC_CALL node in the environment
+		// get the procedure associated with the symbol or lambda 
+		// in the first child of the PROC_CALL node in the environment
 		Value proc = evaluator.evaluate(shaka::eval::Expression()); 
 	
 		//did we successfully get a defined procedure?
