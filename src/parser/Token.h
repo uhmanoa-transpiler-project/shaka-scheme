@@ -1,6 +1,7 @@
 #ifndef SHAKA_PARSER_TOKEN_H
 #define SHAKA_PARSER_TOKEN_H
 
+#include <iostream>
 #include <string>
 
 namespace shaka {
