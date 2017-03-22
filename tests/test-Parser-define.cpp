@@ -9,6 +9,7 @@
 #include "parser/Tokenizer.h"
 #include "parser/Token.h"
 #include "parser/rule_define.h"
+#include "parser/rule_define_impl.h"
 
 #include <iostream>
 #include <sstream>
