@@ -45,9 +45,12 @@ class Proc_Call : public shaka::IEvaluatorStrategy {
 			std::shared_ptr<shaka::IDataNode<T>> next_argument;
 			
 			// if so, get all of the data out of the child nodes of the
-			// LIST node and place them in an argument vector to pass to proc
-			for (int i = 0; i < list_node->get_num_children(); i++) {
+			// LIST node, evaluate the arguments that we get 
+			// and place them in an argument vector to pass to proc
+			for (size_t i = 0; i < list_node->get_num_children(); i++) {
 				next_argument = list_node->get_child(i);
+				shaka::Evaluator arg_evaluator(next_argument, env);
+				next_argument = evaluator.evaluate(shaka::eval::Expression());
 				args.push_back(next_argument);
 			}
 			
@@ -56,7 +59,7 @@ class Proc_Call : public shaka::IEvaluatorStrategy {
 			std::vector<Value> result = shaka::get<shaka::Procedure>(*proc->get_data()).call(args);
 			// loop through the number of children in the LIST node and
 			// remove the old children (the arguments to the proc call)
-			for (int i = 0; i < list_node->get_num_children(); i++) {
+			for (size_t i = 0; i < list_node->get_num_children(); i++) {
 				list_node->remove_child(i);
 		
 			}
