@@ -12,7 +12,7 @@
 #include "parser/rule_number.h"
 #include "parser/Tokenizer.h"
 
-namespace shake {
+namespace shaka {
 namespace parser {
 namespace rule {
 
@@ -41,6 +41,7 @@ bool lambda (InputStream& in, NodePtr root, T& interm) {
 }
 
 // <formals> ::= (<identifer>*) | <identifier> | (<identifier>+ . <identifier>)
+template <typename T>
 bool formals(InputStream& in, NodePtr root, T& interm) {
   if (match_char<char, '('>(in, root, interm)) {
     while (true) {
@@ -64,6 +65,7 @@ bool formals(InputStream& in, NodePtr root, T& interm) {
 }
 
 // <body> ::= <definition>* <sequence>
+template <typename T>
 bool body(InputStream& in, NodePtr root, T& interm) {
   // expect definition
   // expect sequence
@@ -71,6 +73,7 @@ bool body(InputStream& in, NodePtr root, T& interm) {
 }
 
 // <definition> ::= <command>*  <expression>
+template <typename T>
 bool defintion(InputStream& in, NodePtr root, T& interm) {
   // expect command
   // expect expression
@@ -78,6 +81,7 @@ bool defintion(InputStream& in, NodePtr root, T& interm) {
 }
 
 // <command> ::= <expression>
+template <typename T>
 bool command(InputStream& in, NodePtr root, T& interm) {
   // expect expression
   return false;
