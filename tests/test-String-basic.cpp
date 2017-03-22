@@ -17,6 +17,16 @@ TEST(String, copy_constructor){
 	shaka::String c(a);
 	ASSERT_TRUE(c==a);
 }
+
+TEST(String, copy_constructor_two){
+	int size = 5;
+	int size1 = 3;
+	shaka::String a(size, 'b');
+	shaka::String c(a, 2);
+	shaka::String d(size1, 'b');	
+	ASSERT_TRUE(c==d);
+	
+}
 TEST(String, substring_constructor){
 	int size = 5;
 	shaka::String a(size, 'a');
