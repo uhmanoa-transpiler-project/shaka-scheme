@@ -1,12 +1,19 @@
 #ifndef SHAKA_ASCII_STRING_H
 #define SHAKA_ASCII_STRING_H
+
+#include <string>
 #include <vector>
 #include <iostream>
 #include <ctype.h>
+
 namespace shaka{
 
 class String{
 public:
+    // Construction from a std::string with iterators
+    String(std::string str) :
+        a_string(str.begin(), str.end()) {}
+
     //make new string with length "size" 
     String(int size) : a_string(std::vector<char>(size, 0)) { }
 
@@ -19,13 +26,22 @@ public:
     }
 
     //Makes a copy of a string
-    String(String &c) : a_string(std::vector<char>(c.getString().size(), 0)) {
-		for(int i=0; i!= static_cast<int>(c.getString().size()); i++){
-			a_string[i] = (c.getString())[i];
-		}
-	}
+    String(const String &c) :
+        a_string(c.a_string) {}
 
-    String(String &c, int index1, int index2): a_string(std::vector<char>(c.getString().size(), 0)) {
+    // Move constructor
+    String(String&& c) :
+        a_string(std::move(c.a_string)) {}
+
+    // Copy and swap operator= assignment
+    String& operator=(String rhs) { 
+        using std::swap;
+        swap(*this, rhs);
+        return *this;
+    }
+
+
+    String(const String &c, int index1, int index2): a_string(std::vector<char>(c.getString().size(), 0)) {
 
         for(int i=0; i <= (index2 - index1); i++){
             a_string[i] = c.getString().at(i+index1);
@@ -34,12 +50,12 @@ public:
     }
 
     //return length of a_string
-     int string_length(){
+     int string_length() const {
         return static_cast<int>(a_string.size());
     }
 
     //takes the index, and returns the value of the index
-    char string_ref(int index){
+    char string_ref(int index) const {
 
         for(int i = 0; i < static_cast<int>(a_string.size()); i++){
             if (i == index){
@@ -48,7 +64,7 @@ public:
         }
         
     }
-    void substring(String &c, int start, int end){
+    void substring(const String &c, int start, int end){
         for(int i=0; i <= (end - start); i++){
             a_string[i] = c.getString().at(i+start);
         }
@@ -63,52 +79,52 @@ public:
             }
         }
     }
-    void string_append(String &c){
-	for(int i = 0; i!= static_cast<int>(c.getString().size()); i++){
-		a_string.push_back((c.getString())[i]);
-	}
+    void string_append(const String &c){
+        for(int i = 0; i!= static_cast<int>(c.getString().size()); i++){
+            a_string.push_back((c.getString())[i]);
+        }
     }
-    void string_copy(String &c){
-	for(int i=0; i!= static_cast<int>(c.getString().size()); i++){
-		a_string[i] = (c.getString())[i];
-	}
+    void string_copy(const String &c){
+        for(int i=0; i!= static_cast<int>(c.getString().size()); i++){
+            a_string[i] = (c.getString())[i];
+        }
     }
-    void string_copy(String &c, int start){
-	for(int i=0; i!= static_cast<int>(c.getString().size()); i++){
-		a_string[i] = (c.getString())[i+start];
-	}
+    void string_copy(const String &c, int start){
+        for(int i=0; i!= static_cast<int>(c.getString().size()); i++){
+            a_string[i] = (c.getString())[i+start];
+        }
     }
-    void string_copy(String &c, int start, int end){
-	for(int i=0; i!= (end-start); i++){
-		a_string[i] = (c.getString())[i+start];
-	}
+    void string_copy(const String &c, int start, int end){
+        for(int i=0; i!= (end-start); i++){
+            a_string[i] = (c.getString())[i+start];
+        }
     }
     void string_fill(char fill){
-	for(int i=0; i!= static_cast<int>(a_string.size());i++){
-		a_string[i] = fill;
-	}
+        for(int i=0; i!= static_cast<int>(a_string.size());i++){
+            a_string[i] = fill;
+        }
     }
     void string_fill(char fill, int start){
-	for(int i=start; i!=static_cast<int>(a_string.size());i++){
-		a_string[i] = fill;
-	}
+        for(int i=start; i!=static_cast<int>(a_string.size());i++){
+            a_string[i] = fill;
+        }
     }
     void string_fill(char fill, int start, int end){
-	for(int i=start; i<= end;i++){
-		a_string[i] = fill;
-	}
+        for(int i=start; i<= end;i++){
+            a_string[i] = fill;
+        }
     }
     void string_upcase(){
-	for(int i = 0; i!= static_cast<int>(a_string.size()); i++){
-		a_string[i] = toupper(a_string[i]);
-		
-	}
+        for(int i = 0; i!= static_cast<int>(a_string.size()); i++){
+            a_string[i] = toupper(a_string[i]);
+            
+        }
     }
     void string_downcase(){
-	for(int i = 0; i!= static_cast<int>(a_string.size()); i++){
-		a_string[i] = tolower(a_string[i]);
-		
-	}
+        for(int i = 0; i!= static_cast<int>(a_string.size()); i++){
+            a_string[i] = tolower(a_string[i]);
+            
+        }
 	
     }
 
@@ -157,7 +173,7 @@ public:
         return false;
     }*/
 
-     friend bool operator==(String& s1, String& s2){
+     friend bool operator==(const String& s1, const String& s2){
         if(s1.getString().size() != s2.getString().size()){
             return false;
         }
@@ -170,7 +186,7 @@ public:
         return true;
     } 
 	    
-    friend bool operator!=(String& s1, String& s2){
+    friend bool operator!=(const String& s1, const String& s2){
         if(s1.getString().size() != s2.getString().size()){
             return true;
         }
@@ -185,29 +201,29 @@ public:
 
       //  return !(s1 == s2);
     
-    friend bool operator<(String& s1, String& s2){
+    friend bool operator<(const String& s1, const String& s2){
 	if(s1.string_length() < s2.string_length())
 		return true;
 	return false;
         //return s1.a_string < s2.a_string;
     }
-    friend bool operator>(String& s1, String& s2){
+    friend bool operator>(const String& s1, const String& s2){
         if(s1.string_length() > s2.string_length())
 		return true;
 	return false;
     }
-    friend bool operator<=(String& s1, String& s2){
+    friend bool operator<=(const String& s1, const String s2){
         if(s1.string_length() <= s2.string_length())
 		return true;
 	return false;
     }
-    friend bool operator>=(String& s1, String& s2){
+    friend bool operator>=(const String& s1, const String& s2){
         if(s1.string_length() >= s2.string_length())
 		return true;
 	return false;
     }
 
-    std::vector<char>& getString(){
+    const std::vector<char>& getString() const {
         return a_string;
     }
 
