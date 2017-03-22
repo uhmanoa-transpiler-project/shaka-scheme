@@ -65,16 +65,21 @@ bool formals(InputStream& in, NodePtr root, T& interm) {
 
 // <body> ::= <definition>* <sequence>
 bool body(InputStream& in, NodePtr root, T& interm) {
+  // expect definition
+  // expect sequence
   return false;
 }
 
 // <definition> ::= <command>*  <expression>
 bool defintion(InputStream& in, NodePtr root, T& interm) {
+  // expect command
+  // expect expression
   return false;
 }
 
 // <command> ::= <expression>
 bool command(InputStream& in, NodePtr root, T& interm) {
+  // expect expression
   return false;
 }
 
