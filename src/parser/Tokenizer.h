@@ -511,7 +511,8 @@ public:
         // Parse in the fractional integer part.
         while (std::isdigit(in.peek())) {
             buffer += in.get();
-        }
+        } 
+	/*
         // Make sure that it's the end of the number
         if (is_delimiter(in.peek())) {
             return Token(Token::Type::NUMBER, buffer);
@@ -522,6 +523,8 @@ public:
             throw std::runtime_error("Tokenizer.parse_number: Did not find following delimiter");
             return Token(Token::Type::INVALID);
         }
+	*/
+	return Token(Token::Type::NUMBER, buffer);
     }
 
     Token parse_token () {
