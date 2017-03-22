@@ -19,85 +19,89 @@ bool number_integer(
     NodePtr         root,
     T&              interm
 ) {
-    using shaka::Token;
-    bool accept = false;
-    std::string buffer;
+	bool accept = false;
+   
+	shaka::Token token = in.peek();
 
-    shaka::Token token = in.peek();
-    if (token.type == Token::Type::NUMBER) {
+	std::cout << in.peek() << std::endl;
+	
+	if(token.type == Token::Type::NUMBER) {
+		
+	in.get();
+	interm += token.str;
+	accept = true;
+    	}
 
-	    in.get();
-	    accept = true;
+    	if (accept == true) {
+   	root -> push_child(
+   		shaka::Number(std::stoi(token.str)));
+    	}
 
-    	    if (accept == true) {
-		    root -> push_child(
-		    shaka::Number(std::stoi(token.str)));
-    	    }
-    }
-    return accept;
+   	return accept;
 }
 
-/*
-/// @brief Function that checks if the given is a negative number or decimal 
-/// or a negative decimal
 template <typename T>
 bool number_real(
-	InputStream& 	in,
-	NodePtr 	root,
-	T& 		interm
+    InputStream&    in,
+    NodePtr         root,
+    T&              interm
 ) {
 	bool accept = false;
-	std::string buffer;
 
-    	if (digit(in, root, buffer)) {
-        	while (digit(in, root, buffer));
-        	interm += buffer;
-        	accept = true;
-		
-		if (is_decimal(in, root, buffer))
-		{
-			interm = buffer;
-			if (digit(in, root, buffer))
-			{
-				while(digit(in, root, buffer));
-				interm = buffer;
-				accept = true;
-			}
-			else
-				accept = false;
-		}
-	} 
-	else 
-        	accept = false;
+	shaka::Token token = in.peek();
+    	if(token.type == Token::Type::NUMBER) {
 
-	if (is_negative(in, root, buffer))
-	{
-		if (digit(in, root, buffer))
-	{
-			while (digit(in, root, buffer));
-			interm += buffer;
-			accept = true;
-		}
+		in.get();
+		interm += token.str;
+		accept = true;
 
-		else
-			accept = false;
-		
-		if (is_decimal(in, root, buffer))
-		{
-			interm = buffer;
-			if (digit(in, root, buffer))
-			{
-				while (digit(in, root, buffer));
-				interm = buffer;	
-				accept = true;
-			}
-			else
-				accept = false;
 	}
-	}	
+
+	std::cout << interm << std::endl;
+	if (accept == true) {
+		root -> push_child(
+   			shaka::Number(std::stod(interm)));
+    	}
+
+    return accept;
+}	
+
+template <typename T>
+bool number_rational(
+	InputStream&	in,
+	NodePtr		root,
+	T&		interm
+) {
+	bool accept = false;
+	std::string denom;
+	std::string numer;
+	int fraction;
+
+	shaka::Token token = in.peek();
+	if(token.type == Token::Type::NUMBER) {
+
+		in.get();
+		interm += token.str;
+
+		fraction = token.str.find("/");
+		numer = token.str.substr(0, fraction);
+		denom = token.str.substr(fraction + 1, token.str.size());
+
+		accept = true;
+
+		if(accept == true) {
+			root -> push_child(
+				shaka::Number(std::stoi(numer),
+				std::stoi(denom)));
+		}
+		
+
+
+	}
+	
 	return accept;
-}
-*/
+}	
+
 } // namespace rule
 } // namespace parser
 } // namespace shaka

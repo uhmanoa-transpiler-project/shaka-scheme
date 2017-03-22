@@ -497,22 +497,42 @@ public:
     }
 
     Token parse_number(std::string& buffer) {
+
+	bool number = false;
         // Parse sign if it's there
         if (is_explicit_sign(in.peek())) {
+
             buffer += in.get();
         }
         // Parse the integer part.
         while (std::isdigit(in.peek())) {
             buffer += in.get();
+
+	    number = true;
         }
+	
         // Parse in a dot if it's a float
         if (in.peek() == '.') {
             buffer += in.get();
-        }
-        // Parse in the fractional integer part.
-        while (std::isdigit(in.peek())) {
-            buffer += in.get();
-        } 
+
+      	    // Parse in the fractional integer part.
+     	    while (std::isdigit(in.peek())) {
+            	buffer += in.get();
+       	    }
+
+	    number = true;
+	} 
+	
+	// If there is a /, it is a fraction
+	if (in.peek() == '/') {
+		buffer += in.get();
+
+	    while (std::isdigit(in.peek())) {
+		buffer += in.get();
+
+		number = true;
+	    }
+	}	
 	/*
         // Make sure that it's the end of the number
         if (is_delimiter(in.peek())) {
@@ -525,7 +545,13 @@ public:
             return Token(Token::Type::INVALID);
         }
 	*/
-	return Token(Token::Type::NUMBER, buffer);
+
+	if(number == true)
+	{
+		return Token(Token::Type::NUMBER, buffer);
+	}
+	else
+		return Token(Token::Type::INVALID);
     }
 
     Token parse_token () {
@@ -658,7 +684,7 @@ public:
                     }
 
                 // Parse in a number
-                } else if (std::isdigit(in.peek())) {
+                } else if (std::isdigit(in.peek()) {
                     std::string buffer;
                     return parse_number(buffer);
 
