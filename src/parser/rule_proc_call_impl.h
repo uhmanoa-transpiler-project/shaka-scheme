@@ -1,7 +1,7 @@
-#ifndef SHAKA_PARSER_RULES_RULE_PROC_CALL_H
-#define SHAKA_PARSER_RULES_RULE_PROC_CALL_H
+#ifndef SHAKA_PARSER_RULES_RULE_PROC_CALL_IMPL_H
+#define SHAKA_PARSER_RULES_RULE_PROC_CALL_IMPL_H
 
-#include <cctype>
+#include "parser/rule_proc_call.h"
 
 #include "parser/primitives.h"
 #include "parser/Token.h"
@@ -26,11 +26,13 @@ bool proc_call(
     InputStream&    in,
     NodePtr         root,
     T&              interm
-);
+) {
+
+}
 
 } // namespace rule
 } // namespace parser
 } // namespace shaka
 
 
-#endif // SHAKA_PARSER_RULE_RULE_PROC_CALL_H
+#endif // SHAKA_PARSER_RULE_RULE_PROC_CALL_IMPL_H
