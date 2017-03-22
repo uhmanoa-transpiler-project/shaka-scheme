@@ -22,14 +22,14 @@ OBJ_FILES := $(addprefix obj/, $(notdir $(CPP_FILES:.cpp=.o)))
 # The directories to search for includes from.
 ### Sometimes, header files are in other directories.
 ### This is where one might place those directory paths.
-TESTINCLUDEDIR = 
-INCLUDEDIR = -Isrc/
+TESTINCLUDEDIR = -I./dep/googletest/googletest/include/
+INCLUDEDIR = -Isrc/ -I/usr/local/boost_1_63_0/
 
 # These are for including the libraries you want to use.
 ### Ignore these for now; we have not covered libraries yet.
 LIBSDIR = 
 LIBS = 
-TESTLIBSDIR = 
+TESTLIBSDIR = -L./dep/googletest/googletest/
 TESTLIBS = -lgtest -lpthread
 
 # Flags for the linker step.
