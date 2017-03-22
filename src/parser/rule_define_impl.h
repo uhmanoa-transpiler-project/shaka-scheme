@@ -42,7 +42,6 @@ bool define(
 
     std::stack<shaka::Token> tokens;
     NodePtr defNode;
-    shaka::Data tag = shaka::MetaTag::DEFINE;
 
     try {
         // Check if it starts with a open parenthesis
