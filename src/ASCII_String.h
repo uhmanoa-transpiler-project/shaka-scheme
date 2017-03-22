@@ -8,26 +8,24 @@ namespace shaka{
 class String{
 public:
     //make new string with length "size" 
-    String(int size){  
-        a_string.resize(size);
-    }
+    String(int size) : a_string(std::vector<char>(size, 0)) { }
 
     //Create char vector with size "size" and initialize with character "b""
-    String(int size, char b){
+    String(int size, char b) : a_string(std::vector<char>(size, 0)) {
 
         for(int i = 0 ; i < size; i++){
-            a_string.push_back(b); 
+            a_string[i] = b; 
         }
     }
 
     //Makes a copy of a string
-    String(String &c){
-	for(int i=0; i!= static_cast<int>(c.getString().size()); i++){
-		a_string[i] = (c.getString())[i];
+    String(String &c) : a_string(std::vector<char>(c.getString().size(), 0)) {
+		for(int i=0; i!= static_cast<int>(c.getString().size()); i++){
+			a_string[i] = (c.getString())[i];
+		}
 	}
-    }
 
-    String(String &c, int index1, int index2){
+    String(String &c, int index1, int index2): a_string(std::vector<char>(c.getString().size(), 0)) {
 
         for(int i=0; i <= (index2 - index1); i++){
             a_string[i] = c.getString().at(i+index1);

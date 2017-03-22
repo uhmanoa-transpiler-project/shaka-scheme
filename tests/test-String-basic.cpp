@@ -11,7 +11,7 @@ TEST(String, Single_element_constructor){
 	ASSERT_EQ(b=='a', true);
 
 }
-/*TEST(String, copy_constructor){
+TEST(String, copy_constructor){
 	int size = 5;
 	shaka::String a(size, 'b');
 	shaka::String c(a);
@@ -23,7 +23,7 @@ TEST(String, substring_constructor){
 	shaka::String b(a, 1, 2);
 	shaka::String c(b);
 	ASSERT_TRUE(b==c); 
-}*/
+}
 TEST(String, get_length){
 	int size = 5;
 	shaka::String a(size, 'a');
