@@ -23,6 +23,7 @@ public:
     using T = shaka::Data;
     using Key = shaka::Symbol;
     using Value = std::shared_ptr<shaka::IDataNode<shaka::Data>>;
+
     /// @brief Prints the type of all the items in the tree recursively.
     std::shared_ptr<IDataNode<T>> evaluate(
         std::shared_ptr<IDataNode<T>> node,
