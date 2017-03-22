@@ -17,7 +17,7 @@
 #include <vector>
 
 /// @brief Basic default constructor test
-TEST(Tokenizer_define, token_constructor) {
+TEST(Parser_define, token_constructor) {
     shaka::Token(
         shaka::Token::Type::INVALID,
         "(define asdf 1)"
@@ -25,7 +25,7 @@ TEST(Tokenizer_define, token_constructor) {
 }
 
 /// @brief Assert that two tokens are equal
-TEST(Tokenizer_define, tokenizer_test) {
+TEST(Parser_define, tokenizer_test) {
     // Create a stringstream and give it to the Tokenizer
     std::stringstream ss("( define\nasdf\t1    )");
     shaka::Tokenizer tk(ss);
@@ -38,7 +38,7 @@ TEST(Tokenizer_define, tokenizer_test) {
 
 /// @brief Assert that rule_define can parse the base 
 /// of (define asdf 1)
-TEST(Tokenizer_define, define_return) {
+TEST(Parser_define, define_return) {
 
     std::stringstream ss("( define asdf 1 )");
     shaka::Tokenizer in(ss);
@@ -50,7 +50,7 @@ TEST(Tokenizer_define, define_return) {
 
 /// @brief Asser that rule_define can parse a slightly
 /// more complicated version of define using extra whitespace
-TEST(Tokenizer_define, define_number) {
+TEST(Parser_define, define_number) {
 
     std::stringstream ss(" (   define \n true \n1 \n )");
     shaka::Tokenizer in(ss);
@@ -62,7 +62,7 @@ TEST(Tokenizer_define, define_number) {
 
 /// @brief Test that rule_define can parse a boolean as the 
 /// expression
-TEST(Tokenizer_define, define_bool) {
+TEST(Parser_define, define_bool) {
     
     std::stringstream ss("(define true #true)");
     shaka::Tokenizer in(ss);
@@ -72,7 +72,7 @@ TEST(Tokenizer_define, define_bool) {
     std::cout << "interm: " << interm << std::endl;
 }
 
-TEST(Tokenizer_define, define_fail) {
+TEST(Parser_define, define_fail) {
 
     std::stringstream ss("( define 123)");
     shaka::Tokenizer in(ss);
@@ -91,7 +91,7 @@ using IDataTree = shaka::IDataNode<Data>;
 using DataTree  = shaka::DataNode<Data>;
 using Environment = shaka::Environment<shaka::Symbol, std::shared_ptr<IDataTree>>;
 
-TEST(Tokenizer_define, define_tree) {
+TEST(Parser_define, define_tree) {
     
     std::stringstream ss("(define x 1)");
     shaka::Tokenizer in(ss);
