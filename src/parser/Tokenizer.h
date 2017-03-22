@@ -3,6 +3,7 @@
 
 #include "parser/Token.h"
 
+#include <iostream>
 #include <string>
 #include <deque>
 
@@ -15,6 +16,9 @@
 namespace shaka {
 
 class Tokenizer {
+private:
+    std::istream&     in;
+    std::deque<Token> tokens;
 public:
     Tokenizer (std::istream& in) :
         in(in) {}
@@ -497,17 +501,16 @@ public:
 
     Token parse_number(std::string& buffer) {
 
-	bool number = false;
+        bool number = false;
         // Parse sign if it's there
         if (is_explicit_sign(in.peek())) {
-
             buffer += in.get();
         }
         // Parse the integer part.
         while (std::isdigit(in.peek())) {
             buffer += in.get();
 
-	    number = true;
+            number = true;
         }
 	
         // Parse in a dot if it's a float
@@ -519,38 +522,37 @@ public:
             	buffer += in.get();
        	    }
 
-	    number = true;
-	} 
+            number = true;
+        } 
 	
-	// If there is a /, it is a fraction
-	if (in.peek() == '/') {
-		buffer += in.get();
+        // If there is a /, it is a fraction
+        if (in.peek() == '/') {
+            buffer += in.get();
 
-	    while (std::isdigit(in.peek())) {
-		buffer += in.get();
+            while (std::isdigit(in.peek())) {
+            buffer += in.get();
 
-		number = true;
-	    }
-	}	
-	/*
-        // Make sure that it's the end of the number
-        if (is_delimiter(in.peek())) {
+            number = true;
+            }
+        }	
+        //
+        //  // Make sure that it's the end of the number
+        //  if (is_delimiter(in.peek())) {
+        //      return Token(Token::Type::NUMBER, buffer);
+        //  } else {
+        //      if (DEBUG_PRINT) {
+        //          std::cerr << "Tokenizer.parse_number: Did not find following delimiter" << std::endl;
+        //      }
+        //      throw std::runtime_error("Tokenizer.parse_number: Did not find following delimiter");
+        //      return Token(Token::Type::INVALID);
+        //  }
+        //
+
+        if (number == true) {
             return Token(Token::Type::NUMBER, buffer);
         } else {
-            if (DEBUG_PRINT) {
-                std::cerr << "Tokenizer.parse_number: Did not find following delimiter" << std::endl;
-            }
-            throw std::runtime_error("Tokenizer.parse_number: Did not find following delimiter");
             return Token(Token::Type::INVALID);
         }
-	*/
-
-	if(number == true)
-	{
-		return Token(Token::Type::NUMBER, buffer);
-	}
-	else
-		return Token(Token::Type::INVALID);
     }
 
     Token parse_token () {
@@ -683,7 +685,7 @@ public:
                     }
 
                 // Parse in a number
-                } else if (std::isdigit(in.peek()) {
+                } else if (std::isdigit(in.peek())) {
                     std::string buffer;
                     return parse_number(buffer);
 
@@ -894,14 +896,7 @@ public:
             || c == 'f'
         );
     }
-
-    friend std::ostream& operator<< (std::ostream&, Token);
-
-private:
-    std::istream&     in;
-    std::deque<Token> tokens;
 };
-
 
 } // namespace shaka
 
