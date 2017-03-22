@@ -39,13 +39,11 @@ TEST(Tokenizer_number, stringstream) {
 
 }
 
-TEST(Tokenizer_number, integer_push) {
-	std::stringstream ss ("1");
+TEST(Tokenizer_number, pos_integer_push) {
+	std::stringstream ss ("+1");
 	std::string interm;
 
 	shaka::Tokenizer tk(ss);
-
-	using Node = shaka::DataNode<shaka::Data>;
 
 	auto root = std::make_shared<shaka::parser::Node>(shaka::MetaTag::LIST);
 
@@ -56,9 +54,124 @@ TEST(Tokenizer_number, integer_push) {
 	shaka::Number n1 = shaka::get<shaka::Number>
 		(*(root -> get_child(0) -> get_data()));
 
-	shaka::Number n2(1);
+	shaka::Number n2(+1);
 
 	ASSERT_EQ(n1, n2);
+}
+
+TEST(Tokenizer_number, neg_integer_push) {
+	std::stringstream ss ("-2");
+	std::string interm;
+
+	shaka::Tokenizer tk(ss);
+
+	auto root = std::make_shared<shaka::parser::Node>(shaka::MetaTag::LIST);
+
+	bool b = shaka::parser::rule::number_integer(tk, root, interm);
+
+	ASSERT_TRUE(b);
+
+	shaka::Number n1 = shaka::get<shaka::Number>
+		(*(root -> get_child(0) -> get_data()));
+
+	shaka::Number n2(-2);
+
+	ASSERT_EQ(n1, n2);
+}
+
+TEST(Tokenizer_number, pos_real_push) {
+	std::stringstream ss ("+66.99");
+	std::string interm;
+
+	shaka::Tokenizer tk(ss);
+
+	auto root = std::make_shared<shaka::parser::Node>(shaka::MetaTag::LIST);
+
+	bool b = shaka::parser::rule::number_real(tk, root, interm);
+
+	ASSERT_TRUE(b);
+
+	shaka::Number n1 = shaka::get<shaka::Number>
+		(*(root -> get_child(0) -> get_data()));
+
+	shaka::Number n2(+66.99);
+
+	ASSERT_EQ(n1, n2);
+}
+
+TEST(Tokenizer_number, neg_real_push) {
+	std::stringstream ss ("-1.23");
+	std::string interm;
+
+	shaka::Tokenizer tk(ss);
+
+	auto root = std::make_shared<shaka::parser::Node>(shaka::MetaTag::LIST);
+
+	bool b = shaka::parser::rule::number_real(tk, root, interm);
+
+	ASSERT_TRUE(b);
+
+	shaka::Number n1 = shaka::get<shaka::Number>
+		(*(root -> get_child(0) -> get_data()));
+
+	shaka::Number n2(-1.23);
+
+	ASSERT_EQ(n1, n2);
+}
+
+TEST(Tokenizer_number, pos_rational_push) {
+	std::stringstream ss ("123/456");
+	std::string interm;
+
+	shaka::Tokenizer tk(ss);
+
+	auto root = std::make_shared<shaka::parser::Node>(shaka::MetaTag::LIST);
+
+	bool b = shaka::parser::rule::number_rational(tk, root, interm);
+
+	ASSERT_TRUE(b);
+
+	shaka::Number n1 = shaka::get<shaka::Number> 
+			(*root -> get_child(0) -> get_data());
+
+	shaka::Number n2(123, 456);
+
+	ASSERT_EQ(n1, n2);
+}
+
+TEST(Tokenizer_number, neg_rational_push) {
+	std::stringstream ss ("-7/100")
+
+	std::string interm;
+
+	shaka::Tokenizer tk(ss);
+
+	auto root = std::make_shared<shaka::parser::Node>(shaka::MetaTag::LIST);
+
+	bool b = shaka::parser::rule::number_rational(tk, root, interm);
+
+	ASSERT_TRUE(b);
+
+	shaka::Number n1 = shaka::get<shaka::Number> 
+			(*root -> get_child(0) -> get_data());
+
+	shaka::Number n2(-7, 100);
+
+	ASSERT_EQ(n1, n2);
+}
+
+
+TEST(Tokenizer_number, not_a_number) {
+	std::stringstream ss ("abc");
+	std::string interm;
+
+	shaka::Tokenizer tk(ss);
+
+	auto root = std::make_shared<shaka::parser::Node>(shaka::MetaTag::LIST);
+
+	bool b = shaka::parser::rule::number_real(tk, root, interm);
+
+	ASSERT_FALSE(b);
 }
 
 int main(int argc, char** argv) {
@@ -66,3 +179,4 @@ int main(int argc, char** argv) {
 
     return RUN_ALL_TESTS();
 }
+
