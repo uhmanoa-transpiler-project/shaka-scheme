@@ -5,6 +5,10 @@
 
 #include "parser/primitives.h"
 
+#include "Data.h"
+#include "DataNode.h"
+#include "Procedure.h"
+
 namespace shaka {
 namespace parser {
 namespace rule {
@@ -24,6 +28,39 @@ bool digit(
     } else {
         return false;
     }
+}
+
+/// @brief Rule for '-'
+template <typename T>
+bool is_negative(
+	InputStream&	in,
+	NodePtr		root,
+	T&		interm
+) {
+	if (in.peek() == '-')
+	{
+		interm += in.get();
+		return true;
+	}
+	
+	else
+		return false;
+}
+
+/// @brief Rule for '.'
+template <typename T>
+bool is_decimal(
+	InputStream&	in,
+	NodePtr		root,
+	T&		interm
+) {
+	if (in.peek() == '.')
+	{
+		interm += in.get();
+		return true;
+	}
+	else
+		return false;
 }
 
 /// @brief Matches an alpha character, and then
@@ -54,7 +91,7 @@ bool space(
         interm += in.get();
         return true;        
     } else {
-        return false;
+       return false;
     }
 }
 
