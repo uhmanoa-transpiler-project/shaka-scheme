@@ -140,7 +140,7 @@ TEST(Tokenizer_number, pos_rational_push) {
 }
 
 TEST(Tokenizer_number, neg_rational_push) {
-	std::stringstream ss ("-7/100")
+	std::stringstream ss ("-7/100");
 
 	std::string interm;
 
