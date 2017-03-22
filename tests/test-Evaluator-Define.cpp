@@ -80,24 +80,17 @@ TEST(Evaluator_define, define_symbol_list) {
         root,
         env
     );
-    std::cout << "asdf" << std::endl;
 
     evaluator.evaluate(shaka::eval::PrintTree<std::cout>());
     // Evaluate the next thing using the Define strategy.
     evaluator.evaluate(shaka::eval::Define());
-    std::cout << "asdf" << std::endl;
 
     ASSERT_EQ(typeid(shaka::MetaTag), env->get_value(shaka::Symbol("a"))->get_data()->type());
-    std::cout << "asdf" << std::endl;
 
     ASSERT_EQ(shaka::MetaTag::LIST, shaka::get<shaka::MetaTag>(*env->get_value(shaka::Symbol("a"))->get_data()));
-    std::cout << "asdf" << std::endl;
     ASSERT_EQ(shaka::Number(1), shaka::get<shaka::Number>(*env->get_value(shaka::Symbol("a"))->get_child(0)->get_data()));
-    std::cout << "asdf" << std::endl;
     ASSERT_EQ(shaka::Number(2), shaka::get<shaka::Number>(*env->get_value(shaka::Symbol("a"))->get_child(1)->get_data()));
-    std::cout << "asdf" << std::endl;
     ASSERT_EQ(shaka::Number(3), shaka::get<shaka::Number>(*env->get_value(shaka::Symbol("a"))->get_child(2)->get_data()));
-    std::cout << "asdf" << std::endl;
 }
 
 

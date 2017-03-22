@@ -37,7 +37,6 @@ bool define(
     T&              interm
 );
 
-
 } // namespace rule
 } // namespace parser
 } // namespace shaka
