@@ -2,61 +2,141 @@
 #define SHAKA_PARSER_RULES_RUL_DEFINE_H
 
 #include <cctype>
+#include <exception>
 #include <functional>
-#include <vector>
+#include <stack>
+#include <string>
 
 #include "Number.h"
 #include "Symbol.h"
+#include "Data.h"
+#include "IDataNode.h"
 
-#include "parser/char_rules.h"
-#include "parser/rule_number.h"
+#include "Environment.h"
+#include "Evaluator.h"
+#include "Eval_Define.h"
+#include "Procedure.h"
+#include "Eval_Expression.h"
+#include "Eval_Define_impl.h"
+#include "Eval_Variable_impl.h"
+#include "Eval_PrintTree.h"
+
+#include "parser/primitives.h"
+#include "parser/Tokenizer.h"
+#include "parser/Token.h"
 
 namespace shaka {
 namespace parser {
 namespace rule {
 
-// BNF:
-// <define> ::= (\s*define\s+<letter>+\s+<number>\s*)
+// Define using tokens
 template <typename T>
 bool define(
     InputStream&    in,
-    NodePtr         root,
+    NodePtr         root, // shared ptr to IDataNode<Data>
     T&              interm
 ) {
-    char c;
 
-    /* Begin to parse if input begins with a '('.
-     * It MUST begin with this, otherwise it cannot be define.
-     */
-    if(match_char<char, '('>(in, root, c)){
-        std::string builder;
-        NodePtr topNode(shaka::MetaTag::DEFINE);
+    std::stack<shaka::Token> tokens;
+    NodePtr defNode;
+    shaka::Data tag = shaka::MetaTag::DEFINE;
+
+    try {
+        // Check if it starts with a open parenthesis
+        if(in.peek().type != shaka::Token::Type::PAREN_START) 
+            throw std::runtime_error("No open parenthesis");
+
+        tokens.push(in.get());
+        interm += tokens.top().get_string();
+
+        // Open parenthesis must be followed by 'define'
+        if(in.peek().type != shaka::Token::Type::IDENTIFIER &&
+           in.peek().get_string() != "define")
+            throw std::runtime_error("No define keyword");
+
+        tokens.push(in.get());
+        interm += tokens.top().get_string();
+        // add NODE
+        if(root != nullptr)
+            defNode = root->push_child(shaka::Data{shaka::MetaTag::DEFINE});
+
+        // Get identifier after 'define'
+        if(in.peek().type != shaka::Token::Type::IDENTIFIER)
+            throw std::runtime_error("No followup identifier");
+
+        tokens.push(in.get());
+        interm += tokens.top().get_string();
+        // Add Symbol for identifier to tree
+        if(defNode != nullptr)
+            defNode->push_child(shaka::Symbol(tokens.top().get_string()));
+
+        // Get end expression
+        if(in.peek().type != shaka::Token::Type::IDENTIFIER &&
+           in.peek().type != shaka::Token::Type::NUMBER     &&
+           in.peek().type != shaka::Token::Type::CHARACTER  &&
+           in.peek().type != shaka::Token::Type::STRING     &&
+           in.peek().type != shaka::Token::Type::BOOLEAN_TRUE &&
+           in.peek().type != shaka::Token::Type::BOOLEAN_FALSE)
+            throw std::runtime_error("No followup expression");
+
+        tokens.push(in.get());
+        interm += tokens.top().get_string();
         
-        /* Ignore leading white space */
-        while(space(in, root, c));
-        /* Parse only enough to find the keyword 'define'. */
-        for(int i = 0; i < 6; i++)      alpha(in, root, interm);
-        if(interm != "define")          return false;
-        /* Check for a space and ignore extra spaces */
-        if(!space(in, root, interm))    return false;
-        while(space(in, root, c));
-        /* Define must be followed by a word */
-        if(!alpha(in, topNode, builder))    return false;
-        while(alpha(in, topNode, builder));
-        NodePtr symbolNode(shaka::Symbol(builder));
+        switch(tokens.top().type) {
 
-        //NodePtr firstChild();
-        /* Word must be followed by a space, ignore extras */
-        if(!space(in, root, interm))    return false;
-        while(space(in, root, c));
-        /* Must be followed by an integer */
-        if(!integer(in, root, interm))  return false;
-        /* Ignore trailing whitespace */
-        while(space(in, root, c));
-        /* Must have matching closing ')'. */
-        if(match_char<char, ')'>(in, root, c)) return true;
-        return false;
-    } else {
+            case shaka::Token::Type::NUMBER:
+                // Push Number under define node
+                if(defNode != nullptr) {
+                    defNode->push_child(
+                        shaka::Number( 
+                            std::stod( tokens.top().get_string() )
+                        )
+                    );
+                }
+                break;
+            case shaka::Token::Type::IDENTIFIER:
+            case shaka::Token::Type::CHARACTER:
+            case shaka::Token::Type::STRING:
+            case shaka::Token::Type::BOOLEAN_TRUE:
+            case shaka::Token::Type::BOOLEAN_FALSE:
+            default:
+                // push symbol under define node
+                if(defNode != nullptr) {
+                    defNode->push_child(
+                            shaka::Symbol( tokens.top().get_string() )
+                            );
+                }
+                break;
+        }
+        
+        // Get end closing parenthesis
+        if(in.peek().type != shaka::Token::Type::PAREN_END)
+            throw std::runtime_error("No closing paren");
+
+        tokens.push(in.get());
+        interm += tokens.top().get_string();
+
+        return true;
+
+
+    // If define failed to parse, then put all tokens
+    // back on the Tokenizer for use elsewhere
+    } catch (std::runtime_error& e) {
+
+        while(!tokens.empty()) {
+            in.unget(tokens.top());
+            tokens.pop();
+        }
+        
+        // delete defNode and children
+        if(defNode != nullptr) {
+
+            std::size_t size = defNode->get_num_children();
+            for(std::size_t i = 0; i < size; ++i) {
+                defNode->remove_child(i);
+            }
+        }
+        
         return false;
     }
 }
