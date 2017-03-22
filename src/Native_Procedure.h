@@ -29,43 +29,15 @@ public:
 	variable_arity(variable_arity) {}
 	
 	
-	}
 	virtual /*std::vector<std::shared_ptr<IDataNode<Data>>>*/ Args call(
 			/*std::vector<std::shared_ptr<IDataNode<Data>>*/ Args v) {
-		if (v.size() > fixed_arity) {
+		if (v.size() > fixed_arity && !variable_arity) {
 			throw std::runtime_error("Wrong number of args to native procedure");
 		}
 		
 		else {
 
-			for(std::size_t i = 0; i <v.size(); i++){
-				if(*v[i] -> get_data().type() != func.target_type().name())
-					throw std::runtime_error("Wrong argument type to native procedure");
-			}
-			
-			if(*v[i] -> get_data().type() == typeid(shaka::Number)){
-				/*for(std::size_t i = 1; i < v.size(); i++){
-					shaka::Data result = func(v[i-1], v[i]);
-					if(i>=2){
-					result = func(shaka::get<shaka::Number>(result), v[i]); 
-					}*/
-				shaka::Data result = func(v);
-				}
-			}
-			if(*v[i] -> get_data().type() == typeid(shaka::Symbol)){
-				/*for(std::size_t i = 1; i < v.size(); i++){
-					shaka::Data result = func(v[i-1], v[i]);
-					if(i>=2){
-					result = func(shaka::get<shaka::Symbol>(result), v[i]); 
-					}
-				}*/
-				shaka::Data result = func(v);
-			}
-			
-			
-			
-			}
-
+			return func(v);
 		}
 	
 	}
