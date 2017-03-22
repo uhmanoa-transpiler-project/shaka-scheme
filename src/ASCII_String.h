@@ -25,7 +25,16 @@ public:
 		}
 	}
 
-    String(String &c, int index1, int index2): a_string(std::vector<char>(c.getString().size(), 0)) {
+    String(String &c, int index1): a_string(std::vector<char>(static_cast<int>(c.getString().size()) - index1, 0)) {
+
+        for(int i=0; i < static_cast<int>(c.getString().size()) - index1; i++){
+            a_string[i] = c.getString().at(i+index1);
+        }
+
+    }
+
+    //Makes a string out of part of another string
+    String(String &c, int index1, int index2): a_string((index2-index1), 0) {
 
         for(int i=0; i <= (index2 - index1); i++){
             a_string[i] = c.getString().at(i+index1);
@@ -41,11 +50,13 @@ public:
     //takes the index, and returns the value of the index
     char string_ref(int index){
 
-        for(int i = 0; i < static_cast<int>(a_string.size()); i++){
-            if (i == index){
-                return a_string[index];
-            }
+        for(int i=0; i < static_cast<int>(a_string.size()); i++){
+		if(i == index)
+            		return a_string[index];
         }
+		/*if(static_cast<int>(a_string.size()) <= index){
+                	return a_string[index];
+		}*/
         
     }
     void substring(String &c, int start, int end){
@@ -58,9 +69,9 @@ public:
     void string_set(int index, char a){
 
         for(int i = 0; i < static_cast<int>(a_string.size()); i++){
-            if (i == index){
+           if (i == index){
                 a_string[index] = a;
-            }
+           }
         }
     }
     void string_append(String &c){
@@ -69,16 +80,20 @@ public:
 	}
     }
     void string_copy(String &c){
+	a_string = std::vector<char>(c.getString().size(), 0);
 	for(int i=0; i!= static_cast<int>(c.getString().size()); i++){
 		a_string[i] = (c.getString())[i];
 	}
     }
     void string_copy(String &c, int start){
+
+	a_string = std::vector<char>(c.getString().size(), 0);
 	for(int i=0; i!= static_cast<int>(c.getString().size()); i++){
 		a_string[i] = (c.getString())[i+start];
 	}
     }
     void string_copy(String &c, int start, int end){
+	a_string = std::vector<char>(c.getString().size(), 0);
 	for(int i=0; i!= (end-start); i++){
 		a_string[i] = (c.getString())[i+start];
 	}
