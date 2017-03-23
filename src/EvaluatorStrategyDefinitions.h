@@ -9,6 +9,8 @@ class Eval_Define;
 class Eval_Variable;
 class Eval_Quote;
 class Eval_Expression;
+class Eval_Lambda;
+class Eval_Proc_Call;
 
 } // namespace eval
 

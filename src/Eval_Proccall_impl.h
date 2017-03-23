@@ -6,13 +6,19 @@
 #include "IDataNode.h"
 #include "IEnvironment.h"
 #include "IProcedure.h"
+#include "Data.h"
+
 #include "Procedure.h"
+
 #include <vector>
 #include <memory>
 #include <type_traits>
-#include "Data.h"
+
 #include "DataNode.h"
 #include "Eval_Expression.h"
+#include "Eval_Proccall.h"
+
+#include "Eval_Expression_impl.h"
 // attempts to get the procedure bound in the current environment
 // and call it on the arguments condained as the child nodes of the
 // list node that the procedure is called on
@@ -22,12 +28,11 @@
 namespace shaka {
 namespace eval {
 
-class Proc_Call : public shaka::IEvaluatorStrategy {
     using T = shaka::Data;
     using Key = shaka::Symbol;
     using Value = std::shared_ptr<shaka::IDataNode<shaka::Data>>;
 
-	std::shared_ptr<shaka::IDataNode<T>> evaluate(std::shared_ptr<shaka::IDataNode<T>> node,
+	std::shared_ptr<shaka::IDataNode<T>> Proc_Call::evaluate(std::shared_ptr<shaka::IDataNode<T>> node,
 			std::shared_ptr<shaka::IEnvironment<Key, Value>> env) {
 		
 		// instantiate an evaluator on the child node which should either hold a lambda or
@@ -80,7 +85,6 @@ class Proc_Call : public shaka::IEvaluatorStrategy {
 		}
 	}
 
-};
 } // namespace eval
 } // namespace shaka
 #endif // SHAKA_EVAL_PROCCALL_IMPL_H
