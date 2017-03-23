@@ -8,6 +8,7 @@ namespace shaka {
 class Number;
 class Symbol;
 class Procedure;
+class String;
 
 /// @brief Auxillary "type-tags" used to decide whether the
 /// contained type should have children, according to the sematnics
@@ -30,19 +31,15 @@ boost::variant<
     boost::recursive_wrapper<shaka::Procedure>,
     shaka::MetaTag,
     shaka::Symbol,
-    shaka::Number
+    shaka::Number,
+    shaka::String
 >;
 
 }
 
 #include "Number.h"
 #include "Symbol.h"
-#include "Data.h"
+#include "ASCII_String.h"
 
-
-namespace shaka {
-
-
-} // namespace shaka
 
 #endif // SHAKA_DATA_H

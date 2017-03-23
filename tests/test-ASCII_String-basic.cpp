@@ -1,5 +1,4 @@
-
-/*
+#include "ASCII_String.h"
 #include <gtest/gtest.h>
 
 TEST(Stringasdf, empty_string_constructor){ }
@@ -17,6 +16,16 @@ TEST(String, copy_constructor){
 	shaka::String a(size, 'b');
 	shaka::String c(a);
 	ASSERT_TRUE(c==a);
+}
+
+TEST(String, copy_constructor_two){
+	int size = 5;
+	int size1 = 3;
+	shaka::String a(size, 'b');
+	shaka::String c(a, 2);
+	shaka::String d(size1, 'b');	
+	ASSERT_TRUE(c==d);
+	
 }
 TEST(String, substring_constructor){
 	int size = 5;
@@ -46,9 +55,9 @@ TEST(String, string_append){
 	shaka::String a(size, 'c');
 	shaka::String b(size, 'a');
         a.string_append(b);
-	for(int i =5; i!= 10; i++)
+	for(int i =5; i!= 10; i++){
 		ASSERT_EQ(a.getString()[i], 'a');	
-
+	}
 }
 TEST(String, string_copy_one){
 	int size = 5;
@@ -64,8 +73,8 @@ TEST(String, string_copy_two){
 	shaka::String b(size, 'b');
 	shaka::String c(size1);
 	shaka::String d(size1, 'b');
-	a.string_copy(b, 3);
-	c.substring(a, 3, 5);
+	a.string_copy(b, 2, 4);
+	c.substring(a, 0, 2);
 	ASSERT_TRUE(c==d);
 }
 
@@ -83,8 +92,41 @@ TEST(String, string_fill){
 	a.string_fill('b');
 	ASSERT_TRUE(a==b);
 }
+TEST(String, string_fill_one){
+	int size = 5;
+	shaka::String a(size, 'a');
+	shaka::String b(size, 'b');
+	shaka::String c(size);
+	a.string_fill('b', 2);
+	for(int i=2; i<size; i++){
+	  ASSERT_TRUE(a.string_ref(i)=='b');
+	}
+}
+TEST(String, string_fill_two){
+	int size = 5;
+	shaka::String a(size, 'a');
+	a.string_fill('b', 1, 3);
+	for(int i=1; i<4; i++){
+	ASSERT_TRUE(a.string_ref(i)=='b');
+	}
+}
 
-*/
+
+TEST(String, string_upcase){
+	int size = 5;
+	shaka::String a(size, 'a');
+	shaka::String b(size, 'A');
+	a.string_upcase();
+	ASSERT_TRUE(b==a);
+}
+TEST(String, string_downcasecase){
+	int size = 5;
+	shaka::String a(size, 'A');
+	shaka::String b(size, 'a');
+	a.string_downcase();
+	ASSERT_TRUE(b==a);
+}
+
 
 #include <gtest/gtest.h>
 int main(int argc, char** argv) {
