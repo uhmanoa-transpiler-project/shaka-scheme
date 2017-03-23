@@ -22,11 +22,12 @@ public:
     using Function = std::function<Args(Args)>;
 
 
-	Native_Procedure(Function func,  std::size_t         fixed_arity, 
-					 bool                variable_arity = false) :
-	func(func),
-	fixed_arity(fixed_arity),
-	variable_arity(variable_arity) {}
+	Native_Procedure(Function	func,
+			 std::size_t    fixed_arity, 
+			 bool           variable_arity = false) :
+		func(func),
+		fixed_arity(fixed_arity),
+		variable_arity(variable_arity) {}
 	
 	
 	virtual /*std::vector<std::shared_ptr<IDataNode<Data>>>*/ Args call(
@@ -59,7 +60,7 @@ public:
 		return fixed_arity;
 	}
 
-	virtual bool get_variable_arity() const {
+	virtual bool is_variable_arity() const {
 		return variable_arity;
 	}
 
