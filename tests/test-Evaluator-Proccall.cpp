@@ -4,6 +4,7 @@
 #include <functional>
 #include <algorithm>
 #include <numeric>
+#include <type_traits>
 
 #include <boost/variant.hpp>
 
@@ -13,6 +14,7 @@
 #include "Evaluator.h"
 
 #include "Eval_Expression_impl.h"
+#include "Eval_Proccall_impl.h"
 
 using IDataTree = shaka::IDataNode<shaka::Data>;
 using DataTree = shaka::DataNode<shaka::Data>;
@@ -78,6 +80,10 @@ TEST(Procedure_basic, initialization_Procedure) {
 	ASSERT_EQ(proc_call_root->get_num_children(), 2);
 	ASSERT_EQ(proc_call_root->get_child(1)->get_num_children(), 1);
 
+	// instantiate an evaluator so that we can now evaluate our procedure call
+	shaka::Evaluator evaluator(proc_call_root, env);
+	auto result_list = evaluator.evaluate(shaka::eval::Proc_Call());
+	ASSERT_EQ(result_list->get_child(0)->get_data()->type(), typeid(shaka::Number));
 
 	
 	/*
