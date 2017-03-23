@@ -10,6 +10,8 @@
 #include "Environment.h"
 #include "Evaluator.h"
 #include "Eval_Lambda.h"
+#include "Eval_Lambda_impl.h"
+
 #include "Procedure.h"
 
 using Data = shaka::Data;
