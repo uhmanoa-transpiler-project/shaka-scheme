@@ -24,7 +24,7 @@ using Environment =
 
 TEST(Evaluator_variable, initializing){
     std::shared_ptr<DataTree> variable = std::make_shared<DataTree>(shaka::Symbol("x"));
-    std::shared_ptr<DataTree> value = std::make_shared<DataTree>(2);
+    std::shared_ptr<DataTree> value = std::make_shared<DataTree>(shaka::Number(2));
 
     std::shared_ptr<Environment> env = std::make_shared<Environment>(nullptr);
 
