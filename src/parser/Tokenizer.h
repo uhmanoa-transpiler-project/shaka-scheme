@@ -534,7 +534,8 @@ public:
 
             number = true;
             }
-        }	
+        }
+
         //
         //  // Make sure that it's the end of the number
         //  if (is_delimiter(in.peek())) {
@@ -550,9 +551,10 @@ public:
 
         if (number == true) {
             return Token(Token::Type::NUMBER, buffer);
-        } else {
-            return Token(Token::Type::INVALID);
-        }
+	}
+	else 
+	    return Token(Token::Type::INVALID, buffer);
+
     }
 
     Token parse_token () {

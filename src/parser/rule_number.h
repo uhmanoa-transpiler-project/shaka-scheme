@@ -18,89 +18,21 @@ bool number_integer(
     InputStream&    in,
     NodePtr         root,
     T&              interm
-) {
-	bool accept = false;
-   
-	shaka::Token token = in.peek();
-
-	std::cout << in.peek() << std::endl;
-	
-	if(token.type == Token::Type::NUMBER) {
-		
-	in.get();
-	interm += token.str;
-	accept = true;
-    	}
-
-    	if (accept == true) {
-   	root -> push_child(
-   		shaka::Number(std::stoi(token.str)));
-    	}
-
-   	return accept;
-}
+);
 
 template <typename T>
 bool number_real(
     InputStream&    in,
     NodePtr         root,
     T&              interm
-) {
-	bool accept = false;
-
-	shaka::Token token = in.peek();
-    	if(token.type == Token::Type::NUMBER) {
-
-		in.get();
-		interm += token.str;
-		accept = true;
-
-	}
-
-	std::cout << interm << std::endl;
-	if (accept == true) {
-		root -> push_child(
-   			shaka::Number(std::stod(interm)));
-    	}
-
-    return accept;
-}	
+);
 
 template <typename T>
 bool number_rational(
 	InputStream&	in,
 	NodePtr		root,
 	T&		interm
-) {
-	bool accept = false;
-	std::string denom;
-	std::string numer;
-	int fraction;
-
-	shaka::Token token = in.peek();
-	if(token.type == Token::Type::NUMBER) {
-
-		in.get();
-		interm += token.str;
-
-		fraction = token.str.find("/");
-		numer = token.str.substr(0, fraction);
-		denom = token.str.substr(fraction + 1, token.str.size());
-
-		accept = true;
-
-		if(accept == true) {
-			root -> push_child(
-				shaka::Number(std::stoi(numer),
-				std::stoi(denom)));
-		}
-		
-
-
-	}
-	
-	return accept;
-}	
+);
 
 } // namespace rule
 } // namespace parser
