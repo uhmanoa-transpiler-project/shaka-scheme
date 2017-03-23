@@ -33,14 +33,14 @@ class Lambda : public shaka::IEvaluatorStrategy {
         /// input parameters. The second child is the body of the procedure. 
         /// fixed_arity holds the number of input parameters that are not a list
         /// var_arity is true if one of the input parameters is a list
-        std::size_t fixed_arity;
+        std::size_t fixed_arity =0;
         bool var_arity = false; 
         std::shared_ptr<IDataNode<T>> params = node->get_child(0);
         int num_param = params->get_num_children();
         std::map<shaka::Symbol, bool> symbols;
 
         if(num_param < 1){
-            fixed_arity = 0;
+            fixed_arity = 0;    
             var_arity = false;
         }
         else {
@@ -65,7 +65,7 @@ class Lambda : public shaka::IEvaluatorStrategy {
                     }
                 }
                 else{
-                    throw std::runtime_error("Lamba: argument member is not a symbol");
+                    throw std::runtime_error("Lambda: argument member is not a symbol");
                 }
             }
             if(var_arity == true){

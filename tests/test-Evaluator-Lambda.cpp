@@ -31,7 +31,7 @@ TEST(Evaluator_lambda, initialization) {
     root->push_child(shaka::MetaTag::LIST);
 
     root->get_child(0)->push_child(shaka::Symbol("a"));
-    root->get_child(0)->push_child(shaka::Symbol("b"));
+    root->get_child(1)->push_child(1);
 
     //  constructing evaluator 
     shaka::Evaluator evaluator(
@@ -40,7 +40,7 @@ TEST(Evaluator_lambda, initialization) {
     std::size_t arity= shaka::get<shaka::Procedure>(*evaluator.evaluate(
     shaka::eval::Lambda())->get_data()).get_fixed_arity();
 
-std::size_t size= 2;
+std::size_t size= 1;
     ASSERT_EQ(size, arity
         );
 }
