@@ -52,8 +52,9 @@ class Lambda : public shaka::IEvaluatorStrategy {
                     else{
                         symbols[*ptr]=true;
                     }
+                }
 
-                    if(shaka::get<shaka::MetaTag>(*params->get_child(i)->get_data())
+                  else if(shaka::get<shaka::MetaTag>(*params->get_child(i)->get_data())
                          == shaka::MetaTag::LIST ){
                         if(i == num_param-1){
                             var_arity = true;
@@ -63,7 +64,7 @@ class Lambda : public shaka::IEvaluatorStrategy {
                             throw std::runtime_error("Lambda: list must be last argument");
                         }
                     }
-                }
+                
                 else{
                     throw std::runtime_error("Lambda: argument member is not a symbol");
                 }
@@ -72,7 +73,7 @@ class Lambda : public shaka::IEvaluatorStrategy {
                 fixed_arity = num_param -1;
             }
             else {
-                fixed_arity = 0;
+                fixed_arity = num_param;
             }
 
 
