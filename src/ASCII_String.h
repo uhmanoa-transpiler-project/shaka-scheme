@@ -90,68 +90,56 @@ public:
            }
         }
     }
+
     void string_append(const String &c){
         for(int i = 0; i!= static_cast<int>(c.getString().size()); i++){
             a_string.push_back((c.getString())[i]);
         }
     }
-<<<<<<< HEAD
-    void string_copy(String &c){
-	a_string = std::vector<char>(c.getString().size(), 0);
-	for(int i=0; i!= static_cast<int>(c.getString().size()); i++){
-		a_string[i] = (c.getString())[i];
-	}
-    }
-    void string_copy(String &c, int start){
 
-	a_string = std::vector<char>(c.getString().size(), 0);
-	for(int i=0; i!= static_cast<int>(c.getString().size()); i++){
-		a_string[i] = (c.getString())[i+start];
-	}
-    }
-    void string_copy(String &c, int start, int end){
-	a_string = std::vector<char>(c.getString().size(), 0);
-	for(int i=0; i!= (end-start); i++){
-		a_string[i] = (c.getString())[i+start];
-	}
-=======
     void string_copy(const String &c){
         for(int i=0; i!= static_cast<int>(c.getString().size()); i++){
             a_string[i] = (c.getString())[i];
         }
     }
+
     void string_copy(const String &c, int start){
         for(int i=0; i!= static_cast<int>(c.getString().size()); i++){
             a_string[i] = (c.getString())[i+start];
         }
     }
+
     void string_copy(const String &c, int start, int end){
         for(int i=0; i!= (end-start); i++){
             a_string[i] = (c.getString())[i+start];
         }
->>>>>>> adc8e005a67409d6120fc91e6d4df838921de6fc
     }
+
     void string_fill(char fill){
         for(int i=0; i!= static_cast<int>(a_string.size());i++){
             a_string[i] = fill;
         }
     }
+
     void string_fill(char fill, int start){
         for(int i=start; i!=static_cast<int>(a_string.size());i++){
             a_string[i] = fill;
         }
     }
+
     void string_fill(char fill, int start, int end){
         for(int i=start; i<= end;i++){
             a_string[i] = fill;
         }
     }
+
     void string_upcase(){
         for(int i = 0; i!= static_cast<int>(a_string.size()); i++){
             a_string[i] = toupper(a_string[i]);
             
         }
     }
+
     void string_downcase(){
         for(int i = 0; i!= static_cast<int>(a_string.size()); i++){
             a_string[i] = tolower(a_string[i]);
