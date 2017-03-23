@@ -1,5 +1,6 @@
-#ifndef SHAKA_EVAL_PROC_CALL_H
-#define SHAKA_EVAL_PROC_CALL_H
+
+#ifndef SHAKA_EVAL_PROCCALL_IMPL_H
+#define SHAKA_EVAL_PROCCALL_IMPL_H
 
 #include "IEvaluatorStrategy.h"
 #include "IDataNode.h"
@@ -82,4 +83,4 @@ class Proc_Call : public shaka::IEvaluatorStrategy {
 };
 } // namespace eval
 } // namespace shaka
-#endif // SHAKA_EVAL_PROC_CALL_H
+#endif // SHAKA_EVAL_PROCCALL_IMPL_H
