@@ -2,30 +2,34 @@
 #define SHAKA_PARSER_PRIMITIVES_H
 
 #include "DataNode.h"
+#include "parser/Tokenizer.h"
 
 namespace shaka {
 
 namespace parser {
 
-using InputStream = std::istream;
+using InputStream = shaka::Tokenizer;
 using NodePtr = std::shared_ptr<shaka::IDataNode<shaka::Data>>;
+using Node = shaka::DataNode<shaka::Data>;
 
 /// @brief The general type signature of Rule procedures
 ///
 /// Takes in the input stream, root node pointer, and
 /// intermediate data node ptr.
 ///
-/// Conventional names are:
+/// The conventional variable names for each are, respectively:
 /// - in
 /// - root
 /// - interm
 ///
 /// Returns whether the rule matches or not.
+template <typename T>
 using Rule = std::function<
     bool(                   // Accept/reject of rule
-        InputStream&,      // Input stream
+        InputStream&,       // Input stream
         NodePtr,            // Root node
-        NodePtr             // Intermediate data node 
+        T&                  // Intermediate data store variable
+                            // - Treat it as "scratchwork"
     )
 >;
 
@@ -34,7 +38,6 @@ using Rule = std::function<
 /// We may change this if we ever decide to transition to other
 /// Unicode formats.
 using Char = char;
-
 
 } // namespace parser
 
