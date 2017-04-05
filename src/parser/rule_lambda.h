@@ -88,10 +88,21 @@ bool formals(InputStream& in, NodePtr root, T& interm) {
       while(space(in, root, interm));
       shaka::Tokenizer tokenizer(in);
       if (in.peek() == ')') break;
+      else if (tokenizer.parse_string().get_type() == Token::Type::IDENTIFIER) {
+        while (true) {
+          while(space(in, root, interm));
+          if (tokenizer.parse_string().get_type() != Token::Type::IDENTIFIER) break;
+        }
+        if (in.peek() == '.') {
+          while(space(in, root, interm));
+          if (tokenizer.parse_string().get_type() != Token::Type::IDENTIFIER) return false;
+        }
+      }
       else if (tokenizer.parse_string().get_type() != Token::Type::IDENTIFIER) {
         return false;
       }
     }
+    while(space(in, root, interm));
     if (match_char<char, ')'>(in, root, interm)) return true;
     return false;
   }
