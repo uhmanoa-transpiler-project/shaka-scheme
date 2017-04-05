@@ -2,8 +2,10 @@
 #define SHAKA_PARSER_RULES_RULE_LAMBDA_H
 
 #include <cctype>
+#include <exception>
 #include <functional>
 #include <vector>
+#include <stack>
 
 #include "Number.h"
 #include "Symbol.h"
@@ -16,19 +18,41 @@ namespace shaka {
 namespace parser {
 namespace rule {
 
+// <Lambda expression> ::= (lambda <Formals> <body>)
+// 
 template <typename T>
-bool lambda (InputStream& in, NodePtr root, T& interm) {
-    if(match_char<char, '('>(in, root, interm)) {
-        std::string builder;
-        NodePtr topNode(shaka::MetaTag::LAMBDA);
+bool lambda (
+        InputStream&    in, 
+        NodePtr         root, 
+        T&              interm
+) {
 
-        while(space(in, root,interm));
+    std::stack<shaka::Token> tokens;
+    NodePtr lambdaNode;
 
-        for(int i = 0; i < 6; i++)      alpha(in, root, interm);
-        if(interm != "lambda")          return false;
+    try {
 
-        if(!space(in, root, interm))    return false;
-        while(space(in, root, interm));
+        // Must start with open parenthesis
+        if(in.peek().type != shaka::Token::Type::PAREN_START)
+            throw std::runtime_error("No required open parenthesis");
+
+        tokens.push(in.get());
+        interm += tokens.top().get_string();
+
+        // Parenthesis must be followed by lambda keyword
+        if(in.peek().type != shaka::Token::Type::IDENTIFIER &&
+           in.peek().get_string != "lambda")
+            throw std::runtime_error("No Lambda keyword");
+
+        tokens.push(in.get());
+        interm += tokens.top().get_string();
+        // add lambda node
+        if(root != nullptr)
+            lambdaNode = root->push_child(shaka::Data{shaka::MetaTag::LAMBDA});
+
+        // ADD FORMALS CODE BELOW
+
+        //////////////////////////
 
         if (!formals(in, root, interm)) return false;
         else while body(in, root, interm);
@@ -36,11 +60,27 @@ bool lambda (InputStream& in, NodePtr root, T& interm) {
         while(space(in, root, interm));
         if(match_char<char, ')'>(in, root, interm)) return true;
         return false;
-  }
-     else { return false; }
+
+    } catch(std::runtime_error& e) {
+
+        while(!tokens.empty()) {
+            in.unget(tokens.top());
+            tokens.pop();
+        }
+
+        // delete lambdaNode and children
+        if(lambdaNode != nullptr) {
+
+            std::size_t size = lambdaNode->get_num_children();
+            for(std::size_t i = 0; i < size; ++i) {
+                lambdaNode->remove_child(i);
+            }
+        }
+        return false;
+    }
 }
 
-// <formals> ::= (<identifer>*) | <identifier> | (<identifier>+ . <identifier>)
+// <formals> ::= (<identifer>*) | <identifier> | (<identifier>+ . <identifier>)
 template <typename T>
 bool formals(InputStream& in, NodePtr root, T& interm) {
   if (match_char<char, '('>(in, root, interm)) {
