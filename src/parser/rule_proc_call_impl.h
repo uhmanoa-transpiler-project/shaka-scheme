@@ -1,7 +1,7 @@
 #ifndef SHAKA_PARSER_RULES_RULE_PROC_CALL_IMPL_H
 #define SHAKA_PARSER_RULES_RULE_PROC_CALL_IMPL_H
 
-
+#include <iostream> // debugging, remove later
 #include <exception>
 #include <stack>
 #include <string>
@@ -38,11 +38,51 @@ bool proc_call(
 
     try {
 
-        // TODO: Write code to parse dakine proc_call
+        // Must start with open parenthesis
+        if( in.peek() != shaka::Token::Type::PAREN_START )
+            throw std::runtime_error("No open parenthesis");
+
+        tokens.push( in.get() );
+        interm += tokens.top().get_string();
+
+        // Get an identifier
+        if( in.peek() != shaka::Token::Type::IDENTIFIER )
+            throw std::runtime_error("No follow up identifier");
+
+        tokens.push( in.get() );
+        interm += tokens.top().get_string();
+
+        ///////////////////////
+        //    TEMP FOR NOW   //
+        ///////////////////////
+
+        if( in.peek() != shaka::Token::Type::NUMBER )
+            throw std::runtime_error("No follow up number");
+
+        tokens.push( in.get() );
+        interm += " " + tokens.top().get_string();
+
+        if( in.peek() != shaka::Token::Type::NUMBER )
+            throw std::runtime_error("No follow up number");
+           
+        tokens.push( in.get() );
+        interm += " " + tokens.top().get_string();
+
+        if( in.peek() != shaka::Token::Type::PAREN_END ) 
+            throw std::runtime_error("No follow up number");
+
+        tokens.push( in.get() );
+        interm += " " + tokens.top().get_string();
+
+        //////////////////////
+        //     END TEMP     //
+        //////////////////////
 
         return true;
 
     } catch (std::runtime_error& err) {
+
+        std::cout << err.what() << std::endl;
 
         // Put all used tokens back into stream
         while( !tokens.empty() ) {
