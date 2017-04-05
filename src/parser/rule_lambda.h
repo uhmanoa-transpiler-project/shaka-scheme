@@ -31,7 +31,7 @@ bool lambda (InputStream& in, NodePtr root, T& interm) {
         while(space(in, root, interm));
 
         if (!formals(in, root, interm)) return false;
-        // body(in, root, interm)
+        else while body(in, root, interm);
 
         while(space(in, root, interm));
         if(match_char<char, ')'>(in, root, interm)) return true;
@@ -67,7 +67,9 @@ bool formals(InputStream& in, NodePtr root, T& interm) {
 // <body> ::= <definition>* <sequence>
 template <typename T>
 bool body(InputStream& in, NodePtr root, T& interm) {
-  // expect definition
+  if (definition(in, root, interm)) {
+    while (definition(in, root, interm));
+  }
   // expect sequence
   return false;
 }
