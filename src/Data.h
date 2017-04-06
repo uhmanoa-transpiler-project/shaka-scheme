@@ -21,7 +21,8 @@ enum class MetaTag : int {
     LIST = 1,
     PROC_CALL = 2,
     QUOTE = 3,
-    LAMBDA = 4
+    LAMBDA = 4,
+    SET = 5
 };
 
 using Data = typename
