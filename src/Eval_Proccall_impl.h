@@ -19,6 +19,8 @@
 #include "Eval_Proccall.h"
 
 #include "Eval_Expression_impl.h"
+
+#include "Procedure_impl.h"
 // attempts to get the procedure bound in the current environment
 // and call it on the arguments condained as the child nodes of the
 // list node that the procedure is called on
