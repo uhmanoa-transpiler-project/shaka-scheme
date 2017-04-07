@@ -84,7 +84,8 @@ Rational operator/(const Integer& lhs, const Integer& rhs) {
 }
 
 Integer operator%(const Integer& lhs, const Integer& rhs) {
-	return lhs.value % rhs.value;
+	Integer result(lhs.value % rhs.value);
+	return result;
 }
 
 bool operator==(const Integer& lhs, const Integer& rhs) {
