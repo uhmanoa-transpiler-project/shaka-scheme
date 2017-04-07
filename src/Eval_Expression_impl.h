@@ -81,6 +81,11 @@ std::shared_ptr<IDataNode<T>> Expression::evaluate(
         return node;
     }
 
+    else if (type == typeid(shaka::Procedure)) {
+        std::cout << "@Expression ==> Procedure" << std::endl;
+        return node;
+    }
+
     else {
         throw std::runtime_error("Expression: Top-level expression type not supported.");
         return nullptr;
