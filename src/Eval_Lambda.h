@@ -1,4 +1,3 @@
-
 #ifndef SHAKA_EVAL_LAMBDA_H
 #define SHAKA_EVAL_LAMBDA_H
 
@@ -8,8 +7,7 @@
 #include "IEvaluatorStrategy.h"
 #include "IProcedure.h"
 
-#include"Procedure.h"
-#include "Eval_Expression_impl.h"
+#include "Procedure.h"
 
 namespace shaka {
 
