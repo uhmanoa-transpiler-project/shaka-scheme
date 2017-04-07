@@ -33,7 +33,7 @@ TEST(Evaluator_Lambda, initialization) {
     root->push_child(shaka::MetaTag::LIST);
 
     root->get_child(0)->push_child(shaka::Symbol("a"));
-    root->get_child(1)->push_child(1);
+    root->get_child(1)->push_child(shaka::Number(1));
 
     //  constructing evaluator 
     shaka::Evaluator evaluator(
