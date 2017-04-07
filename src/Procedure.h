@@ -9,6 +9,9 @@
 #include "IProcedure.h"
 
 #include "Eval_Expression.h"
+#include "Eval_ProcedureBody.h"
+
+#include "Eval_ProcedureBody_impl.h"
 
 namespace shaka {
 
@@ -44,6 +47,7 @@ public:
         // names in the arguments subtree (the first child) of this
         // root node.
         auto args_list_root = this->body_root->get_child(0);
+        auto env = this->curr_env;
 
         /// For each child, verify it's a symbol.
         for (
@@ -57,11 +61,12 @@ public:
             if(auto* symbol =
                 shaka::get<shaka::Symbol>(args_symbol_ptr->get_data().get())) {
                 // Set the value in our current environment
-                this->curr_env->set_value(*symbol, v[i]);
+                env->set_value(*symbol, v[i]);
             } else {
                 /// @todo Define better semantics for procedure call
                 ///       failure.
                 // Failure
+                throw std::runtime_error("Procedure: argument list member node is not a Symbol");
                 return std::vector<std::shared_ptr<IDataNode<Data>>>{nullptr};
             }
         }
@@ -69,12 +74,12 @@ public:
         // Setup an Evaluator on the current environment and
         // a copy of the body root node.
         //
-        shaka::Evaluator evaluator(body_root, curr_env);
+        shaka::Evaluator evaluator(body_root->get_child(1), env);
 
         // Evaluate the body of the procedure on the right side.
         //
         // DO NOT DESTROY THE TREE
-        auto result = evaluator.evaluate(shaka::eval::Expression());
+        auto result = evaluator.evaluate(shaka::eval::ProcedureBody());
 
         // If the root of the result list is multiple values,
         // then you'll need to get a multiple value list.
@@ -100,7 +105,7 @@ public:
 
 private:
     std::shared_ptr<IEnvironment<Key, Value>> parent_env;
-    std::shared_ptr<Environment<Key, Value>>  curr_env;
+    std::shared_ptr<IEnvironment<Key, Value>>  curr_env;
     std::shared_ptr<IDataNode<Data>>          body_root;
     std::size_t                               fixed_arity;
     bool                                      variable_arity;

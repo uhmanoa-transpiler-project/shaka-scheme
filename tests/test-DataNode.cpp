@@ -13,7 +13,7 @@ using DataTree = shaka::DataNode<shaka::Data>;
 
 /// @brief Basic default constructor test
 TEST(DataNode, constructor_default) {
-    DataTree root(shaka::Data(shaka::MetaTag::LIST));
+    DataTree root(shaka::MetaTag::LIST);
 
     ASSERT_TRUE(true);
 }
@@ -25,17 +25,17 @@ TEST(DataNode, parameterized_type) {
         PROC_CALL
     };
 
-    using Data = boost::variant<
+    using LocalData = boost::variant<
         MetaTag,
         int,
         std::string
     >;
-    using DataTree = shaka::DataNode<Data>;
+    using LocalDataTree = shaka::DataNode<LocalData>;
    
-    // Defined 3 shaka::DataNode<Data>
-    DataTree root0(MetaTag::DEFINE);
-    DataTree root1(5);
-    DataTree root2("Hello World!!");
+    // Defined 3 shaka::LocalDataNode<LocalData>
+    LocalDataTree root0(MetaTag::DEFINE);
+    LocalDataTree root1(5);
+    LocalDataTree root2(std::string("Hello World!!"));
 
     // retrieve
     auto data0 = boost::get<MetaTag>(*root0.get_data());
@@ -44,16 +44,16 @@ TEST(DataNode, parameterized_type) {
 
     // Here is now to check the type inside the node
     if(MetaTag* ptr = boost::get<MetaTag>(root0.get_data().get())){
-        std::cout << "Data in Root0 is MetaTag" << std::endl;
+        std::cout << "LocalData in Root0 is MetaTag" << std::endl;
     }
-    else if(int* ptr = boost::get<int>(root0.get_data().get())){
-        std::cout << "Data in Root0 is int" << std::endl;
+    else if(auto* ptr = boost::get<int>(root0.get_data().get())){
+        std::cout << "LocalData in Root0 is int" << std::endl;
     }
-    else if(std::string* ptr = boost::get<std::string>(root0.get_data().get())){
-        std::cout << "Data in Root0 is std::string" << std::endl;
+    else if(auto* ptr = boost::get<std::string>(root0.get_data().get())){
+        std::cout << "LocalData in Root0 is std::string" << std::endl;
     }
 
-    //std::shared_ptr<DataTree>
+    //std::shared_ptr<LocalDataTree>
 }
 
 TEST(DataNode, create_list) {
@@ -159,21 +159,21 @@ TEST(DataNode, push_and_get_child) {
 ///        the correct amount of children returned.
 TEST(DataNode, get_num_children) {
 
-    auto root = std::make_shared<DataTree>(0);
+    auto root = std::make_shared<DataTree>(shaka::Number(0));
 
     ASSERT_EQ(root->get_num_children(), std::size_t(0));
 
-    root->push_child(1);
-    root->push_child(2);
+    root->push_child(shaka::Number(1));
+    root->push_child(shaka::Number(2));
 
     ASSERT_EQ(root->get_num_children(), std::size_t(2));
 
-    root->push_child(2);
-    root->push_child(2);
-    root->push_child(2);
-    root->push_child(2);
-    root->push_child(2);
-    root->push_child(2);
+    root->push_child(shaka::Number(2));
+    root->push_child(shaka::Number(2));
+    root->push_child(shaka::Number(2));
+    root->push_child(shaka::Number(2));
+    root->push_child(shaka::Number(2));
+    root->push_child(shaka::Number(2));
 
     ASSERT_EQ(root->get_num_children(), std::size_t(8));
 
@@ -191,13 +191,13 @@ TEST(DataNode, get_num_children) {
 /// @brief Pushes, and then removes a child by index.
 TEST(DataNode, remove_child) {
     // Initialize the root node with a boolean value.
-    auto root = std::make_shared<DataTree>(true);
+    auto root = std::make_shared<DataTree>(shaka::Number(0));
 
     // The value to test for.
-    std::string test_value("shaka-scheme");
+    shaka::Symbol test_value("shaka-scheme");
 
     // Push a child with a std::string value.
-    root->push_child(test_value);
+    root->push_child(shaka::Symbol(test_value));
 
     // See if the child value matches.
     ASSERT_EQ(
@@ -350,13 +350,13 @@ TEST(DataNode, traverse_tree_post_order_sum) {
 /// @brief Pushes, and then removes a child by index.
 TEST(DataNode, get_parent) {
     // Initialize the root node with a boolean value.
-    auto root = std::make_shared<DataTree>(true);
+    auto root = std::make_shared<DataTree>(shaka::Number(1));
 
     // Push a child node, initialized with a value.
-    auto child = root->push_child(false);
+    auto child = root->push_child(shaka::Number(0));
 
     // Push a grandchild node to the child
-    auto grandchild = child->push_child(true);
+    auto grandchild = child->push_child(shaka::Number(1));
 
     // See if the child's parent is the same as the root
     ASSERT_EQ(
