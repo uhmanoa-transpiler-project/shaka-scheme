@@ -50,9 +50,36 @@ TEST(Evaluator_set, set) {
     );
 
     // Evaluate the next thing using the Set strategy.
-    evaluator.evaluate(shaka::eval::Set());
-
+    // evaluator.evaluate(shaka::eval::Set());
+    ASSERT_NO_THROW(evaluator.evaluate(shaka::eval::Set()));
     ASSERT_EQ(1,shaka::get<shaka::Number>(*env->get_value(a)->get_data()));
+
+}
+
+TEST(Evaluator_set, not_set) {
+
+    // Made the root node.
+    std::shared_ptr<DataTree> root = std::make_shared<DataTree>(shaka::MetaTag::SET);
+
+    shaka::Symbol a = shaka::Symbol("a");
+    // Created the enivronment
+    std::shared_ptr<Environment> env = std::make_shared<Environment>(nullptr);
+    // Pushed the symbol
+    root->push_child(a);
+    // Pushed a value
+    root->push_child(shaka::Number(1));
+
+
+    // /* constructing evaluator */
+    shaka::Evaluator evaluator(
+        root,
+        env
+    );
+
+    // Evaluate the next thing using the Set strategy.
+    // should throw an exception because "a" is not defined 
+
+    ASSERT_ANY_THROW(evaluator.evaluate(shaka::eval::Set()));
 }
 
 
