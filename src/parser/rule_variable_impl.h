@@ -24,10 +24,8 @@ bool variable(
 		return true;
 	}
 
-	else {
-		throw std::runtime_error("Parser.rule_Variable token is not an identifier");
-		return false;
-	}
+	return false;
+	
 }
 
 }
