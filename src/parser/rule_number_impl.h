@@ -25,15 +25,15 @@ bool number_integer(
 
 	if(token.type == Token::Type::NUMBER) {
 		
-	in.get();
-	interm += token.str;
-	accept = true;
-    	}
+        in.get();
+        interm += token.str;
+        accept = true;
+    }
 
-    	if (accept == true) {
-   	root -> push_child(
-   		shaka::Number(std::stoi(token.str)));
-    	}
+    if (accept == true) {
+        root -> push_child(
+        shaka::Number(std::stoi(token.str)));
+    }
 
    	return accept;
 }
@@ -57,10 +57,10 @@ bool number_real(
 
 	if (accept == true) {
 		root -> push_child(
-   			shaka::Number(std::stod(interm)));
-    	}
+        shaka::Number(std::stod(interm)));
+    }
 
-    	return accept;
+    return accept;
 }	
 
 template <typename T>
@@ -87,9 +87,10 @@ bool number_rational(
 		accept = true;
 
 		if(accept == true) {
-			root -> push_child(
-				shaka::Number(std::stoi(numer),
-				std::stoi(denom)));
+			root -> push_child(shaka::Number(
+                std::stoi(numer),
+				std::stoi(denom)
+            ));
 		}
 
 	}

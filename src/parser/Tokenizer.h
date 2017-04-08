@@ -532,8 +532,17 @@ public:
             while (std::isdigit(in.peek())) {
             buffer += in.get();
 
-	    number = true;
+            number = true;
 	    }
+
+        // If the next character is not a space,
+        // like possibly an alpha character, that's not right.
+        // So throw an exception
+        if (!std::isspace(in.peek()) && !in.eof()) {
+              throw std::runtime_error("Tokenizer.parse_number: Is not a number");
+              return Token(Token::Type::INVALID);
+
+        }
 	}
 
         //
@@ -690,8 +699,8 @@ public:
                 } else if (std::isdigit(in.peek())) {
                     std::string buffer;
 
-		    //Unget to get back the sign
-		    in.unget();
+                    //Unget to get back the sign
+                    in.unget();
 
                     return parse_number(buffer);
 
