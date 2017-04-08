@@ -51,15 +51,9 @@ bool lambda (
             lambdaNode = root->push_child(shaka::Data{shaka::MetaTag::LAMBDA});
 
         // ADD FORMALS CODE BELOW
+        // Need to call function
 
         //////////////////////////
-
-        if (!formals(in, root, interm)) return false;
-        else while body(in, root, interm);
-
-        while(space(in, root, interm));
-        if(match_char<char, ')'>(in, root, interm)) return true;
-        return false;
 
     } catch(std::runtime_error& e) {
 
