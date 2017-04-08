@@ -10,7 +10,6 @@
 
 namespace shaka {
 
-
 /// @brief The central data structure for a Scheme object.
 ///
 /// The Shaka Scheme data node implements the core data structure

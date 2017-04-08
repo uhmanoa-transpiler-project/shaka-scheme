@@ -3,12 +3,13 @@
 
 #include <boost/variant.hpp>
 
+
 namespace shaka {
 
 class Number;
 class Symbol;
-class Procedure;
 class String;
+class Procedure;
 
 /// @brief Auxillary "type-tags" used to decide whether the
 /// contained type should have children, according to the sematnics
@@ -40,6 +41,7 @@ boost::variant<
 #include "Number.h"
 #include "Symbol.h"
 #include "ASCII_String.h"
+#include "Procedure.h"
 
 
 #endif // SHAKA_DATA_H

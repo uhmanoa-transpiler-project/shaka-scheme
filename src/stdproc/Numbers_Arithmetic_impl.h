@@ -5,9 +5,16 @@
 #include "IDataNode.h"
 #include "DataNode.h"
 #include "Data.h"
+
+#include "Procedure_impl.h"
+
 #include <functional>
 #include <typeinfo>
 #include <vector>
+
+namespace shaka {
+namespace stdproc {
+
 using Value = std::shared_ptr<shaka::IDataNode<shaka::Data>>;
 //using Value = std::shared_ptr<IDataNode<Data>>;
 using Args = std::vector<Value>;
@@ -21,8 +28,7 @@ Args add_numbers(Args args) {
 	}
 
 	Args result_vector;
-	Value result_value = std::make_shared<shaka::DataNode<shaka::Data>>();
-	result_value->set_data(result);
+	Value result_value = std::make_shared<shaka::DataNode<shaka::Data>>(result);
 	result_vector.push_back(result_value);
 
 	return result_vector;
@@ -38,8 +44,7 @@ Args mul_numbers(Args args) {
 	}
 
 	Args result_vector;
-	Value result_value = std::make_shared<shaka::DataNode<shaka::Data>>();
-	result_value->set_data(result);
+	Value result_value = std::make_shared<shaka::DataNode<shaka::Data>>(result);
 	result_vector.push_back(result_value);
 
 	return result_vector;
@@ -54,8 +59,7 @@ Args neg_numbers(Args args) {
 	result = result - shaka::get<shaka::Number>(*args[0]->get_data());
 
 	Args result_vector;
-	Value result_value = std::make_shared<shaka::DataNode<shaka::Data>>();
-	result_value->set_data(result);
+	Value result_value = std::make_shared<shaka::DataNode<shaka::Data>>(result);
 	result_vector.push_back(result_value);
 
 	return result_vector;
@@ -73,8 +77,7 @@ Args sub_numbers(Args args) {
 	}
 
 	Args result_vector;
-	Value result_value = std::make_shared<shaka::DataNode<shaka::Data>>();
-	result_value->set_data(result);
+	Value result_value = std::make_shared<shaka::DataNode<shaka::Data>>(result);
 	result_vector.push_back(result_value);
 
 	return result_vector;
@@ -88,8 +91,7 @@ Args reciprocal_numbers(Args args) {
 	shaka::Number result = shaka::Number(1);
 	result = result / shaka::get<shaka::Number>(*args[0]->get_data());
 	Args result_vector;
-	Value result_value = std::make_shared<shaka::DataNode<shaka::Data>>();
-	result_value->set_data(result);
+	Value result_value = std::make_shared<shaka::DataNode<shaka::Data>>(result);
 	result_vector.push_back(result_value);
 
 	return result_vector;
@@ -106,8 +108,7 @@ Args div_numbers(Args args) {
 		result = result / shaka::get<shaka::Number>(*args[i]->get_data());
 	}
 
-	Value result_value = std::make_shared<shaka::DataNode<shaka::Data>>();
-	result_value->set_data(result);
+	Value result_value = std::make_shared<shaka::DataNode<shaka::Data>>(result);
 	Args result_vector = {result_value};
 
 	return result_vector;
@@ -316,5 +317,8 @@ Function truncate_div_numbers_f = truncate_div_numbers;
 
 // (inexact z)
 // (exact z)
+
+} // namespace stdproc
+} // namespace shaka
 
 #endif // SHAKA_STDPROC_NUMBERS_ARITHMETIC_IMPL_H

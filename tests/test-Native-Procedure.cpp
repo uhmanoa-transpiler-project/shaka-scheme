@@ -12,9 +12,7 @@
 #include "Environment.h"
 //#include "Evaluator.h"
 #include "Eval_Expression.h"
-#include "Procedure.h"
-#include "Symbol.h"
-#include "Number.h"
+#include "Procedure_impl.h"
 #include <vector>
 
 //#include "Eval_Expression_impl.h"
