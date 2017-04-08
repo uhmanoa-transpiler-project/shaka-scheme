@@ -31,7 +31,7 @@ TEST(Evaluator_Expression, define_basic) {
     // Pushed the symbol
     root->push_child(shaka::Symbol("a"));
     // Pushed a value
-    root->push_child(1);
+    root->push_child(shaka::Number(1));
 
     // /* constructing evaluator */
     shaka::Evaluator evaluator(

@@ -1,41 +1,33 @@
-#include <gtest/gtest.h>
-
-#include "Data.h"
+#include <iostream> 
+#include "Evaluator.h"
 #include "Procedure.h"
+#include "Eval_Expression_impl.h"
+
+#include "parser/Tokenizer.h"
+
+#include "Environment.h"
+#include "Symbol.h"
 
 
-TEST(Data, construct) {
-    std::cout << "hello world" << std::endl;
+int main() {
+    // A few type alias for convenience.
+    using NodePtr = std::shared_ptr<shaka::IDataNode<shaka::Data>>;
+    using Environment = shaka::Environment<shaka::Symbol, NodePtr>;
 
-    shaka::Data d = shaka::Symbol("Hello world!");
-    d = shaka::Number(1);
+    // Create the tokenizer.
+    shaka::Tokenizer tokenizer(std::cin);     
 
-}
+    // Create the global environment.
+    Environment global_env(nullptr);
 
-#include "DataNode.h"
-#include <memory>
-
-using DataNode = shaka::DataNode<shaka::Data>;
-
-TEST(DataNode, construct) {
-    auto root = std::make_shared<DataNode>(shaka::MetaTag::LIST);
-
-    auto child0 = root->push_child(shaka::Number(1));
-
-    auto num = shaka::get<shaka::Number>(*root->get_child(0)->get_data());
-
-    ASSERT_EQ(num, shaka::Number(1));
-
-    root->push_child(1);
-    root->push_child(1);
-    root->push_child(1);
-    root->push_child(1);
-
-    ASSERT_EQ(root->get_num_children(), 5);
-}
-
-int main(int argc, char** argv) {
-    ::testing::InitGoogleTest(&argc, argv);
-
-    return RUN_ALL_TESTS();
+    /// @todo Bind the regular bindings for functions
+    ///       to the environment.
+    
+    //////////////////////////////////////////////////
+    // PARSE/READ
+    //////////////////////////////////////////////////
+    // EVAL
+    //////////////////////////////////////////////////
+    // PRINT
+    //////////////////////////////////////////////////
 }
