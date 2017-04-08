@@ -169,9 +169,17 @@ TEST(Tokenizer_number, not_a_number) {
 
 	auto root = std::make_shared<shaka::parser::Node>(shaka::MetaTag::LIST);
 
-	bool b = shaka::parser::rule::number_real(tk, root, interm);
+	bool a = shaka::parser::rule::number_real(tk, root, interm);
+
+	ASSERT_FALSE(a);
+
+	bool b = shaka::parser::rule::number_integer(tk, root, interm);
 
 	ASSERT_FALSE(b);
+
+	bool c = shaka::parser::rule::number_rational(tk, root, interm);
+
+	ASSERT_FALSE(c);
 }
 
 TEST(Tokenizer_number, not_a_number_again) {
@@ -183,8 +191,8 @@ TEST(Tokenizer_number, not_a_number_again) {
 	auto root = std::make_shared<shaka::parser::Node>(shaka::MetaTag::LIST);
 
     ASSERT_THROW(
-	    bool b = shaka::parser::rule::number_integer(tk, root, interm); ,
-        std::runtime_error
+	bool a = shaka::parser::rule::number_integer(tk, root, interm) ,
+	std::runtime_error
     );
 }
 

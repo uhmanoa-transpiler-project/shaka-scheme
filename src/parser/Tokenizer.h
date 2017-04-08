@@ -535,14 +535,12 @@ public:
             number = true;
 	    }
 
-        // If the next character is not a space,
-        // like possibly an alpha character, that's not right.
-        // So throw an exception
-        if (!std::isspace(in.peek()) && !in.eof()) {
-              throw std::runtime_error("Tokenizer.parse_number: Is not a number");
-              return Token(Token::Type::INVALID);
+	}
 
-        }
+	// If the next character is not a space,
+	// like possibly an alpha character, that's not right.
+	if (!std::isspace(in.peek()) && !in.eof()) {
+		number = false;
 	}
 
         //
@@ -561,11 +559,12 @@ public:
         if (number == true) {
             return Token(Token::Type::NUMBER, buffer);
 	}
-	else 
+	else {
+	    throw std::runtime_error("Tokenizer.parse_number: Is not a number");
 	    return Token(Token::Type::INVALID, buffer);
 
+    	}
     }
-
     Token parse_token () {
         bool done = false;
         while (!done) {
