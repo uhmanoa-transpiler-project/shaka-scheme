@@ -144,6 +144,7 @@ bool define(
     }
 }
 
+
 } // namespace rule
 } // namespace parser
 } // namespace shaka
