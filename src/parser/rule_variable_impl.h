@@ -18,6 +18,7 @@ bool variable(
 	if (var_tok.type == Token::Type::IDENTIFIER) {
 		//Take string and create DataNode that holds a shaka::Symbol
 		//interm temporarily holds a value
+		in.get();
 		interm = var_tok.get_string();
 		//Use interm to push the DataNode onto tree
 		root->push_child(Symbol(interm));
