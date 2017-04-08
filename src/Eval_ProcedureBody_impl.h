@@ -34,20 +34,22 @@ std::shared_ptr<IDataNode<T>> ProcedureBody::evaluate(
     // to evaluate.
     if (auto* ptr = shaka::get<shaka::MetaTag>(node->get_data().get())) {
         if (!ptr) { throw std::runtime_error("Eval_ProcedureBody: Root node is null"); }
+        if (*ptr != shaka::MetaTag::LIST) {
+            throw std::runtime_error("Eval_ProcedureBody: Root node is not a LIST");
+        }
+        std::cout << node->get_num_children() << std::endl;
         // For each child, evaluate with shaka::eval::Expression()
-        for (std::size_t i = 0; i < node->get_num_children()-1; ++i) {
+        for (std::size_t i = 0; i < node->get_num_children(); ++i) {
             std::cout << "@ProcedureBody:Arg(" << i << ")" << std::endl;
             // Setup the current expression to evaluate.
             shaka::Evaluator evaluator (node->get_child(i), env);
             // Evaluate the expression.
-            evaluator.evaluate(shaka::eval::Expression());
+            if (i == node->get_num_children()-1) {
+                return evaluator.evaluate(shaka::eval::Expression());
+            } else {
+                evaluator.evaluate(shaka::eval::Expression());
+            }
         }
-        std::cout << "@ProcedureBody:Arg(" << node->get_num_children()-1 << ")" << std::endl;
-        // Return the result of evaluating the last expression
-        // in the list of expressions.
-        shaka::Evaluator evaluator (node->get_child(node->get_num_children()-1), env);
-        auto last_value_ptr = evaluator.evaluate(shaka::eval::Expression());
-        return last_value_ptr;
         
     } else {
         throw std::runtime_error("Eval_ProcedureBody: Did not get a list as the root node.");

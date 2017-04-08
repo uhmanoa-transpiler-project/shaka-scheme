@@ -83,6 +83,8 @@ TEST(Procedure_basic, initialization_Procedure) {
 	// instantiate an evaluator so that we can now evaluate our procedure call
 	shaka::Evaluator evaluator(proc_call_root, env);
 	auto result_list = evaluator.evaluate(shaka::eval::Proc_Call());
+
+    std::cout << "result, list, number of stuff: " << result_list->get_num_children() << std::endl;
 	ASSERT_EQ(result_list->get_child(0)->get_data()->type(), typeid(shaka::Number));
 
 	

@@ -18,6 +18,8 @@
 #include "Eval_Expression.h"
 #include "Eval_Proccall.h"
 
+#include "Eval_PrintTree.h"
+
 #include "Eval_Expression_impl.h"
 
 #include "Procedure_impl.h"
@@ -41,9 +43,13 @@ namespace eval {
 		// a symbol that refers to a procedure in the environment or its parent env
 		shaka::Evaluator evaluator(node->get_child(0), env);
 
+        std::cout << "@Proccall" << std::endl;
+        shaka::Evaluator evaluator2(node, env);
+        evaluator2.evaluate(shaka::eval::PrintTree<std::cout>());
 
 		// get the procedure associated with the symbol or lambda 
 		// in the first child of the PROC_CALL node in the environment
+        std::cout << "@Proccall : Procedure?" << std::endl;
 		Value proc = evaluator.evaluate(shaka::eval::Expression()); 
 	
 		//did we successfully get a defined procedure?
@@ -56,29 +62,27 @@ namespace eval {
 			// LIST node, evaluate the arguments that we get 
 			// and place them in an argument vector to pass to proc
 			for (size_t i = 0; i < list_node->get_num_children(); i++) {
+                std::cout << "@Proccall : Args : " << i << std::endl;
 				next_argument = list_node->get_child(i);
 				shaka::Evaluator arg_evaluator(next_argument, env);
-				next_argument = evaluator.evaluate(shaka::eval::Expression());
-				args.push_back(next_argument);
+				args.push_back(arg_evaluator.evaluate(shaka::eval::Expression()));
 			}
 			
 			// call the proc on the args vector and save the result in a
 			// new vector of results
+            std::cout << "@Proccall : Call" << std::endl;
 			std::vector<Value> result = shaka::get<shaka::Procedure>(*proc->get_data()).call(args);
-			// loop through the number of children in the LIST node and
-			// remove the old children (the arguments to the proc call)
-			for (size_t i = 0; i < list_node->get_num_children(); i++) {
-				list_node->remove_child(i);
-		
-			}
+
+            auto results_node = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::MetaTag::LIST);
 			// add new children to the LIST node, which are the results
 			// of our procedure call
-			for (int i = 0; i < result.size(); i++) {
-
-				list_node->insert_child(i, result[i]);
+			for (std::size_t i = 0; i < result.size(); i++) {
+                std::cout << "@Proccall : Building Result Tree List(" << i << ")" << std::endl;
+				results_node->push_child(*result[i]->get_data());
 			}
 			
-			return list_node;
+            std::cout << "@Proccall : Returning tree list" << std::endl;
+			return results_node;
 		}
 	
 		// if we didn't manage to get a defined procedure out of the environment

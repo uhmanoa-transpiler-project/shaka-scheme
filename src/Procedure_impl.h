@@ -54,6 +54,7 @@ Procedure::call (std::vector<std::shared_ptr<IDataNode<Data>>> v) {
     //
     // DO NOT DESTROY THE TREE
     auto result = evaluator.evaluate(shaka::eval::ProcedureBody());
+    std::cout << "Result of Call : " << result->get_data()->type().name() << std::endl;
 
     // If the root of the result list is multiple values,
     // then you'll need to get a multiple value list.
@@ -65,7 +66,8 @@ Procedure::call (std::vector<std::shared_ptr<IDataNode<Data>>> v) {
 
     // Then, return the list.
     return_values.push_back(result);
-    
+
+    std::cout << "Returning result of call..." << std::endl;
     return return_values;
 }
 

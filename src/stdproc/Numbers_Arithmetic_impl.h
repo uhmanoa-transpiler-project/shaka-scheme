@@ -133,8 +133,7 @@ Args abs_numbers(Args args) {
 		result = input;
 	}
 
-	Value result_value = std::make_shared<shaka::DataNode<shaka::Data>>();
-	result_value->set_data(result);
+	Value result_value = std::make_shared<shaka::DataNode<shaka::Data>>(result);
 
 	Args result_vector = {result_value};
 
@@ -168,12 +167,8 @@ Args floor_div_numbers(Args args) {
 		q = (n1 - r) / n2;
 	}
 
-	Value v1 = std::make_shared<shaka::DataNode<shaka::Data>>();
-	Value v2 = std::make_shared<shaka::DataNode<shaka::Data>>();
-	
-	v1->set_data(q);
-	v2->set_data(r);
-
+	Value v1 = std::make_shared<shaka::DataNode<shaka::Data>>(q);
+	Value v2 = std::make_shared<shaka::DataNode<shaka::Data>>(r);
 	Args result_vector = {v1, v2};
 
 	return result_vector;
@@ -207,9 +202,7 @@ Args floor_quotient_numbers(Args args) {
 		q = (n1 - r) / n2;
 	}
 
-	Value v1 = std::make_shared<shaka::DataNode<shaka::Data>>();
-	
-	v1->set_data(q);
+	Value v1 = std::make_shared<shaka::DataNode<shaka::Data>>(q);
 
 	Args result_vector = {v1};
 
@@ -238,9 +231,7 @@ Args floor_remainder_numbers(Args args) {
 		r = n1 % n2 * shaka::Number(-1);
 	}
 
-	Value v1 = std::make_shared<shaka::DataNode<shaka::Data>>();
-	
-	v1->set_data(r);
+	Value v1 = std::make_shared<shaka::DataNode<shaka::Data>>(r);
 
 	Args result_vector = {v1};
 
@@ -262,11 +253,8 @@ Args truncate_div_numbers(Args args) {
 	r = n1 % n2;
 	q = (n1 - r) / n2;
 
-	Value v1 = std::make_shared<shaka::DataNode<shaka::Data>>();
-	Value v2 = std::make_shared<shaka::DataNode<shaka::Data>>();
-	
-	v1->set_data(q);
-	v2->set_data(r);
+	Value v1 = std::make_shared<shaka::DataNode<shaka::Data>>(q);
+	Value v2 = std::make_shared<shaka::DataNode<shaka::Data>>(r);
 
 	Args result_vector = {v1, v2};
 

@@ -20,6 +20,7 @@ std::shared_ptr<IDataNode<T>> Variable::evaluate(
         std::shared_ptr<IEnvironment<Key,Value>> env) {
 
     // Lookup the Symbol from the Environment.
+    std::cout << "@Variable" << std::endl;
     shaka::Evaluator evaluator(
         env->get_value(shaka::get<Key>(*node->get_data())),
         env
