@@ -117,10 +117,164 @@ Args div_numbers(Args args) {
 Function div_numbers_f = div_numbers;
 
 // (abs x)
+Args abs_numbers(Args args) {
+
+	shaka::Number result = shaka::Number(0);
+	
+	shaka::Number input = shaka::get<shaka::Number>(*args[0]->get_data());
+
+	if (input < 0) {
+
+		result = result - shaka::get<shaka::Number>(*args[0]->get_data());
+	}
+
+	else {
+		result = input;
+	}
+
+	Value result_value = std::make_shared<shaka::DataNode<shaka::Data>>();
+	result_value->set_data(result);
+
+	Args result_vector = {result_value};
+
+	return result_vector;
+
+}
+
+Function abs_numbers_f = abs_numbers;
+
 // (floor/ n1 n2)
+Args floor_div_numbers(Args args) {
+
+	shaka::Number n1 = shaka::get<shaka::Number>(*args[0]->get_data());
+	shaka::Number n2 = shaka::get<shaka::Number>(*args[1]->get_data());
+	shaka::Number r;
+	shaka::Number q;
+
+	if (n1 > shaka::Number(0) && n2 > shaka::Number(0)) {
+
+		r = n1 % n2;
+		q = (n1 - r) / n2;
+	}
+
+	else if (n1 < shaka::Number(0) && n2 < shaka::Number(0)) {
+		r = n1 % n2;
+		q = (n1 - r) / n2;
+	
+	}
+	else {
+		r = n1 % n2 * shaka::Number(-1);
+		q = (n1 - r) / n2;
+	}
+
+	Value v1 = std::make_shared<shaka::DataNode<shaka::Data>>();
+	Value v2 = std::make_shared<shaka::DataNode<shaka::Data>>();
+	
+	v1->set_data(q);
+	v2->set_data(r);
+
+	Args result_vector = {v1, v2};
+
+	return result_vector;
+
+}
+
+Function floor_div_numbers_f = floor_div_numbers;
+
 // (floor-quotient n1 n2)
+Args floor_quotient_numbers(Args args) {
+		
+
+	shaka::Number n1 = shaka::get<shaka::Number>(*args[0]->get_data());
+	shaka::Number n2 = shaka::get<shaka::Number>(*args[1]->get_data());
+	shaka::Number r;
+	shaka::Number q;
+
+	if (n1 > shaka::Number(0) && n2 > shaka::Number(0)) {
+
+		r = n1 % n2;
+		q = (n1 - r) / n2;
+	}
+
+	else if (n1 < shaka::Number(0) && n2 < shaka::Number(0)) {
+		r = n1 % n2;
+		q = (n1 - r) / n2;
+	
+	}
+	else {
+		r = n1 % n2 * shaka::Number(-1);
+		q = (n1 - r) / n2;
+	}
+
+	Value v1 = std::make_shared<shaka::DataNode<shaka::Data>>();
+	
+	v1->set_data(q);
+
+	Args result_vector = {v1};
+
+	return result_vector;
+
+}
+
+Function floor_quotient_numbers_f = floor_quotient_numbers;
+
 // (floor-remainder n1 n2)
+Args floor_remainder_numbers(Args args) {
+	shaka::Number n1 = shaka::get<shaka::Number>(*args[0]->get_data());
+	shaka::Number n2 = shaka::get<shaka::Number>(*args[1]->get_data());
+	shaka::Number r;
+
+	if (n1 > shaka::Number(0) && n2 > shaka::Number(0)) {
+
+		r = n1 % n2;
+	}
+
+	else if (n1 < shaka::Number(0) && n2 < shaka::Number(0)) {
+		r = n1 % n2;
+	
+	}
+	else {
+		r = n1 % n2 * shaka::Number(-1);
+	}
+
+	Value v1 = std::make_shared<shaka::DataNode<shaka::Data>>();
+	
+	v1->set_data(r);
+
+	Args result_vector = {v1};
+
+	return result_vector;
+
+}
+
+Function floor_remainder_numbers_f = floor_remainder_numbers;
+
 // (truncate/ n1 n2)
+Args truncate_div_numbers(Args args) {
+	shaka::Number n1 = shaka::get<shaka::Number>(*args[0]->get_data());
+	shaka::Number n2 = shaka::get<shaka::Number>(*args[1]->get_data());
+
+	shaka::Number r;
+	shaka::Number q;
+
+
+	r = n1 % n2;
+	q = (n1 - r) / n2;
+
+	Value v1 = std::make_shared<shaka::DataNode<shaka::Data>>();
+	Value v2 = std::make_shared<shaka::DataNode<shaka::Data>>();
+	
+	v1->set_data(q);
+	v2->set_data(r);
+
+	Args result_vector = {v1, v2};
+
+	return result_vector;
+
+
+}
+
+Function truncate_div_numbers_f = truncate_div_numbers;
 // (truncate-quotient n1 n2)
 // (truncate-remainder n1 n2)
 
