@@ -41,7 +41,16 @@ public:
     }
 
 
-    String(const String &c, int index1, int index2): a_string(std::vector<char>(c.getString().size(), 0)) {
+    String(String &c, int index1): a_string(std::vector<char>(static_cast<int>(c.getString().size()) - index1, 0)) {
+
+        for(int i=0; i < static_cast<int>(c.getString().size()) - index1; i++){
+            a_string[i] = c.getString().at(i+index1);
+        }
+
+    }
+
+    //Makes a string out of part of another string
+    String(String &c, int index1, int index2): a_string((index2-index1), 0) {
 
         for(int i=0; i <= (index2 - index1); i++){
             a_string[i] = c.getString().at(i+index1);
@@ -57,11 +66,13 @@ public:
     //takes the index, and returns the value of the index
     char string_ref(int index) const {
 
-        for(int i = 0; i < static_cast<int>(a_string.size()); i++){
-            if (i == index){
-                return a_string[index];
-            }
+        for(int i=0; i < static_cast<int>(a_string.size()); i++){
+		if(i == index)
+            		return a_string[index];
         }
+		/*if(static_cast<int>(a_string.size()) <= index){
+                	return a_string[index];
+		}*/
         
     }
     void substring(const String &c, int start, int end){
@@ -74,52 +85,61 @@ public:
     void string_set(int index, char a){
 
         for(int i = 0; i < static_cast<int>(a_string.size()); i++){
-            if (i == index){
+           if (i == index){
                 a_string[index] = a;
-            }
+           }
         }
     }
+
     void string_append(const String &c){
         for(int i = 0; i!= static_cast<int>(c.getString().size()); i++){
             a_string.push_back((c.getString())[i]);
         }
     }
+
     void string_copy(const String &c){
         for(int i=0; i!= static_cast<int>(c.getString().size()); i++){
             a_string[i] = (c.getString())[i];
         }
     }
+
     void string_copy(const String &c, int start){
         for(int i=0; i!= static_cast<int>(c.getString().size()); i++){
             a_string[i] = (c.getString())[i+start];
         }
     }
+
     void string_copy(const String &c, int start, int end){
         for(int i=0; i!= (end-start); i++){
             a_string[i] = (c.getString())[i+start];
         }
     }
+
     void string_fill(char fill){
         for(int i=0; i!= static_cast<int>(a_string.size());i++){
             a_string[i] = fill;
         }
     }
+
     void string_fill(char fill, int start){
         for(int i=start; i!=static_cast<int>(a_string.size());i++){
             a_string[i] = fill;
         }
     }
+
     void string_fill(char fill, int start, int end){
         for(int i=start; i<= end;i++){
             a_string[i] = fill;
         }
     }
+
     void string_upcase(){
         for(int i = 0; i!= static_cast<int>(a_string.size()); i++){
             a_string[i] = toupper(a_string[i]);
             
         }
     }
+
     void string_downcase(){
         for(int i = 0; i!= static_cast<int>(a_string.size()); i++){
             a_string[i] = tolower(a_string[i]);
