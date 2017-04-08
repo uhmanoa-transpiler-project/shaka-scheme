@@ -3,15 +3,13 @@
 
 #include <cctype>
 #include <exception>
-#include <functional>
-#include <vector>
 #include <stack>
+
+#include "parser/primitives.h"
 
 #include "Number.h"
 #include "Symbol.h"
 
-#include "parser/char_rules.h"
-#include "parser/rule_number.h"
 #include "parser/Tokenizer.h"
 
 namespace shaka {

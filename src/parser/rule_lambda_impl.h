@@ -3,18 +3,16 @@
 
 #include <cctype>
 #include <exception>
-#include <functional>
-#include <vector>
 #include <stack>
+
+#include "parser/primitives.h"
+
+#include "parser/rule_lambda.h"
+#include "parser/rule_define.h"
+#include "parser/Tokenizer.h"
 
 #include "Number.h"
 #include "Symbol.h"
-
-#include "parser/rule_lambda.h"
-
-#include "parser/char_rules.h"
-#include "parser/rule_number.h"
-#include "parser/Tokenizer.h"
 
 namespace shaka {
 namespace parser {
@@ -42,8 +40,7 @@ bool lambda (
         interm += tokens.top().get_string();
 
         // Parenthesis must be followed by lambda keyword
-        if(in.peek().type != shaka::Token::Type::IDENTIFIER &&
-           in.peek().get_string != "lambda")
+        if(in.peek().get_string() != "lambda")
             throw std::runtime_error("No Lambda keyword");
 
         tokens.push(in.get());
@@ -175,9 +172,8 @@ bool formals(InputStream& in, NodePtr root, T& interm) {
             tokens.pop();
         }
         // TODO: Delete tree
-
-        return false;
     }
+    return false;
 }
 
 // <body>          ::= <definition>* <sequence>
