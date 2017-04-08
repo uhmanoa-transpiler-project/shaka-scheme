@@ -13,14 +13,23 @@ bool string(
 	NodePtr			root,
 	T&				interm
 ) {
+	//Token Declaration
 	Token str_tok = in.peek();
 
+	//IF the token is of the type STRING
 	if(str_tok.type == Token::Type::STRING) {
+		//Clear InputStream
+		in.get();
+		
+		//Get string stored in token
 		interm = str_tok.get_string();
+		
+		//Create new DataNode
+		//Push DataNode onto tree as child of root
 		root->push_child( String(interm) );
+		
 		return true;
-	} else {
-		throw std::runtime_error("Could not push DataNode onto tree");
+	} else {	
 		return false;
 	}
 	
