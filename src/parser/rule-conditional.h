@@ -41,7 +41,7 @@ bool conditional(
 	using shaka::Token;
 
 	std::stack<shaka::Token> tokens;
-	std::shared_ptr<Node> defNode;
+	std::shared_ptr<Node> ifNode;
 
 	//define if token as "if"
 	shaka::Token if_token(
@@ -154,8 +154,8 @@ bool conditional(
 	
 	switch(tokens.top().type) {
 		case shaka::Token::Type::NUMBER:
-			if(defNode != nullptr) {
-				defNode->push_child(
+			if(ifNode != nullptr) {
+				ifNode->push_child(
 					shaka::Number(
 						std::stod(tokens.top().get_string())
 					)
@@ -164,19 +164,13 @@ bool conditional(
 			break;
 
 		default:
-			if(defNode != nullptr) {
-				defNode->push_child(
+			if(ifNode != nullptr) {
+				ifNode->push_child(
 					shaka::Symbol(tokens.top().get_string())
 				);
 			}
 			break;
 	}
-
-//	if(in.peek().type != shaka::Token::Type::END_OF_FILE) {
-	//check for end parenthesis or end of file
-//	if(in.peek().type != shaka::Token::Type::PAREN_END) 
-//		throw std::runtime_error("No End Parenthesis");
-//	}
 
 	return true;
 
@@ -186,10 +180,10 @@ bool conditional(
 			tokens.pop();
 		}
 
-		if(defNode != nullptr) {
-			std::size_t size = defNode->get_num_children();
+		if(ifNode != nullptr) {
+			std::size_t size = ifNode->get_num_children();
 			for(std::size_t i = 0; i < size; i++) {
-				defNode->remove_child(i);
+				ifNode->remove_child(i);
 			}
 		}
 
