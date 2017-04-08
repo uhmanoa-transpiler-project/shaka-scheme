@@ -173,6 +173,20 @@ TEST(Tokenizer_number, not_a_number) {
 
 	ASSERT_FALSE(b);
 }
+/*
+TEST(Tokenizer_number, not_a_number_again) {
+	std::stringstream ss ("123abc456");
+	std::string interm;
+
+	shaka::Tokenizer tk(ss);
+
+	auto root = std::make_shared<shaka::parser::Node>(shaka::MetaTag::LIST);
+
+	bool b = shaka::parser::rule::number_integer(tk, root, interm);
+
+	ASSERT_FALSE(b);
+}
+*/
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);

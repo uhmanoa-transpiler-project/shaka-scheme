@@ -532,9 +532,9 @@ public:
             while (std::isdigit(in.peek())) {
             buffer += in.get();
 
-            number = true;
-            }
-        }
+	    number = true;
+	    }
+	}
 
         //
         //  // Make sure that it's the end of the number
@@ -689,6 +689,10 @@ public:
                 // Parse in a number
                 } else if (std::isdigit(in.peek())) {
                     std::string buffer;
+
+		    //Unget to get back the sign
+		    in.unget();
+
                     return parse_number(buffer);
 
                 // No other identifier? Just <explicit sign> is fine.
