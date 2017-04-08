@@ -1,5 +1,25 @@
+#include <cctype>
+#include <exception>
+#include <functional>
 #include <stack>
+#include <string>
+#include <iostream>
+
+#include "Number.h"
+#include "Symbol.h"
+#include "Data.h"
+#include "IDataNode.h"
+
+#include "Environment.h"
+#include "Evaluator.h"
+#include "Eval_Define.h"
+#include "Procedure.h"
+#include "Eval_Expression.h"
+#include "Eval_PrintTree.h"
+
 #include "parser/primitives.h"
+#include "parser/Tokenizer.h"
+#include "parser/Token.h"
 
 namespace shaka {
 namespace parser{
@@ -47,88 +67,135 @@ bool conditional(
 		"2"
 	);
 
+	try {
 	//check for start parenthesis
-	if(in.peek().type == shaka::Token::Type::PAREN_START){	
-	        tokens.push(in.get());
+	if(in.peek().type != shaka::Token::Type::PAREN_START) 
+	        throw std::runtime_error("No Starting Parenthesis");
+
+	tokens.push(in.get());
+	interm += tokens.top().get_string();
+
+	//check for "if" token
+        if(in.peek() != if_token)
+		throw std::runtime_error("No 'if' Declared");
+
+	tokens.push(in.get());
+	interm += tokens.top().get_string();
+
+	//check for mock procedure call
+	if(in.peek().type != shaka::Token::Type::PAREN_START)
+		throw std::runtime_error("No Start to Mock Proc Call");
+			
+	tokens.push(in.get());
+	interm += tokens.top().get_string();
+
+	//check for mock symbol
+	if(in.peek().type != shaka::Token::Type::IDENTIFIER)
+		throw std::runtime_error("No Symbol in Mock Proc Call");	
+	
+	tokens.push(in.get());
+	interm += tokens.top().get_string();
+		
+	//check for first mock number
+	if(in.peek().type != shaka::Token::Type::NUMBER) 
+		throw std::runtime_error("No first numerical variable");
+
+	tokens.push(in.get());
+	interm += tokens.top().get_string();
+
+	//check for second mock number
+	if(in.peek().type != shaka::Token::Type::NUMBER)
+		throw std::runtime_error("No second numerical variable");
+		
+	tokens.push(in.get());
+	interm += tokens.top().get_string();
+
+	//check for end of mock procedure call
+	if(in.peek().type != shaka::Token::Type::PAREN_END)
+		throw std::runtime_error("No End to Mock Proc Call");
+
+		tokens.push(in.get());
 		interm += tokens.top().get_string();
 
-		//check for "if" token
-           	if(in.peek() == if_token) {
-			tokens.push(in.get());
-			interm += tokens.top().get_string();
+	//check for first condition
+	if(in.peek().type != shaka::Token::Type::BOOLEAN_TRUE  && 
+	   in.peek().type != shaka::Token::Type::BOOLEAN_FALSE &&
+	   in.peek().type != shaka::Token::Type::IDENTIFIER)
+		throw std::runtime_error("No Consequent");
 
-		//check for mock procedure call
-		if(in.peek().type == shaka::Token::Type::PAREN_START) {
-			tokens.push(in.get());
-			interm += tokens.top().get_string();
+	tokens.push(in.get());
+	interm += tokens.top().get_string();
 
-		//check for mock symbol
-		if(in.peek() == mock_symbol) {
-			tokens.push(in.get());
-			interm += tokens.top().get_string();
-		
-		//check for first mock number
-		if(in.peek() == mock_num1) {
-			tokens.push(in.get());
-			interm += tokens.top().get_string();
+	//check for second condition or end parenthesis
+	if(in.peek().type != shaka::Token::Type::BOOLEAN_TRUE  &&
+	   in.peek().type != shaka::Token::Type::BOOLEAN_FALSE &&
+	   in.peek().type != shaka::Token::Type::IDENTIFIER    &&
+	   in.peek().type != shaka::Token::Type::PAREN_END)
+		throw std::runtime_error("No Alternate or End Parenthesis");
 
-		//check for second mock number
-		if(in.peek() == mock_num2) {
-			tokens.push(in.get());
-			interm += tokens.top().get_string();
-
-		//check for end of mock procedure call
-		if(in.peek().type == shaka::Token::Type::PAREN_END) {
-			tokens.push(in.get());
-			interm += tokens.top().get_string();
-
-		//check for boolean true
-		if(in.peek().type == shaka::Token::Type::BOOLEAN_TRUE) {
-			tokens.push(in.get());
-			interm += tokens.top().get_string();
-
-		//check for boolean false
-		if(in.peek().type == shaka::Token::Type::BOOLEAN_FALSE) {
-			tokens.push(in.get());
-		        interm += tokens.top().get_string();	
-			
-		//check for end parenthesis
-		if(in.peek().type == shaka::Token::Type::PAREN_END) {
-			return true;
-		}
-
-		else return false;
-		} //end of boolean false
-			
-		else return false;
-		} //end of boolean true
-
-		else return false;
-		} //end of end of mock proc call 
-
-		else return false;
-		} //end of second mock number
-
-		else return false;
-		} //end of first mock number
-		
-		else return false;
-		} //end of mock symbol
-
-		else return false;
-		} //end of procedure call check
-
-		else return false;
-		} //end of "if" token check
-
-//		else if(in.peek().type == shaka::Token::Type::END_OF_FILE) {
-//			return false;
-//		}
-
+	if(in.peek().type == shaka::Token::Type::PAREN_END){		
+		tokens.push(in.get());
+        	interm += tokens.top().get_string();
 	}
 
-	else return false;	
-} //end of first parenthesis check
+	else {
+		tokens.push(in.get());
+		interm += tokens.top().get_string();
+
+		if(in.peek().type != shaka::Token::Type::PAREN_END)
+			throw std::runtime_error("No End Parenthesis");
+
+		tokens.push(in.get());
+		interm += tokens.top().get_string();
+	}
+
+	if(in.peek().type != shaka::Token::Type::END_OF_FILE)
+		throw std::runtime_error("Excess Symbols Detected");	
+	
+	switch(tokens.top().type) {
+		case shaka::Token::Type::NUMBER:
+			if(defNode != nullptr) {
+				defNode->push_child(
+					shaka::Number(
+						std::stod(tokens.top().get_string())
+					)
+				);
+			}
+			break;
+
+		default:
+			if(defNode != nullptr) {
+				defNode->push_child(
+					shaka::Symbol(tokens.top().get_string())
+				);
+			}
+			break;
+	}
+
+//	if(in.peek().type != shaka::Token::Type::END_OF_FILE) {
+	//check for end parenthesis or end of file
+//	if(in.peek().type != shaka::Token::Type::PAREN_END) 
+//		throw std::runtime_error("No End Parenthesis");
+//	}
+
+	return true;
+
+	} catch (std::runtime_error& e) {
+		while(!tokens.empty()) {
+			in.unget(tokens.top());
+			tokens.pop();
+		}
+
+		if(defNode != nullptr) {
+			std::size_t size = defNode->get_num_children();
+			for(std::size_t i = 0; i < size; i++) {
+				defNode->remove_child(i);
+			}
+		}
+
+		return false;
+	}
+}
 
 }
 }
