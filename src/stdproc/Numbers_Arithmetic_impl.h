@@ -7,6 +7,7 @@
 #include "Data.h"
 
 #include "Procedure_impl.h"
+#include "Procedure.h"
 
 #include <functional>
 #include <typeinfo>
@@ -18,8 +19,9 @@ namespace stdproc {
 using Value = std::shared_ptr<shaka::IDataNode<shaka::Data>>;
 //using Value = std::shared_ptr<IDataNode<Data>>;
 using Args = std::vector<Value>;
-using Function = std::function<Args(Args)>;
 
+using Function = std::function<Args(Args)>;
+namespace impl {
 // (+ z1 ...)
 Args add_numbers(Args args) {
 	shaka::Number result = shaka::Number(0);
@@ -34,7 +36,6 @@ Args add_numbers(Args args) {
 	return result_vector;
 }
 
-Function add_numbers_f = add_numbers;
 
 // (* z1 ...)
 Args mul_numbers(Args args) {
@@ -50,7 +51,6 @@ Args mul_numbers(Args args) {
 	return result_vector;
 }
 
-Function mul_numbers_f = mul_numbers;
 
 // (- z)
 Args neg_numbers(Args args) {
@@ -66,7 +66,6 @@ Args neg_numbers(Args args) {
 
 }
 
-Function neg_numbers_f = neg_numbers;
 
 // (- z1 z2 ...)
 Args sub_numbers(Args args) {
@@ -84,7 +83,6 @@ Args sub_numbers(Args args) {
 
 }
 
-Function sub_numbers_f = sub_numbers;
 
 // (/ z1)
 Args reciprocal_numbers(Args args) {
@@ -98,7 +96,6 @@ Args reciprocal_numbers(Args args) {
 
 }
 
-Function reciprocal_numbers_f = reciprocal_numbers;
 
 // (/ z1 z2 ...)
 Args div_numbers(Args args) {
@@ -115,7 +112,6 @@ Args div_numbers(Args args) {
 
 }
 
-Function div_numbers_f = div_numbers;
 
 // (abs x)
 Args abs_numbers(Args args) {
@@ -133,8 +129,8 @@ Args abs_numbers(Args args) {
 		result = input;
 	}
 
-	Value result_value = std::make_shared<shaka::DataNode<shaka::Data>>();
-	result_value->set_data(result);
+	Value result_value = std::make_shared<shaka::DataNode<shaka::Data>>(result);
+
 
 	Args result_vector = {result_value};
 
@@ -142,7 +138,6 @@ Args abs_numbers(Args args) {
 
 }
 
-Function abs_numbers_f = abs_numbers;
 
 // (floor/ n1 n2)
 Args floor_div_numbers(Args args) {
@@ -168,19 +163,15 @@ Args floor_div_numbers(Args args) {
 		q = (n1 - r) / n2;
 	}
 
-	Value v1 = std::make_shared<shaka::DataNode<shaka::Data>>();
-	Value v2 = std::make_shared<shaka::DataNode<shaka::Data>>();
+	Value v1 = std::make_shared<shaka::DataNode<shaka::Data>>(q);
+	Value v2 = std::make_shared<shaka::DataNode<shaka::Data>>(r);
 	
-	v1->set_data(q);
-	v2->set_data(r);
-
 	Args result_vector = {v1, v2};
 
 	return result_vector;
 
 }
 
-Function floor_div_numbers_f = floor_div_numbers;
 
 // (floor-quotient n1 n2)
 Args floor_quotient_numbers(Args args) {
@@ -207,17 +198,14 @@ Args floor_quotient_numbers(Args args) {
 		q = (n1 - r) / n2;
 	}
 
-	Value v1 = std::make_shared<shaka::DataNode<shaka::Data>>();
+	Value v1 = std::make_shared<shaka::DataNode<shaka::Data>>(q);
 	
-	v1->set_data(q);
-
 	Args result_vector = {v1};
 
 	return result_vector;
 
 }
 
-Function floor_quotient_numbers_f = floor_quotient_numbers;
 
 // (floor-remainder n1 n2)
 Args floor_remainder_numbers(Args args) {
@@ -238,17 +226,14 @@ Args floor_remainder_numbers(Args args) {
 		r = n1 % n2 * shaka::Number(-1);
 	}
 
-	Value v1 = std::make_shared<shaka::DataNode<shaka::Data>>();
+	Value v1 = std::make_shared<shaka::DataNode<shaka::Data>>(r);
 	
-	v1->set_data(r);
-
 	Args result_vector = {v1};
 
 	return result_vector;
 
 }
 
-Function floor_remainder_numbers_f = floor_remainder_numbers;
 
 // (truncate/ n1 n2)
 Args truncate_div_numbers(Args args) {
@@ -262,12 +247,9 @@ Args truncate_div_numbers(Args args) {
 	r = n1 % n2;
 	q = (n1 - r) / n2;
 
-	Value v1 = std::make_shared<shaka::DataNode<shaka::Data>>();
-	Value v2 = std::make_shared<shaka::DataNode<shaka::Data>>();
+	Value v1 = std::make_shared<shaka::DataNode<shaka::Data>>(q);
+	Value v2 = std::make_shared<shaka::DataNode<shaka::Data>>(r);
 	
-	v1->set_data(q);
-	v2->set_data(r);
-
 	Args result_vector = {v1, v2};
 
 	return result_vector;
@@ -275,7 +257,6 @@ Args truncate_div_numbers(Args args) {
 
 }
 
-Function truncate_div_numbers_f = truncate_div_numbers;
 // (truncate-quotient n1 n2)
 // (truncate-remainder n1 n2)
 
@@ -318,6 +299,19 @@ Function truncate_div_numbers_f = truncate_div_numbers;
 // (inexact z)
 // (exact z)
 
+} // namespace impl
+
+Function add = impl::add_numbers;
+Function mul = impl::mul_numbers;
+Function neg = impl::neg_numbers;
+Function sub = impl::sub_numbers;
+Function reciprocal = impl::reciprocal_numbers;
+Function div = impl::div_numbers;
+Function abs = impl::abs_numbers;
+Function floor_div = impl::floor_div_numbers;
+Function floor_quotient = impl::floor_quotient_numbers;
+Function floor_remainder = impl::floor_remainder_numbers;
+Function truncate_div = impl::truncate_div_numbers;
 } // namespace stdproc
 } // namespace shaka
 
