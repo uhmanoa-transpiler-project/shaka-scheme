@@ -82,6 +82,10 @@ bool conditional(
 	tokens.push(in.get());
 	interm += tokens.top().get_string();
 
+	//Add "if" statement as root node
+	if(root != nullptr)
+		ifNode = root->push_child(shaka::Data{shaka::MetaTag::IF});
+
 	//check for mock procedure call
 	if(in.peek().type != shaka::Token::Type::PAREN_START)
 		throw std::runtime_error("No Start to Mock Proc Call");
@@ -89,12 +93,20 @@ bool conditional(
 	tokens.push(in.get());
 	interm += tokens.top().get_string();
 
+	//add "(" to tree
+	if(ifNode != nullptr)
+		ifNode->push_child(shaka:::Symbol(tokens.top().get_string()));
+
 	//check for mock symbol
 	if(in.peek().type != shaka::Token::Type::IDENTIFIER)
 		throw std::runtime_error("No Symbol in Mock Proc Call");	
 	
 	tokens.push(in.get());
 	interm += tokens.top().get_string();
+
+	//add mock symbol to tree
+//	if(ifNode != nullptr)
+//		ifNode->push_child(shaka::Symbol(tokens.top().get_string()));
 		
 	//check for first mock number
 	if(in.peek().type != shaka::Token::Type::NUMBER) 
@@ -103,6 +115,11 @@ bool conditional(
 	tokens.push(in.get());
 	interm += tokens.top().get_string();
 
+	//add first mock number to tree
+//	if(ifNode != nullptr)
+//		ifNode->push_child(shaka::Number(
+//					std::stod(tokens.top().get_string())));
+
 	//check for second mock number
 	if(in.peek().type != shaka::Token::Type::NUMBER)
 		throw std::runtime_error("No second numerical variable");
@@ -110,12 +127,21 @@ bool conditional(
 	tokens.push(in.get());
 	interm += tokens.top().get_string();
 
+	//add second mock number to tree
+//	if(ifNode != nullptr)
+//		ifNode->push_child(shaka::Number(
+//					std::stod(tokens.top().get_string())));
+
 	//check for end of mock procedure call
 	if(in.peek().type != shaka::Token::Type::PAREN_END)
 		throw std::runtime_error("No End to Mock Proc Call");
 
-		tokens.push(in.get());
-		interm += tokens.top().get_string();
+	tokens.push(in.get());
+	interm += tokens.top().get_string();
+
+	//add ")" to tree
+//	if(ifNode != nullptr)
+//		ifNode->push_child(shaka::Symbol(tokens.top().get_string()));
 
 	//check for first condition
 	if(in.peek().type != shaka::Token::Type::BOOLEAN_TRUE  && 
@@ -125,6 +151,25 @@ bool conditional(
 
 	tokens.push(in.get());
 	interm += tokens.top().get_string();
+
+	//add first condition to tree
+	if(ifNode != nullptr) {
+		switch(tokens.top().type) {
+			case shaka::Token::Type::NUMBER:
+				ifNode->push_child(
+					shaka::Number(
+						std::stod(tokens.top().get_string())
+					)
+				);
+
+				break;
+
+			default:
+				ifNode->push_child(
+					shaka::Symbol(tokens.top().get_string()));
+				break;
+		}
+	}
 
 	//check for second condition or end parenthesis
 	if(in.peek().type != shaka::Token::Type::BOOLEAN_TRUE  &&
@@ -142,6 +187,29 @@ bool conditional(
 		tokens.push(in.get());
 		interm += tokens.top().get_string();
 
+		//add second condition to tree
+		if(ifNode != nullptr) {
+			switch(tokens.top().type) {
+				case shaka::Token::Type::NUMBER:
+					ifNode->push_child(
+						shaka::Number(
+							std::stod(
+								tokens.top().
+								get_string())
+						)
+					);
+
+					break;
+
+				default:
+					ifNode->push_child(
+						shaka::Symbol(tokens.top().
+								get_string()));
+					break;
+			}
+		}
+
+
 		if(in.peek().type != shaka::Token::Type::PAREN_END)
 			throw std::runtime_error("No End Parenthesis");
 
@@ -150,27 +218,7 @@ bool conditional(
 	}
 
 	if(in.peek().type != shaka::Token::Type::END_OF_FILE)
-		throw std::runtime_error("Excess Symbols Detected");	
-	
-	switch(tokens.top().type) {
-		case shaka::Token::Type::NUMBER:
-			if(ifNode != nullptr) {
-				ifNode->push_child(
-					shaka::Number(
-						std::stod(tokens.top().get_string())
-					)
-				);
-			}
-			break;
-
-		default:
-			if(ifNode != nullptr) {
-				ifNode->push_child(
-					shaka::Symbol(tokens.top().get_string())
-				);
-			}
-			break;
-	}
+		throw std::runtime_error("Excess Symbols Detected");
 
 	return true;
 
