@@ -38,18 +38,16 @@ TEST(DataNode, parameterized_type) {
     LocalDataTree root2(std::string("Hello World!!"));
 
     // retrieve
-    auto data0 = boost::get<MetaTag>(*root0.get_data());
-    auto data1 = boost::get<int>(*root1.get_data());
     auto data2 = boost::get<std::string>(*root2.get_data());
 
     // Here is now to check the type inside the node
-    if(MetaTag* ptr = boost::get<MetaTag>(root0.get_data().get())){
+    if (root0.get_data()->type() == typeid(shaka::MetaTag)){
         std::cout << "LocalData in Root0 is MetaTag" << std::endl;
     }
-    else if(auto* ptr = boost::get<int>(root0.get_data().get())){
+    else if (root0.get_data()->type() == typeid(int)){
         std::cout << "LocalData in Root0 is int" << std::endl;
     }
-    else if(auto* ptr = boost::get<std::string>(root0.get_data().get())){
+    else if (root0.get_data()->type() == typeid(std::string)){
         std::cout << "LocalData in Root0 is std::string" << std::endl;
     }
 
