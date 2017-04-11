@@ -14,9 +14,7 @@ namespace shaka {
 
 std::vector<std::shared_ptr<IDataNode<Data>>> 
 Procedure::call (std::vector<std::shared_ptr<IDataNode<Data>>> v) {
-    using Key = shaka::Symbol;
     using Data = shaka::Data;
-    using Value = std::shared_ptr<shaka::IDataNode<shaka::Data>>;
 
     // Get the arguments, bind them without evaluating to the
     // names in the arguments subtree (the first child) of this

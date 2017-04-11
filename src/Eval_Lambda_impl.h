@@ -29,8 +29,6 @@ std::shared_ptr<IDataNode<T>> Lambda::evaluate(
     std::shared_ptr<IEnvironment<Key, Value>> env
 ) {
     using T = shaka::Data;
-    using Key = shaka::Symbol;
-    using Value = std::shared_ptr<shaka::IDataNode<shaka::Data>>;
     /// brief Sets the number of input parameters to the procedure
     /// The 'node' has two children. The first child is the list of 
     /// input parameters. The second child is the body of the procedure. 

@@ -73,7 +73,7 @@ namespace eval {
 			}
 			// add new children to the LIST node, which are the results
 			// of our procedure call
-			for (int i = 0; i < result.size(); i++) {
+			for (std::size_t i = 0; i < result.size(); i++) {
 
 				list_node->insert_child(i, result[i]);
 			}
