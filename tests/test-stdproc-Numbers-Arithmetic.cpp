@@ -82,7 +82,7 @@ TEST(Numbers_Arithmetic_impl, reciprocal_numbers_f) {
     using namespace shaka::stdproc;
 
 	shaka::stdproc::Value v1 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(1, 2));
-	shaka::stdproc::Value v2 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(3)   );
+	shaka::stdproc::Value v2 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(3));
 	shaka::stdproc::Value v3 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(0.5) );
 
 	shaka::stdproc::Args args1 = {v1};
@@ -258,6 +258,212 @@ TEST(Numbers_Arithmetic_impl, truncate_div_numbers_f) {
 
 }
 
+
+TEST(Numbers_Arithmetic_impl, truncate_quotient_numbers_f) {
+	using namespace shaka::stdproc;
+
+	Value v1 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(5));
+	Value v2 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(2));
+	Value v3 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(-5));
+	Value v4 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(-2));
+
+	Args args1 = {v1, v2};
+	Args args2 = {v3, v2};
+	Args args3 = {v1, v4};
+	Args args4 = {v3, v4};
+
+	Args result1 = truncate_quotient(args1);
+	Args result2 = truncate_quotient(args2);
+	Args result3 = truncate_quotient(args3);
+	Args result4 = truncate_quotient(args4);
+
+	ASSERT_EQ(shaka::Number(2), shaka::get<shaka::Number>(*result1[0]->get_data()));
+
+	ASSERT_EQ(shaka::Number(-2), shaka::get<shaka::Number>(*result2[0]->get_data()));
+
+	ASSERT_EQ(shaka::Number(-2), shaka::get<shaka::Number>(*result3[0]->get_data()));
+
+	ASSERT_EQ(shaka::Number(2), shaka::get<shaka::Number>(*result4[0]->get_data()));
+
+}
+
+
+TEST(Numbers_Arithmetic_impl, truncate_remainder_numbers_f) {
+	using namespace shaka::stdproc;
+
+	Value v1 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(5));
+	Value v2 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(2));
+	Value v3 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(-5));
+	Value v4 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(-2));
+
+	Args args1 = {v1, v2};
+	Args args2 = {v3, v2};
+	Args args3 = {v1, v4};
+	Args args4 = {v3, v4};
+
+	Args result1 = truncate_remainder(args1);
+	Args result2 = truncate_remainder(args2);
+	Args result3 = truncate_remainder(args3);
+	Args result4 = truncate_remainder(args4);
+
+	ASSERT_EQ(shaka::Number(1), shaka::get<shaka::Number>(*result1[0]->get_data()));
+
+	ASSERT_EQ(shaka::Number(-1), shaka::get<shaka::Number>(*result2[0]->get_data()));
+
+	ASSERT_EQ(shaka::Number(1), shaka::get<shaka::Number>(*result3[0]->get_data()));
+
+	ASSERT_EQ(shaka::Number(-1), shaka::get<shaka::Number>(*result4[0]->get_data()));
+
+}
+
+TEST(Numbers_Arithmetic_impl, quotient_numbers_f) {
+	using namespace shaka::stdproc;
+
+	Value v1 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(5));
+	Value v2 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(2));
+	Value v3 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(-5));
+	Value v4 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(-2));
+
+	Args args1 = {v1, v2};
+	Args args2 = {v3, v2};
+	Args args3 = {v1, v4};
+	Args args4 = {v3, v4};
+
+	Args result1 = quotient(args1);
+	Args result2 = quotient(args2);
+	Args result3 = quotient(args3);
+	Args result4 = quotient(args4);
+
+	ASSERT_EQ(shaka::Number(2), shaka::get<shaka::Number>(*result1[0]->get_data()));
+
+	ASSERT_EQ(shaka::Number(-2), shaka::get<shaka::Number>(*result2[0]->get_data()));
+
+	ASSERT_EQ(shaka::Number(-2), shaka::get<shaka::Number>(*result3[0]->get_data()));
+
+	ASSERT_EQ(shaka::Number(2), shaka::get<shaka::Number>(*result4[0]->get_data()));
+
+}
+
+TEST(Numbers_Arithmetic_impl, remainder_numbers_f) {
+	using namespace shaka::stdproc;
+
+	Value v1 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(5));
+	Value v2 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(2));
+	Value v3 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(-5));
+	Value v4 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(-2));
+
+	Args args1 = {v1, v2};
+	Args args2 = {v3, v2};
+	Args args3 = {v1, v4};
+	Args args4 = {v3, v4};
+
+	Args result1 = shaka::stdproc::remainder(args1);
+	Args result2 = shaka::stdproc::remainder(args2);
+	Args result3 = shaka::stdproc::remainder(args3);
+	Args result4 = shaka::stdproc::remainder(args4);
+
+	ASSERT_EQ(shaka::Number(1), shaka::get<shaka::Number>(*result1[0]->get_data()));
+
+	ASSERT_EQ(shaka::Number(-1), shaka::get<shaka::Number>(*result2[0]->get_data()));
+
+	ASSERT_EQ(shaka::Number(1), shaka::get<shaka::Number>(*result3[0]->get_data()));
+
+	ASSERT_EQ(shaka::Number(-1), shaka::get<shaka::Number>(*result4[0]->get_data()));
+
+}
+
+TEST(Numbers_Arithmetic_impl, modulo_numbers_f) {
+	using namespace shaka::stdproc;
+
+	Value v1 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(5));
+	Value v2 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(2));
+	Value v3 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(-5));
+	Value v4 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(-2));
+
+	Args args1 = {v1, v2};
+	Args args2 = {v3, v2};
+	Args args3 = {v1, v4};
+	Args args4 = {v3, v4};
+
+	Args result1 = modulo(args1);
+	Args result2 = modulo(args2);
+	Args result3 = modulo(args3);
+	Args result4 = modulo(args4);
+
+	ASSERT_EQ(shaka::Number(1), shaka::get<shaka::Number>(*result1[0]->get_data()));
+	ASSERT_EQ(shaka::Number(1), shaka::get<shaka::Number>(*result2[0]->get_data()));
+	ASSERT_EQ(shaka::Number(-1), shaka::get<shaka::Number>(*result3[0]->get_data()));
+	ASSERT_EQ(shaka::Number(-1), shaka::get<shaka::Number>(*result4[0]->get_data()));
+
+}
+
+TEST(Numbers_Arithmetic_impl, gcd_numbers_f) {
+	using namespace shaka::stdproc;
+
+	Value v1 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(20));
+	Value v2 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(10));
+	Value v3 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(100));
+	Value v4 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(5));
+
+	Args args = {v1, v2, v3, v4};
+	Args args2 = {v1, v2, v3};
+
+	Args result = shaka::stdproc::gcd(args);
+	Args result2 = shaka::stdproc::gcd(args2);
+
+	ASSERT_EQ(shaka::Number(5), shaka::get<shaka::Number>(*result[0]->get_data()));
+	ASSERT_EQ(shaka::Number(10), shaka::get<shaka::Number>(*result2[0]->get_data()));
+
+}
+
+TEST(Numbers_Arithmetic_impl, lcm_numbers_f) {
+	using namespace shaka::stdproc;
+
+	Value v1 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(5));
+	Value v2 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(70));
+	Value v3 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(29));
+	Value v4 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(31));
+
+	Args args = {v1, v2, v3, v4};
+
+	Args result = shaka::stdproc::lcm(args);
+
+	ASSERT_EQ(shaka::Number(62930), shaka::get<shaka::Number>(*result[0]->get_data()));
+
+}
+
+TEST(Numbers_Arithmetic_impl, numerator_numbers_f) {
+	using namespace shaka::stdproc;
+
+	Value v1 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(1, 2));
+	Value v2 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(3, 4));
+
+	Args args1 = {v1};
+	Args args2 = {v2};
+
+	Args result1 = shaka::stdproc::numerator(args1);
+	Args result2 = shaka::stdproc::numerator(args2);
+
+	ASSERT_EQ(shaka::Number(1), shaka::get<shaka::Number>(*result1[0]->get_data()));
+	ASSERT_EQ(shaka::Number(3), shaka::get<shaka::Number>(*result2[0]->get_data()));
+}
+
+TEST(Numbers_Arithmetic_impl, denominator_numbers_f) {
+	using namespace shaka::stdproc;
+
+	Value v1 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(1, 2));
+	Value v2 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(3, 4));
+
+	Args args1 = {v1};
+	Args args2 = {v2};
+
+	Args result1 = shaka::stdproc::denominator(args1);
+	Args result2 = shaka::stdproc::denominator(args2);
+
+	ASSERT_EQ(shaka::Number(2), shaka::get<shaka::Number>(*result1[0]->get_data()));
+	ASSERT_EQ(shaka::Number(4), shaka::get<shaka::Number>(*result2[0]->get_data()));
+
+}
 int main(int argc, char* argv[]) {
 	::testing::InitGoogleTest(&argc, argv);
 
