@@ -15,6 +15,7 @@
 #include "Eval_Define.h"
 #include "Procedure.h"
 #include "Eval_Expression.h"
+#include "Eval_Variable_impl.h"
 #include "Eval_PrintTree.h"
 
 #include "parser/primitives.h"
@@ -95,7 +96,7 @@ bool conditional(
 
 	//add "(" to tree
 	if(ifNode != nullptr)
-		ifNode->push_child(shaka:::Symbol(tokens.top().get_string()));
+		ifNode->push_child(shaka::Symbol(tokens.top().get_string()));
 
 	//check for mock symbol
 	if(in.peek().type != shaka::Token::Type::IDENTIFIER)
