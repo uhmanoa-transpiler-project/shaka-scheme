@@ -464,6 +464,46 @@ TEST(Numbers_Arithmetic_impl, denominator_numbers_f) {
 	ASSERT_EQ(shaka::Number(4), shaka::get<shaka::Number>(*result2[0]->get_data()));
 
 }
+
+TEST(Numbers_Arithmetic_impl, floor_numbers_f) {
+	using namespace shaka::stdproc;
+	
+	Value v1 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(50, 20));
+	Value v2 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(7.54));
+
+	Args args1 = {v1};
+	Args args2 = {v2};
+
+	Args result1 = shaka::stdproc::floor(args1);
+	Args result2 = shaka::stdproc::floor(args2);
+
+	ASSERT_EQ(shaka::Number(2), shaka::get<shaka::Number>(*result1[0]->get_data()));
+	ASSERT_EQ(shaka::Number(7), shaka::get<shaka::Number>(*result2[0]->get_data()));
+}
+
+TEST(Numbers_Arithmetic_impl, ceiling_numbers_f) {
+	using namespace shaka::stdproc;
+
+	Value v1 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(5, 20));
+	Value v2 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(8.0001));
+	Value v3 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(20));
+	Value v4 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(50, 20));
+
+	Args args1 = {v1};
+	Args args2 = {v2};
+	Args args3 = {v3};
+	Args args4 = {v4};
+
+	Args result1 = shaka::stdproc::ceiling(args1);
+	Args result2 = shaka::stdproc::ceiling(args2);
+	Args result3 = shaka::stdproc::ceiling(args3);
+	Args result4 = shaka::stdproc::ceiling(args4);
+
+	ASSERT_EQ(shaka::Number(1), shaka::get<shaka::Number>(*result1[0]->get_data()));
+	ASSERT_EQ(shaka::Number(9.0), shaka::get<shaka::Number>(*result2[0]->get_data()));
+	ASSERT_EQ(shaka::Number(20), shaka::get<shaka::Number>(*result3[0]->get_data()));
+	ASSERT_EQ(shaka::Number(3), shaka::get<shaka::Number>(*result4[0]->get_data()));
+}
 int main(int argc, char* argv[]) {
 	::testing::InitGoogleTest(&argc, argv);
 

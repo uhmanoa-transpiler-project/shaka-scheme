@@ -396,7 +396,6 @@ Args lcm_numbers(Args args) {
 }
 
 // (numerator q)
-
 Args numerator_numbers(Args args) {
 	shaka::Number n1 = shaka::get<shaka::Number>(*args[0]->get_data());
 	
@@ -426,7 +425,56 @@ Args denominator_numbers(Args args) {
 
 
 // (floor x)
+Args floor_numbers(Args args) {
+	shaka::Number n1 = shaka::get<shaka::Number>(*args[0]->get_data());
+	if (n1.get_value().type() == typeid(shaka::Real)) {
+		shaka::Number result(floor(boost::get<shaka::Real>(n1.get_value()).get_value()));
+		Value result_value = std::make_shared<shaka::DataNode<shaka::Data>>(result);
+		Args result_vector = {result_value};
+		return result_vector;
+	}
+	else if (n1.get_value().type() == typeid(shaka::Integer)) {
+		shaka::Number result(floor(boost::get<shaka::Integer>(n1.get_value()).get_value()));
+		Value result_value = std::make_shared<shaka::DataNode<shaka::Data>>(result);
+		Args result_vector = {result_value};
+		return result_vector;
+	}
+	else {
+		int numerator = boost::get<shaka::Rational>(n1.get_value()).get_numerator();
+		int denominator = boost::get<shaka::Rational>(n1.get_value()).get_denominator();
+
+		shaka::Number result(floor((double) numerator / (double) denominator));
+		Value result_value = std::make_shared<shaka::DataNode<shaka::Data>>(result);
+		Args result_vector = {result_value};
+		return result_vector;
+	}
+
+}
 // (ceiling x)
+Args ceiling_numbers(Args args) {
+  	shaka::Number n1 = shaka::get<shaka::Number>(*args[0]->get_data());
+  	if (n1.get_value().type() == typeid(shaka::Real)) {
+    	shaka::Number result(ceil(boost::get<shaka::Real>(n1.get_value()).get_value()));
+		Value result_value = std::make_shared<shaka::DataNode<shaka::Data>>(result);
+		Args result_vector = {result_value};
+		return result_vector;
+  	}
+	else if (n1.get_value().type() == typeid(shaka::Integer)) {
+		shaka::Number result(ceil(boost::get<shaka::Integer>(n1.get_value()).get_value()));
+		Value result_value = std::make_shared<shaka::DataNode<shaka::Data>>(result);
+		Args result_vector = {result_value};
+		return result_vector;
+	}
+	else {
+		int numerator = boost::get<shaka::Rational>(n1.get_value()).get_numerator();
+		int denominator = boost::get<shaka::Rational>(n1.get_value()).get_denominator();
+
+		shaka::Number result(ceil((double) numerator / (double) denominator));
+		Value result_value = std::make_shared<shaka::DataNode<shaka::Data>>(result);
+		Args result_vector = {result_value};
+		return result_vector;
+	}
+}
 // (truncate x)
 // (round x)
 
@@ -476,6 +524,8 @@ Function gcd = impl::gcd_numbers;
 Function lcm = impl::lcm_numbers;
 Function numerator = impl::numerator_numbers;
 Function denominator = impl::denominator_numbers;
+Function floor = impl::floor_numbers;
+Function ceiling = impl::ceiling_numbers;
 } // namespace stdproc
 } // namespace shaka
 
