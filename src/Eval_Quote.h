@@ -23,6 +23,8 @@ public:
         std::shared_ptr<IDataNode<T>> node,
         std::shared_ptr<IEnvironment<Key, Value>> env) {
 
+        // This is just so that env doesn't have an unused parameter warning.
+        static_cast<void>(env);
 		return node->get_child(0);
 	}
 
