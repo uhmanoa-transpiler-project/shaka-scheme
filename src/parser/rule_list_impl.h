@@ -39,27 +39,23 @@ bool symbol_list(InputStream& in,NodePtr root, T& interm) {
         interm += tokens.top().get_string();
         break;
       }
-      else if (in.peek().type != shaka::Token::Type::IDENTIFIER || in.peek().type != shaka::Token::Type::CHARACTER ||
-               in.peek().type !=  shaka::Token::Type::STRING  || in.peek().type != shaka::Token::Type::BOOLEAN_TRUE ||
-               in.peek().type != shaka::Token::Type::BOOLEAN_FALSE) {
-        if(defNode != nullptr) {
-            defNode->push_child(
-                    shaka::Symbol( tokens.top().get_string() )
-                    );
-        }
-      }
       else if (in.peek().type == shaka::Token::Type::NUMBER) {
-        defNode->push_child(
-            shaka::Number(
-                std::stod( tokens.top().get_string() )
-            )
-        );
+        tokens.push(in.get());
+        interm += tokens.top().get_string();
+
+        if(defNode != nullptr) defNode->push_child(shaka::Number(std::stod(tokens.top().get_string())));
+      }
+      else if (in.peek().type == shaka::Token::Type::IDENTIFIER || in.peek().type == shaka::Token::Type::CHARACTER ||
+               in.peek().type ==  shaka::Token::Type::STRING  || in.peek().type == shaka::Token::Type::BOOLEAN_TRUE ||
+               in.peek().type == shaka::Token::Type::BOOLEAN_FALSE) {
+        tokens.push(in.get());
+        interm += tokens.top().get_string();
+        if(defNode != nullptr) {
+            defNode->push_child(shaka::Symbol(tokens.top().get_string()));
+        }
       }
       else
           throw std::runtime_error("BRUH WTF");
-
-      tokens.push(in.get());
-      interm += tokens.top().get_string();
     }
 
     return true;
@@ -70,7 +66,6 @@ bool symbol_list(InputStream& in,NodePtr root, T& interm) {
         shaka::Token bruh = tokens.top();
         in.unget(tokens.top());
         tokens.pop();
-        std::cout << bruh.get_string() << " " << bruh.get_type() << std::endl;
     }
 
     // delete defNode and children
@@ -118,29 +113,24 @@ bool proc_quote(InputStream& in,NodePtr root, T& interm) {
         interm += tokens.top().get_string();
         break;
       }
-      else if (in.peek().type != shaka::Token::Type::IDENTIFIER || in.peek().type != shaka::Token::Type::CHARACTER ||
-               in.peek().type !=  shaka::Token::Type::STRING  || in.peek().type != shaka::Token::Type::BOOLEAN_TRUE ||
-               in.peek().type != shaka::Token::Type::BOOLEAN_FALSE) {
+      else if (in.peek().type == shaka::Token::Type::NUMBER) {
+        tokens.push(in.get());
+        interm += tokens.top().get_string();
         if(defNode != nullptr) {
-            defNode->push_child(
-                    shaka::Symbol( tokens.top().get_string() )
-                    );
+          defNode->push_child(shaka::Number(std::stod(tokens.top().get_string())));
         }
       }
-      else if (in.peek().type == shaka::Token::Type::NUMBER) {
-      if(defNode != nullptr) {
-          defNode->push_child(
-              shaka::Number(
-                std::stod( tokens.top().get_string() )
-              )
-          );
+      else if (in.peek().type == shaka::Token::Type::IDENTIFIER || in.peek().type == shaka::Token::Type::CHARACTER ||
+               in.peek().type ==  shaka::Token::Type::STRING  || in.peek().type == shaka::Token::Type::BOOLEAN_TRUE ||
+               in.peek().type == shaka::Token::Type::BOOLEAN_FALSE) {
+        tokens.push(in.get());
+        interm += tokens.top().get_string();
+        if(defNode != nullptr) {
+            defNode->push_child(shaka::Symbol(tokens.top().get_string()));
         }
       }
       else
           throw std::runtime_error("BRUH WTF");
-
-      tokens.push(in.get());
-      interm += tokens.top().get_string();
     }
 
     return true;

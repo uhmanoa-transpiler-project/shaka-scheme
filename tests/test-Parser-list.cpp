@@ -15,6 +15,8 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <numeric>
+#include <cctype>
 
 TEST(Parser_Rules, symbol_list_alpha) {
   std::stringstream ss("'(apple orange)");
@@ -77,7 +79,7 @@ using Environment = shaka::Environment<shaka::Symbol, std::shared_ptr<IDataTree>
 
 TEST(Tokenizer_list, proc_tree) {
 
-    std::stringstream ss("(quote x 1)");
+    std::stringstream ss("(quote x 13)");
     shaka::Tokenizer in(ss);
     std::string interm;
 
@@ -92,11 +94,14 @@ TEST(Tokenizer_list, proc_tree) {
 
     ASSERT_EQ( lol->get_num_children(), 2);
 
+    ASSERT_EQ(shaka::get<shaka::Number>(*lol->get_child(1)->get_data()), shaka::Number(13));
+
+    ASSERT_EQ(shaka::get<shaka::Symbol>(*lol->get_child(0)->get_data()), shaka::Symbol("x"));
 }
 
 TEST(Tokenizer_list, symbol_tree) {
 
-    std::stringstream ss("'(x 1)");
+    std::stringstream ss("'(x 13)");
     shaka::Tokenizer in(ss);
     std::string interm;
 
@@ -111,7 +116,9 @@ TEST(Tokenizer_list, symbol_tree) {
 
     ASSERT_EQ( lol->get_num_children(), 2);
 
-    // ASSERT_EQ(shaka::Number(1), shaka::Number(lol->get_child(1)->get_data()));
+    ASSERT_EQ(shaka::get<shaka::Number>(*lol->get_child(1)->get_data()), shaka::Number(13));
+
+    ASSERT_EQ(shaka::get<shaka::Symbol>(*lol->get_child(0)->get_data()), shaka::Symbol("x"));
 }
 
 int main(int argc, char** argv) {
