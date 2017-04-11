@@ -58,9 +58,9 @@ TEST(Parser_Rules, conditional_tree) {
 	ASSERT_TRUE (shaka::parser::rule::conditional<std::string>
 			(tk, root, interm));
 
-//	ASSERT_EQ(root->get_num_children(), 1);
-//	auto child = root->get_child(0);
-//	ASSERT_EQ(child->get_num_children(), 3);
+	ASSERT_EQ(root->get_num_children(), 1);
+	auto child = root->get_child(0);
+	ASSERT_EQ(child->get_num_children(), 3);
 
 }
 

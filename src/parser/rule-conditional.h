@@ -42,7 +42,8 @@ bool conditional(
 	using shaka::Token;
 
 	std::stack<shaka::Token> tokens;
-	std::shared_ptr<Node> ifNode;
+	NodePtr ifNode;
+	shaka::Data tag = shaka::MetaTag::IF;
 
 	//define if token as "if"
 	shaka::Token if_token(
@@ -96,7 +97,7 @@ bool conditional(
 
 	//add "(" to tree
 	if(ifNode != nullptr)
-		ifNode->push_child(shaka::Symbol(tokens.top().get_string()));
+		ifNode->push_child(shaka::String(tokens.top().get_string()));
 
 	//check for mock symbol
 	if(in.peek().type != shaka::Token::Type::IDENTIFIER)
