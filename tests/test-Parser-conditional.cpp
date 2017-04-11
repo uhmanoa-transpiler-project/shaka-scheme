@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
 #include "parser/Tokenizer.h"
 #include "parser/Token.h"
-#include "parser/rule-conditional.h"
+#include "parser/rule_conditional_impl.h"
 
 #include "Data.h"
 #include "DataNode.h"

@@ -1,37 +1,8 @@
-#include <cctype>
-#include <exception>
-#include <functional>
-#include <stack>
-#include <string>
-#include <iostream>
-
-#include "Number.h"
-#include "Symbol.h"
-#include "Data.h"
-#include "IDataNode.h"
-
-#include "Environment.h"
-#include "Evaluator.h"
-#include "Eval_Define.h"
-#include "Procedure.h"
-#include "Eval_Expression.h"
-#include "Eval_Variable_impl.h"
-#include "Eval_PrintTree.h"
-
-#include "parser/primitives.h"
-#include "parser/Tokenizer.h"
-#include "parser/Token.h"
+#include "rule_conditional.h"
 
 namespace shaka {
 namespace parser{
 namespace rule {
-
-template <typename T> 
-bool conditional(
-	InputStream&	in,
-	NodePtr		root,
-	T&		interm
-);
 
 template <typename T>
 bool conditional(
@@ -105,10 +76,6 @@ bool conditional(
 	
 	tokens.push(in.get());
 	interm += tokens.top().get_string();
-
-	//add mock symbol to tree
-//	if(ifNode != nullptr)
-//		ifNode->push_child(shaka::Symbol(tokens.top().get_string()));
 		
 	//check for first mock number
 	if(in.peek().type != shaka::Token::Type::NUMBER) 
@@ -117,11 +84,6 @@ bool conditional(
 	tokens.push(in.get());
 	interm += tokens.top().get_string();
 
-	//add first mock number to tree
-//	if(ifNode != nullptr)
-//		ifNode->push_child(shaka::Number(
-//					std::stod(tokens.top().get_string())));
-
 	//check for second mock number
 	if(in.peek().type != shaka::Token::Type::NUMBER)
 		throw std::runtime_error("No second numerical variable");
@@ -129,21 +91,12 @@ bool conditional(
 	tokens.push(in.get());
 	interm += tokens.top().get_string();
 
-	//add second mock number to tree
-//	if(ifNode != nullptr)
-//		ifNode->push_child(shaka::Number(
-//					std::stod(tokens.top().get_string())));
-
 	//check for end of mock procedure call
 	if(in.peek().type != shaka::Token::Type::PAREN_END)
 		throw std::runtime_error("No End to Mock Proc Call");
 
 	tokens.push(in.get());
 	interm += tokens.top().get_string();
-
-	//add ")" to tree
-//	if(ifNode != nullptr)
-//		ifNode->push_child(shaka::Symbol(tokens.top().get_string()));
 
 	//check for first condition
 	if(in.peek().type != shaka::Token::Type::BOOLEAN_TRUE  && 
