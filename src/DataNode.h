@@ -9,6 +9,17 @@
 #include "Data.h"
 
 namespace shaka {
+// Need to forward declare the class to use it output stream operator
+template <typename T>
+class DataNode;
+} // namespace shaka
+
+// Need to forward declare the output stream operator.
+template <typename T>
+std::ostream& operator<< (std::ostream& out, shaka::DataNode<T> node);
+
+namespace shaka {
+
 
 /// @brief The central data structure for a Scheme object.
 ///
@@ -179,14 +190,30 @@ private:
 
     std::vector<std::shared_ptr<IDataNode<T>>>   children;
     std::weak_ptr<IDataNode<T>>                  parent;    
+
+    friend std::ostream& operator<< <>(std::ostream&, shaka::DataNode<T>);
 };
 
-// #include <map>
-// 
-// struct Environment {
-//     std::map<std::string, DataNode> symbol_table;
-// };
-
 } // namespace shaka
+
+template <>
+std::ostream& operator<< <shaka::Data>(std::ostream& out, shaka::DataNode<shaka::Data> node) {
+    if (node.get_data()->type() == typeid(shaka::Symbol)) {
+        std::cout << typeid(shaka::Symbol).name();
+    }
+    else if (node.get_data()->type() == typeid(shaka::Number)) {
+        std::cout << typeid(shaka::Number).name();
+    }
+    else if (auto ptr = shaka::get<shaka::MetaTag>(node.get_data().get())) {
+        std::cout << typeid(shaka::MetaTag).name();
+    }
+    return out;
+}
+
+template <typename T>
+std::ostream& operator<< (std::ostream& out, shaka::DataNode<T> node) {
+    std::cout << typeid(*node->get_data()).name();
+    return out;
+}
 
 #endif // SHAKA_DATANODE_H
