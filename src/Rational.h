@@ -38,8 +38,8 @@ public:
 
 
 	// getters for supporting unit testing
-	int get_numerator();
-	int get_denominator();
+	 int get_numerator() const;
+	 int get_denominator() const;
 	
 	// arithmetic operators
 	friend Rational operator+(const Rational& lhs, const Rational& rhs);
@@ -70,11 +70,11 @@ private:
 };
 
 
-int Rational::get_numerator() {
+int Rational::get_numerator() const {
 	return numer;
 }
 
-int Rational::get_denominator() {
+int Rational::get_denominator() const {
 	return denom;
 }
 
