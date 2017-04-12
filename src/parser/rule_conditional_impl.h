@@ -1,3 +1,6 @@
+#ifndef SHAKA_PARSER_RULES_RULE_CONDITIONAL_IMPL_H_
+#define SHAKA_PARSER_RULES_RULE_CONDITIONAL_IMPL_H_
+
 #include <stack>
 #include "parser/primitives.h"
 
@@ -8,8 +11,8 @@ namespace rule {
 template <typename T>
 bool conditional(
 	InputStream&	in,
-	NodePtr		root,
-	T&		interm
+	NodePtr         root,
+	T&              interm
 ) {
 	using shaka::Token;
 
@@ -126,3 +129,6 @@ bool conditional(
 }
 }
 }
+
+
+#endif // SHAKA_PARSER_RULES_RULE_CONDITIONAL_IMPL_H_
