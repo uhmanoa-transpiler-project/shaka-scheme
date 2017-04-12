@@ -6,6 +6,7 @@
 #include "parser/Tokenizer.h"
 #include "parser/Token.h"
 #include "parser/rule_number_impl.h"
+#include "parser/rule_number.h"
 
 #include "Data.h"
 #include "DataNode.h"
@@ -182,7 +183,7 @@ TEST(Tokenizer_number, not_a_number) {
 	ASSERT_FALSE(c);
 }
 
-TEST(Tokenizer_number, not_a_number_again) {
+TEST(Tokenizer_number, not_a_number_int) {
 	std::stringstream ss ("123abc456");
 	std::string interm;
 
@@ -190,12 +191,81 @@ TEST(Tokenizer_number, not_a_number_again) {
 
 	auto root = std::make_shared<shaka::parser::Node>(shaka::MetaTag::LIST);
 
-    ASSERT_THROW(
-	bool a = shaka::parser::rule::number_integer(tk, root, interm) ,
-	std::runtime_error
-    );
+    	ASSERT_THROW(
+		shaka::parser::rule::number_integer(tk, root, interm),
+		std::runtime_error
+   	 );
 }
 
+TEST(Tokenizer_number, not_a_number_real) {
+	std::stringstream ss ("123.abc");
+	std::string interm;
+
+	shaka::Tokenizer tk(ss);
+
+	auto root = std::make_shared<shaka::parser::Node>(shaka::MetaTag::LIST);
+
+	ASSERT_THROW(
+		shaka::parser::rule::number_real(tk, root, interm), 
+		std::runtime_error
+    	);
+}
+
+TEST(Tokenizer_number, not_a_number_rational) {
+	std::stringstream ss ("123/abc");
+	std::string interm;
+
+	shaka::Tokenizer tk(ss);
+
+	auto root = std::make_shared<shaka::parser::Node>(shaka::MetaTag::LIST);
+
+    	ASSERT_THROW(
+		shaka::parser::rule::number_rational(tk, root, interm),
+		std::runtime_error
+   	);
+}
+
+TEST(Tokenizer_number, big_int) {
+	std::stringstream ss("2147483648");
+	std::string interm;
+
+	shaka::Tokenizer tk(ss);
+
+	auto root = std::make_shared<shaka::parser::Node>(shaka::MetaTag::LIST);
+
+	ASSERT_THROW(
+		shaka::parser::rule::number_integer(tk, root, interm),
+		std::out_of_range
+	);
+}
+
+TEST(Tokenizer_number, big_real) {
+	std::stringstream ss("0.00000000000000012");
+	std::string interm;
+
+	shaka::Tokenizer tk(ss);
+
+	auto root = std::make_shared<shaka::parser::Node>(shaka::MetaTag::LIST);
+
+	ASSERT_THROW(
+		shaka::parser::rule::number_integer(tk, root, interm),
+		std::out_of_range
+	);
+}
+
+TEST(Tokenizer_number, big_rational) {
+	std::stringstream ss("6969696969696/696969696969696969696969");
+	std::string interm;
+
+	shaka::Tokenizer tk(ss);
+
+	auto root = std::make_shared<shaka::parser::Node>(shaka::MetaTag::LIST);
+
+	ASSERT_THROW(
+		shaka::parser::rule::number_integer(tk, root, interm),
+		std::out_of_range
+	);
+}
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);

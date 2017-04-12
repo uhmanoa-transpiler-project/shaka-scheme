@@ -4,11 +4,14 @@
 #include "parser/primitives.h"
 #include "rule_number.h"
 #include <cctype>
+#include <climits>
 
 namespace shaka {
 namespace parser {
 namespace rule {
 
+bool checkLimit(std::string s);
+int tothepower(int base, int power);
 	
 /// @brief Matches to an integer, and then
 ///        appends the string matching the integer
@@ -28,12 +31,19 @@ bool number_integer(
         in.get();
         interm += token.str;
         accept = true;
-    }
+    	}	
 
-    if (accept == true) {
+	if(checkLimit(token.str) == false) {
+		accept = false;
+		throw std::out_of_range("Number entered is too large");
+
+	}
+
+  	if (accept == true) {
+
         root -> push_child(
         shaka::Number(std::stoi(token.str)));
-    }
+    	}
 
    	return accept;
 }
@@ -55,10 +65,15 @@ bool number_real(
 
 	}
 
+	if(checkLimit(token.str) == false) {
+		accept = false;
+		throw std::out_of_range("Number entered is too large");
+
+	}
 	if (accept == true) {
 		root -> push_child(
         shaka::Number(std::stod(interm)));
-    }
+   	}
 
     return accept;
 }	
@@ -86,11 +101,15 @@ bool number_rational(
 
 		accept = true;
 
+		if(checkLimit(token.str) == false) {
+			accept = false;
+			throw std::out_of_range("Number entered is too large");
+
+		}
+
 		if(accept == true) {
 			root -> push_child(shaka::Number(
-                std::stoi(numer),
-				std::stoi(denom)
-            ));
+                std::stoi(numer), std::stoi(denom)));
 		}
 
 	}
@@ -98,6 +117,69 @@ bool number_rational(
 	return accept;
 }	
 
+bool checkLimit(std::string numstring) {
+	int digits = numstring.length();
+	int n = LONG_MAX;
+	int max[10];
+	int num[10];
+	int difference = 0;
+	int temp_diff;
+	int flag = 1;
+
+	//If the number enntered has more digits than the max, invalid number
+	if (digits > 10) {
+		return false;
+	}
+
+	//If the number entered has less digits than the max, valid number
+	if (digits < 10) {
+		return true;
+	}
+
+	//If the number entered has equal digits than max, check by subracting
+	//If difference is negative, number entered is invalid
+	//If different is positve, number entered is valid
+	if (digits == 10) {
+
+		//Put the max number into an array
+		for(int i = 10; i > 0; i--) {
+			max[i] = n % 10;
+			n = n / 10;
+		}	
+	
+		//Put the given digit into an array
+		for(int i = 0; i < digits; i++) {
+			num[i] = numstring[i] - '0';
+		}
+
+		//Subtract the numbers
+		for(int i = 10; i > 0; i--) {	
+			temp_diff = max[i] - num[i];
+			difference = temp_diff * tothepower(10, flag);
+			flag++;
+		}
+
+		if(difference >= 0) {
+			return true;
+		}
+
+		else {
+			return false;
+		}	
+	}
+
+	return false;	
+}
+
+int tothepower(int base, int power) {
+	int value = 1;
+
+	for(int i = 1; i <= power; i++) {
+		value = value * base;	
+	}
+
+	return value;
+}
 } // namespace rule
 } // namespace parser
 } // namespace shaka

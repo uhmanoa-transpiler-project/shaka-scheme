@@ -8,7 +8,6 @@
 namespace shaka {
 namespace parser {
 namespace rule {
-
 	
 /// @brief Matches to an integer, and then
 ///        appends the string matching the integer
