@@ -13,7 +13,6 @@
 #include <iostream>
 #include <sstream>
 #include <string>
-#include <vector>
 
 /// @brief Basic default constructor test
 TEST(Parser_lambda, token_constructor) {
@@ -35,8 +34,20 @@ TEST(Parser_lambda, tokenizer_test) {
     ASSERT_EQ(tok1, tok2);
 }
 
-/// @brief Assert that rule_define can parse the base 
-/// of (define asdf 1)
+/// @brief Assert that rule_lambda can parse through
+//   a very simple lambda case
+TEST(Parser_lambda, lambda_super_simple) {
+
+    std::stringstream ss("(lambda x 1)");
+    shaka::Tokenizer in(ss);
+    std::string interm;
+
+    ASSERT_TRUE( shaka::parser::rule::lambda(in, nullptr, interm) );
+    ASSERT_EQ(ss.str(), interm);
+}
+
+/// @brief Assert that rule_lambda can parse through
+//   a simple lambda case
 TEST(Parser_lambda, lambda_base_case) {
 
     std::stringstream ss("(lambda (x) x)");
@@ -44,62 +55,73 @@ TEST(Parser_lambda, lambda_base_case) {
     std::string interm;
 
     ASSERT_TRUE( shaka::parser::rule::lambda(in, nullptr, interm) );
-    std::cout << "interm: " << interm << std::endl;
+    ASSERT_EQ(ss.str(), interm);
 }
-/*
-/// @brief Asser that rule_define can parse a slightly
-/// more complicated version of define using extra whitespace
-TEST(Parser_lambda, define_number) {
+/// @brief Assert that rule_lambda can parse the same
+//   simple lambda case as in above with extra whitespace.
+TEST(Parser_lambda, base_case_with_whitespace) {
 
-    std::stringstream ss(" (   define \n true \n1 \n )");
+    std::stringstream ss(" (   lambda \n (   x) \nx \n )");
     shaka::Tokenizer in(ss);
+    std::string result = "(lambda (x) x)";
     std::string interm;
 
-    ASSERT_TRUE( shaka::parser::rule::define(in, nullptr, interm) );
-    std::cout << "interm: " << interm << std::endl;
+    EXPECT_TRUE( shaka::parser::rule::lambda(in, nullptr, interm) );
+    ASSERT_EQ(result, interm);
 }
 
-/// @brief Test that rule_define can parse a boolean as the 
-/// expression
-TEST(Parser_lambda, define_bool) {
+/// @brief Test that rule_lambda can parse
+//   a lambda that contains a define
+TEST(Parser_lambda, lambda_complicated) {
     
-    std::stringstream ss("(define true #true)");
+    std::stringstream ss("(lambda (x y z) (define a #t) 100)");
     shaka::Tokenizer in(ss);
     std::string interm;
 
-    ASSERT_TRUE( shaka::parser::rule::define(in, nullptr, interm) );
-    std::cout << "interm: " << interm << std::endl;
+    ASSERT_TRUE( shaka::parser::rule::lambda(in, nullptr, interm) );
+    ASSERT_EQ(ss.str(), interm);
 }
 
-TEST(Parser_lambda, define_fail) {
+TEST(Parser_lambda, lambda_fail_on_different_rule) {
 
-    std::stringstream ss("( define 123)");
+    std::stringstream ss("(define x 1)");
     shaka::Tokenizer in(ss);
     std::string interm;
 
-    ASSERT_FALSE( shaka::parser::rule::define(in, nullptr, interm) );
-    std::cout << "interm: " << interm << std::endl;
+    ASSERT_FALSE( shaka::parser::rule::lambda(in, nullptr, interm) );
+}
+
+TEST(Parser_lambda, lambda_fail_on_incomplete_lambda) {
+
+    std::stringstream ss("(lambda (xx))");
+    shaka::Tokenizer in(ss);
+    std::string interm;
+
+    ASSERT_FALSE( shaka::parser::rule::lambda(in, nullptr, interm) );
+    ASSERT_EQ("(lambda (xx) ", interm);
 }
 
 ////////////////////////////////
 //        TREE TESTS          //
 ////////////////////////////////
 
+/*
+
 using Data = shaka::Data;
 using IDataTree = shaka::IDataNode<Data>;
 using DataTree  = shaka::DataNode<Data>;
 using Environment = shaka::Environment<shaka::Symbol, std::shared_ptr<IDataTree>>;
 
-TEST(Parser_lambda, define_tree) {
+TEST(Parser_lambda, basic_lambda_tree) {
     
-    std::stringstream ss("(define x 1)");
+    std::stringstream ss("(lambda x 1)");
     shaka::Tokenizer in(ss);
     std::string interm;
 
     std::shared_ptr<DataTree> root = std::make_shared<DataTree>(shaka::MetaTag::LIST);
     std::shared_ptr<Environment> env = std::make_shared<Environment>(nullptr);
 
-    ASSERT_TRUE( shaka::parser::rule::define(in, root, interm) );
+    ASSERT_TRUE( shaka::parser::rule::lambda(in, root, interm) );
 
     shaka::Evaluator evaluator(root->get_child(0), env);
     evaluator.evaluate(shaka::eval::Define());
@@ -110,7 +132,9 @@ TEST(Parser_lambda, define_tree) {
     ASSERT_EQ(typeid(shaka::Number), env->get_value(shaka::Symbol("x"))->get_data()->type());
     ASSERT_EQ(shaka::Number(1), shaka::get<shaka::Number>(*env->get_value(shaka::Symbol("x"))->get_data()));
 }
+
 */
+
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

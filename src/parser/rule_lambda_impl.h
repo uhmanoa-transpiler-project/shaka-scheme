@@ -8,7 +8,7 @@
 #include "parser/primitives.h"
 
 #include "parser/rule_lambda.h"
-#include "parser/rule_define.h"
+#include "parser/rule_define_impl.h"
 #include "parser/Tokenizer.h"
 
 #include "Number.h"
@@ -34,17 +34,18 @@ bool lambda (
 
         // Must start with open parenthesis
         if(in.peek().type != shaka::Token::Type::PAREN_START)
-            throw std::runtime_error("No required open parenthesis");
+            throw std::runtime_error("LAMBDA: No required open parenthesis");
 
         tokens.push(in.get());
         interm += tokens.top().get_string();
 
         // Parenthesis must be followed by lambda keyword
         if(in.peek().get_string() != "lambda")
-            throw std::runtime_error("No Lambda keyword");
+            throw std::runtime_error("LAMBDA: No Lambda keyword");
 
         tokens.push(in.get());
         interm += tokens.top().get_string();
+        interm += " ";
         // add lambda node
         if(root != nullptr)
             lambdaNode = root->push_child(shaka::Data{shaka::MetaTag::LAMBDA});
@@ -52,15 +53,16 @@ bool lambda (
 
         // Function below parses in the <formals> sub rule
         if( !formals(in, root, interm) ) 
-            throw std::runtime_error("Lambda: Failed to parse Formals");
+            throw std::runtime_error("LAMBDA: Failed to parse Formals");
+        interm += " ";
 
         // function below parses in the <body> rule
         if( !body(in, root, interm) )
-            throw std::runtime_error("Lambda: Failed to parse Body");
+            throw std::runtime_error("LAMBDA: Failed to parse Body");
 
         // Parse in final ending close parenthesis
         if(in.peek().type != shaka::Token::Type::PAREN_END)
-            throw std::runtime_error("No required close parenthesis");
+            throw std::runtime_error("LAMBDA: No required close parenthesis");
 
         tokens.push(in.get());
         interm += tokens.top().get_string();
@@ -100,7 +102,7 @@ bool formals(InputStream& in, NodePtr root, T& interm) {
         // Check for '(' or identifier
         if(in.peek().type != shaka::Token::Type::PAREN_START &&
            in.peek().type != shaka::Token::Type::IDENTIFIER)
-            throw std::runtime_error("No formal following lambda keyword");
+            throw std::runtime_error("LAMBDA FORMALS: No formal following lambda keyword");
 
         tokens.push(in.get());
         interm += tokens.top().get_string();
@@ -130,18 +132,20 @@ bool formals(InputStream& in, NodePtr root, T& interm) {
         bool foundIdentifier = false;
         while(in.peek().type == shaka::Token::Type::IDENTIFIER) {
 
-            foundIdentifier = true;
+            if(foundIdentifier) interm += " "; // so interm is well formatted
             tokens.push(in.get());
             interm += tokens.top().get_string();
+            foundIdentifier = true;
             // TODO: add nodes to tree
 
         }
-        if(!foundIdentifier) throw std::runtime_error("No followup identifier in ()");
+        if(!foundIdentifier) 
+            throw std::runtime_error("LAMBDA FORMALS: No followup identifier in ()");
 
         // Check for the final ')' or the .
         if(in.peek().type != shaka::Token::Type::PAREN_END &&
            in.peek().type != shaka::Token::Type::PERIOD)
-            throw std::runtime_error("No closing parenthesis or . in Formals");
+            throw std::runtime_error("LAMBDA FORMALS: No closing parenthesis or . in Formals");
 
         // Parse in ')' or '.'
         tokens.push(in.get());
@@ -152,14 +156,14 @@ bool formals(InputStream& in, NodePtr root, T& interm) {
             return true;
 
         if(in.peek().type != shaka::Token::Type::IDENTIFIER)
-            throw std::runtime_error("No final Identifier in Formal rule");
+            throw std::runtime_error("LAMBDA FORMALS: No final Identifier in Formal rule");
 
         tokens.push(in.get());
         interm += tokens.top().get_string();
         // TODO: TREE
 
         if(in.peek().type != shaka::Token::Type::PAREN_END)
-            throw std::runtime_error("No final end parenthesis in Formal rule");
+            throw std::runtime_error("LAMBDA FORMALS: No final end parenthesis in Formal rule");
 
         tokens.push(in.get());
         interm += tokens.top().get_string();
@@ -186,7 +190,7 @@ bool body(InputStream& in, NodePtr root, T& interm) {
         // Calls the define rule each time a valid define is found
         // Parses 0 or more definitions
         // NOTE: THIS LOSES TOKENS
-        while( define(in, root, interm) );
+        while( define(in, root, interm) ) interm += " ";
 
 
         // TODO: FINISH EXPRESSION
@@ -203,7 +207,8 @@ bool body(InputStream& in, NodePtr root, T& interm) {
             interm += in.get().get_string();
         }
 
-        if(!foundExpression) throw std::runtime_error("Body: Failed to parse expression");
+        if(!foundExpression) 
+            throw std::runtime_error("LAMBDA BODY: Failed to parse expression");
         else return true;
 
     } catch(std::runtime_error& e) {
