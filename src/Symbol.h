@@ -13,7 +13,7 @@ public:
 	//TODO implement interface
 	Symbol(Value v) : value(v){}
 
-	Value get_value() {return value;}	
+	Value get_value() const {return value;}	
 	// overload the == and != operator for Symbol
 	friend bool operator==(const Symbol& n1, const Symbol& n2);
 	// hint: == is already overloaded for std::string
@@ -38,5 +38,10 @@ bool operator!=(const Symbol& n1, const Symbol& n2){
 	return !(n1 == n2);
 }
 
+}
+
+std::ostream& operator<< (std::ostream& lhs, const shaka::Symbol& rhs) {
+    lhs << rhs.get_value();
+    return lhs;
 }
 #endif

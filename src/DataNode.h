@@ -159,6 +159,11 @@ struct DataNode : public IDataNode<T> {
         return this->data;
     }
 
+    virtual std::shared_ptr<IDataNode<T>> copy_subtree_onto(std::shared_ptr<IDataNode<T>> other) {
+        other->push_child(*this->get_data());
+        return copy_subtree_recursive(other->get_child(0), std::shared_ptr<IDataNode<T>>(this));
+    }
+
 private:
     /// @brief Checks for a valid index for the children vector.
     ///
@@ -177,6 +182,20 @@ private:
             throw std::runtime_error("DataNode<T>: Index is invalid (negative).");
             return std::numeric_limits<size_t>::max();
         }
+    }
+
+    /// @brief Will copy the subtree recursively
+    std::shared_ptr<IDataNode<T>> copy_subtree_recursive(
+        std::shared_ptr<IDataNode<T>> this_node,
+        std::shared_ptr<IDataNode<T>> other_node) {
+        for (int i = 0; i < this_node->get_num_children(); ++i) {
+            // Push the copied value onto the root node.
+            auto other_child = other_node->push_child(*this_node->get_child(i)->get_data());
+            if (this_node->get_child(i)->get_num_children() > 0) {
+                copy_subtree_recursive(this_node->get_child(i), other_child); 
+            }
+        }
+        return other_node;
     }
 
 
@@ -199,13 +218,13 @@ private:
 template <>
 std::ostream& operator<< <shaka::Data>(std::ostream& out, shaka::DataNode<shaka::Data> node) {
     if (node.get_data()->type() == typeid(shaka::Symbol)) {
-        std::cout << typeid(shaka::Symbol).name();
+        std::cout << "Symbol";
     }
     else if (node.get_data()->type() == typeid(shaka::Number)) {
-        std::cout << typeid(shaka::Number).name();
+        std::cout << "Number";
     }
     else if (auto ptr = shaka::get<shaka::MetaTag>(node.get_data().get())) {
-        std::cout << typeid(shaka::MetaTag).name();
+        std::cout << "MetaTag";
     }
     return out;
 }

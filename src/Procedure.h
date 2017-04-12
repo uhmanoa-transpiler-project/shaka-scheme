@@ -60,5 +60,12 @@ private:
 
 } // namespace shaka
 
+std::ostream& operator<< (std::ostream& lhs, const shaka::Procedure rhs) {
+    lhs << "Procedure(" << rhs.get_fixed_arity();
+    if (rhs.is_variable_arity()) { lhs << "+"; }
+    lhs << ')';
+    return lhs;
+}
+
 
 #endif // SHAKA_PROCEDURE_H

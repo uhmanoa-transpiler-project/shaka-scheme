@@ -41,7 +41,6 @@ public:
         root(root),
         elipsis(elipsis) {}
 
-    /// @todo Fix matches.
     /// @brief Will determine whether an evaluation tree root
     ///        conforms to the pattern as held in the tree.
     bool matches (INodePtr other_root) {
@@ -51,22 +50,32 @@ public:
         }
     }
 
+    /// @brief Assumes that the pattern already matches correctly.
+    std::map<shaka::Symbol, INodePtr> get_bindings () {
+        return this->bindings;
+    }
+
 private:
     
     bool matches_recursive(INodePtr curr_node, INodePtr other_node) {
+        // First, clear the bindings.
+        this->bindings.clear();
+
         std::cout << "@Pattern.matches: "
                   << curr_node->get_data()->type().name()
-                  << " : " << other_node->get_data()->type().name() << std::endl;
-        // If the current node doesn't match the other one, stop.
-        // Make sure that the children match as well.
+                  << " : " << other_node->get_data()->type().name();
+
+        // First, match sure that any children match.
         for (std::size_t i = 0; i < other_node->get_num_children(); ++i) {
             if (i >= curr_node->get_num_children()) {
+                std::cout << std::endl;
                 return false;
             } else {
                 // If the next child symbol is an elipsis, return true.
                 if (curr_node->get_child(i)->get_data()->type() == typeid(shaka::Symbol)) { 
                     // If the symbol if an elipsis, then verify that it matches the rest of stuff.
                     auto symbol = shaka::get<shaka::Symbol>(*curr_node->get_child(i)->get_data());
+                    std::cout << '(' << symbol << ')' << std::endl;
                     if (symbol == elipsis) {
                         if (i == 0) {
                             throw std::runtime_error(
@@ -74,18 +83,45 @@ private:
                             );
                             return false;
                         } else {
+                            // Save the binding to the symbol.
+                            // Because the ellipsis matches the rest of the arguments,
+                            // we need to construct a new list with the rest of the
+                            // arguments in the list.
+                            auto ellipsis_root = std::make_shared<Node>(shaka::MetaTag::LIST);
+                            // Copy the tree onto the list.
+                            for (std::size_t j = i; j < other_node->get_num_children(); ++j) {
+                                ellipsis_root->push_child(*other_node->get_child(i)->get_data());
+                            }
+                            bindings[symbol] = ellipsis_root;
                             /// @todo Make sure to bind the rest of the list to the remainder.
+                            std::cout << std::endl;
                             break;
                         }
+                    } else {
+                        // Else, if it's not an elipsis, store the binding
+                        bindings[symbol] = other_node->get_child(i);
                     }
                 }
-                std::cout << '\t'; 
-                if (!matches_recursive(curr_node->get_child(i), other_node->get_child(i))) { return false; }
+                else if (curr_node->get_child(i)->get_data()->type() == typeid(shaka::MetaTag)) {
+                    auto tag = shaka::get<shaka::MetaTag>(*curr_node->get_child(i)->get_data());
+                    if (tag == shaka::MetaTag::LIST) {
+                        std::cout << "\t"; 
+                        if (!matches_recursive(
+                                curr_node->get_child(i),
+                                other_node->get_child(i))) {
+                            return false;
+                        }
+                    }
+
+                }
+                // Make sure the child of each of their node matches as well.
             }
         }
         // If the current node is a symbol, just match to what the
-        // other node is.
+        // other node is, and bind it.
         if (curr_node->get_data()->type() == typeid(shaka::Symbol)) { 
+            auto symbol = shaka::get<shaka::Symbol>(*curr_node->get_data());
+            bindings[symbol] = other_node;
             return true;
         }
         // If the current node is a LIST but the other one is not,
@@ -99,8 +135,10 @@ private:
         return true;
     }
 
+
     INodePtr root;
     shaka::Symbol elipsis;
+    std::map<shaka::Symbol, INodePtr> bindings;
 };
 
 /// @brief Represents the tree to substitute into.
@@ -130,6 +168,8 @@ class Template {
     ///        After substitution, the macro should be ready to evaluate
     ///        normally.
     INodePtr substitute(std::shared_ptr<IEnvironment<Key, Value>> env);
+
+    /// Requires Eval_Macro_Substitute
 
     INodePtr root;
 };

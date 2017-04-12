@@ -87,6 +87,7 @@ bool operator!=(const Real& lhs, const Real& rhs) {
 	return lhs.value != rhs.value;
 }
 
+
 } // namespace shaka
 
 #endif

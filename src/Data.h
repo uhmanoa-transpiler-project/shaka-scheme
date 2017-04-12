@@ -43,5 +43,14 @@ boost::variant<
 #include "ASCII_String.h"
 #include "Procedure.h"
 
+std::ostream& operator<< (std::ostream& lhs, const shaka::MetaTag rhs) {
+    using shaka::MetaTag;
+    if (rhs == MetaTag::DEFINE) { lhs << "DEFINE"; }
+    else if (rhs == MetaTag::LIST) { lhs << "LIST"; }
+    else if (rhs == MetaTag::PROC_CALL) { lhs << "PROC_CALL"; }
+    else if (rhs == MetaTag::QUOTE) { lhs << "QUOTE"; }
+    else if (rhs == MetaTag::LAMBDA) { lhs << "LAMBDA"; }
+}
+
 
 #endif // SHAKA_DATA_H

@@ -33,7 +33,7 @@ public:
         if (node->get_data()->type() == typeid(shaka::Symbol)) {
             out << "(" << shaka::get<shaka::Symbol>(*node->get_data()).get_value() << ')';
         } else if (node->get_data()->type() == typeid(shaka::Number)) {
-            out << "()";
+            out << "(" << shaka::get<shaka::Number>(*node->get_data()) << ")";
         } else if (node->get_data()->type() == typeid(shaka::MetaTag)) {
             out << "(" << static_cast<int>(shaka::get<shaka::MetaTag>(*node->get_data())) << ')';
         }

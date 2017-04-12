@@ -19,7 +19,7 @@ public:
 	Number(double v) : value(Real(v)) {}
 	Number(int n, int d) : value(Rational(n, d)) {}
 	
-    Value get_value() {return value;}
+    Value get_value() const {return value;}
 
 	// arithmetic operators R7RS 6.2.6
 	friend Number operator+(const Number& n1, const Number& n2);
@@ -187,5 +187,22 @@ Number min(const Number& n1, const Number& n2) {
 }
 */
 } // namespace shaka
+
+std::ostream& operator<< (std::ostream& lhs, const shaka::Number rhs) {
+    auto value = rhs.get_value();
+    if (value.type() == typeid(shaka::Integer)) {
+        auto val = shaka::get<shaka::Integer>(value);
+        lhs << val.get_value();
+    }
+    else if (value.type() == typeid(shaka::Rational)) {
+        auto val = shaka::get<shaka::Rational>(value);
+        lhs << val.get_numerator() << '/' << val.get_denominator();
+    }
+    else if (value.type() == typeid(shaka::Real)) {
+        auto val = shaka::get<shaka::Real>(value);
+        lhs << val.get_value();
+    }
+    return lhs;
+}
 
 #endif // NUMBER_H

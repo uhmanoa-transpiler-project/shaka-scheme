@@ -247,10 +247,16 @@ public:
         return a_string;
     }
 
+    friend std::ostream& operator<< (std::ostream&, const shaka::String&);
 private:
     std::vector<char> a_string;
 }; 
 
 
+}
+
+std::ostream& operator<< (std::ostream& lhs, const shaka::String& rhs) {
+    for (auto it : rhs.getString()) { lhs << it; }
+    return lhs;
 }
 #endif // SHAKA_ASCII_STRING_H

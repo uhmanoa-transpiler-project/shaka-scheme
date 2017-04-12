@@ -30,6 +30,7 @@ public:
     virtual std::size_t                 get_num_children() = 0;
     virtual std::shared_ptr<T>          get_data() = 0;
     virtual std::shared_ptr<T>          set_data(T data) = 0;
+    virtual std::shared_ptr<IDataNode<T>>  copy_subtree_onto(std::shared_ptr<IDataNode<T>> other) = 0; 
 
 };
 

@@ -22,17 +22,17 @@ public:
 	friend bool operator==(const Complex& lhs, const Complex& rhs);	
 	
 	// getter methods, for unit testing support
-	double get_real();
-	double get_imag();
+	double get_real() const;
+	double get_imag() const;
 private:
 	double real, imag;
 };
 
-double Complex::get_real() {
+double Complex::get_real() const {
 	return real;
 }
 
-double Complex::get_imag() {
+double Complex::get_imag() const {
 	return imag;
 }
 

@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include "macro/Macro.h"
+#include "Environment.h"
 
 TEST(Macro_Pattern, let_tree_initialization) {
     using namespace shaka::macro;
@@ -110,6 +111,14 @@ TEST(Macro_Pattern, test_elipsis) {
     ASSERT_FALSE(p.matches(root));
     ASSERT_TRUE(p2.matches(root));
 
+    auto env = std::make_shared<shaka::Environment<shaka::Symbol, INodePtr>>(nullptr);
+    auto bindings = p2.get_bindings();
+
+    for (auto it : bindings) {
+        shaka::Evaluator eval(it.second, env);
+        std::cout << "|" << it.first.get_value() << "|:" << std::endl;
+        eval.evaluate(shaka::eval::PrintTree<std::cout>());
+    }
 }
 
 int main(int argc, char** argv) {
