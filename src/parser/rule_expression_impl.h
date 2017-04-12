@@ -36,7 +36,10 @@ bool expression (
     try {
 
         // First, I want to check for any rules that may be recursive
-        // or that may include any of the smaller rules such as literal
+        // or that may include any of the smaller rules such as literal.
+        //
+        // Things that start with '(':
+        //      quotation
         if(in.peek().type == shaka::Token::Type::PAREN_START)
 
 
