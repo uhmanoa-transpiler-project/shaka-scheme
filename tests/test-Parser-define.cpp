@@ -40,12 +40,12 @@ TEST(Tokenizer_define, tokenizer_test) {
 /// of (define asdf 1)
 TEST(Tokenizer_define, define_return) {
 
-    std::stringstream ss("( define asdf 1 )");
+    std::stringstream ss("(define asdf 1)");
     shaka::Tokenizer in(ss);
     std::string interm;
 
     ASSERT_TRUE( shaka::parser::rule::define(in, nullptr, interm) );
-    std::cout << "interm: " << interm << std::endl;
+    ASSERT_EQ(ss.str(), interm);
 }
 
 /// @brief Asser that rule_define can parse a slightly
@@ -54,10 +54,11 @@ TEST(Tokenizer_define, define_number) {
 
     std::stringstream ss(" (   define \n true \n1 \n )");
     shaka::Tokenizer in(ss);
+    std::string result = "(define true 1)";
     std::string interm;
 
     ASSERT_TRUE( shaka::parser::rule::define(in, nullptr, interm) );
-    std::cout << "interm: " << interm << std::endl;
+    ASSERT_EQ(result, interm);
 }
 
 /// @brief Test that rule_define can parse a boolean as the 
@@ -66,10 +67,11 @@ TEST(Tokenizer_define, define_bool) {
     
     std::stringstream ss("(define true #true)");
     shaka::Tokenizer in(ss);
+    std::string result = "(define true #t)";
     std::string interm;
 
     ASSERT_TRUE( shaka::parser::rule::define(in, nullptr, interm) );
-    std::cout << "interm: " << interm << std::endl;
+    ASSERT_EQ(result, interm);
 }
 
 TEST(Tokenizer_define, define_fail) {
