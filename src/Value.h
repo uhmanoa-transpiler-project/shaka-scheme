@@ -172,6 +172,12 @@ Value operator/(Value v1, Value v2) {
 	}
 }
 
+Value operator |(Value v1, Value v2) {
+	assert(v1.type() != typeid(Real) && v1.type() != typeid(Rational) &&
+			v2.type() != typeid(Real) && v2.type() != typeid(Rational));
+	return boost::get<Integer>(v1) | boost::get<Integer>(v2);
+}
+
 Value operator%(Value v1, Value v2) {
 	assert(v1.type() != typeid(Real) && v1.type() != typeid(Rational) &&
 			v2.type() != typeid(Real) && v2.type() != typeid(Rational));
