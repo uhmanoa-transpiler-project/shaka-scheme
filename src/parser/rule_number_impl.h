@@ -1,5 +1,5 @@
-#ifndef SHAKA_PARSER_RULE_RULE_NUMBER_H
-#define SHAKA_PARSER_RULE_RULE_NUMBER_H
+#ifndef SHAKA_PARSER_RULE_RULE_NUMBER_IMPL_H
+#define SHAKA_PARSER_RULE_RULE_NUMBER_IMPL_H
 
 #include "parser/primitives.h"
 #include "rule_number.h"
@@ -9,9 +9,6 @@
 namespace shaka {
 namespace parser {
 namespace rule {
-
-bool checkLimit(std::string s);
-int tothepower(int base, int power);
 	
 /// @brief Matches to an integer, and then
 ///        appends the string matching the integer

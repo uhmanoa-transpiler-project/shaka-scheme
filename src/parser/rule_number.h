@@ -8,6 +8,9 @@
 namespace shaka {
 namespace parser {
 namespace rule {
+
+bool checkLimit(std::string s);
+int tothepower(int base, int power);
 	
 /// @brief Matches to an integer, and then
 ///        appends the string matching the integer
