@@ -6,9 +6,9 @@
 #include <stack>
 
 #include "parser/primitives.h"
-
-#include "parser/rule_expression.h"
 #include "parser/Tokenizer.h"
+
+#include "parser/rule_quote_impl.h"
 
 namespace shaka {
 namespace parser {
@@ -52,6 +52,9 @@ bool expression (
 
         // Pretty much can only be quotation
         else if(in.peek().type == shaka::Token::Type::QUOTE) {
+
+            if() return true;
+            else throw std::runtime_error("");
             
         }
 
@@ -98,6 +101,14 @@ bool expression (
         return true;
 
     } catch(std::runtime_error& e) {
+
+        while(!tokens.empty()) {
+            in.unget(tokens.top());
+            tokens.pop();
+
+        }
+
+        // TODO: Delete added nodes
 
         return false;
     }
