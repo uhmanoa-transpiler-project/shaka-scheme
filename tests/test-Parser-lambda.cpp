@@ -57,6 +57,19 @@ TEST(Parser_lambda, lambda_base_case) {
     ASSERT_TRUE( shaka::parser::rule::lambda(in, nullptr, interm) );
     ASSERT_EQ(ss.str(), interm);
 }
+
+/// @brief Assert that rule_lambda can parse through
+//   a simple lambda case
+TEST(Parser_lambda, lambda_base_case2) {
+
+    std::stringstream ss("(lambda () (define q 2))");
+    shaka::Tokenizer in(ss);
+    std::string interm;
+
+    ASSERT_TRUE( shaka::parser::rule::lambda(in, nullptr, interm) );
+    ASSERT_EQ(ss.str(), interm);
+}
+
 /// @brief Assert that rule_lambda can parse the same
 //   simple lambda case as in above with extra whitespace.
 TEST(Parser_lambda, base_case_with_whitespace) {

@@ -191,7 +191,11 @@ bool body(InputStream& in, NodePtr root, T& interm) {
         // Calls the define rule each time a valid define is found
         // Parses 0 or more definitions
         // NOTE: THIS LOSES TOKENS
-        while( define(in, root, interm) ) interm += " ";
+        bool foundDefine = false;
+        while( define(in, root, interm) ) {
+            if(foundDefine) interm += " ";
+            foundDefine = true;
+        }
 
 
         // TODO: FINISH EXPRESSION
@@ -205,10 +209,11 @@ bool body(InputStream& in, NodePtr root, T& interm) {
               in.peek().type == shaka::Token::Type::BOOLEAN_FALSE) 
         {
             foundExpression = true; 
+            if(foundDefine) interm += " ";
             interm += in.get().get_string();
         }
 
-        if(!foundExpression) 
+        if(!foundDefine && !foundExpression) 
             throw std::runtime_error("LAMBDA BODY: Failed to parse expression");
         else return true;
 
