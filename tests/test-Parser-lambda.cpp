@@ -70,6 +70,17 @@ TEST(Parser_lambda, lambda_base_case2) {
     ASSERT_EQ(ss.str(), interm);
 }
 
+// Extra case
+TEST(Parser_lambda, lambda_base_case3) {
+
+    std::stringstream ss("(lambda (x y.z) 400)");
+    shaka::Tokenizer in(ss);
+    std::string interm;
+
+    ASSERT_TRUE( shaka::parser::rule::lambda(in, nullptr, interm) );
+    ASSERT_EQ(ss.str(), interm);
+}
+
 /// @brief Assert that rule_lambda can parse the same
 //   simple lambda case as in above with extra whitespace.
 TEST(Parser_lambda, base_case_with_whitespace) {
@@ -117,7 +128,7 @@ TEST(Parser_lambda, lambda_fail_on_incomplete_lambda) {
 ////////////////////////////////
 //        TREE TESTS          //
 ////////////////////////////////
-/*
+
 
 using Data = shaka::Data;
 using IDataTree = shaka::IDataNode<Data>;
@@ -136,16 +147,18 @@ TEST(Parser_lambda, basic_lambda_tree) {
     ASSERT_TRUE( shaka::parser::rule::lambda(in, root, interm) );
 
     shaka::Evaluator evaluator(root->get_child(0), env);
-    evaluator.evaluate(shaka::eval::Define());
+    evaluator.evaluate(shaka::eval::Lambda());
 
     ASSERT_EQ( root->get_num_children(), 1 );
-    auto child = root->get_child(0);
-    ASSERT_EQ( child->get_num_children(), 2 );
-    ASSERT_EQ(typeid(shaka::Number), env->get_value(shaka::Symbol("x"))->get_data()->type());
-    ASSERT_EQ(shaka::Number(1), shaka::get<shaka::Number>(*env->get_value(shaka::Symbol("x"))->get_data()));
+    auto lambdaNode = root->get_child(0);
+    ASSERT_EQ( lambdaNode->get_num_children(), 2 );
+    auto argsNode = lambdaNode->get_child(0);
+    auto bodyNode = lambdaNode->get_child(1);
+    ASSERT_EQ( argsNode->get_num_children(), 1 );
+    ASSERT_EQ( argsNode->get_num_children(), 1 );
 }
 
-*/
+
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

@@ -166,16 +166,17 @@ bool formals(InputStream& in, NodePtr root, T& interm) {
         // There was a '.', so add this '.' to the node list
         // TODO: Assess how to add this period, because it represents a list.
         //       Determine if this needs to become a new list node.
+        NodePtr consList;
         if(root != nullptr)
-            root->push_child(shaka::Symbol(tokens.top().get_string()));
+            consList = root->push_child(shaka::Data{shaka::MetaTag::LIST});
 
         if(in.peek().type != shaka::Token::Type::IDENTIFIER)
             throw std::runtime_error("LAMBDA FORMALS: No final Identifier in Formal rule");
 
         tokens.push(in.get());
         interm += tokens.top().get_string();
-        if(root != nullptr)
-            root->push_child(shaka::Symbol(tokens.top().get_string()));
+        if(consList != nullptr)
+            consList->push_child(shaka::Symbol(tokens.top().get_string()));
 
         if(in.peek().type != shaka::Token::Type::PAREN_END)
             throw std::runtime_error("LAMBDA FORMALS: No final end parenthesis in Formal rule");
@@ -202,6 +203,8 @@ bool formals(InputStream& in, NodePtr root, T& interm) {
 template <typename T>
 bool body(InputStream& in, NodePtr root, T& interm) {
 
+    std::stack<shaka::Token> tokens;
+
     try {
         // Calls the define rule each time a valid define is found
         // Parses 0 or more definitions
@@ -223,9 +226,10 @@ bool body(InputStream& in, NodePtr root, T& interm) {
               in.peek().type == shaka::Token::Type::BOOLEAN_TRUE ||
               in.peek().type == shaka::Token::Type::BOOLEAN_FALSE) 
         {
+            tokens.push(in.get());
             foundExpression = true; 
             if(foundDefine) interm += " ";
-            interm += in.get().get_string();
+            interm += tokens.top().get_string();
 
             // Add expression to tree.
             // TODO: Replace this while loop with the actual expression
@@ -238,6 +242,11 @@ bool body(InputStream& in, NodePtr root, T& interm) {
         else return true;
 
     } catch(std::runtime_error& e) {
+
+        while(!tokens.empty()) {
+            in.unget(tokens.top());
+            tokens.pop();
+        }
         return false;
     }
 }
