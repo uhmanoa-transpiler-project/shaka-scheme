@@ -78,10 +78,11 @@ TEST(Tokenizer_define, define_fail) {
 
     std::stringstream ss("( define 123)");
     shaka::Tokenizer in(ss);
+    std::string result = "(define ";
     std::string interm;
 
     ASSERT_FALSE( shaka::parser::rule::define(in, nullptr, interm) );
-    std::cout << "interm: " << interm << std::endl;
+    ASSERT_EQ(result, interm);
 }
 
 ////////////////////////////////

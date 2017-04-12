@@ -52,12 +52,14 @@ bool lambda (
 
 
         // Function below parses in the <formals> sub rule
-        if( !formals(in, root, interm) ) 
+        // Pass in lambdaNode so it can fill it with children
+        if( !formals(in, lambdaNode, interm) ) 
             throw std::runtime_error("LAMBDA: Failed to parse Formals");
         interm += " ";
 
         // function below parses in the <body> rule
-        if( !body(in, root, interm) )
+        // Pass in lambdaNode so it can fill it with children
+        if( !body(in, lambdaNode, interm) )
             throw std::runtime_error("LAMBDA: Failed to parse Body");
 
         // Parse in final ending close parenthesis
@@ -66,7 +68,6 @@ bool lambda (
 
         tokens.push(in.get());
         interm += tokens.top().get_string();
-        // TODO: TREE
 
         // Parsed in everything successfully
         return true;

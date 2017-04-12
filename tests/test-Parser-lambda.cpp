@@ -104,7 +104,6 @@ TEST(Parser_lambda, lambda_fail_on_incomplete_lambda) {
 ////////////////////////////////
 //        TREE TESTS          //
 ////////////////////////////////
-
 /*
 
 using Data = shaka::Data;
@@ -134,7 +133,6 @@ TEST(Parser_lambda, basic_lambda_tree) {
 }
 
 */
-
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
