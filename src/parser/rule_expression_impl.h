@@ -47,15 +47,38 @@ bool expression (
         //
         //  Required look ahead.
         if(in.peek().type == shaka::Token::Type::PAREN_START) {
-            
+            tokens.push(in.get()); // keep token for later
+
+            // Determine which specific rule applies
+            if(in.peek().type == shaka::Token::Type::IDENTIFIER) {
+                if(in.peek().get_string() == "quote") {
+                    in.unget(tokens.top());
+                    tokens.pop();
+                    
+                    return quote(in, root, interm);
+                }
+                else if(in.peek().get_string() == "lambda") {
+                    in.unget(tokens.top());
+                    tokens.pop();
+
+                    return lambda(in, root, interm);
+                }
+                else if(in.peek().get_string() == "if") {
+                    in.unget(tokens.top());
+                    tokens.pop();
+
+                    return conditional(in, root, interm);
+                }
+                // TODO: FIX THIS and add PROC_CALL
+                else throw std::runtime_error("NO IDENFITIER AFTER OPEN PAREN");
+            }
         }
 
         // Pretty much can only be quotation
         else if(in.peek().type == shaka::Token::Type::QUOTE) {
 
-            if() return true;
-            else throw std::runtime_error("");
-            
+            if( quote(in, root, interm) ) return true;
+            else throw std::runtime_error("EXPRESSION: Failed to parse quote '''");
         }
 
         // Covers NUMBER
