@@ -2,7 +2,7 @@
 #define SHAKA_PARSER_RULES_RULE_LIST_IMPL_H
 
 #include "parser/primitives.h"
-#include "rule_list.h"
+#include "rule_quote.h"
 #include <cctype>
 #include <functional>
 #include <vector>
@@ -13,7 +13,7 @@ namespace rule {
 
 // '(<datum>)
 template <typename T>
-bool symbol_list(InputStream& in,NodePtr root, T& interm) {
+bool quote_literal(InputStream& in,NodePtr root, T& interm) {
   std::stack<shaka::Token> tokens;
   NodePtr defNode;
 
@@ -88,7 +88,7 @@ bool symbol_list(InputStream& in,NodePtr root, T& interm) {
 
 // (quote <datum>)
 template <typename T>
-bool proc_quote(InputStream& in,NodePtr root, T& interm) {
+bool quote_procedure(InputStream& in,NodePtr root, T& interm) {
   std::stack<shaka::Token> tokens;
   NodePtr defNode;
 
