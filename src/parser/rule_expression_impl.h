@@ -9,6 +9,8 @@
 #include "parser/Tokenizer.h"
 
 #include "parser/rule_quote_impl.h"
+#include "parser/rule_define_impl.h"
+#include "parser/rule_lambda_impl.h"
 
 namespace shaka {
 namespace parser {
@@ -25,12 +27,7 @@ namespace rule {
 //      <macro block>        |
 //      <includer>           |
 template <typename T>
-bool expression (
-        InputStream&    in,
-        NodePtr         root,
-        T&              interm
-) {
-
+bool expression (InputStream& in, NodePtr root, T& interm) {
     std::stack<shaka::Token> tokens;
 
     try {
@@ -47,35 +44,34 @@ bool expression (
         //
         //  Required look ahead.
         if(in.peek().type == shaka::Token::Type::PAREN_START) {
-            
+          tokens.push(in.get());
+          interm += tokens.top().get_string();
+
+          if (in.peek().type == shaka::Token::Type::IDENTIFIER) {
+            if (in.peek().get_string() == "define") define(in, root, interm);
+            else if (in.peek().get_string() == "lambda") lambda(in, root, interm);
+          }
         }
 
         // Pretty much can only be quotation
         else if(in.peek().type == shaka::Token::Type::QUOTE) {
-
-            if() return true;
-            else throw std::runtime_error("");
-            
+          if(quote_literal(in, root, interm)) return true;
+          else throw std::runtime_error("");
         }
 
         // Covers NUMBER
         // This turns in to a shaka::NUMBER data
         else if(in.peek().type == shaka::Token::Type::NUMBER) {
-
             tokens.push(in.get());
             interm += tokens.top().get_string();
 
             // Add to tree
             if(root != nullptr)
-                root->push_child(
-                        shaka::Number( std::stod(tokens.top().get_string() )
-                            ));
-            
-
+                root->push_child(shaka::Number(std::stod(tokens.top().get_string())));
         }
 
         // Covers.......
-        //  
+        //
         //      identifier
         //      boolean
         //      character
@@ -108,7 +104,12 @@ bool expression (
 
         }
 
-        // TODO: Delete added nodes
+        if(root != nullptr) {
+            std::size_t size = root->get_num_children();
+            for(std::size_t i = 0; i < size; ++i) {
+                root->remove_child(i);
+            }
+        }
 
         return false;
     }
