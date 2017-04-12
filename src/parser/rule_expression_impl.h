@@ -9,6 +9,9 @@
 #include "parser/Tokenizer.h"
 
 #include "parser/rule_quote_impl.h"
+#include "parser/rule_define_impl.h"
+#include "parser/rule_lambda_impl.h"
+#include "parser/rule_conditional_impl.h"
 
 namespace shaka {
 namespace parser {
@@ -55,19 +58,23 @@ bool expression (
                     in.unget(tokens.top());
                     tokens.pop();
                     
-                    return quote(in, root, interm);
+                    if(quote_literal(in, root, interm)) return true;
+                    else throw std::runtime_error("EXPR: Failed to parse quote");
                 }
                 else if(in.peek().get_string() == "lambda") {
                     in.unget(tokens.top());
                     tokens.pop();
 
-                    return lambda(in, root, interm);
+                    if(lambda(in, root, interm)) return true;
+                    else throw std::runtime_error("EXPR: Failed to parse lambda");
                 }
                 else if(in.peek().get_string() == "if") {
                     in.unget(tokens.top());
                     tokens.pop();
 
-                    return conditional(in, root, interm);
+                    if(conditional(in, root, interm)) return true;
+                    else throw std::runtime_error("EXPR: Failed to parse if");
+                    
                 }
                 // TODO: FIX THIS and add PROC_CALL
                 else throw std::runtime_error("NO IDENFITIER AFTER OPEN PAREN");
@@ -77,7 +84,7 @@ bool expression (
         // Pretty much can only be quotation
         else if(in.peek().type == shaka::Token::Type::QUOTE) {
 
-            if( quote(in, root, interm) ) return true;
+            if( quote_literal(in, root, interm) ) return true;
             else throw std::runtime_error("EXPRESSION: Failed to parse quote '''");
         }
 
