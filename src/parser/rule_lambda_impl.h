@@ -28,7 +28,9 @@ bool lambda (
 ) {
 
     std::stack<shaka::Token> tokens;
-    NodePtr lambdaNode;
+    NodePtr lambdaNode; // Top node of lambda
+    NodePtr argsNode;   // Node that all identifier arguments are passed to
+    NodePtr bodyNode;   // Node which is a list of expressions in body
 
     try {
 
@@ -46,20 +48,23 @@ bool lambda (
         tokens.push(in.get());
         interm += tokens.top().get_string();
         interm += " ";
-        // add lambda node
-        if(root != nullptr)
+        // add lambda node as well as its argument and body nodes
+        if(root != nullptr) {
             lambdaNode = root->push_child(shaka::Data{shaka::MetaTag::LAMBDA});
+            argsNode   = lambdaNode->push_child(shaka::MetaTag::LIST);
+            bodyNode   = lambdaNode->push_child(shaka::MetaTag::LIST);
+        }
 
 
         // Function below parses in the <formals> sub rule
-        // Pass in lambdaNode so it can fill it with children
-        if( !formals(in, lambdaNode, interm) ) 
+        // Pass in argsNode to populate with arguments from formals
+        if( !formals(in, argsNode, interm) )
             throw std::runtime_error("LAMBDA: Failed to parse Formals");
         interm += " ";
 
         // function below parses in the <body> rule
-        // Pass in lambdaNode so it can fill it with children
-        if( !body(in, lambdaNode, interm) )
+        // Pass in bodyNode to get all expressions in body
+        if( !body(in, bodyNode, interm) )
             throw std::runtime_error("LAMBDA: Failed to parse Body");
 
         // Parse in final ending close parenthesis
@@ -108,11 +113,13 @@ bool formals(InputStream& in, NodePtr root, T& interm) {
         tokens.push(in.get());
         interm += tokens.top().get_string();
 
-        // TODO: Tree insertions
-
         // Covers case of single identifier
-        if(tokens.top().type == shaka::Token::Type::IDENTIFIER)
+        if(tokens.top().type == shaka::Token::Type::IDENTIFIER) {
+            if(root != nullptr) {
+                root->push_child(shaka::Symbol(tokens.top().get_string()));
+            }
             return true;
+        }
 
         // Next we can have either:
         // 1. <Identifier*>)
@@ -122,7 +129,6 @@ bool formals(InputStream& in, NodePtr root, T& interm) {
         if(in.peek().type == shaka::Token::Type::PAREN_END) {
             tokens.push(in.get());
             interm += tokens.top().get_string();
-            // TODO: FILL TREE
             return true;
         }
         // Next up:
@@ -137,8 +143,10 @@ bool formals(InputStream& in, NodePtr root, T& interm) {
             tokens.push(in.get());
             interm += tokens.top().get_string();
             foundIdentifier = true;
-            // TODO: add nodes to tree
 
+            // Add each identifier to the argument list
+            if(root != nullptr)
+                root->push_child(shaka::Symbol(tokens.top().get_string()));
         }
         if(!foundIdentifier) 
             throw std::runtime_error("LAMBDA FORMALS: No followup identifier in ()");
@@ -151,24 +159,31 @@ bool formals(InputStream& in, NodePtr root, T& interm) {
         // Parse in ')' or '.'
         tokens.push(in.get());
         interm += tokens.top().get_string();
-        // TODO: Insert to tree
 
         if(tokens.top().type == shaka::Token::Type::PAREN_END)
             return true;
+
+        // There was a '.', so add this '.' to the node list
+        // TODO: Assess how to add this period, because it represents a list.
+        //       Determine if this needs to become a new list node.
+        if(root != nullptr)
+            root->push_child(shaka::Symbol(tokens.top().get_string()));
 
         if(in.peek().type != shaka::Token::Type::IDENTIFIER)
             throw std::runtime_error("LAMBDA FORMALS: No final Identifier in Formal rule");
 
         tokens.push(in.get());
         interm += tokens.top().get_string();
-        // TODO: TREE
+        if(root != nullptr)
+            root->push_child(shaka::Symbol(tokens.top().get_string()));
 
         if(in.peek().type != shaka::Token::Type::PAREN_END)
             throw std::runtime_error("LAMBDA FORMALS: No final end parenthesis in Formal rule");
 
         tokens.push(in.get());
         interm += tokens.top().get_string();
-        // TODO: TREE
+
+        return true;
 
     } catch(std::runtime_error& e) {
 
@@ -211,6 +226,11 @@ bool body(InputStream& in, NodePtr root, T& interm) {
             foundExpression = true; 
             if(foundDefine) interm += " ";
             interm += in.get().get_string();
+
+            // Add expression to tree.
+            // TODO: Replace this while loop with the actual expression
+            //       function once it is finished
+            if(root != nullptr) root->push_child(shaka::Symbol(tokens.top().get_string()));
         }
 
         if(!foundDefine && !foundExpression) 
