@@ -22,6 +22,8 @@ namespace rule {
 template <typename T>
 bool proc_call(InputStream& in, NodePtr root, T& interm);
 
+template <typename T>
+bool expr(InputStream& in, NodePtr root, T& interm);
 
 } // namespace rule
 } // namespace parser

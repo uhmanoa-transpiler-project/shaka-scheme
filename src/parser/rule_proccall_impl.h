@@ -38,4 +38,10 @@ bool proc_call(InputStream& in, NodePtr root, T& interm) {
   }
 }
 
+template <typename T>
+bool expr(InputStream& in, NodePtr root, T& interm) {
+  std::stack<shaka::Token> tokens;
+  return true;
+}
+
 #endif // SHAKA_PARSER_RULE_RULE_PROC_CALL_H
