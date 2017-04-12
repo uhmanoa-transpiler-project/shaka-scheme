@@ -1,5 +1,5 @@
-#ifndef SHAKA_PARSER_RULES_RUL_PROC_CALL_H
-#define SHAKA_PARSER_RULES_RUL_PROC_CALL_H
+#ifndef SHAKA_PARSER_RULES_RULE_PROCCALL_H
+#define SHAKA_PARSER_RULES_RULE_PROCCALL_H
 
 #include <cctype>
 
@@ -20,20 +20,7 @@ namespace rule {
 //                 if <test> <consequent> | set! <variable> <expression> |
 //                 derived expressions
 template <typename T>
-bool proc_call(
-    InputStream&    in,
-    NodePtr         root,
-    T&              interm
-) {
-    std::string buffer;
-    if(match_char<'('>(in, root, buffer)){
-        while(!match_char<')'>(in, root, buffer)){
-            
-        }
-    } else {
-        return false;
-    }
-}
+bool proc_call(InputStream& in, NodePtr root, T& interm);
 
 
 } // namespace rule
