@@ -11,12 +11,14 @@ namespace shaka {
 namespace parser {
 namespace rule {
 
+// '(<datum>)
 template <typename T>
 bool symbol_list(InputStream& in,NodePtr root, T& interm) {
   std::stack<shaka::Token> tokens;
   NodePtr defNode;
 
   try {
+    // '
     if (in.peek().type != shaka::Token::Type::QUOTE)
       throw std::runtime_error("BRUH WTF");
 
@@ -26,12 +28,14 @@ bool symbol_list(InputStream& in,NodePtr root, T& interm) {
     if(root != nullptr)
         defNode = root->push_child(shaka::Data{shaka::MetaTag::LIST});
 
+    // (
     if (in.peek().type != shaka::Token::Type::PAREN_START)
       throw std::runtime_error("No open parenthesis");
 
     tokens.push(in.get());
     interm += tokens.top().get_string();
 
+    // <datum>
     while (true)
     {
       if (in.peek().type == shaka::Token::Type::PAREN_END) {
@@ -82,11 +86,13 @@ bool symbol_list(InputStream& in,NodePtr root, T& interm) {
 
 }
 
+// (quote <datum>)
 template <typename T>
 bool proc_quote(InputStream& in,NodePtr root, T& interm) {
   std::stack<shaka::Token> tokens;
   NodePtr defNode;
 
+  // '
   try {
     // Check if it starts with a open parenthesis
     if(in.peek().type != shaka::Token::Type::PAREN_START)
@@ -98,7 +104,7 @@ bool proc_quote(InputStream& in,NodePtr root, T& interm) {
     if(root != nullptr)
         defNode = root->push_child(shaka::Data{shaka::MetaTag::LIST});
 
-    // Open parenthesis must be followed by 'define'
+    // Open parenthesis must be followed by 'quote'
     if(in.peek().type != shaka::Token::Type::IDENTIFIER &&
        in.peek().get_string() != "quote")
         throw std::runtime_error("No quote keyword");
@@ -153,8 +159,8 @@ bool proc_quote(InputStream& in,NodePtr root, T& interm) {
     return false;
   }
 }
-}
-}
-}
+} // end rule
+} // end parser
+} // end shaka
 
 #endif

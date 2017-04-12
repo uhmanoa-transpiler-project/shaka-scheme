@@ -29,14 +29,16 @@ namespace shaka {
 namespace parser {
 namespace rule {
 
+// '(<datum>)
 template <typename T>
 bool symbol_list(InputStream& in,NodePtr root, T& interm);
 
+// (quote <datum>)
 template <typename T>
 bool proc_quote(InputStream& in,NodePtr root, T& interm);
 
-}
-}
-}
+} // end rule
+} // end parser
+} // end shaka
 
 #endif

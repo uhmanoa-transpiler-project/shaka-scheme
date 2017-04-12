@@ -18,6 +18,7 @@
 #include <numeric>
 #include <cctype>
 
+// quote literal with alpha IDs
 TEST(Parser_Rules, symbol_list_alpha) {
   std::stringstream ss("'(apple orange)");
   shaka::Tokenizer tk(ss);
@@ -26,6 +27,7 @@ TEST(Parser_Rules, symbol_list_alpha) {
   ASSERT_TRUE(shaka::parser::rule::symbol_list<std::string>(tk, nullptr, interm));
 }
 
+// quote literal with numbers
 TEST(Parser_Rules, symbol_list_num) {
   std::stringstream ss("'(7 8 9)");
   shaka::Tokenizer tk(ss);
@@ -34,6 +36,7 @@ TEST(Parser_Rules, symbol_list_num) {
   ASSERT_TRUE(shaka::parser::rule::symbol_list<std::string>(tk, nullptr, interm));
 }
 
+// quote literal with mix of numbers and alpha IDs
 TEST(Parser_Rules, symbol_list_mixed) {
   std::stringstream ss("'(4 score n 7 yrs)");
   shaka::Tokenizer tk(ss);
@@ -42,6 +45,7 @@ TEST(Parser_Rules, symbol_list_mixed) {
   ASSERT_TRUE(shaka::parser::rule::symbol_list<std::string>(tk, nullptr, interm));
 }
 
+// quote procedure with alpha IDs
 TEST(Parser_Rules, proc_quote_alpha) {
   std::stringstream ss("(quote square circle triangle)");
   shaka::Tokenizer tk(ss);
@@ -50,6 +54,7 @@ TEST(Parser_Rules, proc_quote_alpha) {
   ASSERT_TRUE(shaka::parser::rule::proc_quote<std::string>(tk, nullptr, interm));
 }
 
+// quote procedure with number
 TEST(Parser_Rules, proc_quote_num) {
   std::stringstream ss("(quote 9001 13 3)");
   shaka::Tokenizer tk(ss);
@@ -58,6 +63,7 @@ TEST(Parser_Rules, proc_quote_num) {
   ASSERT_TRUE(shaka::parser::rule::proc_quote<std::string>(tk, nullptr, interm));
 }
 
+// quote procedure with mix of numbers and alpha IDs
 TEST(Parser_Rules, proc_quote_mixed) {
   std::stringstream ss("(quote c7ay 10 l35 b1)");
   shaka::Tokenizer tk(ss);
@@ -71,6 +77,7 @@ using IDataTree = shaka::IDataNode<Data>;
 using DataTree  = shaka::DataNode<Data>;
 using Environment = shaka::Environment<shaka::Symbol, std::shared_ptr<IDataTree>>;
 
+// quote procedure onto tree
 TEST(Tokenizer_list, proc_tree) {
     std::stringstream ss("(quote x 13)");
     shaka::Tokenizer in(ss);
@@ -87,6 +94,7 @@ TEST(Tokenizer_list, proc_tree) {
     ASSERT_EQ(shaka::get<shaka::Symbol>(*lol->get_child(0)->get_data()), shaka::Symbol("x"));
 }
 
+// quote literal onto tree
 TEST(Tokenizer_list, symbol_tree) {
     std::stringstream ss("'(x 13)");
     shaka::Tokenizer in(ss);
@@ -103,6 +111,7 @@ TEST(Tokenizer_list, symbol_tree) {
     ASSERT_EQ(shaka::get<shaka::Symbol>(*lol->get_child(0)->get_data()), shaka::Symbol("x"));
 }
 
+// quote procedure number only onto tree
 TEST(Tokenizer_list, proc_tree_more_num) {
   std::stringstream ss("(quote 18 5 67 4 3)");
   shaka::Tokenizer in(ss);
@@ -123,6 +132,7 @@ TEST(Tokenizer_list, proc_tree_more_num) {
   ASSERT_EQ(shaka::get<shaka::Number>(*kid->get_child(4)->get_data()), shaka::Number(3));
 }
 
+// quote procedure alpha IDs only onto tree
 TEST(Tokenizer_list, proc_quote_more_alpha) {
   std::stringstream ss("(quote fee fi fo fum)");
   shaka::Tokenizer in(ss);
