@@ -59,6 +59,7 @@ bool define(
 
         tokens.push(in.get());
         interm += tokens.top().get_string();
+        interm += " ";
         // add NODE
         if(root != nullptr)
             defNode = root->push_child(shaka::Data{shaka::MetaTag::DEFINE});
@@ -69,6 +70,7 @@ bool define(
 
         tokens.push(in.get());
         interm += tokens.top().get_string();
+        interm += " ";
         // Add Symbol for identifier to tree
         if(defNode != nullptr)
             defNode->push_child(shaka::Symbol(tokens.top().get_string()));
@@ -143,6 +145,7 @@ bool define(
         return false;
     }
 }
+
 
 } // namespace rule
 } // namespace parser
