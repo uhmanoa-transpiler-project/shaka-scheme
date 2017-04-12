@@ -62,6 +62,7 @@ bool expression (
             tokens.push(in.get());
             interm += tokens.top().get_string();
 
+            // Add to tree
             if(root != nullptr)
                 root->push_child(
                         shaka::Number( std::stod(tokens.top().get_string() )
