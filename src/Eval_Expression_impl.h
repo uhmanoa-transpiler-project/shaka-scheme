@@ -13,6 +13,8 @@
 #include "Eval_Define.h"
 #include "Eval_Variable.h"
 #include "Eval_Quote.h"
+#include "Eval_Lambda.h"
+#include "Eval_Proccall.h"
 
 #include "Eval_Expression.h"
 
@@ -20,6 +22,8 @@
 
 #include "Eval_Define_impl.h"
 #include "Eval_Variable_impl.h"
+#include "Eval_Proccall_impl.h"
+#include "Eval_Lambda_impl.h"
 
 
 namespace shaka { 
@@ -55,7 +59,13 @@ std::shared_ptr<IDataNode<T>> Expression::evaluate(
         } else if (tag == shaka::MetaTag::LIST) {
             std::cout << "@Expression ==> List (Literal)" << std::endl;
             return node;
-        } else {
+        } else if (tag == shaka::MetaTag::LAMBDA) {
+			std::cout << "@Expression ==> Lambda (Literal)" << std::endl;
+			return evaluator.evaluate(shaka::eval::Lambda());
+		} else if (tag == shaka::MetaTag::PROC_CALL) {
+			std::cout << "@Expression ==> Procedure Call" << std::endl;
+			return evaluator.evaluate(shaka::eval::Proc_Call());
+		} else {
             throw std::runtime_error("Expression: Invalid MetaTag option.");
             return nullptr;
         }
@@ -70,6 +80,16 @@ std::shared_ptr<IDataNode<T>> Expression::evaluate(
         std::cout << "@Expression ==> Number" << std::endl;
         return node;
     }
+
+    else if (type == typeid(shaka::Procedure)) {
+        std::cout << "@Expression ==> Procedure" << std::endl;
+        return node;
+    }
+
+	else if (type == typeid(shaka::String)) {
+		std::cout << "@Expression ==> String" << std::endl;
+		return node;
+	}
 
     else {
         throw std::runtime_error("Expression: Top-level expression type not supported.");

@@ -32,14 +32,14 @@ public:
 	friend bool operator<=(const Real& lhs, const Real& rhs);
 	friend bool operator!=(const Real& lhs, const Real& rhs);
 
-	double get_value();
+	double get_value() const;
 
 
 private:
 	double value;
 };
 
-double Real::get_value() {
+double Real::get_value() const{
 	return value;
 }
 

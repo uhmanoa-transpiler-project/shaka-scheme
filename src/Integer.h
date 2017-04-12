@@ -44,6 +44,7 @@ public:
 	friend Integer operator-(const Integer& lhs, const Integer& rhs);
 	friend Integer operator*(const Integer& lhs, const Integer& rhs);
 	friend Rational operator/(const Integer& lhs, const Integer& rhs);
+	friend Integer operator|(const Integer& lhs, const Integer& rhs);
 	friend Integer operator%(const Integer& lhs, const Integer& rhs);
 
 	// comparison operators for Integers
@@ -54,12 +55,12 @@ public:
 	friend bool operator<=(const Integer& lhs, const Integer& rhs);
 	friend bool operator!=(const Integer& lhs, const Integer& rhs);
 
-	int get_value();
+	int get_value() const;
 private:
 	int value;
 };
 
-int Integer::get_value() {
+int Integer::get_value() const {
 	return value;
 }
 
@@ -83,8 +84,14 @@ Rational operator/(const Integer& lhs, const Integer& rhs) {
 	return result;
 }
 
+Integer operator|(const Integer& lhs, const Integer& rhs) {
+	Integer result(lhs.value / rhs.value);
+	return result;
+}
+
 Integer operator%(const Integer& lhs, const Integer& rhs) {
-	return lhs.value % rhs.value;
+	Integer result(lhs.value % rhs.value);
+	return result;
 }
 
 bool operator==(const Integer& lhs, const Integer& rhs) {
