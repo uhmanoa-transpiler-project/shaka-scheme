@@ -1,12 +1,10 @@
 #include <gtest/gtest.h>
-#include "core/base/DataList.h"
+#include "core/base/DataNode.h"
 
 /// @brief Basic default constructor test
-TEST(DataList, constructors) {
-    shaka::DataList l(nullptr, nullptr);
-
-    ASSERT_TRUE(l.is_null());
-    ASSERT_FALSE(l.is_pair());
+TEST(DataNode, constructors) {
+    // '()
+    shaka::DataNode l0(nullptr, nullptr);
 }
 
 int main(int argc, char** argv) {

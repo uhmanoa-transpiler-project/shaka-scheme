@@ -7,19 +7,22 @@ namespace shaka {
 
 using boost::get;
 
-class DataList;
+class DataNode;
 class Symbol;
 class Number;
 class String;
 class Boolean;
 
+
 using Data = boost::variant<
-    std::shared_ptr<DataList>,
+    std::shared_ptr<DataNode>,
     shaka::Symbol,
     shaka::Number,
     shaka::String,
     shaka::Boolean
 >;
+
+using ListPtr = std::shared_ptr<DataNode>;
 
 }
 
