@@ -10,6 +10,7 @@ class Number;
 class Symbol;
 class String;
 class Procedure;
+class Boolean;
 
 /// @brief Auxillary "type-tags" used to decide whether the
 /// contained type should have children, according to the sematnics
@@ -33,7 +34,8 @@ boost::variant<
     shaka::MetaTag,
     shaka::Symbol,
     shaka::Number,
-    shaka::String
+    shaka::String,
+    shaka::Boolean
 >;
 
 }
@@ -42,6 +44,6 @@ boost::variant<
 #include "Symbol.h"
 #include "ASCII_String.h"
 #include "Procedure.h"
-
+#include "Boolean.h"
 
 #endif // SHAKA_DATA_H
