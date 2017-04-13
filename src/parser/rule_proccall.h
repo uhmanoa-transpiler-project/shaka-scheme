@@ -2,8 +2,28 @@
 #define SHAKA_PARSER_RULES_RULE_PROCCALL_H
 
 #include <cctype>
+#include <exception>
+#include <functional>
+#include <stack>
+#include <string>
 
-#include "parser/char_rules.h"
+#include "Number.h"
+#include "Symbol.h"
+#include "Data.h"
+#include "IDataNode.h"
+
+#include "Environment.h"
+#include "Evaluator.h"
+#include "Eval_Define.h"
+#include "Procedure.h"
+#include "Eval_Expression.h"
+#include "Eval_Define_impl.h"
+#include "Eval_Variable_impl.h"
+#include "Eval_PrintTree.h"
+
+#include "parser/primitives.h"
+#include "parser/Tokenizer.h"
+#include "parser/Token.h"
 
 namespace shaka {
 namespace parser {
@@ -22,12 +42,9 @@ namespace rule {
 template <typename T>
 bool proc_call(InputStream& in, NodePtr root, T& interm);
 
-template <typename T>
-bool expr(InputStream& in, NodePtr root, T& interm);
-
 } // namespace rule
 } // namespace parser
 } // namespace shaka
 
 
-#endif // SHAKA_PARSER_RULE_RULE_PROC_CALL_H
+#endif // SHAKA_PARSER_RULE_RULE_PROCCALL_H
