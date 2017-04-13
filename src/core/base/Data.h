@@ -12,10 +12,12 @@ class Symbol;
 class Number;
 class String;
 class Boolean;
+class Environment;
 
 
 using Data = boost::variant<
     std::shared_ptr<DataNode>,
+    shaka::Environment,
     shaka::Symbol,
     shaka::Number,
     shaka::String,
@@ -30,6 +32,8 @@ using ListPtr = std::shared_ptr<DataNode>;
 #include "core/base/Symbol.h"
 #include "core/base/Boolean.h"
 #include "core/base/String.h"
+#include "core/base/Environment.h"
+
 
 #endif // SHAKA_CORE_BASE_DATA_H
 

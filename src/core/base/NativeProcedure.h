@@ -1,44 +1,43 @@
-#ifndef NATIVE_PROCEDURE_H
-#define NATIVE_PROCEDURE_H
+#ifndef SHAKA_CORE_BASE_NATIVEPROCEDURE_H
+#define SHAKA_CORE_BASE_NATIVEPROCEDURE_H
 
-#include "IProcedure.h"
-#include "IEnvironment.h"
-#include "IEvaluatorStrategy.h"
-#include "Evaluator.h"
-#include "Data.h"
+#include "core/base/IProcedure.h"
+#include "core/base/Environment.h"
+//#include "Evaluator.h"
+#include "core/base/Data.h"
 #include <functional>
 #include <typeinfo>
 #include <vector>
 namespace shaka {
 
-//template <typename Data, typename Key, typename Value>
-class Native_Procedure : public IProcedure<Data> {
+class NativeProcedure : public IProcedure {
 public:
     using T = shaka::Data;
     using Key = shaka::Symbol;
-    using Value = std::shared_ptr<shaka::IDataNode<shaka::Data>>;
+    using Value = shaka::Data;
+    using IEnvPtr = std::shared_ptr<shaka::Environment>;
     //using Value = std::shared_ptr<IDataNode<Data>>;
     using Args = std::vector<Value>;
-    using Function = std::function<Args(Args)>;
+    using Function = std::function<Args(Args, IEnvPtr)>;
 
 
-	Native_Procedure(Function	func,
-			 std::size_t    fixed_arity, 
-			 bool           variable_arity = false) :
+	NativeProcedure(
+        Function	   func,
+        std::size_t    fixed_arity, 
+        bool           variable_arity = false) :
 		func(func),
 		fixed_arity(fixed_arity),
 		variable_arity(variable_arity) {}
 	
 	
-	virtual /*std::vector<std::shared_ptr<IDataNode<Data>>>*/ Args call(
-			/*std::vector<std::shared_ptr<IDataNode<Data>>*/ Args v) {
+	virtual Args call(Args v, IEnvPtr env) {
 		if (v.size() > fixed_arity && !variable_arity) {
 			throw std::runtime_error("Wrong number of args to native procedure");
 		}
 		
 		else {
 
-			return func(v);
+			return func(v, env);
 		}
 	
 	}
@@ -75,4 +74,4 @@ private:
 
 } // namespace shaka
 
-#endif //NATIVE_PROCEDURE_H
+#endif // SHAKA_CORE_BASE_NATIVEPROCEDURE_H

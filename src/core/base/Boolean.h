@@ -1,17 +1,15 @@
-#ifndef BOOLEAN_H
-#define BOOLEAN_H
+#ifndef SHAKA_CORE_BASE_BOOLEAN_H
+#define SHAKA_CORE_BASE_BOOLEAN_H
 
 namespace shaka{
 
 
 class Boolean {
 public:
-
-
 	//TODO implement interface
 	Boolean(bool v) : value(v){}
 
-	bool get_value() {return value;}	
+	bool get_value() const {return value;}	
     void set_value(bool v) { value = v; }
 
     
@@ -33,5 +31,10 @@ bool operator!=(const Boolean& n1, const Boolean& n2){
 	return !(n1 == n2);
 }
 
+
+std::ostream& operator<< (std::ostream& lhs, const shaka::Boolean& rhs) {
+    lhs << ((rhs.get_value()) ? "#t" : "#f");
+    return lhs;
 }
-#endif
+}
+#endif // SHAKA_CORE_BASE_BOOLEAN_H

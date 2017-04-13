@@ -249,8 +249,15 @@ public:
 
 private:
     std::vector<char> a_string;
-}; 
+};
 
-
+std::ostream& operator<< (std::ostream& lhs, const shaka::String& rhs) {
+    lhs << "\"";
+    for (auto it : rhs.getString()) {
+        lhs << it;
+    }
+    lhs << "\"";
+    return lhs;
+}
 }
 #endif // SHAKA_ASCII_STRING_H

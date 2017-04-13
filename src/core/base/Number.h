@@ -2,7 +2,7 @@
 #define NUMBER_H
 
 #include <cmath>
-#include "Value.h"
+#include "core/base/Value.h"
 
 namespace shaka {
 
@@ -37,6 +37,7 @@ public:
 	friend bool operator>=(const Number& n1, const Number& n2);
 	friend bool operator<=(const Number& n1, const Number& n2);
 	
+    friend std::ostream& operator<< (std::ostream& lhs, const Number& rhs);
 	/*
 	// testing for exactness/inexactness R7RS 6.2.2
 	friend bool exact_p(const Number& n);
@@ -186,6 +187,23 @@ Number min(const Number& n1, const Number& n2) {
 	}
 }
 */
+
+std::ostream& operator<< (std::ostream& lhs, const Number& rhs) {
+    if (auto* p = boost::get<shaka::Integer>(&rhs.value)) {
+        lhs << p->get_value();
+    }
+    else if (auto* p = boost::get<shaka::Rational>(&rhs.value)) {
+        lhs << p->get_numerator() << '/' << p->get_denominator();
+    }
+    else if (auto* p = boost::get<shaka::Real>(&rhs.value)) {
+        lhs << p->get_value();
+    }
+    else {
+        throw std::runtime_error("Number.<<: Invalid variant type");
+    }
+    return lhs;
+}
+
 } // namespace shaka
 
 #endif // NUMBER_H
