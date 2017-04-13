@@ -54,6 +54,7 @@ bool expression (
 
             // Determine which specific rule applies
             if(in.peek().type == shaka::Token::Type::IDENTIFIER) {
+
                 if(in.peek().get_string() == "quote") {
                     in.unget(tokens.top());
                     tokens.pop();
@@ -128,6 +129,7 @@ bool expression (
         }
         else throw std::runtime_error("EXPRESSION: Got to else, no conditions met");
 
+        // If anything parses successfully, this return is reached
         return true;
 
     } catch(std::runtime_error& e) {
