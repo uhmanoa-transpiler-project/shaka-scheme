@@ -5,14 +5,14 @@
 #include <exception>
 #include <stack>
 
-#include "parser/primitives.h"
-
 #include "parser/rule_lambda.h"
-#include "parser/rule_define_impl.h"
-#include "parser/Tokenizer.h"
 
 #include "Number.h"
 #include "Symbol.h"
+
+#include "parser/rule_define_impl.h"
+#include "parser/Tokenizer.h"
+
 
 namespace shaka {
 namespace parser {

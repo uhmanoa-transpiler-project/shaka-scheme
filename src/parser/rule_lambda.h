@@ -1,16 +1,7 @@
 #ifndef SHAKA_PARSER_RULES_RULE_LAMBDA_H
 #define SHAKA_PARSER_RULES_RULE_LAMBDA_H
 
-#include <cctype>
-#include <exception>
-#include <stack>
-
 #include "parser/primitives.h"
-
-#include "Number.h"
-#include "Symbol.h"
-
-#include "parser/Tokenizer.h"
 
 namespace shaka {
 namespace parser {

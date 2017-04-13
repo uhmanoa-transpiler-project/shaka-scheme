@@ -4,10 +4,10 @@
 #include "IDataNode.h"
 #include "Environment.h"
 #include "Evaluator.h"
+#include "Eval_Lambda_impl.h"
 
 #include "parser/Tokenizer.h"
 #include "parser/Token.h"
-#include "parser/rule_lambda.h"
 #include "parser/rule_lambda_impl.h"
 
 #include <iostream>
