@@ -4,6 +4,9 @@
 /// @brief Basic default constructor test
 TEST(DataList, constructors) {
     shaka::DataList l(nullptr, nullptr);
+
+    ASSERT_TRUE(l.is_null());
+    ASSERT_FALSE(l.is_pair());
 }
 
 int main(int argc, char** argv) {

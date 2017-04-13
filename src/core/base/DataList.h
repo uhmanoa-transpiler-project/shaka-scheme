@@ -35,12 +35,20 @@ public:
         head = p;
     }
 
+    void set_car (Data d) {
+        head = std::make_shared<Data>(d);
+    }
+
     void set_cdr (Ptr p) {
         tail = p;
     }
 
+    void set_cdr (Data d) {
+        tail = std::make_shared<Data>(d);
+    }
+
     bool is_pair () const {
-        return tail == nullptr;
+        return tail != nullptr;
     }
 
     bool is_null () const {
@@ -60,14 +68,28 @@ public:
     }
 
     std::size_t length () const {
-        
+        if (this->is_null()) { return 0; }
+        return length_recursive(1);
     }
 
-    
-
-
-
 private:
+
+    std::size_t length_recursive (std::size_t length) const {
+        // If the tail is another pair, check it.
+        if (tail->type() == typeid(std::shared_ptr<DataList>)) {
+            // If the tail is another pair, continue.
+            auto data_tail = shaka::get<std::shared_ptr<DataList>>(*tail);
+            // If the tail is null, we have the list length already.
+            if (!data_tail) { return length; }
+            // Otherwise, we need to get one more with the child.
+            else { return data_tail->length_recursive(length+1); }
+        }
+        // Otherwise, stop.
+        else {
+            return length;
+        }
+    }
+
     // The two storage cells in a list.
     Ptr head;
     Ptr tail;
