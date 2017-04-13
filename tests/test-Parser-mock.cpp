@@ -16,11 +16,11 @@ using DataTree = shaka::DataNode<
     >
 >;
 
-TEST(parsing_mock, initialize_ifstream) {
+TEST(Parser_mock, initialize_ifstream) {
     std::ifstream in("parsing-test-files/initialize_ifstream.txt");
 }
 
-TEST(parsing_mock, read_integer) {
+TEST(Parser_mock, read_integer) {
     std::ifstream in("parsing-test-files/read_digit.txt");
 
     auto root = std::make_shared<DataTree>([](int i, int j) {

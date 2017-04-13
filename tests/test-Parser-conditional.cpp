@@ -6,7 +6,7 @@
 #include <sstream>
 #include <vector>
 
-TEST(Parser_Rules, conditional) {
+TEST(Parser_conditional, conditional) {
     // Create a stringstream and give it to the Tokenizer
     std::stringstream ss("(if (> 3 2) #t #f)");
     shaka::Tokenizer tk(ss);
