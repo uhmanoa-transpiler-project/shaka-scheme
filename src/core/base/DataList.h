@@ -3,23 +3,9 @@
 
 #include <boost/variant.hpp>
 
+#include "core/base/Data.h"
+
 namespace shaka {
-
-using boost::get;
-
-class DataList;
-class Symbol;
-class Number;
-class String;
-class Boolean;
-
-using Data = boost::variant<
-    std::shared_ptr<DataList>
-//    shaka::Symbol,
-//    shaka::Number,
-//    shaka::String,
-//    shaka::Boolean
->;
 
 class DataList {
 public:
@@ -58,7 +44,6 @@ public:
     }
 
     bool is_list() const {
-
         if (tail->type() == typeid(std::shared_ptr<DataList>)) {
             if (shaka::get<std::shared_ptr<DataList>>(*tail)) {
                 auto data_tail = shaka::get<std::shared_ptr<DataList>>(*tail);
@@ -68,6 +53,10 @@ public:
                 return false;
             }
         }
+    }
+
+    std::size_t length () const {
+        
     }
 
     
@@ -81,5 +70,6 @@ private:
 };
 
 }
+
 
 #endif // SHAKA_CORE_BASE_IDATALIST_H
