@@ -5,6 +5,9 @@
 TEST(DataNode, constructors) {
     // '()
     shaka::DataNode l0(nullptr, nullptr);
+    ASSERT_TRUE(l0.is_null());
+    ASSERT_FALSE(l0.is_list());
+    ASSERT_FALSE(l0.is_pair());
 }
 
 int main(int argc, char** argv) {
