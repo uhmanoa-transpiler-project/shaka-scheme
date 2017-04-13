@@ -116,7 +116,8 @@ bool formals(InputStream& in, NodePtr root, T& interm) {
         // Covers case of single identifier
         if(tokens.top().type == shaka::Token::Type::IDENTIFIER) {
             if(root != nullptr) {
-                root->push_child(shaka::Symbol(tokens.top().get_string()));
+                auto listNode = root->push_child(shaka::MetaTag::LIST);
+                listNode->push_child(shaka::Symbol(tokens.top().get_string()));
             }
             return true;
         }
