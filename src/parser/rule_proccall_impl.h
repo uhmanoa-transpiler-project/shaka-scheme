@@ -2,10 +2,7 @@
 #define SHAKA_PARSER_RULES_RULE_PROCCALL_IMPL_H
 
 #include <cctype>
-#include <exception>
-#include <functional>
 #include <stack>
-#include <string>
 #include <vector>
 
 #include "parser/primitives.h"
@@ -14,6 +11,10 @@
 
 #include "parser/rule_proccall.h"
 #include "parser/rule_expression_impl.h"
+
+namespace shaka {
+namespace parser {
+namespace rule {
 
 // BNF:
 // <procedure call> := (<operator> <operand>*)
@@ -32,11 +33,12 @@ bool proc_call(InputStream& in, NodePtr root, T& interm) {
 
   try {
     // Must start with open parenthesis
-    if(in.peek().type != shaka::Token::Type::PAREN_START)
+    if (in.peek().type != shaka::Token::Type::PAREN_START)
       throw std::runtime_error("No open parenthesis");
 
     tokens.push(in.get());
     interm += tokens.top().get_string();
+
     if (root != nullptr)
       procNode = root->push_child(shaka::Data{shaka::MetaTag::PROC_CALL});
 
@@ -49,10 +51,11 @@ bool proc_call(InputStream& in, NodePtr root, T& interm) {
     if (procNode != nullptr)
       procNode->push_child(shaka::Symbol(tokens.top().get_string()));
 
-    NodePtr listNode = procNode->push_child(shaka::Data{shaka::MetaTag::LIST});
+    NodePtr listNode;
+    if (procNode != nullptr) listNode = procNode->push_child(shaka::Data{shaka::MetaTag::LIST});
 
     while (true) {
-      if (!expression(in, listNode, ptr)) {
+      if (!expression(in, listNode, interm)) {
         break;
       }
     }
@@ -62,6 +65,7 @@ bool proc_call(InputStream& in, NodePtr root, T& interm) {
 
     tokens.push(in.get());
     interm += tokens.top().get_string();
+    std::cout << tokens.top().get_string();
 
     return true;
   }
@@ -70,8 +74,18 @@ bool proc_call(InputStream& in, NodePtr root, T& interm) {
       in.unget(tokens.top());
       tokens.pop();
     }
+
+    if(procNode != nullptr) {
+      std::size_t size = procNode->get_num_children();
+      for(std::size_t i = 0; i < size; ++i) {
+        procNode->remove_child(i);
+      }
+    }
+
     return false;
   }
 }
+
+}}}
 
 #endif // SHAKA_PARSER_RULES_RULE_PROCCALL_IMPL_H
