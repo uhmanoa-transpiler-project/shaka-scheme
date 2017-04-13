@@ -39,11 +39,15 @@ public:
         tail = p;
     }
 
-    bool is_null() const {
+    bool is_pair () const {
         return tail == nullptr;
     }
 
-    bool is_list() const {
+    bool is_null () const {
+        return head == nullptr;
+    }
+
+    bool is_list () const {
         if (tail->type() == typeid(std::shared_ptr<DataList>)) {
             if (shaka::get<std::shared_ptr<DataList>>(*tail)) {
                 auto data_tail = shaka::get<std::shared_ptr<DataList>>(*tail);
