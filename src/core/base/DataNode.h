@@ -21,13 +21,24 @@ public:
         tail(nullptr) {}
 
     DataNode (DataNode left, DataNode right) {
-        auto h = std::make_shared<DataNode>(left.head);
-        h->tail = left.tail;
 
+        // If the left node is an atom,
+        // then just append the right as its tail
+        if (!left.is_pair()) {
+            this->head = left.head;
+        }
+        // Otherwise, we must create a new head to
+        // represent the cons of the left list and
+        // the right list.
+        else {
+            auto h = std::make_shared<DataNode>(left.head);
+            h->tail = left.tail;
+            head = h;
+        }
+
+        // Put the tail in the tail slot.
         auto t = std::make_shared<DataNode>(right.head);
         t->tail = right.tail;
-
-        head = h;
         tail = t;
     }
 
@@ -45,10 +56,8 @@ public:
     }
 
     bool is_pair() const {
-        if (head.type() == typeid(ListPtr)) {
-            if (tail.type() == typeid(ListPtr)) {
-                return get<ListPtr>(head) && get<ListPtr>(tail);
-            }
+        if (tail.type() == typeid(ListPtr)) {
+            return get<ListPtr>(tail) != nullptr;
         }
         return false;
     }
@@ -61,6 +70,8 @@ public:
         if (this->is_pair()) {
             if (head.type() == typeid(ListPtr)) {
                 return get<ListPtr>(head);
+            } else {
+                return std::make_shared<DataNode>(head);
             }
         } else {
             throw std::runtime_error("DataNode.cdr: argument is not pair");
@@ -154,6 +165,30 @@ std::ostream& operator<< (std::ostream& lhs, const DataNode& rhs) {
         }
         else if (rhs.is_environment()) {
             lhs << "#<environment>";
+        }
+    }
+    // Otherwise, this is some sort of list
+    else {
+        // Print out the first item.
+        lhs << "("; 
+        lhs << *rhs.car();
+        // Then continue to print out the
+        // other items.
+        auto tail = *rhs.cdr();
+        while (tail.is_pair()) {
+            lhs << ' ' << *tail.car();
+            tail = *tail.cdr();
+        }
+        // If this is a proper list, just close it.
+        if (tail.is_null()) {
+            auto last = get<ListPtr>(tail.tail);
+            if (!last) { lhs << ")"; }
+        }
+        // Otherwise, this is an improper list,
+        // and we must print out the last element.
+        else {
+            auto last = DataNode(tail.head);
+            lhs << " . " << last << ")";
         }
     }
     return lhs;

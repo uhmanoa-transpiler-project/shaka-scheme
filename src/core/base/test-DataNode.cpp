@@ -73,6 +73,7 @@ TEST(DataNode, pairs) {
         ASSERT_FALSE(tail.is_pair());
         ASSERT_FALSE(tail.is_null());
         ASSERT_FALSE(tail.is_list());
+        std::cout << n0 << std::endl;
     }
 
     {
@@ -92,6 +93,7 @@ TEST(DataNode, pairs) {
         ASSERT_FALSE(tail.is_pair());
         ASSERT_TRUE(tail.is_null());
         ASSERT_TRUE(tail.is_list());
+        std::cout << n0 << std::endl;
     }
 
     {
@@ -102,6 +104,24 @@ TEST(DataNode, pairs) {
 
         DataNode n1 = DataNode::cons({Number(0)}, n0);
         ASSERT_EQ(*n1.car(), DataNode(Number(0)));
+        std::cout << n1 << std::endl;
+    }
+
+    {
+        DataNode n0({Number(0)}, {nullptr});
+        for (int i = 1; i <= 10; ++i) {
+            n0 = DataNode::cons({Number(i)}, n0);
+        }
+
+        for (int i = 0; i < 10; ++i) {
+            auto temp = n0;
+            for (int j = 0; j < i; ++j) {
+                temp = *temp.cdr();
+            }
+            ASSERT_EQ(*temp.car(), DataNode(Number(10-i)));
+
+        }
+        std::cout << n0 << std::endl;
     }
 }
 
