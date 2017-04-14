@@ -126,7 +126,6 @@ TEST(DataNode, pairs) {
 }
 
 /// @brief Basic default constructor test
-/*
 TEST(DataNode, constructors) {
     // '()
     shaka::DataNode l0(nullptr);
@@ -145,16 +144,15 @@ TEST(DataNode, constructors) {
     std::cout << l1 << std::endl;
 
     // (1 . 2)
-    shaka::DataNode l2(shaka::Number(1), shaka::Number(2));
+    shaka::DataNode l2({shaka::Number(1)}, {shaka::Number(2)});
     ASSERT_FALSE(l2.is_null());
     ASSERT_FALSE(l2.is_list());
     ASSERT_TRUE(l2.is_pair());
-    ASSERT_EQ(shaka::DataNode(shaka::Number(1), shaka::Number(2)), l2);
+    ASSERT_EQ(shaka::DataNode({shaka::Number(1)}, {shaka::Number(2)}), l2);
     std::cout << l2 << std::endl;
 
     // (1 . '()) or (1)
-    shaka::DataNode l3(shaka::Number(1),
-        std::make_shared<shaka::DataNode>(nullptr, nullptr));
+    shaka::DataNode l3({shaka::Number(1)}, {nullptr});
     ASSERT_FALSE(l3.is_null());
     ASSERT_TRUE(l3.is_list());
     ASSERT_TRUE(l3.is_pair());
@@ -162,6 +160,27 @@ TEST(DataNode, constructors) {
     std::cout << l3 << std::endl;
 }
 
+TEST(DataNode, lists) {
+    DataNode l0 =
+        DataNode::list(Number(1), Number(2), Number(3), Number(4));
+    std::cout << l0 << std::endl;
+
+    DataNode l1 =
+        DataNode::list(
+            Symbol("define"),
+            Symbol("x"),
+            DataNode::list(
+                Symbol("+"),
+                Number(1),
+                Number(2)
+            )
+        );
+    std::cout << l1 << std::endl;
+
+        
+}
+
+/*
 TEST(DataNode, types) {
     shaka::DataNode l0(shaka::Number(1));
     shaka::DataNode l1(shaka::Symbol("asdf"));

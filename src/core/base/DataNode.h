@@ -66,6 +66,12 @@ public:
         return DataNode(left, right);
     }
 
+
+    template <typename T, typename... Args>
+    static DataNode list (T head, Args... tail) {
+        return list_recursive(head, tail...); 
+    }
+
     ListPtr car() const {
         if (this->is_pair()) {
             if (head.type() == typeid(ListPtr)) {
@@ -89,6 +95,11 @@ public:
             return nullptr;
         }
     }
+
+    std::size_t length() const {
+        return this->length_recursive(0);
+    }
+    
 
     bool is_list() const {
         if (this->is_null()) { return true; }
@@ -124,6 +135,26 @@ public:
     friend bool operator!= (DataNode lhs, DataNode rhs);
     friend std::ostream& operator<< (std::ostream& lhs, const DataNode& rhs);
 private:
+    std::size_t length_recursive(std::size_t l) const {
+        if (this->is_null()) { return 0; }
+        else if (this->is_pair()) {
+            auto next = this->cdr();
+            return next->length_recursive(l)+1;
+        } else {
+            throw std::runtime_error("DataNode.length: argument is not a list.");
+            return 0;
+        }
+    }
+    
+    template <typename T, typename... Args>
+    static DataNode list_recursive(T first, Args... rest) {
+        return cons({first}, list_recursive(rest...));
+    }
+
+    template <typename T>
+    static DataNode list_recursive (T last) {
+        return cons({last}, {nullptr});
+    }
 
     // The two storage cells in a list.
     Data head;
@@ -132,7 +163,15 @@ private:
 
 
 bool operator== (shaka::DataNode lhs, shaka::DataNode rhs) {
-    return lhs.head == rhs.head && lhs.tail == rhs.tail;
+    if (lhs.is_pair() && rhs.is_pair()) {
+        return *lhs.car() == *rhs.car() && *lhs.cdr() == *rhs.cdr();
+    }
+    else if (!lhs.is_pair() && !rhs.is_pair()) {
+        return lhs.head == rhs.head && lhs.tail == rhs.tail;
+    }
+    else {
+        return false;
+    }
 }
 
 bool operator!= (shaka::DataNode lhs, shaka::DataNode rhs) {

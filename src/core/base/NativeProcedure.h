@@ -32,9 +32,8 @@ public:
 	
 	virtual Args call(Args v, IEnvPtr env) {
 		if (v.size() > fixed_arity && !variable_arity) {
-			throw std::runtime_error("Wrong number of args to native procedure");
+			throw std::runtime_error("NativeProcedure.call: incorrect number of arguments");
 		}
-		
 		else {
 
 			return func(v, env);
