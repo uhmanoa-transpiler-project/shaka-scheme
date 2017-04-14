@@ -7,7 +7,7 @@
 using namespace shaka;
 
 TEST(DataNode, single_item_constructor) {
-    DataNode l0(nullptr);
+    DataNode l0(NodePtr(nullptr));
     ASSERT_TRUE(l0.is_null());
     ASSERT_FALSE(l0.is_pair());
 
@@ -23,12 +23,12 @@ TEST(DataNode, single_item_constructor) {
 TEST(DataNode, single_item_print) {
     std::ostringstream oss;
 
-    DataNode l0(nullptr);
+    DataNode l0(NodePtr(nullptr));
     DataNode l1(shaka::Number(1));
     DataNode l2(shaka::Symbol("asdf"));
     DataNode l3(shaka::String("Hello"));
     DataNode l4(shaka::Boolean(true));
-    DataNode l5(shaka::Environment(nullptr));
+    DataNode l5(std::make_shared<Environment>(nullptr));
 
     oss << l0;
     ASSERT_EQ(oss.str(), std::string("()"));
@@ -77,7 +77,7 @@ TEST(DataNode, pairs) {
     }
 
     {
-        DataNode n0({Number(1)}, {nullptr});
+        DataNode n0({Number(1)}, {NodePtr{nullptr}});
         ASSERT_TRUE(n0.is_pair());
         ASSERT_FALSE(n0.is_null());
         ASSERT_TRUE(n0.is_list());
@@ -89,7 +89,7 @@ TEST(DataNode, pairs) {
         ASSERT_FALSE(head.is_list());
 
         DataNode tail = *n0.cdr();
-        ASSERT_EQ(tail, DataNode(nullptr));
+        ASSERT_EQ(tail, DataNode(NodePtr(nullptr)));
         ASSERT_FALSE(tail.is_pair());
         ASSERT_TRUE(tail.is_null());
         ASSERT_TRUE(tail.is_list());
@@ -97,7 +97,7 @@ TEST(DataNode, pairs) {
     }
 
     {
-        DataNode n0({Number(1)}, {nullptr});
+        DataNode n0({Number(1)}, {NodePtr{nullptr}});
         ASSERT_TRUE(n0.is_pair());
         ASSERT_FALSE(n0.is_null());
         ASSERT_TRUE(n0.is_list());
@@ -108,7 +108,7 @@ TEST(DataNode, pairs) {
     }
 
     {
-        DataNode n0({Number(0)}, {nullptr});
+        DataNode n0({Number(0)}, {NodePtr{nullptr}});
         for (int i = 1; i <= 10; ++i) {
             n0 = DataNode::cons({Number(i)}, n0);
         }
@@ -128,7 +128,7 @@ TEST(DataNode, pairs) {
 /// @brief Basic default constructor test
 TEST(DataNode, constructors) {
     // '()
-    shaka::DataNode l0(nullptr);
+    shaka::DataNode l0(NodePtr(nullptr));
     ASSERT_TRUE(l0.is_null());
     ASSERT_TRUE(l0.is_list());
     ASSERT_FALSE(l0.is_pair());
@@ -152,7 +152,7 @@ TEST(DataNode, constructors) {
     std::cout << l2 << std::endl;
 
     // (1 . '()) or (1)
-    shaka::DataNode l3({shaka::Number(1)}, {nullptr});
+    shaka::DataNode l3({shaka::Number(1)}, {NodePtr(nullptr)});
     ASSERT_FALSE(l3.is_null());
     ASSERT_TRUE(l3.is_list());
     ASSERT_TRUE(l3.is_pair());
@@ -176,8 +176,6 @@ TEST(DataNode, lists) {
             )
         );
     std::cout << l1 << std::endl;
-
-        
 }
 
 /*

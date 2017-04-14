@@ -1,10 +1,8 @@
-#ifndef SHAKA_IEVALUATORSTRATEGY_H
-#define SHAKA_IEVALUATORSTRATEGY_H
+#ifndef SHAKA_CORE_BASE_IEVALUATORSTRATEGY_H
+#define SHAKA_CORE_BASE_IEVALUATORSTRATEGY_H
 
 #include "core/base/DataNode.h"
 #include "core/base/Environment.h"
-
-/// @todo Replace IEnvironment stub with the real Environment interface.
 
 namespace shaka {
 
@@ -37,8 +35,7 @@ public:
 };
 
 
-
 } // namespace shaka
 
-#endif // SHAKA_IEVALUATORSTRATEGY_H
+#endif // SHAKA_CORE_BASE_IEVALUATORSTRATEGY_H
 

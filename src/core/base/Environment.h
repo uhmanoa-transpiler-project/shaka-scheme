@@ -47,7 +47,7 @@ public:
         /* Returns null if does not exist and doesn't have a parent */
         else if (this->parent == nullptr) {
             throw std::runtime_error("Environment.get_value: key does not have an assigned value");
-            return std::make_shared<DataNode>(nullptr);
+            return std::make_shared<DataNode>(NodePtr{nullptr});
         } 
         /* Looks for key in the parent environment */
         else {
@@ -68,6 +68,17 @@ public:
         return v;
     }
 
+    const std::map<Key, Value>& get_bindings() const {
+        return local;
+    }
+
+    void print_bindings(std::ostream& out) {
+        out << "{";
+        for (const auto& it : local) {
+           out << " {" << it.first << " : " << it.second << "}";
+        }
+        out << " } \n";
+    }
 
     friend bool operator== (const shaka::Environment&, const shaka::Environment&);
     friend bool operator!= (const shaka::Environment&, const shaka::Environment&);
@@ -85,10 +96,10 @@ bool operator!= (const shaka::Environment& lhs, const shaka::Environment& rhs) {
     return !operator==(lhs, rhs);
 }
 
-//std::ostream& operator<< (std::ostream& lhs, const shaka::Environment& rhs) {
-//    lhs << "#<environment>";
-//    return lhs;
-//}
+std::ostream& operator<< (std::ostream& lhs, const shaka::Environment& rhs) {
+    lhs << "#<environment>";
+    return lhs;
+}
 
 } // namespace shaka
    

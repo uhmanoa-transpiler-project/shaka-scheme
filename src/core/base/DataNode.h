@@ -18,7 +18,7 @@ public:
     //     tail(tail) {}
     DataNode (Data head) :
         head(head),
-        tail(nullptr) {}
+        tail(NodePtr(nullptr)) {}
 
     DataNode (DataNode left, DataNode right) {
 
@@ -99,6 +99,10 @@ public:
     std::size_t length() const {
         return this->length_recursive(0);
     }
+
+    Data& get_data() {
+        return head;
+    }
     
 
     bool is_list() const {
@@ -125,7 +129,7 @@ public:
     }
     
     bool is_environment() const {
-        return !this->is_pair() && this->head.type() == typeid(shaka::Environment);
+        return !this->is_pair() && this->head.type() == typeid(EnvPtr);
     }
 
     /// @brief Overloadable virtual destructor
@@ -153,7 +157,7 @@ private:
 
     template <typename T>
     static DataNode list_recursive (T last) {
-        return cons({last}, {nullptr});
+        return cons({last}, {NodePtr{nullptr}});
     }
 
     // The two storage cells in a list.

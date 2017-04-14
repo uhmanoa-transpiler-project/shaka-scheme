@@ -17,7 +17,7 @@ class Environment;
 
 using Data = boost::variant<
     std::shared_ptr<DataNode>,
-    shaka::Environment,
+    std::shared_ptr<shaka::Environment>,
     shaka::Symbol,
     shaka::Number,
     shaka::String,
@@ -25,6 +25,8 @@ using Data = boost::variant<
 >;
 
 using ListPtr = std::shared_ptr<DataNode>;
+using NodePtr = std::shared_ptr<DataNode>;
+using EnvPtr  = std::shared_ptr<Environment>;
 
 }
 
