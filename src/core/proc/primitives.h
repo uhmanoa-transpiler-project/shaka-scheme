@@ -12,11 +12,11 @@ namespace proc  {
 using Args = std::vector<NodePtr>;
 using Function = std::function<Args(Args, EnvPtr)>;
 
-NodePtr define (NodePtr l, EnvPtr e) {
-
+Args def (Args l, EnvPtr e) {
+	return {shaka::Evaluator(l[0], e).evaluate(shaka::eval::Define())};	
 }
 
-Function 
+Function define = def; 
 
 } // namespace shaka 
 } // namespace proc  

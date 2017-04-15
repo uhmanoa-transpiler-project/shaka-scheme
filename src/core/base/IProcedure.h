@@ -14,8 +14,8 @@ class IProcedure {
     /// @brief Takes in arguments and then applies the function to them.
     ///
     /// Can possibly return multiple values as required by Scheme.
-    virtual std::vector<shaka::DataNode>
-        call(std::vector<shaka::DataNode> v, IEnvPtr env) = 0; 
+    virtual std::vector<NodePtr>
+        call(std::vector<NodePtr> v, IEnvPtr env) = 0; 
     virtual std::size_t         get_fixed_arity() const = 0;
     virtual bool                is_variable_arity() const = 0;
 };
