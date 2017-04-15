@@ -65,7 +65,6 @@ bool proc_call(InputStream& in, NodePtr root, T& interm) {
 
     tokens.push(in.get());
     interm += tokens.top().get_string();
-    std::cout << tokens.top().get_string();
 
     return true;
   }

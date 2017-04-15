@@ -42,8 +42,11 @@ TEST(Tokenizer_proccall, proc_01_tree) {
   ASSERT_EQ(root->get_child(0)->get_num_children(), 2);
 
   ASSERT_EQ(root->get_child(0)->get_child(0)->get_num_children(), 0);
+  ASSERT_EQ(shaka::get<shaka::Symbol>(*(root->get_child(0)->get_child(0)->get_data())), shaka::Symbol("add"));
 
   ASSERT_EQ(root->get_child(0)->get_child(1)->get_num_children(), 2);
+  ASSERT_EQ(shaka::get<shaka::Number>(*(root->get_child(0)->get_child(1)->get_child(0)->get_data())), shaka::Number(1));
+  ASSERT_EQ(shaka::get<shaka::Number>(*(root->get_child(0)->get_child(1)->get_child(1)->get_data())), shaka::Number(2));
 }
 
 int main(int argc, char** argv) {
