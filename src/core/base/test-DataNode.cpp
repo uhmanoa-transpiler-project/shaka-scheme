@@ -176,6 +176,35 @@ TEST(DataNode, lists) {
             )
         );
     std::cout << l1 << std::endl;
+
+    DataNode l2 = DataNode::list();
+    std::cout << l2 << std::endl;
+}
+
+TEST(DataNode, append) {
+    DataNode l0 = DataNode::list(Symbol("x"));
+    l0.append(DataNode::list(Symbol("y")));
+    std::cout << l0 << std::endl;
+
+    DataNode l1 = DataNode::list(Symbol("a"));
+    l1.append(
+        DataNode::list(
+            Symbol("b"),
+            Symbol("c"),
+            Symbol("d")));
+    std::cout << l1 << std::endl;
+
+    DataNode l2 = DataNode::list(
+        Symbol("a"),
+        DataNode::list(
+            Symbol("b")));
+    std::cout << l2 << std::endl;
+
+    l2.append(
+        DataNode::list(
+            DataNode::list(
+                Symbol("c"))));
+    std::cout << l2 << std::endl;
 }
 
 /*
