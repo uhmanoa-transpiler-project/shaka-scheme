@@ -504,6 +504,84 @@ TEST(Numbers_Arithmetic_impl, ceiling_numbers_f) {
 	ASSERT_EQ(shaka::Number(20), shaka::get<shaka::Number>(*result3[0]->get_data()));
 	ASSERT_EQ(shaka::Number(3), shaka::get<shaka::Number>(*result4[0]->get_data()));
 }
+
+TEST(Numbers_Arithmetic_impl, truncate_numbers_f) {
+	using namespace shaka::stdproc;
+
+	Value v1 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(5, 20));
+	Value v2 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(6.549));
+	Value v3 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(19));
+	Value v4 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(50, 20));
+
+	Args args1 = {v1};
+	Args args2 = {v2};
+	Args args3 = {v3};
+	Args args4 = {v4};
+
+	Args result1 = shaka::stdproc::truncate(args1);
+	Args result2 = shaka::stdproc::truncate(args2);
+	Args result3 = shaka::stdproc::truncate(args3);
+	Args result4 = shaka::stdproc::truncate(args4);
+
+	ASSERT_EQ(shaka::Number(0), shaka::get<shaka::Number>(*result1[0]->get_data()));
+	ASSERT_EQ(shaka::Number(6.0), shaka::get<shaka::Number>(*result2[0]->get_data()));
+	ASSERT_EQ(shaka::Number(19), shaka::get<shaka::Number>(*result3[0]->get_data()));
+	ASSERT_EQ(shaka::Number(2), shaka::get<shaka::Number>(*result4[0]->get_data()));
+
+}
+
+TEST(Numbers_Arithmetic_impl, round_numbers_f) {
+	using namespace shaka::stdproc;
+
+	Value v1 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(5, 20));
+	Value v2 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(7, 10));
+	Value v3 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(5));
+	Value v4 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(6.75));
+	Value v5 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(6.25));
+
+	Args args1 = {v1};
+	Args args2 = {v2};
+	Args args3 = {v3};
+	Args args4 = {v4};
+	Args args5 = {v5};
+
+	Args result1 = shaka::stdproc::round(args1);
+	Args result2 = shaka::stdproc::round(args2);
+	Args result3 = shaka::stdproc::round(args3);
+	Args result4 = shaka::stdproc::round(args4);
+	Args result5 = shaka::stdproc::round(args5);
+
+	ASSERT_EQ(shaka::Number(0), shaka::get<shaka::Number>(*result1[0]->get_data()));
+	ASSERT_EQ(shaka::Number(1), shaka::get<shaka::Number>(*result2[0]->get_data()));
+	ASSERT_EQ(shaka::Number(5), shaka::get<shaka::Number>(*result3[0]->get_data()));
+	ASSERT_EQ(shaka::Number(7.0), shaka::get<shaka::Number>(*result4[0]->get_data()));
+	ASSERT_EQ(shaka::Number(6.0), shaka::get<shaka::Number>(*result5[0]->get_data()));
+
+}
+
+TEST(Numbers_Arithmetic_impl, exp_numbers_f) {
+	using namespace shaka::stdproc;
+
+	Value v1 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(5));
+	Value v2 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(3, 4));
+	Value v3 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(0.75));
+	Value v4 = std::make_shared<shaka::DataNode<shaka::Data>>(shaka::Number(1.0));
+
+	Args args1 = {v1};
+	Args args2 = {v2};
+	Args args3 = {v3};
+	Args args4 = {v4};
+
+	Args result1 = shaka::stdproc::exp(args1);
+	Args result2 = shaka::stdproc::exp(args2);
+	Args result3 = shaka::stdproc::exp(args3);
+	Args result4 = shaka::stdproc::exp(args4);
+
+	ASSERT_EQ(shaka::Number(148.41315910257), shaka::get<shaka::Number>(*result1[0]->get_data()));
+	ASSERT_EQ(shaka::Number(2.11700001661), shaka::get<shaka::Number>(*result2[0]->get_data()));
+	ASSERT_EQ(shaka::Number(2.11700001661), shaka::get<shaka::Number>(*result3[0]->get_data()));
+	ASSERT_EQ(shaka::Number(2.71828182845), shaka::get<shaka::Number>(*result4[0]->get_data()));
+}
 int main(int argc, char* argv[]) {
 	::testing::InitGoogleTest(&argc, argv);
 
