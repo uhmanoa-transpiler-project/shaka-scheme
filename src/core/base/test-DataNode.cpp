@@ -198,13 +198,24 @@ TEST(DataNode, append) {
         Symbol("a"),
         DataNode::list(
             Symbol("b")));
-    std::cout << l2 << std::endl;
-
     l2.append(
         DataNode::list(
             DataNode::list(
                 Symbol("c"))));
     std::cout << l2 << std::endl;
+
+    DataNode l3 = DataNode::list(
+        Symbol("a"),
+        Symbol("b"));
+    l3.append(
+        DataNode::cons(
+            DataNode(Symbol("c")),
+            DataNode(Symbol("d"))));
+    std::cout << l3 << std::endl;
+
+    DataNode l4 = DataNode::list();
+    l4.append(DataNode(Symbol("a")));
+    std::cout << l4 << std::endl;
 }
 
 /*
