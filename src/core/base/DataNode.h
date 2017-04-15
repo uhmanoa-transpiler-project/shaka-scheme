@@ -69,7 +69,13 @@ public:
 
     template <typename T, typename... Args>
     static DataNode list (T head, Args... tail) {
-        return list_recursive(head, tail...); 
+        return list_recursive(
+            std::forward<T>(head),
+            std::forward<Args>(tail)...); 
+    }
+
+    static DataNode list() { 
+        return DataNode(NodePtr(nullptr));
     }
 
     ListPtr car() const {
@@ -96,7 +102,7 @@ public:
         }
     }
 
-    std::size_t length() const {
+    std::size_t length () const {
         return this->length_recursive(0);
     }
 
@@ -132,6 +138,73 @@ public:
         return !this->is_pair() && this->head.type() == typeid(EnvPtr);
     }
 
+    template <typename... Args>
+    DataNode& append (DataNode node, Args... rest) {
+        // Append only works for proper lists.
+        if (!this->is_list()) {
+            throw std::runtime_error("DataNode.append: first argument is not a list");
+            return *this;
+        }
+
+        // Get the item before '() or get the last item
+        // in the improper list.
+        auto& curr = *this;
+        while (curr.is_pair()) {
+            // If the next item is not null, 
+            // get it.
+            std::cout << "\tcurr: " << curr << std::endl;
+            std::cout << "\tcurr.cdr: " << *curr.cdr() << std::endl;
+            if (!curr.cdr()->is_null()) {
+                curr = *curr.cdr(); 
+            }
+            // Otherwise, the next one is null.
+            else {
+                std::cout << "\tstop." << std::endl;
+                break;
+            }
+        }
+        std::cout << "Setting tail of : " << curr << std::endl;
+
+        // Append the current node to the tail of the list.
+        curr.tail = std::make_shared<DataNode>(node);
+        std::cout << "curr.tail: " << curr.tail << std::endl;
+        
+        return *this;
+    }
+
+    DataNode append (DataNode node) {
+        // Append only works for proper lists.
+        if (!this->is_list()) {
+            throw std::runtime_error("DataNode.append: first argument is not a list");
+            return *this;
+        }
+
+        // Get the item before '() or get the last item
+        // in the improper list.
+        auto& curr = *this;
+        while (curr.is_pair()) {
+            // If the next item is not null, 
+            // get it.
+            std::cout << "\tcurr: " << curr << std::endl;
+            std::cout << "\tcurr.cdr: " << *curr.cdr() << std::endl;
+            if (!curr.cdr()->is_null()) {
+                curr = *curr.cdr(); 
+            }
+            // Otherwise, the next one is null.
+            else {
+                std::cout << "\tstop." << std::endl;
+                break;
+            }
+        }
+        std::cout << "Setting tail of : " << curr << std::endl;
+
+        // Append the current node to the tail of the list.
+        curr.tail = std::make_shared<DataNode>(node);
+        std::cout << "curr.tail: " << *get<NodePtr>(curr.tail) << std::endl;
+        
+        return *this;
+    }
+
     /// @brief Overloadable virtual destructor
     virtual ~DataNode () {}
 
@@ -152,12 +225,11 @@ private:
     
     template <typename T, typename... Args>
     static DataNode list_recursive(T first, Args... rest) {
-        return cons({first}, list_recursive(rest...));
+        return cons({first}, list_recursive(std::forward<Args>(rest)...));
     }
 
-    template <typename T>
-    static DataNode list_recursive (T last) {
-        return cons({last}, {NodePtr{nullptr}});
+    static DataNode list_recursive () {
+        return DataNode(NodePtr(nullptr));
     }
 
     // The two storage cells in a list.
