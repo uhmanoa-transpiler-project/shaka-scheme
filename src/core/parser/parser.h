@@ -3,6 +3,7 @@
 
 #include <stack>
 #include "core/parser/primitives.h"
+#include "core/parser/list.h"
 
 namespace shaka {
 namespace parser {
@@ -26,6 +27,7 @@ bool parse(
     // Boolean: DataNode bNode(shaka::Boolean(true));
     //
     // Node manipulation:
+    //
     //
     
 
