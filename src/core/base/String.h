@@ -19,27 +19,24 @@ public:
 
     //Create char vector with size "size" and initialize with character "b""
     String(int size, char b) : a_string(std::vector<char>(size, 0)) {
-
         for(int i = 0 ; i < size; i++){
             a_string[i] = b; 
         }
     }
 
     //Makes a copy of a string
-    String(const String &c) :
-        a_string(c.a_string) {}
+    String(const String &c) {
+        a_string = c.a_string;
+    }
 
-    // Move constructor
-    String(String&& c) :
-        a_string(std::move(c.a_string)) {}
+    String(String &&c) {
+        a_string = std::move(c.a_string);
+    }
 
     // Copy and swap operator= assignment
     String& operator=(String rhs) { 
-        using std::swap;
-        swap(*this, rhs);
-        return *this;
+        a_string = rhs.a_string;
     }
-
 
     String(String &c, int index1): a_string(std::vector<char>(static_cast<int>(c.getString().size()) - index1, 0)) {
 
