@@ -1,0 +1,8 @@
+#ifndef SHAKA_STDPROC_EQUIVALENCE_PREDICATES_IMPL_H
+#define SHAKA_STDPROC_EQUIVALENCE_PREDICATES_IMPL_H
+
+/// (eqv? obj1 obj2)
+/// (eq? obj1 obj2)
+/// (equal? obj1 obj2)
+
+#endif // SHAKA_STDPROC_EQUIVALENCE_PREDICATES_IMPL_H
