@@ -139,71 +139,51 @@ public:
     }
 
     template <typename... Args>
-    DataNode& append (DataNode node, Args... rest) {
+    DataNode append (DataNode node, Args... rest) {
         // Append only works for proper lists.
         if (!this->is_list()) {
             throw std::runtime_error("DataNode.append: first argument is not a list");
             return *this;
         }
-
-        // Get the item before '() or get the last item
-        // in the improper list.
-        auto& curr = *this;
-        while (curr.is_pair()) {
-            // If the next item is not null, 
-            // get it.
-            std::cout << "\tcurr: " << curr << std::endl;
-            std::cout << "\tcurr.cdr: " << *curr.cdr() << std::endl;
-            if (!curr.cdr()->is_null()) {
-                curr = *curr.cdr(); 
-            }
-            // Otherwise, the next one is null.
-            else {
-                std::cout << "\tstop." << std::endl;
-                break;
-            }
-        }
-        std::cout << "Setting tail of : " << curr << std::endl;
-
-        // Append the current node to the tail of the list.
-        curr.tail = std::make_shared<DataNode>(node);
-        std::cout << "curr.tail: " << curr.tail << std::endl;
-        
-        return *this;
-    }
-
-    DataNode append (DataNode node) {
-        // Append only works for proper lists.
-        if (!this->is_list()) {
-            throw std::runtime_error("DataNode.append: first argument is not a list");
-            return *this;
+        // Append will return the append of the first argument
+        // if the current list is null.
+        else if (this->is_null()) {
+            *this = node.append();
+            return node.append(rest...);
         }
 
         // Get the item before '() or get the last item
         // in the improper list.
-        auto& curr = *this;
-        while (curr.is_pair()) {
+        auto* curr = this;
+        while (curr->is_pair()) {
             // If the next item is not null, 
             // get it.
-            std::cout << "\tcurr: " << curr << std::endl;
-            std::cout << "\tcurr.cdr: " << *curr.cdr() << std::endl;
-            if (!curr.cdr()->is_null()) {
-                curr = *curr.cdr(); 
+            //std::cout << "\tcurr: " << *curr << std::endl;
+            //std::cout << "\tcurr.cdr: " << *curr->cdr() << std::endl;
+            if (!curr->cdr()->is_null()) {
+                curr = curr->cdr().get(); 
             }
             // Otherwise, the next one is null.
             else {
-                std::cout << "\tstop." << std::endl;
+                //std::cout << "\tstop." << std::endl;
                 break;
             }
         }
-        std::cout << "Setting tail of : " << curr << std::endl;
+        //std::cout << "Setting tail of this: " << *this << std::endl;
+        //std::cout << "Setting tail of curr: " << *curr << std::endl;
 
         // Append the current node to the tail of the list.
-        curr.tail = std::make_shared<DataNode>(node);
-        std::cout << "curr.tail: " << *get<NodePtr>(curr.tail) << std::endl;
+        curr->tail = std::make_shared<DataNode>(node);
+        //std::cout << "curr.tail: " << curr->tail << std::endl;
+        append(rest...);
         
         return *this;
     }
+
+    DataNode append () {
+        return *this;
+    }
+
 
     /// @brief Overloadable virtual destructor
     virtual ~DataNode () {}
