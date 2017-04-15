@@ -131,6 +131,20 @@ TEST(DataNode, quote_recursive_model) {
     ASSERT_TRUE(true);
 }
 
+// Expectation:
+// (quote (a b c))
+TEST(DataNode, quote_cons) {
+
+    DataNode innerList(Symbol("a"));
+    innerList = DataNode::list(innerList, Symbol("b"));
+    innerList = DataNode::list(innerList, Symbol("c"));
+
+    DataNode node(Symbol("quote"));
+    node = DataNode::list(node, innerList);
+    std::cout << node << std::endl;
+    ASSERT_TRUE(true);
+}
+
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
 
