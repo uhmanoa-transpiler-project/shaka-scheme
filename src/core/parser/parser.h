@@ -1,7 +1,8 @@
 #ifndef SHAKA_CORE_PARSER_PARSE_H_
 #define SHAKA_CORE_PARSER_PARSE_H_
 
-#include <stack>
+#include <iostream>
+#include <exception>
 #include "core/parser/primitives.h"
 #include "core/parser/list.h"
 
@@ -15,23 +16,28 @@ bool parse(
     NodePtr         node
 ) {
 
-    // Parse in everything as one of the following:
-    // 1. Symbol
-    // 2. Number
-    // 3. String
-    // 4. Boolean
-    //
-    // Symbol : DataNode sNode(shaka::Symbol("symbol here"));
-    // Number : DataNode nNode(shaka::Number(4563));
-    // String : DataNode sNode(shaka::String("Hello world!"));
-    // Boolean: DataNode bNode(shaka::Boolean(true));
-    //
-    // Node manipulation:
-    //
-    //
-    
 
 
+    try {
+        while(in.peek().type != shaka::Token::Type::END_OF_FILE) {
+            switch(in.peek().type) {
+
+                case shaka::Token::Type::QUOTE:
+                    in.get();
+                    // TODO:
+                    break;
+
+                case shaka::Token::Type::PAREN_START:
+                    if(node == nullptr) node = list(in);
+                    else                node.append(list(in));
+                    break;
+            }
+        }
+
+    } catch (std::runtime_error& e) {
+        std::cout << e.what() << std::endl;
+        return false;
+    }
 }
 
 
