@@ -59,7 +59,7 @@ namespace eval {
 				// add new children to the LIST node, which are the results
 				// of our procedure call
 				for (std::size_t i = result.size() - 2; i > 0; i--) {
-					*result_list = DataNode::cons(result[i], result_list);
+					*result_list = DataNode::cons(*result[i], *result_list);
 					
 				}
 				

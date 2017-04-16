@@ -68,7 +68,7 @@ NodePtr Expression::evaluate(
 		NodePtr inner_result = nested_evaluator.evaluate(shaka::eval::Expression());
 		NodePtr new_node = std::make_shared<DataNode>(inner_result, node->cdr());
 		shaka::Evaluator new_node_evaluator(new_node, env);
-		return new_node_evaluator.evaluate(shaka::eval:Expression());
+		return new_node_evaluator.evaluate(shaka::eval::Expression());
 	}
 	
 	else {
