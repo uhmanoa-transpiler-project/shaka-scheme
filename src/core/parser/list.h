@@ -6,6 +6,10 @@
 namespace shaka {
 namespace parser {
 
+DataNode cons(
+    InputStream& in
+);
+
 // Function that may be recursively called which 
 // populated any nested lists and returns them.
 DataNode list(
@@ -62,19 +66,68 @@ DataNode list(
                 break;
 
             case shaka::Token::Type::PERIOD:
-                in.get();
-                //if(in.peek().type != shaka::Token::Type::)
+                node.append(cons(in));
                 break;
                 
             default:
                 throw std::runtime_error("LIST: Got to default");
+                break;
 
         } // end switch
+
     } // end while
     if(in.peek().type == shaka::Token::Type::PAREN_END)
         in.get();
     return node;
 }
+
+/* If this function is called, then there is a period currently
+ * on the InputStream. This function needs to parse in the period
+ * as well as anything that comes after the period.
+ *
+ * After the period, we expect an atom or a single list.
+ */
+DataNode cons(
+    InputStream& in
+) {
+
+    if(in.peek().type != shaka::Token::Type::PERIOD)
+        throw std::runtime_error("CONS: No period on InputStream");
+    in.get();
+
+    switch(in.peek().type) {
+    
+        case shaka::Token::Type::IDENTIFIER:
+            return DataNode(Symbol(in.get().get_string()));
+
+        case shaka::Token::Type::BOOLEAN_TRUE:
+            in.get();
+            return DataNode(Boolean(true));
+
+        case shaka::Token::Type::BOOLEAN_FALSE:
+            in.get();
+            return DataNode(Boolean(false));
+
+        case shaka::Token::Type::CHARACTER:
+        case shaka::Token::Type::STRING:
+            return DataNode(String(in.get().get_string()));
+
+        case shaka::Token::Type::QUOTE:
+            return DataNode(Symbol("quote"));
+
+        case shaka::Token::Type::NUMBER:
+            return DataNode(Number(stod(in.get().get_string())));
+
+        case shaka::Token::Type::PAREN_START:
+            return list(in);
+
+        default:
+            throw std::runtime_error("CONS: No valid Token after period");
+            break;
+
+    } // switch end
+} // cons end
+
 
 
 } // parser

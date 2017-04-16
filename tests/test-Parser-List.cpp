@@ -70,6 +70,16 @@ TEST(Parse_list, list_simple_case5) {
     ASSERT_EQ(ss.str(), out.str());
 }
 
+TEST(Parse_list, list_simple_case6) {
+    std::stringstream ss("(1 . 2)");
+    std::stringstream out;
+    shaka::Tokenizer in(ss);
+
+    shaka::DataNode node = shaka::parser::list(in);
+    out << node;
+    ASSERT_EQ(ss.str(), out.str());
+}
+
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
