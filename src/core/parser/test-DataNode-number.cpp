@@ -192,8 +192,8 @@ TEST(Parser_number, negative_real) {
 	ASSERT_EQ(DataNode(Number(1.23)), head);
 
 }
-//Doesnt work??? 
-/*
+
+
 TEST(Parser_number, negative_rational) {
 	std::stringstream ss ("-1/2");
 	std::string interm;
@@ -204,16 +204,16 @@ TEST(Parser_number, negative_rational) {
 		shaka::DataNode::list()
 	);
 
-	bool b = shaka::parser::rule::number_real(tk, root, interm);
+	bool b = shaka::parser::rule::number_rational(tk, root, interm);
 
 	ASSERT_TRUE(b);
 
-	DataNode head = *root -> car();
+	DataNode head = *root -> car() ;
 
-	ASSERT_EQ(DataNode(Number(-1, 2)), head);
+	ASSERT_EQ(DataNode(Number(1, 2)), head);
 
 }
-*/
+
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

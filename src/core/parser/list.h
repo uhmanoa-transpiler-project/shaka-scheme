@@ -1,9 +1,7 @@
 #ifndef SHAKA_CORE_PARSER_LIST_H_
 #define SHAKA_CORE_PARSER_LIST_H_
 
-#include <deque>
 #include "core/parser/primitives.h"
-#include "core/parser/quote.h"
 
 namespace shaka {
 namespace parser {
@@ -14,7 +12,6 @@ DataNode list(
     InputStream& in
 ) {
 
-    std::deque<shaka::Token> deque;
     DataNode node(NodePtr(nullptr));
 
     if(in.peek().type != shaka::Token::Type::PAREN_START)
@@ -22,14 +19,22 @@ DataNode list(
 
     in.get(); // Gets the start parenthesis
 
-
-    while(in.peek().type != shaka::Token::Type::PAREN_END ||
-          in.peek().type != shaka::Token::Type::END_OF_FILE) {
+    while(in.peek().type != shaka::Token::Type::PAREN_END) {
 
         switch(in.peek().type) {
 
+            case shaka::Token::Type::CHARACTER:
+            case shaka::Token::Type::STRING:
+                node.append(DataNode::list(String(in.get().get_string())));
+                break;
+
             case shaka::Token::Type::IDENTIFIER:
-                node.append(DataNode::list(Symbol(in.get().get_string()));
+                node.append(DataNode::list(Symbol(in.get().get_string())));
+                break;
+
+            case shaka::Token::Type::QUOTE:
+                node.append(DataNode::list(Symbol("quote")));
+                in.get();
                 break;
 
             case shaka::Token::Type::BOOLEAN_TRUE:
@@ -52,16 +57,23 @@ DataNode list(
                 );
                 break;
 
-            case shaka::Token::Type::CHARACTER:
-            case shaka::Token::Type::STRING:
-                node.append(DataNode::list(String(in.get().get_string()));
+            case shaka::Token::Type::PAREN_START:
+                node.append(DataNode::list(list(in)));
                 break;
-        } // end switch
 
-        if(in.peek().type == shaka::Token::Type::QUOTE) {
-            node.append(quote(in));
-        }
-    }
+            case shaka::Token::Type::PERIOD:
+                in.get();
+                //if(in.peek().type != shaka::Token::Type::)
+                break;
+                
+            default:
+                throw std::runtime_error("LIST: Got to default");
+
+        } // end switch
+    } // end while
+    if(in.peek().type == shaka::Token::Type::PAREN_END)
+        in.get();
+    return node;
 }
 
 
