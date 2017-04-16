@@ -27,7 +27,7 @@ namespace eval {
 		
 			// instantiate an evaluator on the car of the list which should either hold a lambda or
 			// a symbol that refers to a procedure in the environment or its parent env
-			shaka::Evaluator evaluator(list->car()->get_data(), env);
+			shaka::Evaluator evaluator(list->car(), env);
 
 
 			// get the procedure associated with the symbol or lambda 
