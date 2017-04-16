@@ -35,7 +35,7 @@ namespace eval {
 			NodePtr proc = evaluator.evaluate(shaka::eval::Expression()); 
 		
 			//did we successfully get a defined procedure?
-			if (proc->car()->get_data()->type() == typeid(shaka::Procedure)) {
+			if (proc->car()->get_data().type() == typeid(shaka::Procedure)) {
 				std::vector<NodePtr> args;
 				NodePtr next_argument;
 				NodePtr args_list = list->cdr();
@@ -43,7 +43,7 @@ namespace eval {
 				// if so, get all of the data out of the arguments list
 				// evaluate the arguments that we get 
 				// and place them in an argument vector to pass to proc
-				while(!args_list->get_null()) {
+				while(!args_list->is_null()) {
 					next_argument = args_list->car();
 					shaka::Evaluator arg_evaluator(next_argument, env);
 					next_argument = arg_evaluator.evaluate(shaka::eval::Expression());
@@ -59,7 +59,7 @@ namespace eval {
 				// add new children to the LIST node, which are the results
 				// of our procedure call
 				for (std::size_t i = result.size() - 2; i > 0; i--) {
-					result_list = DataNode::cons(result[i], result_list);
+					*result_list = DataNode::cons(result[i], result_list);
 					
 				}
 				
