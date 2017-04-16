@@ -58,7 +58,7 @@ NodePtr Expression::evaluate(
 
 	else if (node->car()->is_symbol()) {
 		std::cout << "@Expression ==> Procedure Call" << std::endl;
-		return evaluator.evaluate(shaka::eval::ProcCall())
+		return evaluator.evaluate(shaka::eval::ProcCall());
 	
 	}
 	
