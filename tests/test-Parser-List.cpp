@@ -80,6 +80,36 @@ TEST(Parse_list, list_simple_case6) {
     ASSERT_EQ(ss.str(), out.str());
 }
 
+TEST(Parse_list, list_simple_case7) {
+    std::stringstream ss("(1 2 3 . 4)");
+    std::stringstream out;
+    shaka::Tokenizer in(ss);
+
+    shaka::DataNode node = shaka::parser::list(in);
+    out << node;
+    ASSERT_EQ(ss.str(), out.str());
+}
+
+TEST(Parse_list, list_simple_case8) {
+    std::stringstream ss("(cons 1 (cons 2 (cons 3 4)))");
+    std::stringstream out;
+    shaka::Tokenizer in(ss);
+
+    shaka::DataNode node = shaka::parser::list(in);
+    out << node;
+    ASSERT_EQ(ss.str(), out.str());
+}
+
+TEST(Parse_list, empty_list) {
+    std::stringstream ss("()");
+    std::stringstream out;
+    shaka::Tokenizer in(ss);
+
+    shaka::DataNode node = shaka::parser::list(in);
+    out << node;
+    ASSERT_EQ(ss.str(), out.str());
+}
+
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
