@@ -13,7 +13,7 @@
 #include "core/eval/Define.h"
 #include "core/eval/Variable.h"
 #include "core/eval/Quote.h"
-#include "core/eval/Lambda.h"
+//#include "core/eval/Lambda.h"
 #include "core/eval/Proccall.h"
 
 namespace shaka { 

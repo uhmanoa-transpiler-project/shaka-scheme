@@ -2,12 +2,13 @@
 #define SHAKA_EVAL_EXPRESSION_IMPL_H
 
 #include "core/eval/Expression.h"
-
+#include "core/base/Procedure.h"
+#include "core/base/Procedure_impl.h"
 
 #include "Define_impl.h"
 #include "Variable_impl.h"
 #include "Proccall_impl.h"
-#include "Lambda_impl.h"
+//#include "Lambda_impl.h"
 
 
 namespace shaka { 
@@ -16,66 +17,61 @@ namespace shaka {
 namespace eval {
 
 /// @brief returns a std::shared_ptr to the child node
-
-using T = shaka::Data;
-using Key = shaka::Symbol;
-using Value = std::shared_ptr<shaka::IDataNode<shaka::Data>>;
-
-std::shared_ptr<IDataNode<T>> Expression::evaluate(
-    std::shared_ptr<IDataNode<T>> node,
-    std::shared_ptr<IEnvironment<Key, Value>> env
+NodePtr Expression::evaluate(
+    NodePtr node,
+    EnvPtr env
 ) {
 
     shaka::Evaluator evaluator(node, env);
-    std::cout << "@Expression" << std::endl;
-    evaluator.evaluate(shaka::eval::PrintTree<std::cout>());
+   // std::cout << "@Expression" << std::endl;
+    //evaluator.evaluate(shaka::eval::PrintTree<std::cout>());
+	
+	if (node->is_null()) {
+		std::cout << "@Expression ==> EmptyList (Literal)" << std::endl;
+		return node;
+	
+	}
+	else if (node->car()->is_symbol() && node->length() == 1) {
+		std::cout << "@Expression ==> Symbol" << std::endl;
+		return evaluator.evaluate(shaka::eval::Variable());
+	}
 
-    const auto& type = node->get_data()->type();
+	else if (node->car()->is_number() && node->length() == 1) {
+		std::cout << "@Expression ==> Number" << std::endl;
+		return node;
+	}
 
-    if (type == typeid(shaka::MetaTag)) {
-        auto tag = shaka::get<shaka::MetaTag>(*node->get_data());
-        if (tag == shaka::MetaTag::DEFINE) {
-            std::cout << "@Expression ==> Define" << std::endl;
-            return evaluator.evaluate(shaka::eval::Define());
-        } else if (tag == shaka::MetaTag::QUOTE) {
-            std::cout << "@Expression ==> Quote" << std::endl;
-            return evaluator.evaluate(shaka::eval::Quote());
-        } else if (tag == shaka::MetaTag::LIST) {
-            std::cout << "@Expression ==> List (Literal)" << std::endl;
-            return node;
-        } else if (tag == shaka::MetaTag::LAMBDA) {
-			std::cout << "@Expression ==> Lambda (Literal)" << std::endl;
-			return evaluator.evaluate(shaka::eval::Lambda());
-		} else if (tag == shaka::MetaTag::PROC_CALL) {
-			std::cout << "@Expression ==> Procedure Call" << std::endl;
-			return evaluator.evaluate(shaka::eval::Proc_Call());
-		} else {
-            throw std::runtime_error("Expression: Invalid MetaTag option.");
-            return nullptr;
-        }
-    }
-
-    else if (type == typeid(shaka::Symbol)) {
-        std::cout << "@Expression ==> Symbol" << std::endl;
-        return evaluator.evaluate(shaka::eval::Variable());
-    }
-
-    else if (type == typeid(shaka::Number)) {
-        std::cout << "@Expression ==> Number" << std::endl;
-        return node;
-    }
-
-    else if (type == typeid(shaka::Procedure)) {
-        std::cout << "@Expression ==> Procedure" << std::endl;
-        return node;
-    }
-
-	else if (type == typeid(shaka::String)) {
+	else if (node->car()->is_string() && node->length() == 1) {
 		std::cout << "@Expression ==> String" << std::endl;
 		return node;
 	}
 
-    else {
+	else if (node->car()->is_boolean() && node->length() == 1) {
+		std::cout << "@Expression ==> Boolean" << std::endl;
+		return node;
+	}
+
+	else if (node->car()->get_data().type() == typeid(shaka::Procedure) && node->length() == 1) {
+		std::cout << "@Expression ==> Procedure" << std::endl;
+		return node;
+	}
+
+	else if (node->car()->is_symbol()) {
+		std::cout << "@Expression ==> Procedure Call" << std::endl;
+		return evaluator.evaluate(shaka::eval::ProcCall())
+	
+	}
+	
+	else if (node->car()->is_list()) {
+		std::cout << "@Expression ==> List" << std::endl;
+		shaka::Evaluator nested_evaluator(node->car(), env);
+		NodePtr inner_result = nested_evaluator.evaluate(shaka::eval::Expression());
+		NodePtr new_node = std::make_shared<DataNode>(inner_result, node->cdr());
+		shaka::Evaluator new_node_evaluator(new_node, env);
+		return new_node_evaluator.evaluate(shaka::eval:Expression());
+	}
+	
+	else {
         throw std::runtime_error("Expression: Top-level expression type not supported.");
         return nullptr;
     }
