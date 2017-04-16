@@ -94,6 +94,19 @@ TEST(DataNode, lists) {
     std::cout << l1 << std::endl;
 }
 
+TEST(DataNode, nullnode_to_list) {
+
+    DataNode node(NodePtr(nullptr));
+    std::cout << node << std::endl;
+    node.append(DataNode::list(Number(1)));
+    std::cout << node << std::endl;
+    node.append(DataNode::list(Number(2)));
+    std::cout << node << std::endl;
+    node.append(DataNode{Number(3)});
+    std::cout << node << std::endl;
+
+}
+
 // Expectation:
 // (quote (a b c))
 TEST(DataNode, quote) {
