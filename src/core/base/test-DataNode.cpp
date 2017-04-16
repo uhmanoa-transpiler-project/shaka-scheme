@@ -218,6 +218,14 @@ TEST(DataNode, append) {
     std::cout << l4 << std::endl;
 }
 
+TEST(DataNode, string_list) {
+    DataNode l0 = DataNode::list(
+        String("abc"),
+        String("def"),
+        String("ghi"));
+    std::cout << l0 << std::endl;
+}
+
 /*
 TEST(DataNode, types) {
     shaka::DataNode l0(shaka::Number(1));
