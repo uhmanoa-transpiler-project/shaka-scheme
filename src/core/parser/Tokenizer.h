@@ -1,7 +1,7 @@
-#ifndef SHAKA_CORE_PARSER_TOKENIZER_H
-#define SHAKA_CORE_PARSER_TOKENIZER_H
+#ifndef SHAKA_PARSER_TOKENIZER_H
+#define SHAKA_PARSER_TOKENIZER_H
 
-#include "core/parser/Token.h"
+#include "parser/Token.h"
 
 #include <iostream>
 #include <string>
@@ -533,8 +533,16 @@ public:
             buffer += in.get();
 
             number = true;
-            }
-        }	
+	    }
+
+	}
+
+	// If the next character is not a space,
+	// like possibly an alpha character, that's not right.
+	if (!std::isspace(in.peek()) && !in.eof()) {
+		number = false;
+	}
+
         //
         //  // Make sure that it's the end of the number
         //  if (is_delimiter(in.peek())) {
@@ -550,11 +558,13 @@ public:
 
         if (number == true) {
             return Token(Token::Type::NUMBER, buffer);
-        } else {
-            return Token(Token::Type::INVALID);
-        }
-    }
+	}
+	else {
+	    throw std::runtime_error("Tokenizer.parse_number: Is not a number");
+	    return Token(Token::Type::INVALID, buffer);
 
+    	}
+    }
     Token parse_token () {
         bool done = false;
         while (!done) {
@@ -687,6 +697,10 @@ public:
                 // Parse in a number
                 } else if (std::isdigit(in.peek())) {
                     std::string buffer;
+
+                    //Unget to get back the sign
+                    in.unget();
+
                     return parse_number(buffer);
 
                 // No other identifier? Just <explicit sign> is fine.
