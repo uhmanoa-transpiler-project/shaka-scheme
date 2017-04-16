@@ -6,6 +6,7 @@
 #include "core/eval/Define_impl.h"
 #include "core/base/Data.h"
 #include "core/base/DataNode.h"
+
 using Args = std::vector<std::shared_ptr<shaka::DataNode>>;
 
 TEST(define, evaluator){
@@ -30,7 +31,7 @@ TEST(define, define_function){
 				shaka::Number(1)));
 	Args v;
 	v.push_back(l);
-	Args result = shaka::proc::def(v, env);
+	Args result = shaka::proc::define(v, env);
 	ASSERT_EQ(result[0], nullptr);
 
 
