@@ -611,6 +611,21 @@ TEST(Numbers_Arithmetic_impl, exp_numbers_f) {
 	ASSERT_EQ(shaka::Number(2.71828182845), shaka::get<shaka::Number>(result4[0]->get_data()));
 }
 
+TEST(Numbers_Arithmetic_impl, log_numbers_f) {
+	using namespace shaka::stdproc;
+
+	shaka::NodePtr v1 = std::make_shared<shaka::DataNode>(shaka::Number(5));
+
+	Args args1 = {v1};
+
+	shaka::EnvPtr env = std::make_shared<shaka::Environment>(nullptr);
+	
+	Args result1 = shaka::stdproc::log(args1, env);
+
+	ASSERT_EQ(shaka::Number(1.60943791243), shaka::get<shaka::Number>(result1[0]->get_data()));
+
+}
+
 int main(int argc, char* argv[]) {
 	::testing::InitGoogleTest(&argc, argv);
 
