@@ -6,7 +6,6 @@
 #include "core/base/IEvaluatorStrategy.h"
 
 #include "core/eval/ProcedureBody.h" 
-
 #include "core/eval/Expression_impl.h"
 
 
@@ -19,7 +18,7 @@ NodePtr ProcedureBody::evaluate(NodePtr node, EnvPtr env){
     std::cout << "@ProcedureBody" << std::endl;
     // If the root node is LIST, that's right. It's a list of expressions
     // to evaluate.
-    NodePtr expr = node;
+    NodePtr expr = std::make_shared<shaka::DataNode>(node->get_data());
     if (!node->is_null()) {
         while(!((*expr).cdr()->is_null())){
             shaka::Evaluator evaluator ((*expr).car(), env);
