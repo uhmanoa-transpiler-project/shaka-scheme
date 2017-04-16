@@ -1,7 +1,0 @@
-#ifndef SHAKA_STDPROC_BOOLEANS_IMPL_H
-#define SHAKA_STDPROC_BOOLEANS_IMPL_H
-
-// (not obj)
-// (boolean? obj)
-
-#endif // SHAKA_STDPROC_BOOLEANS_IMPL_H
