@@ -13,25 +13,35 @@ NodePtr Lambda::evaluate(NodePtr node, EnvPtr env) {
     std::size_t fixed_arity =0;
     bool var_arity = false; 
     shaka::ListPtr params = node->car();
-    std::size_t num_params = params->length();
 
     while(!params->is_null()){ 
-        if(params->is_symbol()){
+        
+        if(params->car()->is_symbol()){
             //get symbol, find in vector
             //if not in vector, add to vector, increment arity
+            
             fixed_arity++;
+            // std::cout << "its a symbol: "<<fixed_arity<< std::endl;
             //else throw duplicate symbol
         }
-        else if(params->is_list()){
+        else if(params->car()->is_list()){
             //check that it is the last one in the list 
             //else throw list must be last
             var_arity = true;
+            // std::cout << "its a list"<< std::endl;
         }
         else {
             //throw not symbol not list
-
+            // std::cout << "it not a symbol or a list"<< std::endl;
         }
-        params = params->cdr();
+        if(params->is_pair()){
+            params = params->cdr();
+            // std::cout << "its a pair"<< std::endl;
+        }
+        else {
+            break;
+        }
+        
         
         
     }
