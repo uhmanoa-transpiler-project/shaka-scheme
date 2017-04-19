@@ -9,18 +9,26 @@
 #include "core/parser/list.h"
 
 int main() {
-	shaka::Tokenizer in(std::cin);
+	std::string str;
 
-	shaka::Token token = in.get();
+	std::cin >> str;
 
-	while(token.get_string() != "(quit)") {
-//		token = in.get();
-		try{
+	try{
+		while(str != "(quit)") {
+			std::stringstream ss(str);
+			shaka::Tokenizer in(ss);
+			
+			//shaka::Token token = in.get();
+			
+			//token = in.get();
+			//std::cout << token.get_string() << std::endl;	
 			shaka::DataNode node = shaka::parser::list(in);
 			std::cout << node << std::endl;
-		} catch(std::runtime_error& e) {
-			std::cout << e.what() << std::endl;
-		}
-	}
 
+			std::cin >> str;
+		}
+	} catch(std::runtime_error& e) {
+			std::cout << e.what() << std::endl;
+	}
 }
+
