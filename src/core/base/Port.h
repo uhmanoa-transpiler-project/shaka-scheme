@@ -31,7 +31,8 @@ public:
           Type          type,
           Source        source) :
         mode(mode),
-        type(type) {
+        type(type),
+        source(source) {
         
         std::ios_base::openmode modeflag;
         if (type == Type::INPUT) {
@@ -70,6 +71,15 @@ public:
         }
     }
 
+    ~Port() {
+        if (source == Source::FILESTREAM && type == Type::INPUT) {
+            dynamic_cast<std::ifstream*>(this->in.get())->close();
+        }
+        else if (source == Source::FILESTREAM && type == Type::OUTPUT) {
+            dynamic_cast<std::ofstream*>(this->out.get())->close();
+        }
+    }
+
     Port::Mode get_mode() const {
         return this->mode;
     }
@@ -78,12 +88,17 @@ public:
         return this->type;
     }
 
+    Port::Source get_source_type() const {
+        return this->source;
+    }
+
     union {
         std::unique_ptr<std::istream> in;
         std::unique_ptr<std::ostream> out;
     };
     const Mode mode;
     const Type type;
+    const Source source;
 };
 
 }
