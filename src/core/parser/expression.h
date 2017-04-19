@@ -1,5 +1,5 @@
-#ifndef SHAKA_CORE_PARSER_PARSE_H_
-#define SHAKA_CORE_PARSER_PARSE_H_
+#ifndef SHAKA_CORE_PARSER_EXPRESSION_H_
+#define SHAKA_CORE_PARSER_EXPRESSION_H_
 
 #include <iostream>
 #include <exception>
@@ -44,4 +44,4 @@ bool parse(
 } // parser
 } // shaka
 
-#endif // SHAKA_CORE_PARSER_PARSE_H_
+#endif // SHAKA_CORE_PARSER_EXPRESSION_H_
