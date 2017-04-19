@@ -22,6 +22,14 @@ public:
         OUPTUT
     };
 
+    Port::Mode get_mode() const {
+        return this->mode;
+    }
+
+    Port::Type get_type() const {
+        return this->type;
+    }
+
     Mode mode;
     Type type;
 };
