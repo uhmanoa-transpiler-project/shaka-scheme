@@ -45,23 +45,28 @@ public:
         if (mode == Mode::BINARY) {
             modeflag |= std::fstream::binary;
         }
+        std::cout << "Modeflag: setting done." << std::endl;
 
         if (source == Source::FILESTREAM && type == Type::INPUT) {
+            std::cout << "FILESTREAM INPUT" << std::endl;
             this->in = std::move(std::unique_ptr<std::istream>(
                 new std::ifstream(str.c_str(), modeflag)
             )); 
         }
         else if (source == Source::FILESTREAM && type == Type::OUTPUT) {
+            std::cout << "FILESTREAM OUTPUT" << std::endl;
             this->out = std::move(std::unique_ptr<std::ostream>(
                 new std::ofstream(str.c_str(), modeflag)
             )); 
         }
         else if (source == Source::STRING && type == Type::INPUT) {
+            std::cout << "STRING INPUT" << std::endl;
             this->in = std::move(std::unique_ptr<std::istream>(
                 new std::istringstream(str.c_str())
             )); 
         }
         else if (source == Source::STRING && type == Type::OUTPUT) {
+            std::cout << "STRING OUTPUT" << std::endl;
             this->out = std::move(std::unique_ptr<std::ostream>(
                 new std::ostringstream(str.c_str())
             )); 
@@ -72,6 +77,7 @@ public:
     }
 
     ~Port() {
+        std::cout << "~Port()" << std::endl;
         if (source == Source::FILESTREAM && type == Type::INPUT) {
             dynamic_cast<std::ifstream*>(this->in.get())->close();
         }
