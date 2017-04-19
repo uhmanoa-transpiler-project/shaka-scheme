@@ -49,27 +49,23 @@ public:
 
         if (source == Source::FILESTREAM && type == Type::INPUT) {
             std::cout << "FILESTREAM INPUT" << std::endl;
-            this->in = std::move(std::unique_ptr<std::istream>(
-                new std::ifstream(str.c_str(), modeflag)
-            )); 
+            this->in = new std::ifstream;
+            std::cout << "FILESTREAM INPUT" << std::endl;
         }
         else if (source == Source::FILESTREAM && type == Type::OUTPUT) {
             std::cout << "FILESTREAM OUTPUT" << std::endl;
-            this->out = std::move(std::unique_ptr<std::ostream>(
-                new std::ofstream(str.c_str(), modeflag)
-            )); 
+            this->out = new std::ofstream(str.c_str(), modeflag)
+            std::cout << "FILESTREAM OUTPUT" << std::endl;
         }
         else if (source == Source::STRING && type == Type::INPUT) {
             std::cout << "STRING INPUT" << std::endl;
-            this->in = std::move(std::unique_ptr<std::istream>(
-                new std::istringstream(str.c_str())
-            )); 
+            this->in = new std::istringstream(str.c_str())
+            std::cout << "STRING INPUT" << std::endl;
         }
         else if (source == Source::STRING && type == Type::OUTPUT) {
             std::cout << "STRING OUTPUT" << std::endl;
-            this->out = std::move(std::unique_ptr<std::ostream>(
-                new std::ostringstream(str.c_str())
-            )); 
+            this->out =  new std::ostringstream(str.c_str())
+            std::cout << "STRING OUTPUT" << std::endl;
         }
         else {
             throw std::runtime_error("Blah blah Port.h");
@@ -98,10 +94,8 @@ public:
         return this->source;
     }
 
-    union {
-        std::unique_ptr<std::istream> in;
-        std::unique_ptr<std::ostream> out;
-    };
+    std::istream& in;
+    std::ostream& out;
     const Mode mode;
     const Type type;
     const Source source;
