@@ -1,22 +1,29 @@
 #ifndef SHAKA_CORE_PARSER_LIST_H_
 #define SHAKA_CORE_PARSER_LIST_H_
 
+#include <iostream>
+#include <exception>
 #include "core/parser/primitives.h"
 
 namespace shaka {
 namespace parser {
 
-DataNode cons(
-    InputStream& in
+template <typename T>
+bool cons(
+    InputStream&    in,
+    NodePtr         root,
+    T&              interm
 );
 
 // Function that may be recursively called which 
 // populated any nested lists and returns them.
-DataNode list(
-    InputStream& in
+template <typename T>
+bool list(
+    InputStream&    in,
+    NodePtr         root,
+    T&              interm
 ) {
 
-    DataNode node(NodePtr(nullptr));
 
     if(in.peek().type != shaka::Token::Type::PAREN_START)
         throw std::runtime_error("LIST: No start parethesis");
@@ -29,30 +36,30 @@ DataNode list(
 
             case shaka::Token::Type::CHARACTER:
             case shaka::Token::Type::STRING:
-                node.append(DataNode::list(String(in.get().get_string())));
+                root->append(DataNode::list(String(in.get().get_string())));
                 break;
 
             case shaka::Token::Type::IDENTIFIER:
-                node.append(DataNode::list(Symbol(in.get().get_string())));
+                root->append(DataNode::list(Symbol(in.get().get_string())));
                 break;
 
             case shaka::Token::Type::QUOTE:
-                node.append(DataNode::list(Symbol("quote")));
+                root->append(DataNode::list(Symbol("quote")));
                 in.get();
                 break;
 
             case shaka::Token::Type::BOOLEAN_TRUE:
-                node.append(DataNode::list(Boolean(true)));
+                root->append(DataNode::list(Boolean(true)));
                 in.get();
                 break;
 
             case shaka::Token::Type::BOOLEAN_FALSE:
-                node.append(DataNode::list(Boolean(false)));
+                root->append(DataNode::list(Boolean(false)));
                 in.get();
                 break;
 
             case shaka::Token::Type::NUMBER:
-                node.append(
+                root->append(
                     DataNode::list(
                         Number(
                             stod(in.get().get_string())
@@ -62,11 +69,13 @@ DataNode list(
                 break;
 
             case shaka::Token::Type::PAREN_START:
-                node.append(DataNode::list(list(in)));
+                root->append(DataNode::list());
+                list(in, root, interm);
                 break;
 
             case shaka::Token::Type::PERIOD:
-                node.append(cons(in));
+                if(!cons(in, root, interm))
+                    throw std::runtime_error("LIST: Failed to cons");
                 break;
                 
             default:
@@ -78,7 +87,7 @@ DataNode list(
     } // end while
     if(in.peek().type == shaka::Token::Type::PAREN_END)
         in.get();
-    return node;
+    return true;
 }
 
 /* If this function is called, then there is a period currently
@@ -87,45 +96,62 @@ DataNode list(
  *
  * After the period, we expect an atom or a single list.
  */
-DataNode cons(
-    InputStream& in
+template <typename T>
+bool cons(
+    InputStream&    in,
+    NodePtr         root,
+    T&              interm
 ) {
 
-    if(in.peek().type != shaka::Token::Type::PERIOD)
-        throw std::runtime_error("CONS: No period on InputStream");
-    in.get();
+    try {
+        if(in.peek().type != shaka::Token::Type::PERIOD)
+            throw std::runtime_error("CONS: No period on InputStream");
+        in.get();
 
-    switch(in.peek().type) {
-    
-        case shaka::Token::Type::IDENTIFIER:
-            return DataNode(Symbol(in.get().get_string()));
+        switch(in.peek().type) {
+        
+            case shaka::Token::Type::IDENTIFIER:
+                root->append(DataNode(Symbol(in.get().get_string())));
+                break;
 
-        case shaka::Token::Type::BOOLEAN_TRUE:
-            in.get();
-            return DataNode(Boolean(true));
+            case shaka::Token::Type::BOOLEAN_TRUE:
+                in.get();
+                root->append(DataNode(Boolean(true)));
+                break;
 
-        case shaka::Token::Type::BOOLEAN_FALSE:
-            in.get();
-            return DataNode(Boolean(false));
+            case shaka::Token::Type::BOOLEAN_FALSE:
+                in.get();
+                root->append(DataNode(Boolean(false)));
+                break;
 
-        case shaka::Token::Type::CHARACTER:
-        case shaka::Token::Type::STRING:
-            return DataNode(String(in.get().get_string()));
+            case shaka::Token::Type::CHARACTER:
+            case shaka::Token::Type::STRING:
+                root->append(DataNode(String(in.get().get_string())));
+                break;
 
-        case shaka::Token::Type::QUOTE:
-            return DataNode(Symbol("quote"));
+            case shaka::Token::Type::QUOTE:
+                root->append(DataNode(Symbol("quote")));
+                break;
 
-        case shaka::Token::Type::NUMBER:
-            return DataNode(Number(stod(in.get().get_string())));
+            case shaka::Token::Type::NUMBER:
+                root->append(DataNode(Number(stod(in.get().get_string()))));
+                break;
 
-        case shaka::Token::Type::PAREN_START:
-            return list(in);
+            case shaka::Token::Type::PAREN_START:
+                if(!list(in, root, interm))
+                    throw std::runtime_error("CONS: No valid list");
+                break;
 
-        default:
-            throw std::runtime_error("CONS: No valid Token after period");
-            break;
+            default:
+                throw std::runtime_error("CONS: No valid Token after period");
+                break;
 
-    } // switch end
+        } // switch end
+        return true;
+
+    } catch(std::runtime_error& e) {
+        return false;
+    }
 } // cons end
 
 
