@@ -539,7 +539,10 @@ public:
 
 	// If the next character is not a space,
 	// like possibly an alpha character, that's not right.
-	if (!std::isspace(in.peek()) && !in.eof()) {
+	if (!std::isspace(in.peek())
+	    && !in.eof()
+            && in.peek() != ';'
+            && in.peek() != ')') {
 		number = false;
 	}
 
