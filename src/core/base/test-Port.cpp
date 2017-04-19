@@ -11,7 +11,11 @@ TEST(Port, initialization) {
 	std::string str = "sample";
 	//Port(std::string str, Mode mode, Type type, Source source)
 //	shaka::Port p0(str, shaka::Port::Mode::TEXT, shaka::Port::Type::INPUT, shaka::Port::Source::STRING);
-	shaka::Port p1(str, shaka::Port::Mode::TEXT, shaka::Port::Type::INPUT, shaka::Port::Source::FILESTREAM);
+	shaka::Port p1(
+        str,
+        shaka::Port::Mode::TEXT,
+        shaka::Port::Type::INPUT,
+        shaka::Port::Source::FILESTREAM);
 		
 //	shaka::Port p2(str, shaka::Port::Mode::TEXT, shaka::Port::Type::OUTPUT, shaka::Port::Source::STRING);
 //	shaka::Port p3(str, shaka::Port::Mode::TEXT, shaka::Port::Type::OUTPUT, shaka::Port::Source::FILESTREAM);
