@@ -69,8 +69,13 @@ bool list(
                 break;
 
             case shaka::Token::Type::PAREN_START:
-                root->append(DataNode::list());
-                list(in, root, interm);
+                std::cout << *root;
+                root->append(DataNode::list(DataNode::list()));
+                std::cout << "About to enter List recursive\n";
+                std::cout << *root;
+                list(in, root->cdr(), interm);
+                std::cout << "FINISHED RECURSIVE LIST CALL\n";
+                std::cout << *root;
                 break;
 
             case shaka::Token::Type::PERIOD:
