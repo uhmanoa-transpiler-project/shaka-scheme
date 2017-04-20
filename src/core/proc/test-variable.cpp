@@ -4,8 +4,8 @@
 #include "core/base/NativeProcedure.h"
 #include "core/base/Evaluator.h"
 #include "core/eval/Define_impl.h"
-#include "core/base/Data.h"
-#include "core/base/DataNode.h"
+#include "core/base/Core.h"
+
 
 using Args = std::vector<std::shared_ptr<shaka::DataNode>>;
 

@@ -5,8 +5,7 @@
 #include "core/base/Evaluator.h"
 #include "core/eval/Define_impl.h"
 #include "core/eval/Quote_impl.h"
-#include "core/base/Data.h"
-#include "core/base/DataNode.h"
+#include "core/base/Core.h"
 
 using Args = std::vector<std::shared_ptr<shaka::DataNode>>;
 
@@ -28,7 +27,7 @@ TEST(quote, evaluator){
 
 }
 
-TEST(define, quote_function){
+TEST(quote, quote_function){
 	auto env = std::make_shared<shaka::Environment>(nullptr);
 	auto l = std::make_shared<shaka::DataNode>(shaka::DataNode::list(
 				shaka::Symbol("quote"),
@@ -50,7 +49,7 @@ TEST(define, quote_function){
 
 }
 
-TEST(define, NativeProcedure_quote){
+TEST(quote, NativeProcedure_quote){
 	auto env = std::make_shared<shaka::Environment>(nullptr);
 	auto l = std::make_shared<shaka::DataNode>(shaka::DataNode::list(
 				shaka::Symbol("quote"),

@@ -65,10 +65,12 @@ Procedure::call (std::vector<std::shared_ptr<DataNode>> v,
     
     return return_values;
 };
+
 std::ostream& operator<< (std::ostream& lhs, const shaka::Procedure& rhs) {
     lhs << "#<procedure>";
     return lhs;
 }
+
 bool operator== (const Procedure& lhs, const Procedure& rhs) {
     if (lhs.fixed_arity == rhs.fixed_arity) {
        if(lhs.variable_arity ==rhs.variable_arity){
