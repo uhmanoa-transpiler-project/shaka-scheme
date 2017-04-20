@@ -1,12 +1,12 @@
 #include "gtest/gtest.h"
 #include "parser/Tokenizer.h"
 #include "parser/Token.h"
-#include "parser/rule-conditional.h"
+#include "parser/rule_conditional_impl.h"
 
 #include <sstream>
 #include <vector>
 
-TEST(Parser_Rules, conditional) {
+TEST(Parser_conditional, conditional) {
     // Create a stringstream and give it to the Tokenizer
     std::stringstream ss("(if (> 3 2) #t #f)");
     shaka::Tokenizer tk(ss);

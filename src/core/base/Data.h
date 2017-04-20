@@ -14,6 +14,7 @@ class String;
 class Boolean;
 class Environment;
 class Procedure;
+class NativeProcedure;
 
 
 using Data = boost::variant<
@@ -23,7 +24,8 @@ using Data = boost::variant<
     shaka::Number,
     shaka::String,
     shaka::Boolean,
-    boost::recursive_wrapper<shaka::Procedure>
+    boost::recursive_wrapper<shaka::Procedure>,
+    boost::recursive_wrapper<shaka::NativeProcedure>
 >;
 
 using ListPtr = std::shared_ptr<DataNode>;

@@ -11,6 +11,7 @@
 
 namespace shaka { 
 /// Encapsulates the EvaluatorStrategy classes
+
 namespace eval {
 
 /// @brief returns a std::shared_ptr to the child node
@@ -20,7 +21,7 @@ NodePtr ProcedureBody::evaluate(NodePtr node, EnvPtr env){
     // to evaluate.
     NodePtr expr = std::make_shared<shaka::DataNode>(node->get_data());
     if (!node->is_null()) {
-        while(!((*expr).cdr()->is_null())){
+        while(!(expr->cdr()->is_null())){
             shaka::Evaluator evaluator ((*expr).car(), env);
             // Evaluate the expression.
             evaluator.evaluate(shaka::eval::Expression());
@@ -34,7 +35,7 @@ NodePtr ProcedureBody::evaluate(NodePtr node, EnvPtr env){
         return last_value_ptr;
         
     } else {
-        throw std::runtime_error("eval/ProcedureBody: Root node is nullDid not get a list as the root node.");
+        throw std::runtime_error("eval/ProcedureBody: Root node is the empty list.");
     }
 
     return nullptr;

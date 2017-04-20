@@ -11,26 +11,26 @@ namespace shaka {
 
 std::vector<std::shared_ptr<DataNode>> 
 Procedure::call (std::vector<std::shared_ptr<DataNode>> v,
-                    std::shared_ptr<Environment>    env) {
+                 std::shared_ptr<Environment>           env) {
 
     // Get the arguments, bind them without evaluating to the
     // names in the arguments subtree (the first child) of this
     // root node.
     auto args_list_root = this->body_root->car();
-    auto curr_env = this->curr_env;
+    auto curr_env       = this->curr_env;
 
     /// For each child, verify it's a symbol.
     for (
-        int i = 0;
-        i < (int)args_list_root->length();
+        std::size_t i = 0;
+        i < this->body_root->length();
         ++i
     ) {
         // Get the child node pointer.
         auto args_symbol_ptr = args_list_root->car();
         // If we have a symbol, bind it.
-        if(args_symbol_ptr->is_symbol()){
+        if (args_symbol_ptr->is_symbol()) {
             Data symbol = args_symbol_ptr->get_data();
-            Data value = (*v[i]).get_data();
+            Data value  = v[i]->get_data();
             // Set the value in our current environment
             curr_env->set_value(shaka::get<shaka::Symbol>(symbol), value);
         } else {
@@ -44,7 +44,6 @@ Procedure::call (std::vector<std::shared_ptr<DataNode>> v,
     }
     // Setup an Evaluator on the current environment and
     // a copy of the body root node.
-    //
     shaka::Evaluator evaluator(this->body_root->cdr(), curr_env);
 
     // Evaluate the body of the procedure on the right side.
