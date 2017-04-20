@@ -4,11 +4,7 @@
 #include "core/eval/Expression.h"
 #include "core/base/Procedure.h"
 #include "core/base/Procedure_impl.h"
-
-#include "Define_impl.h"
-#include "Variable_impl.h"
-#include "Proccall_impl.h"
-//#include "Lambda_impl.h"
+#include "core/proc/primitives.h"
 
 
 namespace shaka { 
@@ -31,6 +27,7 @@ NodePtr Expression::evaluate(
 		return node;
 	
 	}
+
 	else if (node->car()->is_symbol() && node->length() == 1) {
 		std::cout << "@Expression ==> Symbol" << std::endl;
 		return evaluator.evaluate(shaka::eval::Variable());

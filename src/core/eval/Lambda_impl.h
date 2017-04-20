@@ -76,9 +76,9 @@ NodePtr Lambda::evaluate(NodePtr node, EnvPtr env) {
 
     }
     else {
-        // CASE 4: ( lambda (x) x )
-        fixed_arity = 1;
-        var_arity = false;
+        // CASE 4: ( lambda x x )
+        fixed_arity = 0;
+        var_arity = true;
     }
 
     

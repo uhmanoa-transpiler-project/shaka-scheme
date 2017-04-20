@@ -8,7 +8,7 @@
 using namespace shaka;
 
 TEST(Lambda, initialization) {
-    // (lambda (x) (1) )
+    // (lambda (x)  1)
 
     //create the environment
     EnvPtr env = std::make_shared<Environment>(nullptr);
@@ -34,8 +34,9 @@ TEST(Lambda, initialization) {
     ASSERT_EQ(size, arity);
     ASSERT_EQ(false , varity);
 }
+
 TEST(Lambda, fixed_arity) {
-    // (lambda (x y) (1) )
+    // (lambda (x y) 1)
 
     //create the environment
     EnvPtr env = std::make_shared<Environment>(nullptr);
@@ -64,7 +65,7 @@ TEST(Lambda, fixed_arity) {
 }
 
 TEST(Lambda, no_arity) {
-    // (lambda () (1) )
+    // (lambda () 1)
 
     //create the environment
     EnvPtr env = std::make_shared<Environment>(nullptr);
@@ -73,25 +74,26 @@ TEST(Lambda, no_arity) {
     NodePtr lambda = std::make_shared<DataNode>(DataNode::list(
         DataNode(Symbol("lambda")),
         DataNode::list(),
-        DataNode(Symbol("b"))
+        DataNode(Number(1))
     ));
 
-    std::cout << *lambda->cdr()->cdr()<< std::endl;
+    std::cout << *lambda<< std::endl;
     //  constructing evaluator 
-    // Evaluator evaluator(
-    //     lambda->cdr(), env
-    // );
-    // Procedure procedure = get<Procedure>(evaluator.evaluate(
-    // shaka::eval::Lambda())->get_data());
-    // std::size_t arity= procedure.get_fixed_arity();
-    // bool varity= procedure.is_variable_arity();
-    // std::size_t size= 0;
-    // ASSERT_EQ(size, arity);
-    // ASSERT_EQ(false , varity);
+    Evaluator evaluator(
+        lambda->cdr(), env
+    );
+    Procedure procedure = get<Procedure>(evaluator.evaluate(
+    shaka::eval::Lambda())->get_data());
+    std::size_t arity= procedure.get_fixed_arity();
+    bool varity= procedure.is_variable_arity();
+    std::size_t size= 0;
+    ASSERT_EQ(size, arity);
+    ASSERT_EQ(false , varity);
 }
+
 TEST(Lambda, var_arity){
-    // (lambda ( a b . c) (1))
-    DataNode body = DataNode::list(Number(1));
+    // (lambda ( a b . c) 1)
+    DataNode body = DataNode(Number(1));
     EnvPtr env = std::make_shared<Environment>(nullptr);
     
     DataNode a = DataNode::cons(DataNode(Symbol("b")),DataNode(Symbol("c")));
@@ -113,6 +115,7 @@ TEST(Lambda, var_arity){
     ASSERT_EQ(size, arity);
     ASSERT_EQ(true , varity);
 }
+
 TEST(Lambda, single_arity){
     // (lambda x x)
     DataNode body = DataNode::list(Number(1));
@@ -133,9 +136,9 @@ TEST(Lambda, single_arity){
     shaka::eval::Lambda())->get_data());
     std::size_t arity= procedure.get_fixed_arity();
     bool varity= procedure.is_variable_arity();
-    std::size_t size= 1;
+    std::size_t size= 0;
     ASSERT_EQ(size, arity);
-    ASSERT_EQ(false , varity);
+    ASSERT_EQ(true , varity);
 }
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
