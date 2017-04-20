@@ -1,6 +1,6 @@
 #ifndef SHAKA_CORE_BASE_BOOLEAN_H
 #define SHAKA_CORE_BASE_BOOLEAN_H
-
+#include <iostream>
 namespace shaka{
 
 
