@@ -14,8 +14,8 @@ NodePtr Define::evaluate(NodePtr list, EnvPtr env) {
     // Check if the first item is a symbol
     if (list->car()->is_symbol()) {
         // Get the key and the value, and store in the environment
-        auto key = get<Symbol>(list->cdr()->car()->get_data());
-        auto value = list->cdr()->cdr()->get_data();
+        auto key = get<Symbol>(list->car()->get_data());
+        auto value = list->cdr()->get_data();
         env->set_value(key, value);
         return nullptr;
     } else {
