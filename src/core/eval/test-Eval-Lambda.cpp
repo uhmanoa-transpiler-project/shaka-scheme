@@ -34,6 +34,7 @@ TEST(Lambda, initialization) {
     ASSERT_EQ(size, arity);
     ASSERT_EQ(false , varity);
 }
+
 TEST(Lambda, fixed_arity) {
     // (lambda (x y) 1)
 
@@ -89,6 +90,7 @@ TEST(Lambda, no_arity) {
     ASSERT_EQ(size, arity);
     ASSERT_EQ(false , varity);
 }
+
 TEST(Lambda, var_arity){
     // (lambda ( a b . c) 1)
     DataNode body = DataNode(Number(1));
@@ -113,6 +115,7 @@ TEST(Lambda, var_arity){
     ASSERT_EQ(size, arity);
     ASSERT_EQ(true , varity);
 }
+
 TEST(Lambda, single_arity){
     // (lambda x x)
     DataNode body = DataNode::list(Number(1));
@@ -133,9 +136,9 @@ TEST(Lambda, single_arity){
     shaka::eval::Lambda())->get_data());
     std::size_t arity= procedure.get_fixed_arity();
     bool varity= procedure.is_variable_arity();
-    std::size_t size= 1;
+    std::size_t size= 0;
     ASSERT_EQ(size, arity);
-    ASSERT_EQ(false , varity);
+    ASSERT_EQ(true , varity);
 }
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
