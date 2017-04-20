@@ -3,6 +3,7 @@
 #define SHAKA_PROCCALL_IMPL_H
 
 #include "core/eval/Proccall.h"
+#include "core/base/Core.h"
 #include "core/base/Evaluator.h"
 
 
