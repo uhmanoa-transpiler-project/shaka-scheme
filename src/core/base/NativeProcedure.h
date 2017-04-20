@@ -12,7 +12,6 @@ namespace shaka {
 
 class NativeProcedure : public IProcedure {
 public:
-    using T = shaka::Data;
     using Key = shaka::Symbol;
     using Value = NodePtr;
     //using IEnvPtr = std::shared_ptr<shaka::Environment>;
