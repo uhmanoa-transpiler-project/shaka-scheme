@@ -140,6 +140,40 @@ TEST(Lambda, single_arity){
     ASSERT_EQ(size, arity);
     ASSERT_EQ(true , varity);
 }
+
+TEST(Lambda, define){
+    
+    DataNode body = DataNode::list(Number(1));
+    EnvPtr env = std::make_shared<Environment>(nullptr);
+
+
+    NodePtr lambda = std::make_shared<DataNode>(DataNode::list(
+        DataNode(Symbol("lambda")),
+        DataNode::list(DataNode(Symbol("x"))),
+        DataNode(Symbol("x"))
+        ));
+    NodePtr define = std::make_shared<DataNode>(DataNode::list(
+        DataNode(Symbol("define")),
+        DataNode(Symbol("a")),
+        lambda
+    ));
+    std::cout << *define << std::endl;
+    std::cout<<*define->cdr()<<std::endl;
+    //  constructing evaluator 
+        Evaluator evaluator(
+            define->cdr(), env
+        );
+        evaluator.evaluate(shaka::eval::Define());
+        env->print_bindings(std::cout);
+//     Procedure procedure = get<Procedure>(evaluator.evaluate(
+//     shaka::eval::Lambda())->get_data());
+//     std::size_t arity= procedure.get_fixed_arity();
+//     bool varity= procedure.is_variable_arity();
+//     std::size_t size= 0;
+//     ASSERT_EQ(size, arity);
+//     ASSERT_EQ(true , varity);
+}
+
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
 
