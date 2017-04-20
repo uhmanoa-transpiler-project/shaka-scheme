@@ -3,14 +3,11 @@
 
 #include "gtest/gtest.h"
 
-#include "parser/Tokenizer.h"
-#include "parser/Token.h"
-#include "parser/rule_number.h"
+#include "core/parser/Tokenizer.h"
+#include "core/parser/Token.h"
+#include "core/parser/rule_number.h"
 
-#include "Data.h"
-#include "DataNode.h"
-#include "Procedure.h"
-#include "Eval_Expression_impl.h"
+#include "core/base/Core.h"
 
 TEST(Tokenizer_number, construct) {
 
