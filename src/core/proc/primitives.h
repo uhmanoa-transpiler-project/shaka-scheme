@@ -7,6 +7,7 @@
 #include "core/eval/Define_impl.h"
 #include "core/eval/Quote_impl.h"
 #include "core/eval/Variable_impl.h"
+#include "core/eval/Lambda_impl.h"
 
 namespace shaka {
 namespace proc  {
@@ -25,6 +26,9 @@ Args quote(Args l, EnvPtr e) {
 Args variable(Args l, EnvPtr e) {
 	return {shaka::Evaluator(l[0], e).evaluate(shaka::eval::Variable())};	
 }
+
+Args lambda(Args l, EnvPtr e) {
+	return {shaka::Evaluator(l[0], e).evaluate(shaka::eval::Lambda())};}
 } // namespace shaka 
 } // namespace proc  
 #endif // SHAKA_CORE_PROC_PRIMITIVES
