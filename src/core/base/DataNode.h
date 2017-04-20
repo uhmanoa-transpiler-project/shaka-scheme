@@ -294,6 +294,8 @@ std::ostream& operator<< (std::ostream& lhs, const DataNode& rhs) {
     return lhs;
 }
 
+using make_node = std::make_shared<DataNode>;
+
 }
 
 
