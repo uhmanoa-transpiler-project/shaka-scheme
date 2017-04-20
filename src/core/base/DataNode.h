@@ -22,9 +22,10 @@ public:
 
     DataNode (DataNode left, DataNode right) {
 
-        // If the left node is an atom,
+        // If the left node is an atom and is
+        // not the null list,
         // then just append the right as its tail
-        if (!left.is_pair()) {
+        if (!left.is_pair() && !left.is_null()) {
             this->head = left.head;
         }
         // Otherwise, we must create a new head to
