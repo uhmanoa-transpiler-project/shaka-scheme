@@ -5,8 +5,12 @@ doc/*
 dep/*
 bin/*
 basics/*
-*.out
+**.out
 tests-docs/*
 .vscode/*
 **.jpg
 *.swp
+**.pdf
+**.dot
+**.cinclude2dot2
+**/cinclude2dot2.py
