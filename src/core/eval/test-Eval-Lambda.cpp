@@ -1,10 +1,8 @@
 #include <gtest/gtest.h>
 
-#include "core/base/DataNode.h"
-#include "core/base/Evaluator.h"
+#include "core/base/Core.h"
 #include "core/eval/Lambda_impl.h"
-#include "core/base/Procedure_impl.h"
-#include "core/eval/ProcedureBody_impl.h"
+
 #include <sstream>
 
 using namespace shaka;
@@ -70,9 +68,34 @@ TEST(Lambda, no_arity) {
 
     //create the environment
     EnvPtr env = std::make_shared<Environment>(nullptr);
-    DataNode args = DataNode::list();
-    DataNode body = DataNode::list(Number(1));
 
+
+    NodePtr lambda = std::make_shared<DataNode>(DataNode::list(
+        DataNode(Symbol("lambda")),
+        DataNode::list(),
+        DataNode(Symbol("b"))
+    ));
+
+    std::cout << *lambda->cdr()->cdr()<< std::endl;
+    //  constructing evaluator 
+    // Evaluator evaluator(
+    //     lambda->cdr(), env
+    // );
+    // Procedure procedure = get<Procedure>(evaluator.evaluate(
+    // shaka::eval::Lambda())->get_data());
+    // std::size_t arity= procedure.get_fixed_arity();
+    // bool varity= procedure.is_variable_arity();
+    // std::size_t size= 0;
+    // ASSERT_EQ(size, arity);
+    // ASSERT_EQ(false , varity);
+}
+TEST(Lambda, var_arity){
+    // (lambda ( a b . c) (1))
+    DataNode body = DataNode::list(Number(1));
+    EnvPtr env = std::make_shared<Environment>(nullptr);
+    
+    DataNode a = DataNode::cons(DataNode(Symbol("b")),DataNode(Symbol("c")));
+    DataNode args = DataNode::cons(DataNode(Symbol("a")), a);
 
     NodePtr lambda = std::make_shared<DataNode>(DataNode::list(
         DataNode(Symbol("lambda")),
@@ -84,10 +107,33 @@ TEST(Lambda, no_arity) {
     );
     Procedure procedure = get<Procedure>(evaluator.evaluate(
     shaka::eval::Lambda())->get_data());
-    std::cout<<"5"<<std::endl;
     std::size_t arity= procedure.get_fixed_arity();
     bool varity= procedure.is_variable_arity();
-    std::size_t size= 0;
+    std::size_t size= 2;
+    ASSERT_EQ(size, arity);
+    ASSERT_EQ(true , varity);
+}
+TEST(Lambda, single_arity){
+    // (lambda x x)
+    DataNode body = DataNode::list(Number(1));
+    EnvPtr env = std::make_shared<Environment>(nullptr);
+
+
+    NodePtr lambda = std::make_shared<DataNode>(DataNode::list(
+        DataNode(Symbol("lambda")),
+        DataNode(Symbol("x")),
+        DataNode(Symbol("x"))
+        ));
+    std::cout << *lambda << std::endl;
+    //  constructing evaluator 
+    Evaluator evaluator(
+        lambda->cdr(), env
+    );
+    Procedure procedure = get<Procedure>(evaluator.evaluate(
+    shaka::eval::Lambda())->get_data());
+    std::size_t arity= procedure.get_fixed_arity();
+    bool varity= procedure.is_variable_arity();
+    std::size_t size= 1;
     ASSERT_EQ(size, arity);
     ASSERT_EQ(false , varity);
 }
