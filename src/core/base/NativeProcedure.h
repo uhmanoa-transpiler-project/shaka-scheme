@@ -14,11 +14,11 @@ class NativeProcedure : public IProcedure {
 public:
     using T = shaka::Data;
     using Key = shaka::Symbol;
-    using Value = shaka::Data;
-    using IEnvPtr = std::shared_ptr<shaka::Environment>;
+    using Value = NodePtr;
+    //using IEnvPtr = std::shared_ptr<shaka::Environment>;
     //using Value = std::shared_ptr<IDataNode<Data>>;
     using Args = std::vector<Value>;
-    using Function = std::function<Args(Args, IEnvPtr)>;
+    using Function = std::function<Args(Args, EnvPtr)>;
 
 
 	NativeProcedure(
@@ -30,7 +30,7 @@ public:
 		variable_arity(variable_arity) {}
 	
 	
-	virtual Args call(Args v, IEnvPtr env) {
+	virtual Args call(Args v, EnvPtr env) {
 		if (v.size() > fixed_arity && !variable_arity) {
 			throw std::runtime_error("NativeProcedure.call: incorrect number of arguments");
 		}

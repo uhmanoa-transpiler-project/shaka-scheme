@@ -1,5 +1,5 @@
-#ifndef SHAKA_PROCEDURE_H
-#define SHAKA_PROCEDURE_H
+#ifndef SHAKA_CORE_PROCEDURE_H
+#define SHAKA_CORE_PROCEDURE_H
 
 #include <vector>
 
@@ -12,9 +12,6 @@ namespace shaka {
 
 class Procedure : public IProcedure {
 public:
-    using Key = shaka::Symbol;
-    using Data = shaka::Data;
-    using Value = Data; 
 
     Procedure(std::shared_ptr<Environment> parent_env,
               std::shared_ptr<DataNode>                 body_root,
@@ -26,7 +23,8 @@ public:
         body_root(body_root),
         fixed_arity(fixed_arity),
         variable_arity(variable_arity) {}
-
+    friend std::ostream& operator<< (std::ostream& lhs, const Procedure& rhs);
+    friend bool operator== (const Procedure& lhs, const Procedure& rhs);
     /// @brief Takes in arguments and then applies the function to them.
     ///
     /// Assumes that the input nodes are already evaluated to their correct,
@@ -37,7 +35,7 @@ public:
     virtual std::vector<std::shared_ptr<DataNode>> 
     call (std::vector<std::shared_ptr<DataNode>> v,
           std::shared_ptr<Environment>           env);
-
+  
     virtual std::size_t         get_fixed_arity() const {
         return fixed_arity;
     }
@@ -45,6 +43,7 @@ public:
     virtual bool                is_variable_arity() const {
         return variable_arity;
     }
+
 
 private:
     std::shared_ptr<Environment>    parent_env;
@@ -54,7 +53,8 @@ private:
     bool                            variable_arity;
 };
 
+
 } // namespace shaka
 
 
-#endif // SHAKA_PROCEDURE_H
+#endif // SHAKA_CORE_PROCEDURE_H

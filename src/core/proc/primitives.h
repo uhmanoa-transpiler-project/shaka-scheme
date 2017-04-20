@@ -5,6 +5,8 @@
 #include "core/base/Evaluator.h"
 
 #include "core/eval/Define_impl.h"
+#include "core/eval/Quote_impl.h"
+#include "core/eval/Variable_impl.h"
 
 namespace shaka {
 namespace proc  {
@@ -12,12 +14,17 @@ namespace proc  {
 using Args = std::vector<NodePtr>;
 using Function = std::function<Args(Args, EnvPtr)>;
 
-NodePtr define (NodePtr l, EnvPtr e) {
-
+Args define(Args l, EnvPtr e) {
+	return {shaka::Evaluator(l[0], e).evaluate(shaka::eval::Define())};	
 }
 
-Function 
+Args quote(Args l, EnvPtr e) {
+	return {shaka::Evaluator(l[0], e).evaluate(shaka::eval::Quote())};	
+}
 
+Args variable(Args l, EnvPtr e) {
+	return {shaka::Evaluator(l[0], e).evaluate(shaka::eval::Variable())};	
+}
 } // namespace shaka 
 } // namespace proc  
 #endif // SHAKA_CORE_PROC_PRIMITIVES

@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "core/base/DataNode.h"
+#include "core/base/Core.h"
 
 #include <sstream>
 
@@ -216,6 +216,10 @@ TEST(DataNode, append) {
     DataNode l4 = DataNode::list();
     l4.append(DataNode(Symbol("a")));
     std::cout << l4 << std::endl;
+
+    DataNode l5 = DataNode::list();
+    l5.append(DataNode::list(DataNode::list()));
+    std::cout << l5 << std::endl;
 }
 
 TEST(DataNode, string_list) {
