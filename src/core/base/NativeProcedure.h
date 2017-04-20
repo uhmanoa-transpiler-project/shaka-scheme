@@ -61,6 +61,9 @@ public:
 		return variable_arity;
 	}
 
+    friend bool operator== (const NativeProcedure&, const NativeProcedure&);
+    friend bool operator!= (const NativeProcedure&, const NativeProcedure&);
+    friend std::ostream& operator<< (std::ostream&, const NativeProcedure&);
 private:
 	/*std::shared_ptr<IEnvironment<Key, Data>> parent_env;
 	std::shared_ptr<IEnvironment<Key, Data>> current_env;
@@ -70,6 +73,26 @@ private:
 	bool variable_arity;
 };
 
-} // namespace shaka
+bool operator== (const shaka::NativeProcedure& lhs,
+                 const shaka::NativeProcedure& rhs) {
+    if (lhs.func.target_type() == rhs.func.target_type()) {
+        return &lhs.func == &rhs.func;
+    }
+    else{
+        return false;
+    }
+}
+
+bool operator!= (const shaka::NativeProcedure& lhs,
+                 const shaka::NativeProcedure& rhs) {
+    return !operator==(lhs, rhs);
+}
+
+std::ostream& operator<< (std::ostream& lhs, const shaka::NativeProcedure& rhs) {
+    lhs << "#<procedure>";
+    return lhs;
+}
+
+}// namespace shaka
 
 #endif // SHAKA_CORE_BASE_NATIVEPROCEDURE_H

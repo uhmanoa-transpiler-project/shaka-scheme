@@ -3,5 +3,6 @@
 
 #include "core/base/DataNode.h"
 #include "core/base/Procedure_impl.h"
+#include "core/base/NativeProcedure.h"
 
 #endif // SHAKA_CORE_BASE_CORE_H
