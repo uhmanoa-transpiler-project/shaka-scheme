@@ -74,6 +74,10 @@ namespace eval {
 			
 		
 		}
+        else {
+            throw std::runtime_error("Eval.Proccall: Unsupported form (non-symbol as first argument in list");
+            return nullptr;
+        }
 		
 	}
 

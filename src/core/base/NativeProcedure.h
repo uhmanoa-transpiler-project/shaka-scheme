@@ -3,11 +3,12 @@
 
 #include "core/base/IProcedure.h"
 #include "core/base/Environment.h"
-//#include "Evaluator.h"
 #include "core/base/Data.h"
+
 #include <functional>
 #include <typeinfo>
 #include <vector>
+
 namespace shaka {
 
 class NativeProcedure : public IProcedure {
@@ -89,6 +90,8 @@ bool operator!= (const shaka::NativeProcedure& lhs,
 }
 
 std::ostream& operator<< (std::ostream& lhs, const shaka::NativeProcedure& rhs) {
+    // Turning off rhs unused warning
+    static_cast<void>(rhs);
     lhs << "#<procedure>";
     return lhs;
 }

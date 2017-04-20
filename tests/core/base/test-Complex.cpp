@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "Complex.h"
+#include "core/base/Complex.h"
 
 TEST(Complex, add_two_complex_numbers) {
 	shaka::Complex c1(5.0, 100);

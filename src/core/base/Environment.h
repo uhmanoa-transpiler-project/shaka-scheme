@@ -97,6 +97,8 @@ bool operator!= (const shaka::Environment& lhs, const shaka::Environment& rhs) {
 }
 
 std::ostream& operator<< (std::ostream& lhs, const shaka::Environment& rhs) {
+    // Turning off rhs unused warning
+    static_cast<void>(rhs);
     lhs << "#<environment>";
     return lhs;
 }

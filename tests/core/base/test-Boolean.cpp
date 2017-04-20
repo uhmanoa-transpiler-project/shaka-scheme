@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "Boolean.h" 
+#include "core/base/Boolean.h" 
 
 TEST(Boolean, a_Boolean){
 	shaka::Boolean n1(1 == 1 );

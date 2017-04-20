@@ -101,6 +101,7 @@ public:
             throw std::runtime_error("DataNode.cdr: argument is not pair");
             return nullptr;
         }
+        return nullptr;
     }
 
     std::size_t length () const {
@@ -116,6 +117,9 @@ public:
         if (this->is_null()) { return true; }
         else if (this->is_pair()) {
             return this->cdr()->is_list();
+        }
+        else {
+            return false;
         }
     }
 

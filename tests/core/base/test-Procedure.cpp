@@ -13,9 +13,9 @@ TEST(Procedure,  single_item_constructor) {
         DataNode(Symbol("x")),
         DataNode(Symbol("x"))
         ));
-    Procedure procedure(env, node, 1, false);
-    ASSERT_EQ(procedure.get_fixed_arity(), 1);
-    ASSERT_FALSE(procedure.is_variable_arity());
+    Procedure procedure(env, node, 0, true);
+    ASSERT_EQ(procedure.get_fixed_arity(), 0);
+    ASSERT_TRUE(procedure.is_variable_arity());
 
 }
 

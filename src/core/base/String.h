@@ -36,6 +36,7 @@ public:
     // Copy and swap operator= assignment
     String& operator=(String rhs) { 
         a_string = rhs.a_string;
+        return *this;
     }
 
     String(String &c, int index1): a_string(std::vector<char>(static_cast<int>(c.getString().size()) - index1, 0)) {

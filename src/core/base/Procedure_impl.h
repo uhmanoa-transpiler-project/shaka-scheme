@@ -13,6 +13,8 @@ std::vector<std::shared_ptr<DataNode>>
 Procedure::call (std::vector<std::shared_ptr<DataNode>> v,
                  std::shared_ptr<Environment>           env) {
 
+    // Turn off env unused warning
+    static_cast<void>(env);
     // Get the arguments, bind them without evaluating to the
     // names in the arguments subtree (the first child) of this
     // root node.
@@ -63,9 +65,11 @@ Procedure::call (std::vector<std::shared_ptr<DataNode>> v,
     return_values.push_back(result);
     
     return return_values;
-};
+}
 
 std::ostream& operator<< (std::ostream& lhs, const shaka::Procedure& rhs) {
+    // Turn off rhs unused warning
+    static_cast<void>(rhs);
     lhs << "#<procedure>";
     return lhs;
 }

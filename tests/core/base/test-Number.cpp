@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "Number.h"
+#include "core/base/Number.h"
 
 TEST(Number, test_number_addition) {
 	shaka::Number n1(10);

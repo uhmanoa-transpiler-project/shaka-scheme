@@ -4,7 +4,7 @@ CXX := c++
 CPP_FILES := $(wildcard src/*.cpp)
 H_FILES := $(wildcard src/*.h)
 
-TEST_FILES := $(wildcard tests/*.cpp)
+TEST_FILES := $(shell find ./tests/ -name "*.cpp")
 TEST_EXECUTABLES := $(TEST_FILES:.cpp=.out)
 
 ifdef TESTCASE
@@ -45,7 +45,7 @@ TEST_FLAGS := -Wall -Wextra -pedantic --std=c++11 -g \
 			  $(LIBS) $(TESTLIBS)
 
 .PHONY: clean clean-all clean-docs clean-tests-docs clean-tests \
-	    run run-test docs
+	    run clean-test run-test docs test-edit
 
 # The default rule to be build when just `make` is run.
 all: bin/main
@@ -72,7 +72,7 @@ clean-tests-docs:
 	rm -rf tests-docs/*
 
 clean-tests:
-	rm -rf tests/*.out
+	rm -rf tests/**/*.out
 
 run:
 	cd bin; ./main; cd ../
@@ -80,10 +80,17 @@ run:
 docs: $(CPP_FILES)
 	cd docs; doxygen ../doxygen_config_file; cd ../
 
+test-edit: 
+	vim ./tests/$(TESTCASE).cpp
+
 tests: $(TEST_EXECUTABLES)
 
 test: $(TEST_SINGLE_EXECUTABLE)
 	@echo "Test case: " $(value TESTCASE)
+
+clean-test: $(TEST_SINGLE_EXECUTABLE)
+	@echo "Test case:" $(value TESTCASE)
+	rm ./tests/$(TESTCASE).out
 
 run-test: $(TEST_SINGLE_EXECUTABLE)
 	@echo "Test case: " $(value TESTCASE)

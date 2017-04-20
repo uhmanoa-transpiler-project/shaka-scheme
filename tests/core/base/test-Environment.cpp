@@ -1,15 +1,15 @@
 #include "gtest/gtest.h"
-#include "DataNode.h"
-#include "Environment.h"
+#include "core/base/Core.h"
+#include "core/base/Environment.h"
 
 #include <functional>
 #include <algorithm>
 #include <numeric>
 
-using Environment = shaka::Environment<std::string, int *>;
+using namespace shaka;
 
 TEST(Environment, test_environment_default_constructor) {
-	shaka::Environment<int, int*> e(nullptr);
+	shaka::Environment e(nullptr);
 
 	ASSERT_EQ(e.get_parent(), nullptr);
 }
@@ -21,18 +21,18 @@ TEST(Environment, constructor_null) {
 
 TEST(Environment, define_find_key) {
     Environment e(nullptr);
-    int num =1;
-    int *value = &num;
-    e.set_value("first", value);
-    ASSERT_EQ(value, e.get_value("first"));
+    shaka::Symbol key("first");
+    Data value(Number(1));
+    e.set_value(key, value);
+    ASSERT_EQ(value, e.get_value(key));
 }
 
 TEST(Environment, contains_key) {
     Environment e(nullptr);
-    int num =1;
-    int *value = &num;
-    e.set_value("first", value);
-    ASSERT_TRUE(e.contains("first"));
+    shaka::Symbol key("first");
+    Data value(Number(1));
+    e.set_value(key, value);
+    ASSERT_TRUE(e.contains(key));
 }
 
 TEST(Environment, set_parent){
@@ -44,9 +44,9 @@ TEST(Environment, set_parent){
 
 TEST(Environment, get_keys){
     Environment e(nullptr);
-    int num =1;
-    int *value = &num;
-    e.set_value("first", value);
+    shaka::Symbol key("first");
+    Data value(Number(1));
+    e.set_value(key, value);
 
     ASSERT_EQ(static_cast<std::size_t>(1), e.get_keys().size());
 }
@@ -58,14 +58,14 @@ TEST(Environment, contains_key_in_parent_check){
 
     // Construct a child environment with a parent environment
     Environment kid(parent);
-    int num =1;
-    int *value = &num;
+    shaka::Symbol key("first");
+    Data value(Number(1));
 
     // Store a value with the key "first" in the parent environment
-    parent->set_value("first", value);
+    parent->set_value(key, value);
 
     // Parent and child environment should return the same value
-    ASSERT_EQ(kid.get_value("first"), parent->get_value("first"));
+    ASSERT_EQ(kid.get_value(key), parent->get_value(key));
 }
 
 int main(int argc, char** argv) {

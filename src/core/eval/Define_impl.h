@@ -17,12 +17,11 @@ NodePtr Define::evaluate(NodePtr list, EnvPtr env) {
         auto key = get<Symbol>(list->car()->get_data());
         auto value = list->cdr()->get_data();
         env->set_value(key, value);
-        return nullptr;
     } else {
         // If the first item is not a symbol, raise an exception
         throw std::runtime_error("eval.Define: key is not a Symbol");
-        return nullptr;
     }
+    return nullptr;
 }
 
 } // namespace eval

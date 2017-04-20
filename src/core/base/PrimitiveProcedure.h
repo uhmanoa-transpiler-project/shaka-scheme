@@ -1,8 +1,7 @@
-
 #ifndef SHAKA_CORE_BASE_PRIMITIVEPROCEDURE_H
 #define SHAKA_CORE_BASE_PRIMITIVEPROCEDURE_H
 
-#include "NativeProcedure.h"
+#include "core/base/NativeProcedure.h"
 
 namespace shaka {
 
@@ -86,6 +85,8 @@ bool operator!= (const shaka::PrimitiveProcedure& lhs,
 }
 
 std::ostream& operator<< (std::ostream& lhs, const shaka::PrimitiveProcedure& rhs) {
+    // Turn off rhs unused warning.
+    static_cast<void>(rhs);
     lhs << "#<procedure>";
     return lhs;
 }

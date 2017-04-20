@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "Rational.h"
+#include "core/base/Rational.h"
 
 using namespace shaka;
 

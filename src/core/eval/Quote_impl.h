@@ -7,6 +7,8 @@ namespace shaka {
 namespace eval {
 
 NodePtr Quote::evaluate(NodePtr list, EnvPtr env) {
+    // Turn off env unused warning
+    static_cast<void>(env);
     if (!list->is_list()) {
         throw std::runtime_error("eval.Quote: argument is not a list");
         return nullptr;

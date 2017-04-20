@@ -4,6 +4,7 @@
 #include "core/eval/Expression.h"
 #include "core/base/Procedure.h"
 #include "core/base/Procedure_impl.h"
+#include "core/eval/Proccall_impl.h"
 #include "core/proc/primitives.h"
 
 

@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "Rational.h"
+#include "core/base/Rational.h"
 
 TEST(Rational, add_rational_and_real) {
 	shaka::Rational rat(1, 2);

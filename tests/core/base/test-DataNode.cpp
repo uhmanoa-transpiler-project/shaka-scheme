@@ -163,7 +163,8 @@ TEST(DataNode, constructors) {
 TEST(DataNode, lists) {
     DataNode l0 =
         DataNode::list(Number(1), Number(2), Number(3), Number(4));
-    std::cout << l0 << std::endl;
+    ASSERT_EQ(4, l0.length());
+    ASSERT_TRUE(l0.is_list());
 
     DataNode l1 =
         DataNode::list(
@@ -175,16 +176,21 @@ TEST(DataNode, lists) {
                 Number(2)
             )
         );
-    std::cout << l1 << std::endl;
+    ASSERT_EQ(3, l1.length());
+    ASSERT_EQ(3, l1.cdr()->cdr()->car()->length());
 
     DataNode l2 = DataNode::list();
-    std::cout << l2 << std::endl;
+    ASSERT_TRUE(l2.is_null());
+    ASSERT_EQ(0, l2.length());
+    ASSERT_FALSE(l2.is_pair());
 }
 
 TEST(DataNode, append) {
     DataNode l0 = DataNode::list(Symbol("x"));
     l0.append(DataNode::list(Symbol("y")));
-    std::cout << l0 << std::endl;
+    ASSERT_EQ(2, l0.length());
+    ASSERT_EQ(Data(Symbol("x")), l0.car()->get_data());
+    ASSERT_EQ(Data(Symbol("y")), l0.cdr()->car()->get_data());
 
     DataNode l1 = DataNode::list(Symbol("a"));
     l1.append(
@@ -192,7 +198,7 @@ TEST(DataNode, append) {
             Symbol("b"),
             Symbol("c"),
             Symbol("d")));
-    std::cout << l1 << std::endl;
+    ASSERT_EQ(4, l1.length());
 
     DataNode l2 = DataNode::list(
         Symbol("a"),
@@ -202,7 +208,7 @@ TEST(DataNode, append) {
         DataNode::list(
             DataNode::list(
                 Symbol("c"))));
-    std::cout << l2 << std::endl;
+    ASSERT_EQ(3, l2.length());
 
     DataNode l3 = DataNode::list(
         Symbol("a"),
@@ -211,15 +217,17 @@ TEST(DataNode, append) {
         DataNode::cons(
             DataNode(Symbol("c")),
             DataNode(Symbol("d"))));
-    std::cout << l3 << std::endl;
+    ASSERT_FALSE(l3.is_list());
 
     DataNode l4 = DataNode::list();
     l4.append(DataNode(Symbol("a")));
-    std::cout << l4 << std::endl;
+    ASSERT_TRUE(l4.is_symbol());
 
     DataNode l5 = DataNode::list();
     l5.append(DataNode::list(DataNode::list()));
     std::cout << l5 << std::endl;
+    ASSERT_EQ(1, l5.length());
+    ASSERT_EQ(Data(NodePtr(nullptr)), l5.car()->get_data());
 }
 
 TEST(DataNode, string_list) {
