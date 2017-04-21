@@ -5,6 +5,7 @@
 #include "core/parser/Tokenizer.h"
 
 #include "core/base/Number.h"
+#include "core/base/Core.h"
 #include "core/base/Data.h"
 #include "core/base/DataNode.h"
 

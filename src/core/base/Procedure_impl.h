@@ -7,6 +7,9 @@
 
 #include "core/eval/ProcedureBody_impl.h"
 
+#include "core/eval/Proccall.h"
+#include "core/eval/Proccall_impl.h"
+
 namespace shaka {
 
 std::vector<std::shared_ptr<DataNode>> 

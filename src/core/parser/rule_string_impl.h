@@ -28,7 +28,8 @@ bool string(
 		DataNode str_node = DataNode::list(String(interm));
 
 		//Append DataNode list to root root DataNode
-		root->append(str_node);
+		if(root != nullptr)
+			root->append(str_node);
 		
 		return true;
 	} else {	

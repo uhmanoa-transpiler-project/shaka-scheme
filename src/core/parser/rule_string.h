@@ -7,9 +7,10 @@
 
 #include "core/parser/primitives.h"
 #include "core/parser/Tokenizer.h"
-#include "core/parser/Token.h"
+//#include "core/parser/Token.h"
 
 #include "core/base/String.h"
+#include "core/base/Core.h"
 #include "core/base/Data.h"
 #include "core/base/DataNode.h"
 

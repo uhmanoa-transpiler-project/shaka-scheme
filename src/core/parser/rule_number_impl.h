@@ -5,6 +5,7 @@
 
 #include <cctype>
 #include <climits>
+#include <iostream>
 
 namespace shaka {
 namespace parser {
@@ -20,7 +21,6 @@ bool number_integer(
     T&              interm
 ) {
 	bool accept = false;
-   
 	shaka::Token token = in.peek();
 
 	if(token.type == Token::Type::NUMBER) {
@@ -36,7 +36,7 @@ bool number_integer(
 
 	}
 
-  	if (accept == true) {
+  	if (accept == true && root != nullptr) {
         	DataNode d1({Number(std::stoi(interm))}, {NodePtr{nullptr}});
 		root -> append(d1);
     	}
@@ -66,7 +66,8 @@ bool number_real(
 		throw std::out_of_range("Number entered is too large");
 
 	}
-	if (accept == true) {
+
+	if (accept == true && root != nullptr) {
         	DataNode d1({Number(std::stod(interm))}, {NodePtr{nullptr}});
 		root -> append(d1);
    	}
@@ -92,6 +93,13 @@ bool number_rational(
 		interm += token.str;
 
 		fraction = token.str.find("/");
+
+		if(fraction <= 0 ) {
+			interm = "";
+			in.unget(token);
+			return false;
+		}
+
 		numer = token.str.substr(0, fraction);
 		denom = token.str.substr(fraction + 1, token.str.size());
 
@@ -103,7 +111,7 @@ bool number_rational(
 
 		}
 
-		if(accept == true) {
+		if(accept == true && root != nullptr) {
         		DataNode d1({Number(std::stoi(numer),
 				std::stoi(denom))}, 
 				{NodePtr{nullptr}});
