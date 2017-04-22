@@ -46,9 +46,7 @@ public:
     //DataNode (const DataNode& other) :
     //    head(other.car()),
     //    tail(other.cdr()) {}
-
-    bool is_null() const {
-        if (head.type() == typeid(ListPtr)) {
+    bool is_null() const { if (head.type() == typeid(ListPtr)) {
             if (tail.type() == typeid(ListPtr)) {
                 return !get<ListPtr>(head) && !get<ListPtr>(tail);
             }
@@ -142,6 +140,14 @@ public:
     bool is_environment() const {
         return !this->is_pair() && this->head.type() == typeid(EnvPtr);
     }
+
+    bool is_procedure() const;
+
+    bool is_scheme_procedure() const;
+
+    bool is_native_procedure() const;
+
+    bool is_primtive_procedure() const;
 
     template <typename... Args>
     DataNode append (DataNode node, Args... rest) {
@@ -237,61 +243,6 @@ bool operator== (shaka::DataNode lhs, shaka::DataNode rhs) {
 
 bool operator!= (shaka::DataNode lhs, shaka::DataNode rhs) {
     return !operator==(lhs, rhs);
-}
-
-
-std::ostream& operator<< (std::ostream& lhs, const DataNode& rhs) {
-    // If the current one is a single
-    if (!rhs.is_pair()) {
-        // null list ==> ()
-        if (rhs.is_null()) {
-            lhs << "()";
-        }
-        else if (rhs.is_number()) {
-            auto data = get<Number>(rhs.head);
-            lhs << data;
-        }
-        else if (rhs.is_string()) {
-            auto data = get<String>(rhs.head);
-            lhs << data;
-        }
-        else if (rhs.is_symbol()) {
-            auto data = get<Symbol>(rhs.head);
-            lhs << data;
-        }
-        else if (rhs.is_boolean()) {
-            auto data = get<Boolean>(rhs.head);
-            lhs << data;
-        }
-        else if (rhs.is_environment()) {
-            lhs << "#<environment>";
-        }
-    }
-    // Otherwise, this is some sort of list
-    else {
-        // Print out the first item.
-        lhs << "("; 
-        lhs << *rhs.car();
-        // Then continue to print out the
-        // other items.
-        auto tail = *rhs.cdr();
-        while (tail.is_pair()) {
-            lhs << ' ' << *tail.car();
-            tail = *tail.cdr();
-        }
-        // If this is a proper list, just close it.
-        if (tail.is_null()) {
-            auto last = get<ListPtr>(tail.tail);
-            if (!last) { lhs << ")"; }
-        }
-        // Otherwise, this is an improper list,
-        // and we must print out the last element.
-        else {
-            auto last = DataNode(tail.head);
-            lhs << " . " << last << ")";
-        }
-    }
-    return lhs;
 }
 
 // Overload for std::make_shared<DataNode>
