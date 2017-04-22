@@ -1,6 +1,8 @@
 #ifndef SHAKA_EVAL_EXPRESSION_IMPL_H
 #define SHAKA_EVAL_EXPRESSION_IMPL_H
 
+#include "core/base/Core.h"
+
 #include "core/eval/Expression.h"
 #include "core/base/Procedure.h"
 #include "core/base/Procedure_impl.h"
@@ -50,24 +52,45 @@ NodePtr Expression::evaluate(
 		return node;
 	}
 
-	else if (node->get_data().type() == typeid(shaka::Procedure)) {
+	else if (node->is_scheme_procedure()) {
 		std::cout << "@Expression ==> Procedure" << std::endl;
 		return node;
 	}
 
-	else if (node->is_symbol()) {
-		std::cout << "@Expression ==> Procedure Call" << std::endl;
-		return evaluator.evaluate(shaka::eval::ProcCall());
-	
-	}
-	
+    else if (node->is_native_procedure()) {
+        std::cout << "@Expression ==> NativeProcedure" << std::endl;
+        return node;
+    }
+
+    else if (node->is_primitive_procedure()) {
+        std::cout << "@Expression ==> PrimitiveProcedure" << std::endl;
+        return node;
+    }
+
 	else if (node->is_list()) {
 		std::cout << "@Expression ==> List" << std::endl;
-		shaka::Evaluator nested_evaluator(node->car(), env);
-		NodePtr inner_result = nested_evaluator.evaluate(shaka::eval::Expression());
+        std::cout << "node: " << *node << std::endl;
+		shaka::Evaluator first_evaluator(node->car(), env);
+        std::cout << "node->car: " << *node->car() << std::endl;
+        std::cout << "node->cdr: " << *node->cdr() << std::endl;
+		NodePtr inner_result = first_evaluator.evaluate(shaka::eval::Expression());
+        if (inner_result->is_procedure()) {
+            NodePtr new_node = std::make_shared<DataNode>(*inner_result, *node->cdr());
+            std::cout << "new node: " << *new_node << std::endl;
+            shaka::Evaluator call_eval(new_node, env);
+            return call_eval.evaluate(shaka::eval::ProcCall());
+        }
+        else {
+            throw std::runtime_error(
+                "eval.Expression: Procedure call does not have procedure operand");
+            return nullptr;
+        }
+        /*
 		NodePtr new_node = std::make_shared<DataNode>(*inner_result, *node->cdr());
+        std::cout << "new node: " << *new_node << std::endl;
 		shaka::Evaluator new_node_evaluator(new_node, env);
 		return new_node_evaluator.evaluate(shaka::eval::Expression());
+        */
 	}
 	
 	else {

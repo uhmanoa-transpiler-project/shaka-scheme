@@ -30,7 +30,7 @@ public:
 			throw std::runtime_error("PrimitiveProcedure.call: incorrect number of arguments");
 		}
 		else {
-
+            std::cout << "@PrimtiveProcedure.call" << std::endl;
 			return func(v, env);
 		}
 	
@@ -64,9 +64,6 @@ private:
 	/*std::shared_ptr<IEnvironment<Key, Data>> parent_env;
 	std::shared_ptr<IEnvironment<Key, Data>> current_env;
 	std::shared_ptr<IDataNode<Data>> body_root;*/
-	Function func;
-	std::size_t fixed_arity;
-	bool variable_arity;
 };
 
 bool operator== (const shaka::PrimitiveProcedure& lhs,

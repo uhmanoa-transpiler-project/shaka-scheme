@@ -85,7 +85,7 @@ public:
                 return std::make_shared<DataNode>(head);
             }
         } else {
-            throw std::runtime_error("DataNode.cdr: argument is not pair");
+            throw std::runtime_error("DataNode.car: argument is not pair");
             return nullptr;
         }
     }
@@ -141,13 +141,13 @@ public:
         return !this->is_pair() && this->head.type() == typeid(EnvPtr);
     }
 
-    bool is_procedure() const;
-
     bool is_scheme_procedure() const;
 
     bool is_native_procedure() const;
 
-    bool is_primtive_procedure() const;
+    bool is_primitive_procedure() const;
+
+    bool is_procedure() const;
 
     template <typename... Args>
     DataNode append (DataNode node, Args... rest) {

@@ -88,7 +88,7 @@ tests: $(TEST_EXECUTABLES)
 test: $(TEST_SINGLE_EXECUTABLE)
 	@echo "Test case: " $(value TESTCASE)
 
-clean-test: $(TEST_SINGLE_EXECUTABLE)
+clean-test:
 	@echo "Test case:" $(value TESTCASE)
 	rm ./tests/$(TESTCASE).out
 

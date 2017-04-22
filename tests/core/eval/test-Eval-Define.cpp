@@ -1,82 +1,78 @@
 #include <gtest/gtest.h>
-#include <vector>
-
 #include "core/base/Core.h"
-#include "core/base/NativeProcedure.h"
-#include "core/base/Evaluator.h"
-#include "core/eval/Define_impl.h"
+#include "core/eval/Eval.h"
 
-#include "core/proc/primitives.h"
+using namespace shaka;
 
-using Args = std::vector<std::shared_ptr<shaka::DataNode>>;
+TEST(Eval_Define, evaluator_strategy) {
+    {
+        auto expr = std::make_shared<DataNode>(DataNode::list(
+            Symbol("a"),
+            Number(1)
+        ));
+        auto env = std::make_shared<Environment>(nullptr);
+        Evaluator setup(nullptr, env);
+        setup.evaluate(eval::SetupTopLevel());
 
-TEST(define, evaluator){
-	auto env = std::make_shared<shaka::Environment>(nullptr);
-	auto l = std::make_shared<shaka::DataNode>(shaka::DataNode::list(
-				shaka::Symbol("define"),
-				shaka::Symbol("x"),
-				shaka::Number(1)));
-	Args v;
-	v.push_back(l);
-	ASSERT_EQ(shaka::Evaluator(l, env).evaluate(shaka::eval::Define()), 
-			nullptr);
+        Evaluator eval(expr, env);
 
-	ASSERT_EQ((shaka::get<shaka::Number>(env->get_value(shaka::Symbol("x")))), shaka::Number(1)); 
+        ASSERT_EQ(nullptr, eval.evaluate(eval::Define()));
+        
+        auto val = env->get_value(Symbol("a"));
+        
+        ASSERT_EQ(get<Number>(val->get_data()), Number(1));
+    }
 
-}
+    {
+        auto expr = std::make_shared<DataNode>(DataNode::list(
+            Symbol("\\asdf"),
+            Number(2)
+        ));
+        auto env = std::make_shared<Environment>(nullptr);
+        Evaluator setup(nullptr, env);
+        setup.evaluate(eval::SetupTopLevel());
 
-TEST(define, define_function){
-	auto env = std::make_shared<shaka::Environment>(nullptr);
-	auto l = std::make_shared<shaka::DataNode>(shaka::DataNode::list(
-				shaka::Symbol("define"),
-				shaka::Symbol("x"),
-				shaka::Number(1)));
-	Args v;
-	v.push_back(l);
-	Args result = shaka::proc::define(v, env);
-	ASSERT_EQ(result[0], nullptr);
+        Evaluator eval(expr, env);
+        ASSERT_EQ(nullptr, eval.evaluate(eval::Define()));
 
-	ASSERT_EQ((shaka::get<shaka::Number>(env->get_value(shaka::Symbol("x")))), shaka::Number(1)); 
+        auto val = env->get_value(Symbol("\\asdf"));
+        
+        ASSERT_EQ(get<Number>(val->get_data()), Number(2));
+    }
 
-}
+    
+    {
+        auto expr = make_node(DataNode::list(
+            Symbol("asd.1"),
+            DataNode::list(
+                Symbol("quote"),
+                DataNode::list(
+                    Number(1),
+                    Number(2),
+                    Number(3)
+                )
+            )
+        ));
+        auto env = std::make_shared<Environment>(nullptr);
+        Evaluator setup(nullptr, env);
+        setup.evaluate(eval::SetupTopLevel());
 
-TEST(define, NativeProcedure_define){
-	auto env = std::make_shared<shaka::Environment>(nullptr);
-	auto l = std::make_shared<shaka::DataNode>(shaka::DataNode::list(
-				shaka::Symbol("define"),
-				shaka::Symbol("x"),
-				shaka::Number(1)));
-	Args v;
-	v.push_back(l);
-	shaka::NativeProcedure a(shaka::proc::define, 2);
-	Args result = a.call(v, env);
-	ASSERT_EQ(result[0], nullptr);
-	ASSERT_EQ((shaka::get<shaka::Number>(env->get_value(shaka::Symbol("x")))), shaka::Number(1)); 
+        Evaluator eval(expr, env);
+        ASSERT_EQ(nullptr, eval.evaluate(eval::Define()));
 
-
+        auto val = env->get_value(Symbol("asd.1"));
+        std::cout << "val: " <<  *val << std::endl;
+        ASSERT_TRUE(val->is_list());
+        ASSERT_EQ(3, val->length());
+        
+        ASSERT_EQ(val->car()->get_data(), Data(Number(1)));
+        ASSERT_EQ(val->cdr()->car()->get_data(), Data(Number(2)));
+        ASSERT_EQ(val->cdr()->cdr()->car()->get_data(), Data(Number(3)));
+    }
 }
 
 int main(int argc, char** argv) {
-	::testing::InitGoogleTest(&argc, argv);
+    ::testing::InitGoogleTest(&argc, argv);
 
-	return RUN_ALL_TESTS();
-
+    return RUN_ALL_TESTS();
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

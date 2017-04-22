@@ -13,25 +13,9 @@ NodePtr Quote::evaluate(NodePtr list, EnvPtr env) {
         throw std::runtime_error("eval.Quote: argument is not a list");
         return nullptr;
     }
-    // Check if the first item is a symbol
-    if (list->car()->is_symbol()) {
-        // Check if the symbol is "quote". If so, return cdr.
-        auto key = get<Symbol>(list->car()->get_data());
-        if (key == Symbol("quote")) {
-            if (list->length() != 2) {
-                throw std::runtime_error("eval.Quote: incorrect number of arguments");
-            }
-            return list->cdr()->car();
-        }
-        else {
-            throw std::runtime_error("eval.Quote: list does not begin with Symbol(quote)");
-            return nullptr;
-        }
-    } else {
-        // If the first item is not a symbol, raise an exception
-        throw std::runtime_error("eval.Quote: key is not a Symbol");
-        return nullptr;
-    }
+    std::cout << "@Quote" << std::endl;
+    std::cout << *list << std::endl;
+    return list;
 }
 
 } // namespace eval

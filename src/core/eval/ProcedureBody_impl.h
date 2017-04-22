@@ -1,7 +1,7 @@
 #ifndef SHAKA_CORE_EVAL_PROCEDUREBODY_IMPL_H
 #define SHAKA_CORE_EVAL_PROCEDUREBODY_IMPL_H
 
-#include "core/base/DataNode.h"
+#include "core/base/Core.h"
 #include "core/base/Evaluator.h"
 #include "core/base/IEvaluatorStrategy.h"
 

@@ -71,7 +71,6 @@ TEST(Environment, contains_key_in_parent_check){
 TEST(Environment, print_bindings) {
     // Construct an environment
     auto env = std::make_shared<Environment>(nullptr);
-    std::cout << "type of Nodeptr: " << typeid(NodePtr).name() << std::endl;
     env->set_value(Symbol("a"), make_node(Number(1)));
     env->set_value(Symbol("b"), make_node(String("asdf")));
     env->set_value(Symbol("c"), make_node(Boolean(true)));

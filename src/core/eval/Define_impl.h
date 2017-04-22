@@ -22,11 +22,10 @@ NodePtr Define::evaluate(NodePtr list, EnvPtr env) {
         // Get the key and the value, and store in the environment
         auto key = get<Symbol>(list->car()->get_data());
         auto value = list->cdr()->car();
-        std::cout << *list->cdr() << std::endl;
-        std::cout << *value << std::endl;
+        std::cout << "Pre-evaluaton: " << *value << std::endl;
         // Evaluate the value with the expression, and
         auto evaluated = Evaluator(value, env).evaluate(eval::Expression());
-        std::cout << *evaluated << std::endl;
+        std::cout << "Post_evaluation: " << *evaluated << std::endl;
         env->set_value(key, evaluated);
     } else {
         // If the first item is not a symbol, raise an exception

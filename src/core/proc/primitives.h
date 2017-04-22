@@ -16,19 +16,25 @@ using Args = std::vector<NodePtr>;
 using Function = std::function<Args(Args, EnvPtr)>;
 
 Args define(Args l, EnvPtr e) {
+    std::cout << "@proc.define" << std::endl;
 	return {shaka::Evaluator(l[0], e).evaluate(shaka::eval::Define())};	
 }
 
 Args quote(Args l, EnvPtr e) {
+    std::cout << "@proc.quote" << std::endl;
 	return {shaka::Evaluator(l[0], e).evaluate(shaka::eval::Quote())};	
 }
 
 Args variable(Args l, EnvPtr e) {
+    std::cout << "@proc.variable" << std::endl;
 	return {shaka::Evaluator(l[0], e).evaluate(shaka::eval::Variable())};	
 }
 
 Args lambda(Args l, EnvPtr e) {
-	return {shaka::Evaluator(l[0], e).evaluate(shaka::eval::Lambda())};}
+    std::cout << "@proc.lambda" << std::endl;
+	return {shaka::Evaluator(l[0], e).evaluate(shaka::eval::Lambda())};
+}
+
 } // namespace shaka 
 } // namespace proc  
 #endif // SHAKA_CORE_PROC_PRIMITIVES

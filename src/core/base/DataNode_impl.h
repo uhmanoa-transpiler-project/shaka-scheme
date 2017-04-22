@@ -11,9 +11,17 @@ bool DataNode::is_native_procedure() const {
     return !this->is_pair() && this->head.type() == typeid(NativeProcedure);
 }
 
-bool DataNode::is_primtive_procedure() const {
+bool DataNode::is_primitive_procedure() const {
     return !this->is_pair() &&
         this->head.type() == typeid(PrimitiveProcedure);
+}
+
+bool DataNode::is_procedure() const {
+    return !this->is_pair() && (
+        this->head.type() == typeid(Procedure) || 
+        this->head.type() == typeid(NativeProcedure) || 
+        this->head.type() == typeid(PrimitiveProcedure)
+    );
 }
 
 std::ostream& operator<< (std::ostream& lhs, const DataNode& rhs) {
@@ -42,6 +50,16 @@ std::ostream& operator<< (std::ostream& lhs, const DataNode& rhs) {
         else if (rhs.is_environment()) {
             lhs << "#<environment>";
         }
+        else if (rhs.is_procedure()) {
+            lhs << "#<procedure>";
+        }
+        /*
+        else {
+            auto data = get<NodePtr>(rhs.head);
+            lhs << *data;
+            lhs << rhs.head.type().name();
+        }
+        */
     
     }
     // Otherwise, this is some sort of list

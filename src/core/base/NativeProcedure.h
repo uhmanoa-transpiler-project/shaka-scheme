@@ -25,9 +25,10 @@ public:
         Function	   func,
         std::size_t    fixed_arity, 
         bool           variable_arity = false) :
-		func(func),
 		fixed_arity(fixed_arity),
-		variable_arity(variable_arity) {}
+		variable_arity(variable_arity) {
+            this->func = func; 
+        }
 	
 	
 	virtual Args call(Args v, EnvPtr env) {
@@ -65,7 +66,7 @@ public:
     friend bool operator== (const NativeProcedure&, const NativeProcedure&);
     friend bool operator!= (const NativeProcedure&, const NativeProcedure&);
     friend std::ostream& operator<< (std::ostream&, const NativeProcedure&);
-private:
+protected:
 	/*std::shared_ptr<IEnvironment<Key, Data>> parent_env;
 	std::shared_ptr<IEnvironment<Key, Data>> current_env;
 	std::shared_ptr<IDataNode<Data>> body_root;*/
