@@ -7,10 +7,11 @@
 
 #include "core/parser/primitives.h"
 #include "core/parser/Tokenizer.h"
-#include "core/parser/Token.h"
+//#include "core/parser/Token.h"
 
 #include "../base/Data.h"
 #include "../base/DataNode.h"
+#include "../base/Core.h"
 
 namespace shaka {
 namespace parser {

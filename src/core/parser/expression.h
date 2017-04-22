@@ -4,8 +4,11 @@
 #include "core/base/Core.h"
 #include "core/parser/primitives.h"
 #include "core/parser/list.h"
+#include "core/parser/rule_variable_impl.h"
 #include "core/parser/rule_number_impl.h"
 #include "core/parser/rule_string_impl.h"
+
+#include <iostream>
 
 namespace shaka {
 namespace parser {
@@ -27,11 +30,17 @@ bool expression(
 
 			break;
 
+		case shaka::Token::Type::IDENTIFIER:
+			std::cout << "Is Identifier" << std::endl;
+			if(!rule::variable(in, root, interm))	return false;
+			break;
+
 		case shaka::Token::Type::NUMBER:
 /*			if(rule::number_integer(in, root, interm)) {
 				return true;
 			}
 */
+			std::cout << "Is Number" << std::endl;
 			if(!rule::number_rational(in, root, interm) &&
 			   !rule::number_real(in, root, interm)    &&
 			   !rule::number_integer(in, root, interm)) {
@@ -45,6 +54,7 @@ bool expression(
 			break;
 
 		case shaka::Token::Type::STRING:
+			std::cout << "Is String" << std::endl;
 			if(!rule::string(in, root, interm))	return false;
 			break;
 
