@@ -6,6 +6,7 @@
 #include "core/eval/Define.h"
 
 #include "core/proc/primitives.h"
+#include "core/proc/Numbers_Arithmetic_impl.h"
 
 
 namespace shaka { 
@@ -31,6 +32,23 @@ NodePtr SetupTopLevel::evaluate(
 
     env->set_value(Symbol("quote"),
                    make_node(PrimitiveProcedure(shaka::proc::quote, 1)));
+
+    // Numbers Arithmetic section.
+    env->set_value(Symbol("+"),
+                   make_node(PrimitiveProcedure(shaka::stdproc::add, 1, true)));
+
+    env->set_value(Symbol("-"),
+                   make_node(PrimitiveProcedure(shaka::stdproc::sub, 1, true)));
+
+    env->set_value(Symbol("*"),
+                   make_node(PrimitiveProcedure(shaka::stdproc::mul, 1, true)));
+
+    env->set_value(Symbol("/"),
+                   make_node(PrimitiveProcedure(shaka::stdproc::div, 1, true)));
+
+    env->set_value(Symbol("abs"),
+                   make_node(PrimitiveProcedure(shaka::stdproc::abs, 1)));
+
 
     env->print_bindings(std::cout);
 

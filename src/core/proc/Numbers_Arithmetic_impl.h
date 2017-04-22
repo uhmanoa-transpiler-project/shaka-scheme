@@ -80,6 +80,10 @@ Args neg_numbers(Args args, EnvPtr env) {
 Args sub_numbers(Args args, EnvPtr env) {
 	shaka::Number result = shaka::get<shaka::Number>(args[0]->get_data());
 
+    if (args.size() == 1) {
+        return neg_numbers(args, env);
+    }
+
 	for (std::size_t i = 1; i < args.size(); i++) {
 		result = result - shaka::get<shaka::Number>(args[i]->get_data());
 	}
@@ -721,7 +725,7 @@ Args log_n_numbers(Args args, EnvPtr env) {
 
 Function add = impl::add_numbers;
 Function mul = impl::mul_numbers;
-Function neg = impl::neg_numbers;
+//Function neg = impl::neg_numbers;
 Function sub = impl::sub_numbers;
 Function reciprocal = impl::reciprocal_numbers;
 Function div = impl::div_numbers;
