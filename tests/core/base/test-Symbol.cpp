@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "Symbol.h" 
+#include "core/base/Symbol.h" 
 
 TEST(Symbol, a_symbol){
 	shaka::Symbol n1("symbol");

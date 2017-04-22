@@ -294,7 +294,11 @@ std::ostream& operator<< (std::ostream& lhs, const DataNode& rhs) {
     return lhs;
 }
 
-using make_node = std::make_shared<DataNode>;
+// Overload for std::make_shared<DataNode>
+template <typename... Args>
+NodePtr make_node(Args... args) {
+    return std::make_shared<DataNode>(std::forward<Args>(args)...);
+}
 
 }
 

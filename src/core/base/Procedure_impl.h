@@ -34,7 +34,9 @@ Procedure::call (std::vector<std::shared_ptr<DataNode>> v,
             Data symbol = args_symbol_ptr->get_data();
             Data value  = v[i]->get_data();
             // Set the value in our current environment
-            curr_env->set_value(shaka::get<shaka::Symbol>(symbol), value);
+            curr_env->set_value(
+                shaka::get<shaka::Symbol>(symbol),
+                std::make_shared<DataNode>(value));
         } else {
             /// @todo Define better semantics for procedure call
             ///       failure.

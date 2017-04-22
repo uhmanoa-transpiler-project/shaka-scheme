@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
-#include "parser/Token.h"
-#include "parser/Tokenizer.h"
+#include "core/parser/Token.h"
+#include "core/parser/Tokenizer.h"
 
 #include <boost/variant.hpp>
 #include <string>

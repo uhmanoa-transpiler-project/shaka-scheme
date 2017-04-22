@@ -6,8 +6,7 @@
 #include <numeric>
 
 #include <boost/variant.hpp>
-#include "core/base/Data.h"
-#include "core/base/DataNode.h"
+#include "core/base/Core.h"
 #include "core/base/Environment.h"
 //#include "Evaluator.h"
 //#include "Eval_Expression.h"

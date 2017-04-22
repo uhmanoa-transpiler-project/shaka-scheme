@@ -15,8 +15,8 @@ NodePtr Lambda::evaluate(NodePtr node, EnvPtr env) {
     shaka::ListPtr params = node->car();
     std::map<shaka::Symbol, bool> param_symbols;
 
-    if(params->is_list()){
-        if(params->is_null()){
+    if (params->is_list()){
+        if (params->is_null()){
             //CASE 1:  ( lambda () 1 )
             fixed_arity = 0;
             var_arity = false;
@@ -40,7 +40,7 @@ NodePtr Lambda::evaluate(NodePtr node, EnvPtr env) {
             
         }
     }
-    else if(params->is_pair()){
+    else if (params->is_pair()){
         // CASE 3: (lambda ( x y . z) (body))
             while(params->is_pair()){
                 if(params->car()->is_symbol()){

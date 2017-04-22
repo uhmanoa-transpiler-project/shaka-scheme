@@ -16,13 +16,7 @@ NodePtr Variable::evaluate(NodePtr list, EnvPtr env) {
             throw std::runtime_error("eval.Variable: variable is undefined");
             return nullptr;
         }
-        auto value = env->get_value(key);
-        if (value.type() == typeid(NodePtr)) {
-            return get<NodePtr>(value);
-        }
-        else {
-            return std::make_shared<DataNode>(value);
-        }
+        return env->get_value(key);
     } else {
         // If the first item is not a symbol, raise an exception
         throw std::runtime_error("eval.Variable: argument is not a Symbol");

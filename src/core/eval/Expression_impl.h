@@ -20,47 +20,48 @@ NodePtr Expression::evaluate(
 ) {
 
     shaka::Evaluator evaluator(node, env);
-   // std::cout << "@Expression" << std::endl;
+    std::cout << "@Expression" << std::endl;
     //evaluator.evaluate(shaka::eval::PrintTree<std::cout>());
-	
+
+
 	if (node->is_null()) {
 		std::cout << "@Expression ==> EmptyList (Literal)" << std::endl;
 		return node;
 	
 	}
 
-	else if (node->car()->is_symbol() && node->length() == 1) {
+	else if (node->is_symbol()) {
 		std::cout << "@Expression ==> Symbol" << std::endl;
 		return evaluator.evaluate(shaka::eval::Variable());
 	}
 
-	else if (node->car()->is_number() && node->length() == 1) {
+	else if (node->is_number()) {
 		std::cout << "@Expression ==> Number" << std::endl;
 		return node;
 	}
 
-	else if (node->car()->is_string() && node->length() == 1) {
+	else if (node->is_string()) {
 		std::cout << "@Expression ==> String" << std::endl;
 		return node;
 	}
 
-	else if (node->car()->is_boolean() && node->length() == 1) {
+	else if (node->is_boolean()) {
 		std::cout << "@Expression ==> Boolean" << std::endl;
 		return node;
 	}
 
-	else if (node->car()->get_data().type() == typeid(shaka::Procedure) && node->length() == 1) {
+	else if (node->get_data().type() == typeid(shaka::Procedure)) {
 		std::cout << "@Expression ==> Procedure" << std::endl;
 		return node;
 	}
 
-	else if (node->car()->is_symbol()) {
+	else if (node->is_symbol()) {
 		std::cout << "@Expression ==> Procedure Call" << std::endl;
 		return evaluator.evaluate(shaka::eval::ProcCall());
 	
 	}
 	
-	else if (node->car()->is_list()) {
+	else if (node->is_list()) {
 		std::cout << "@Expression ==> List" << std::endl;
 		shaka::Evaluator nested_evaluator(node->car(), env);
 		NodePtr inner_result = nested_evaluator.evaluate(shaka::eval::Expression());

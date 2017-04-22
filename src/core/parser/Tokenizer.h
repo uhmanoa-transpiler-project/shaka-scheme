@@ -1,7 +1,7 @@
 #ifndef SHAKA_PARSER_TOKENIZER_H
 #define SHAKA_PARSER_TOKENIZER_H
 
-#include "parser/Token.h"
+#include "core/parser/Token.h"
 
 #include <iostream>
 #include <string>

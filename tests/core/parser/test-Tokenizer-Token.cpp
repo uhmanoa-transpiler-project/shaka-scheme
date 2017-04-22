@@ -1,8 +1,8 @@
 #include <sstream>
 #include "gtest/gtest.h"
 
-#include "parser/Tokenizer.h"
-#include "parser/Token.h"
+#include "core/parser/Tokenizer.h"
+#include "core/parser/Token.h"
 
 TEST(Token_base, constructor) {
     shaka::Token token0(shaka::Token::Type::IDENTIFIER);

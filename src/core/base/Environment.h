@@ -15,10 +15,10 @@ namespace shaka {
 
 /// @note Value needs to be a pointer type.
 
-class Environment : public IEnvironment<shaka::Symbol, shaka::Data> {
+class Environment : public IEnvironment<shaka::Symbol, NodePtr> {
 public:
     using Key = shaka::Symbol;
-    using Value = shaka::Data;
+    using Value = NodePtr;
 
     Environment(std::shared_ptr<IEnvironment<Key, Value>> parent) :
         parent(parent) {}
@@ -72,13 +72,7 @@ public:
         return local;
     }
 
-    void print_bindings(std::ostream& out) {
-        out << "{";
-        for (const auto& it : local) {
-           out << " {" << it.first << " : " << it.second << "}";
-        }
-        out << " } \n";
-    }
+    void print_bindings(std::ostream& out);
 
     friend bool operator== (const shaka::Environment&, const shaka::Environment&);
     friend bool operator!= (const shaka::Environment&, const shaka::Environment&);
