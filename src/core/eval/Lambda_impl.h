@@ -8,7 +8,6 @@ namespace shaka {
 namespace eval {
 
 NodePtr Lambda::evaluate(NodePtr node, EnvPtr env) {
-   
 
     std::size_t fixed_arity =0;
     bool var_arity = false; 

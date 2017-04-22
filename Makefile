@@ -23,7 +23,7 @@ OBJ_FILES := $(addprefix obj/, $(notdir $(CPP_FILES:.cpp=.o)))
 ### Sometimes, header files are in other directories.
 ### This is where one might place those directory paths.
 TESTINCLUDEDIR = 
-INCLUDEDIR = -Isrc/
+INCLUDEDIR = -Isrc/shaka/ -Isrc/
 
 # These are for including the libraries you want to use.
 ### Ignore these for now; we have not covered libraries yet.

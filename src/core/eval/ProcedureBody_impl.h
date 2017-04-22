@@ -17,20 +17,22 @@ namespace eval {
 /// @brief returns a std::shared_ptr to the child node
 NodePtr ProcedureBody::evaluate(NodePtr node, EnvPtr env){
     std::cout << "@ProcedureBody" << std::endl;
-    // If the root node is LIST, that's right. It's a list of expressions
-    // to evaluate.
-    NodePtr expr = std::make_shared<shaka::DataNode>(node->get_data());
-    if (!node->is_null()) {
-        while(!(expr->cdr()->is_null())){
-            shaka::Evaluator evaluator ((*expr).car(), env);
+    // Iterate through the list of expressions in the body.
+    NodePtr it = node;
+    // First of all, the body must be valid.
+    if (!it->is_null()) {
+        // While we are not at the last expression, evaluate it.
+        while(!it->is_pair()){
+            std::cout << "@ProcedureBody.expr: " << *it->car() << std::endl;
+            shaka::Evaluator evaluator (it->car(), env);
             // Evaluate the expression.
             evaluator.evaluate(shaka::eval::Expression());
-            expr = (*expr).cdr();
+            it = it->cdr();
         }
-        std::cout << "@ProcedureBody:Arg(" << node->length()-1<< ")" << std::endl;
         // Return the result of evaluating the last expression
         // in the list of expressions.
-        shaka::Evaluator evaluator (expr, env);
+        std::cout << "@ProcedureBody.last_expr: " << *it->car() << std::endl;
+        shaka::Evaluator evaluator (it->car(), env);
         auto last_value_ptr = evaluator.evaluate(shaka::eval::Expression());
         return last_value_ptr;
         

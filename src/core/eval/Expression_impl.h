@@ -24,6 +24,7 @@ NodePtr Expression::evaluate(
     shaka::Evaluator evaluator(node, env);
     std::cout << "@Expression" << std::endl;
     //evaluator.evaluate(shaka::eval::PrintTree<std::cout>());
+    std::cout << "\t" << *node << std::endl; 
 
 
 	if (node->is_null()) {

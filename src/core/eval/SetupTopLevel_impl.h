@@ -33,21 +33,24 @@ NodePtr SetupTopLevel::evaluate(
     env->set_value(Symbol("quote"),
                    make_node(PrimitiveProcedure(shaka::proc::quote, 1)));
 
+    env->set_value(Symbol("lambda"),
+                   make_node(PrimitiveProcedure(shaka::proc::lambda, 2, true)));
+
     // Numbers Arithmetic section.
     env->set_value(Symbol("+"),
-                   make_node(PrimitiveProcedure(shaka::stdproc::add, 1, true)));
+                   make_node(NativeProcedure(shaka::stdproc::add, 1, true)));
 
     env->set_value(Symbol("-"),
-                   make_node(PrimitiveProcedure(shaka::stdproc::sub, 1, true)));
+                   make_node(NativeProcedure(shaka::stdproc::sub, 1, true)));
 
     env->set_value(Symbol("*"),
-                   make_node(PrimitiveProcedure(shaka::stdproc::mul, 1, true)));
+                   make_node(NativeProcedure(shaka::stdproc::mul, 1, true)));
 
     env->set_value(Symbol("/"),
-                   make_node(PrimitiveProcedure(shaka::stdproc::div, 1, true)));
+                   make_node(NativeProcedure(shaka::stdproc::div, 1, true)));
 
     env->set_value(Symbol("abs"),
-                   make_node(PrimitiveProcedure(shaka::stdproc::abs, 1)));
+                   make_node(NativeProcedure(shaka::stdproc::abs, 1)));
 
 
     env->print_bindings(std::cout);

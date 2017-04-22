@@ -44,6 +44,8 @@ public:
         return variable_arity;
     }
 
+    void                        print_body(std::ostream& out) const;
+
 
 private:
     std::shared_ptr<Environment>    parent_env;

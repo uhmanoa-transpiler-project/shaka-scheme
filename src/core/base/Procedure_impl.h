@@ -9,26 +9,35 @@
 
 namespace shaka {
 
+void
+Procedure::print_body(std::ostream& out) const {
+    out << *this->body_root;
+}
+
 std::vector<std::shared_ptr<DataNode>> 
 Procedure::call (std::vector<std::shared_ptr<DataNode>> v,
                  std::shared_ptr<Environment>           env) {
 
     // Turn off env unused warning
     static_cast<void>(env);
+    std::cout << "@Procedure.call" << std::endl;
     // Get the arguments, bind them without evaluating to the
     // names in the arguments subtree (the first child) of this
     // root node.
     auto args_list_root = this->body_root->car();
     auto curr_env       = this->curr_env;
+    std::cout << "args_list_root: " << *args_list_root << std::endl;
+    std::cout << "body_expressions: " << *this->body_root->cdr() << std::endl;
 
     /// For each child, verify it's a symbol.
     for (
         std::size_t i = 0;
-        i < this->body_root->length();
+        i < args_list_root->length();
         ++i
     ) {
         // Get the child node pointer.
         auto args_symbol_ptr = args_list_root->car();
+        std::cout << "Symbol(" << i << "): " << *args_symbol_ptr << std::endl;
         // If we have a symbol, bind it.
         if (args_symbol_ptr->is_symbol()) {
             Data symbol = args_symbol_ptr->get_data();
@@ -37,6 +46,7 @@ Procedure::call (std::vector<std::shared_ptr<DataNode>> v,
             curr_env->set_value(
                 shaka::get<shaka::Symbol>(symbol),
                 std::make_shared<DataNode>(value));
+            std::cout << get<Symbol>(symbol) << " : " << *make_node(value) << std::endl;
         } else {
             /// @todo Define better semantics for procedure call
             ///       failure.
@@ -44,7 +54,12 @@ Procedure::call (std::vector<std::shared_ptr<DataNode>> v,
             throw std::runtime_error("Procedure: argument list member node is not a Symbol");
             return std::vector<std::shared_ptr<DataNode>>{nullptr};
         }
-        args_list_root = args_list_root->cdr();
+        if (args_list_root->is_pair()) {
+            args_list_root = args_list_root->cdr();
+        }
+        else {
+            break;
+        }
     }
     // Setup an Evaluator on the current environment and
     // a copy of the body root node.
