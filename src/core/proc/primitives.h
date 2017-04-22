@@ -17,24 +17,40 @@ using Function = std::function<Args(Args, EnvPtr)>;
 
 Args define(Args l, EnvPtr e) {
     std::cout << "@proc.define" << std::endl;
-	return {shaka::Evaluator(l[0], e).evaluate(shaka::eval::Define())};	
+    auto args = make_node(DataNode::list());
+    for (auto it : l) {
+        args->append(DataNode::list(it));
+    }
+
+	return {shaka::Evaluator(args, e).evaluate(shaka::eval::Define())};	
 }
 
 Args quote(Args l, EnvPtr e) {
     std::cout << "@proc.quote" << std::endl;
-	return {shaka::Evaluator(l[0], e).evaluate(shaka::eval::Quote())};	
+    auto args = make_node(DataNode::list());
+    for (auto it : l) {
+        args->append(DataNode::list(it));
+    }
+	return {shaka::Evaluator(args, e).evaluate(shaka::eval::Quote())};	
 }
 
 Args variable(Args l, EnvPtr e) {
     std::cout << "@proc.variable" << std::endl;
-	return {shaka::Evaluator(l[0], e).evaluate(shaka::eval::Variable())};	
+    auto args = make_node(DataNode::list());
+    for (auto it : l) {
+        args->append(DataNode::list(it));
+    }
+	return {shaka::Evaluator(args, e).evaluate(shaka::eval::Variable())};	
 }
 
 Args lambda(Args l, EnvPtr e) {
     std::cout << "@proc.lambda" << std::endl;
-	return {shaka::Evaluator(l[0], e).evaluate(shaka::eval::Lambda())};
+    auto args = make_node(DataNode::list());
+    for (auto it : l) {
+        args->append(DataNode::list(it));
+    }
+	return {shaka::Evaluator(args, e).evaluate(shaka::eval::Lambda())};
 }
-
 } // namespace shaka 
 } // namespace proc  
 #endif // SHAKA_CORE_PROC_PRIMITIVES

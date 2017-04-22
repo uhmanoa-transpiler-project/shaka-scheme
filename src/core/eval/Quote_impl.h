@@ -15,7 +15,7 @@ NodePtr Quote::evaluate(NodePtr list, EnvPtr env) {
     }
     std::cout << "@Quote" << std::endl;
     std::cout << *list << std::endl;
-    return list;
+    return list->car();
 }
 
 } // namespace eval

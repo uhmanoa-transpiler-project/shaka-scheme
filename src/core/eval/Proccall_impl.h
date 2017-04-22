@@ -106,7 +106,7 @@ namespace eval {
                 //for (std::size_t i = result.size(); i < 0+2; i--) {
                 //    *result_list = DataNode::cons(*result[i], *result_list);
                 //}
-                std::cout << *result_list << std::endl;
+                //std::cout << *result_list << std::endl;
 
                 return result_list;
 

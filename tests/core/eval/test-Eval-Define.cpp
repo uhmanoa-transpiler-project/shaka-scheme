@@ -69,6 +69,32 @@ TEST(Eval_Define, evaluator_strategy) {
         ASSERT_EQ(val->cdr()->car()->get_data(), Data(Number(2)));
         ASSERT_EQ(val->cdr()->cdr()->car()->get_data(), Data(Number(3)));
     }
+
+}
+
+TEST(Eval_Define, shadow_keyword_define) {
+    auto expr = make_node(DataNode::list(
+        Symbol("define"),
+        Symbol("define"),
+        Number(1)
+    ));
+    auto env = std::make_shared<Environment>(nullptr);
+    Evaluator setup(nullptr, env);
+    setup.evaluate(eval::SetupTopLevel());
+
+    auto before = env->get_value(Symbol("define"));
+    ASSERT_TRUE(before->is_primitive_procedure());
+
+    Evaluator eval(expr, env);
+    ASSERT_EQ(nullptr, eval.evaluate(eval::Expression()));
+
+    auto after = env->get_value(Symbol("define"));
+    std::cout << *after << std::endl;
+    ASSERT_TRUE(after->is_number());
+
+    ASSERT_THROW({
+        eval.evaluate(eval::Expression());
+    }, std::runtime_error);
 }
 
 int main(int argc, char** argv) {

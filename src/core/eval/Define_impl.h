@@ -9,6 +9,7 @@ namespace eval {
 
 NodePtr Define::evaluate(NodePtr list, EnvPtr env) {
     std::cout << "@Define" << std::endl;
+    std::cout << *list << std::endl;
     if (!list->is_list()) {
         throw std::runtime_error("eval.Define: argument is not a list");
         return nullptr;
@@ -27,6 +28,7 @@ NodePtr Define::evaluate(NodePtr list, EnvPtr env) {
         auto evaluated = Evaluator(value, env).evaluate(eval::Expression());
         std::cout << "Post_evaluation: " << *evaluated << std::endl;
         env->set_value(key, evaluated);
+        std::cout << "Key:" << key << " | Value: " << *env->get_value(key) << std::endl;
     } else {
         // If the first item is not a symbol, raise an exception
         throw std::runtime_error("eval.Define: expected a Symbol as identifier");
