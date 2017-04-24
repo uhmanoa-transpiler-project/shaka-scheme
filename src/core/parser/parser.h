@@ -19,25 +19,66 @@ bool parse(
 
 
     try {
+        /*
         while(in.peek().type != shaka::Token::Type::END_OF_FILE) {
+        */
             switch(in.peek().type) {
 
+                case shaka::Token::Type::CHARACTER:
+                case shaka::Token::Type::STRING:
+                    node->append(DataNode::list(String(in.get().get_string())));
+                    break;
+
+                case shaka::Token::Type::IDENTIFIER:
+                    node->append(DataNode::list(Symbol(in.get().get_string())));
+                    break;
+
                 case shaka::Token::Type::QUOTE:
+                    node->append(DataNode::list(Symbol("quote")));
                     in.get();
-                    // TODO:
+                    break;
+
+                case shaka::Token::Type::BOOLEAN_TRUE:
+                    node->append(DataNode::list(Boolean(true)));
+                    in.get();
+                    break;
+
+                case shaka::Token::Type::BOOLEAN_FALSE:
+                    node->append(DataNode::list(Boolean(false)));
+                    in.get();
+                    break;
+
+                case shaka::Token::Type::NUMBER:
+                    node->append(
+                        DataNode::list(
+                            Number(
+                                stod(in.get().get_string())
+                            )
+                        )
+                    );
                     break;
 
                 case shaka::Token::Type::PAREN_START:
-                    if(node == nullptr) node = list(in);
-                    else                node.append(list(in));
+                    node->append(DataNode::list(list(in)));
                     break;
-            }
+
+                case shaka::Token::Type::PERIOD:
+                    node->append(cons(in));
+                    break;
+                    
+                default:
+                    throw std::runtime_error("LIST: Got to default");
+                    break; 
+            } // end switch
+        /*
         }
+        */
 
     } catch (std::runtime_error& e) {
         std::cout << e.what() << std::endl;
         return false;
     }
+    return true;
 }
 
 
