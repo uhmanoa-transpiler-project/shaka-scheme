@@ -20,14 +20,14 @@ Procedure::call (std::vector<std::shared_ptr<DataNode>> v,
 
     // Turn off env unused warning
     static_cast<void>(env);
-    std::cout << "@Procedure.call" << std::endl;
+    //std::cout << "@Procedure.call" << std::endl;
     // Get the arguments, bind them without evaluating to the
     // names in the arguments subtree (the first child) of this
     // root node.
     auto args_list_root = this->body_root->car();
     auto curr_env       = this->curr_env;
-    std::cout << "args_list_root: " << *args_list_root << std::endl;
-    std::cout << "body_expressions: " << *this->body_root->cdr() << std::endl;
+    //std::cout << "args_list_root: " << *args_list_root << std::endl;
+    //std::cout << "body_expressions: " << *this->body_root->cdr() << std::endl;
 
     /// For each child, verify it's a symbol.
     for (
@@ -37,7 +37,7 @@ Procedure::call (std::vector<std::shared_ptr<DataNode>> v,
     ) {
         // Get the child node pointer.
         auto args_symbol_ptr = args_list_root->car();
-        std::cout << "Symbol(" << i << "): " << *args_symbol_ptr << std::endl;
+        //std::cout << "Symbol(" << i << "): " << *args_symbol_ptr << std::endl;
         // If we have a symbol, bind it.
         if (args_symbol_ptr->is_symbol()) {
             Data symbol = args_symbol_ptr->get_data();
@@ -46,7 +46,7 @@ Procedure::call (std::vector<std::shared_ptr<DataNode>> v,
             curr_env->set_value(
                 shaka::get<shaka::Symbol>(symbol),
                 std::make_shared<DataNode>(value));
-            std::cout << get<Symbol>(symbol) << " : " << *make_node(value) << std::endl;
+            //std::cout << get<Symbol>(symbol) << " : " << *make_node(value) << std::endl;
         } else {
             /// @todo Define better semantics for procedure call
             ///       failure.
@@ -63,6 +63,8 @@ Procedure::call (std::vector<std::shared_ptr<DataNode>> v,
     }
     // Setup an Evaluator on the current environment and
     // a copy of the body root node.
+    //parent_env->print_bindings(std::cout);
+    //curr_env->print_bindings(std::cout);
     shaka::Evaluator evaluator(this->body_root->cdr(), curr_env);
 
     // Evaluate the body of the procedure on the right side.

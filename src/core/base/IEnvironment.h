@@ -27,6 +27,8 @@ public:
     ///        in the Environment.
     virtual bool contains(const Key& key) = 0;
 
+    virtual bool is_defined(const Key& key) = 0;
+
     /// @brief Returns a reference to the value refered
     ///        to by the key. Note that the key must exist,
     ///        otherwise, it throws an exception. Should be

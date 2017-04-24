@@ -30,7 +30,7 @@ public:
 			throw std::runtime_error("PrimitiveProcedure.call: incorrect number of arguments");
 		}
 		else {
-            std::cout << "@PrimtiveProcedure.call" << std::endl;
+            //std::cout << "@PrimtiveProcedure.call" << std::endl;
 			return func(v, env);
 		}
 	

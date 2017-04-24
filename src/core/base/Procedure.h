@@ -13,13 +13,12 @@ namespace shaka {
 class Procedure : public IProcedure {
 public:
 
-    Procedure(std::shared_ptr<Environment> parent_env,
+    Procedure(std::shared_ptr<Environment> p_env,
               std::shared_ptr<DataNode>                 body_root,
               std::size_t                               fixed_arity,
               bool                                      variable_arity = false) :
-        parent_env(parent_env),
-        curr_env(std::make_shared<shaka::Environment>(
-            parent_env)),
+        parent_env(p_env),
+        curr_env(std::make_shared<shaka::Environment>(p_env)),
         body_root(body_root),
         fixed_arity(fixed_arity),
         variable_arity(variable_arity) {}

@@ -12,8 +12,11 @@ NodePtr Variable::evaluate(NodePtr list, EnvPtr env) {
         // Get the key and the value, and store in the environment
         auto key = get<Symbol>(list->get_data());
         // If it doesn't contain a key, raise an exception.
-        if (!env->contains(key)) {
-            throw std::runtime_error("eval.Variable: variable is undefined");
+        if (!env->is_defined(key)) {
+            throw std::runtime_error(
+                std::string("eval.Variable: variable `") +
+                key.get_value() +
+                std::string("` is undefined"));
             return nullptr;
         }
         return env->get_value(key);

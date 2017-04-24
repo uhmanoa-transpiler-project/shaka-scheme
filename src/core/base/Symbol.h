@@ -26,7 +26,7 @@ private:
 };
 
 bool operator<(const Symbol& n1, const Symbol& n2){
-	return n1.value[0] < n2.value[0];
+	return n1.value < n2.value;
 }
 
 

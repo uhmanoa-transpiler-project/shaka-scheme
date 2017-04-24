@@ -59,6 +59,18 @@ public:
         return local.find(key) != local.end();
     }
 
+    virtual bool is_defined(const Key& key) {
+        if (local.find(key) != local.end()) {
+            return true;
+        }
+        else if (this->parent != nullptr) {
+            return this->parent->is_defined(key);
+        }
+        else {
+            return false;
+        }
+    }
+
     virtual std::vector<Key> get_keys() override {
         std::vector<Key> v;
         v.reserve(local.size());

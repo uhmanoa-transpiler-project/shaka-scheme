@@ -28,13 +28,13 @@ int main() {
             std::cout << "\n>>> " << std::flush;
             if (parser::parse<void>(tokenizer, expr)) {
 
-                std::cout << ">>> Parsed." << std::endl;
+                std::cout << "> Parsed." << std::endl;
                 std::cout << *expr->car() << std::endl;
 
-                std::cout << ">>> Evaluating..." << std::endl;
+                std::cout << "> Evaluating..." << std::endl;
                 Evaluator eval(expr->car(), global_env);
                 auto result = eval.evaluate(eval::Expression());
-                std::cout << ">>> Done." << std::endl;
+                std::cout << "> Done." << std::endl;
 
                 if (result) { std::cout << *result << std::endl; }
                 else {        std::cout << std::endl;           }

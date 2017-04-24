@@ -13,8 +13,8 @@ NodePtr Quote::evaluate(NodePtr list, EnvPtr env) {
         throw std::runtime_error("eval.Quote: argument is not a list");
         return nullptr;
     }
-    std::cout << "@Quote" << std::endl;
-    std::cout << *list << std::endl;
+    //std::cout << "@Quote" << std::endl;
+    //std::cout << *list << std::endl;
     return list->car();
 }
 

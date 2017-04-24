@@ -22,62 +22,66 @@ NodePtr Expression::evaluate(
 ) {
 
     shaka::Evaluator evaluator(node, env);
-    std::cout << "@Expression" << std::endl;
-    //evaluator.evaluate(shaka::eval::PrintTree<std::cout>());
-    std::cout << "\t" << *node << std::endl; 
+    //std::cout << "@Expression" << std::endl;
+    //std::cout << "\t" << *node << std::endl; 
+
+    if (node == nullptr) {
+        throw std::runtime_error("eval.Expression: node is nullptr");
+        return nullptr;
+    }
 
 
 	if (node->is_null()) {
-		std::cout << "@Expression ==> EmptyList (Literal)" << std::endl;
+		//std::cout << "@Expression ==> EmptyList (Literal)" << std::endl;
 		return node;
 	
 	}
 
 	else if (node->is_symbol()) {
-		std::cout << "@Expression ==> Symbol" << std::endl;
+		//std::cout << "@Expression ==> Symbol" << std::endl;
 		return evaluator.evaluate(shaka::eval::Variable());
 	}
 
 	else if (node->is_number()) {
-		std::cout << "@Expression ==> Number" << std::endl;
+		//std::cout << "@Expression ==> Number" << std::endl;
 		return node;
 	}
 
 	else if (node->is_string()) {
-		std::cout << "@Expression ==> String" << std::endl;
+		//std::cout << "@Expression ==> String" << std::endl;
 		return node;
 	}
 
 	else if (node->is_boolean()) {
-		std::cout << "@Expression ==> Boolean" << std::endl;
+		//std::cout << "@Expression ==> Boolean" << std::endl;
 		return node;
 	}
 
 	else if (node->is_scheme_procedure()) {
-		std::cout << "@Expression ==> Procedure" << std::endl;
+		//std::cout << "@Expression ==> Procedure" << std::endl;
 		return node;
 	}
 
     else if (node->is_native_procedure()) {
-        std::cout << "@Expression ==> NativeProcedure" << std::endl;
+        //std::cout << "@Expression ==> NativeProcedure" << std::endl;
         return node;
     }
 
     else if (node->is_primitive_procedure()) {
-        std::cout << "@Expression ==> PrimitiveProcedure" << std::endl;
+        //std::cout << "@Expression ==> PrimitiveProcedure" << std::endl;
         return node;
     }
 
 	else if (node->is_list()) {
-		std::cout << "@Expression ==> List" << std::endl;
-        std::cout << "node: " << *node << std::endl;
+		//std::cout << "@Expression ==> List" << std::endl;
+        //std::cout << "node: " << *node << std::endl;
 		shaka::Evaluator first_evaluator(node->car(), env);
-        std::cout << "node->car: " << *node->car() << std::endl;
-        std::cout << "node->cdr: " << *node->cdr() << std::endl;
+        //std::cout << "node->car: " << *node->car() << std::endl;
+        //std::cout << "node->cdr: " << *node->cdr() << std::endl;
 		NodePtr inner_result = first_evaluator.evaluate(shaka::eval::Expression());
         if (inner_result->is_procedure()) {
             NodePtr new_node = std::make_shared<DataNode>(*inner_result, *node->cdr());
-            std::cout << "new node: " << *new_node << std::endl;
+            //std::cout << "new node: " << *new_node << std::endl;
             shaka::Evaluator call_eval(new_node, env);
             return call_eval.evaluate(shaka::eval::ProcCall());
         }

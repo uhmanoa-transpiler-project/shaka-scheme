@@ -19,7 +19,7 @@ NodePtr SetupTopLevel::evaluate(
     NodePtr node,
     EnvPtr env
 ) {
-    std::cout << "@SetupTopLevel" << std::endl;
+    //std::cout << "@SetupTopLevel" << std::endl;
 
     // Turn off node unused warning.
     static_cast<void>(node);
@@ -35,6 +35,9 @@ NodePtr SetupTopLevel::evaluate(
 
     env->set_value(Symbol("lambda"),
                    make_node(PrimitiveProcedure(shaka::proc::lambda, 2, true)));
+
+    env->set_value(Symbol("if"),
+                   make_node(PrimitiveProcedure(shaka::proc::if_expr, 2, true)));
 
     // Numbers Arithmetic section.
     env->set_value(Symbol("+"),
@@ -53,7 +56,7 @@ NodePtr SetupTopLevel::evaluate(
                    make_node(NativeProcedure(shaka::stdproc::abs, 1)));
 
 
-    env->print_bindings(std::cout);
+    //env->print_bindings(std::cout);
 
     return nullptr;
 }

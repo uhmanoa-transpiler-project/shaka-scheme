@@ -8,8 +8,8 @@ namespace shaka {
 namespace eval {
 
 NodePtr Define::evaluate(NodePtr list, EnvPtr env) {
-    std::cout << "@Define" << std::endl;
-    std::cout << *list << std::endl;
+    //std::cout << "@Define" << std::endl;
+    //std::cout << *list << std::endl;
     if (!list->is_list()) {
         throw std::runtime_error("eval.Define: argument is not a list");
         return nullptr;
@@ -23,12 +23,12 @@ NodePtr Define::evaluate(NodePtr list, EnvPtr env) {
         // Get the key and the value, and store in the environment
         auto key = get<Symbol>(list->car()->get_data());
         auto value = list->cdr()->car();
-        std::cout << "Pre-evaluaton: " << *value << std::endl;
+        //std::cout << "Pre-evaluaton: " << *value << std::endl;
         // Evaluate the value with the expression, and
         auto evaluated = Evaluator(value, env).evaluate(eval::Expression());
-        std::cout << "Post_evaluation: " << *evaluated << std::endl;
+        //std::cout << "Post_evaluation: " << *evaluated << std::endl;
         env->set_value(key, evaluated);
-        std::cout << "Key:" << key << " | Value: " << *env->get_value(key) << std::endl;
+        //std::cout << "Key:" << key << " | Value: " << *env->get_value(key) << std::endl;
     } else {
         // If the first item is not a symbol, raise an exception
         throw std::runtime_error("eval.Define: expected a Symbol as identifier");

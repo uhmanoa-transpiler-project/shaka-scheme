@@ -16,14 +16,15 @@ namespace eval {
 
 /// @brief returns a std::shared_ptr to the child node
 NodePtr ProcedureBody::evaluate(NodePtr node, EnvPtr env){
-    std::cout << "@ProcedureBody" << std::endl;
+    //std::cout << "@ProcedureBody" << std::endl;
     // Iterate through the list of expressions in the body.
     NodePtr it = node;
+    //env->print_bindings(std::cout);
     // First of all, the body must be valid.
     if (!it->is_null()) {
         // While we are not at the last expression, evaluate it.
         while(!it->is_pair()){
-            std::cout << "@ProcedureBody.expr: " << *it->car() << std::endl;
+            //std::cout << "@ProcedureBody.expr: " << *it->car() << std::endl;
             shaka::Evaluator evaluator (it->car(), env);
             // Evaluate the expression.
             evaluator.evaluate(shaka::eval::Expression());
@@ -31,7 +32,7 @@ NodePtr ProcedureBody::evaluate(NodePtr node, EnvPtr env){
         }
         // Return the result of evaluating the last expression
         // in the list of expressions.
-        std::cout << "@ProcedureBody.last_expr: " << *it->car() << std::endl;
+        //std::cout << "@ProcedureBody.last_expr: " << *it->car() << std::endl;
         shaka::Evaluator evaluator (it->car(), env);
         auto last_value_ptr = evaluator.evaluate(shaka::eval::Expression());
         return last_value_ptr;
