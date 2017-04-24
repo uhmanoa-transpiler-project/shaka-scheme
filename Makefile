@@ -48,10 +48,10 @@ TEST_FLAGS := -Wall -Wextra -pedantic --std=c++11 -g \
 	    run clean-test run-test docs test-edit
 
 # The default rule to be build when just `make` is run.
-all: bin/main
+all: bin/repl
 
 # Build the main executable and place inside the (bin)ary directory..
-bin/main: $(OBJ_FILES)
+bin/repl: ./src/repl/main.cpp
 	$(CXX) -o $@ $^ $(CXX_FLAGS)
 
 # A rule to build all the object files from the source files.
@@ -75,7 +75,7 @@ clean-tests:
 	rm -rf tests/**/*.out
 
 run:
-	cd bin; ./main; cd ../
+	cd bin; ./repl; cd ../
 
 docs: $(CPP_FILES)
 	cd docs; doxygen ../doxygen_config_file; cd ../
