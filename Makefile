@@ -60,8 +60,7 @@ obj/%.o: src/%.cpp
 
 # A POSIX-compliant clean command
 clean: 
-	rm obj/*.o
-	rm bin/main
+	rm bin/repl
 
 clean-all: clean clean-tests clean-docs clean-tests-docs
 

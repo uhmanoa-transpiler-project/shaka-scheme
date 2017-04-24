@@ -19,9 +19,19 @@ class Tokenizer {
 private:
     std::istream&     in;
     std::deque<Token> tokens;
+    bool              is_stopped;
 public:
     Tokenizer (std::istream& in) :
-        in(in) {}
+        in(in),
+        is_stopped(false) {}
+
+    void stop () {
+        is_stopped = true;
+    }
+
+    bool is_done () const {
+        return is_stopped;
+    }
 
     Token get () {
         if (!tokens.empty()) {

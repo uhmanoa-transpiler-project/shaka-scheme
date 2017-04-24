@@ -5,6 +5,7 @@
 #include <exception>
 #include "core/parser/primitives.h"
 #include "core/parser/list.h"
+#include "core/parser/exception.h"
 
 namespace shaka {
 namespace parser {
@@ -22,7 +23,14 @@ bool parse(
         /*
         while(in.peek().type != shaka::Token::Type::END_OF_FILE) {
         */
+        if (in.is_done()) {
+            throw shaka::parser::end();
+        }
             switch(in.peek().type) {
+                case shaka::Token::Type::END_OF_FILE:
+                    in.stop();
+                    throw shaka::parser::end();
+                    break;
 
                 case shaka::Token::Type::CHARACTER:
                 case shaka::Token::Type::STRING:
@@ -30,6 +38,11 @@ bool parse(
                     break;
 
                 case shaka::Token::Type::IDENTIFIER:
+                    
+                    if (in.peek().str == "$quit") {
+                        in.unget(shaka::Token(shaka::Token::Type::END_OF_FILE));
+                        return parse<void>(in, node);
+                    }
                     node->append(DataNode::list(Symbol(in.get().get_string())));
                     break;
 
