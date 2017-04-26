@@ -6,6 +6,12 @@
 namespace shaka {
 namespace parser {
 
+template <typename T>
+bool parse(
+    InputStream&    in,
+    NodePtr         node
+);
+
 DataNode cons(
     InputStream& in
 );
@@ -37,8 +43,16 @@ DataNode list(
                 break;
 
             case shaka::Token::Type::QUOTE:
-                node.append(DataNode::list(Symbol("quote")));
-                in.get();
+                {
+                    in.get();
+                    auto quote_expr = make_node(DataNode::list(Symbol("quote")));
+                    if(parse<void>(in, quote_expr)) {
+                        node.append(DataNode::list(quote_expr));
+                    }
+                    else {
+                        throw std::runtime_error("List: Invalid quote");
+                    }
+                }
                 break;
 
             case shaka::Token::Type::BOOLEAN_TRUE:
@@ -52,20 +66,22 @@ DataNode list(
                 break;
 
             case shaka::Token::Type::NUMBER:
-                if(in.peek().get_string().find(".") != std::string::npos) {
-                    node.append( DataNode::list(Number(stod(in.peek().get_string()))) );
+                {
+                    std::string numberStr = in.get().get_string();
+
+                    if(numberStr.find(".") != std::string::npos) {
+                        node.append( DataNode::list(Number(stod(numberStr))) );
+                    }
+                    else if(numberStr.find("/") != std::string::npos) {
+                        int index = numberStr.find("/");
+                        int num   = stoi( numberStr.substr(0, index) );
+                        int den   = stoi( numberStr.substr(index + 1, numberStr.size() - index) );
+                        node.append( DataNode::list(Number(num, den)) );
+                    }
+                    else {
+                        node.append( DataNode::list(Number(stoi(numberStr))) );
+                    }
                 }
-                else if(in.peek().get_string().find("/") != std::string::npos) {
-                    int strSize = in.peek().get_string().size();
-                    int index   = in.peek().get_string().find("/");
-                    int num = stoi( in.peek().get_string().substr(0, index) );
-                    int den = stoi( in.peek().get_string().substr(index + 1, strSize - index) );
-                    node.append( DataNode::list(Number(num, den)) );
-                }
-                else {
-                    node.append( DataNode::list(Number(stoi(in.peek().get_string()))) );
-                }
-                in.get();
                 break;
 
             case shaka::Token::Type::PAREN_START:
