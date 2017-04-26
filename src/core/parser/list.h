@@ -52,13 +52,20 @@ DataNode list(
                 break;
 
             case shaka::Token::Type::NUMBER:
-                node.append(
-                    DataNode::list(
-                        Number(
-                            stod(in.get().get_string())
-                        )
-                    )
-                );
+                if(in.peek().get_string().find(".") != std::string::npos) {
+                    node.append( DataNode::list(Number(stod(in.peek().get_string()))) );
+                }
+                else if(in.peek().get_string().find("/") != std::string::npos) {
+                    int strSize = in.peek().get_string().size();
+                    int index   = in.peek().get_string().find("/");
+                    int num = stoi( in.peek().get_string().substr(0, index) );
+                    int den = stoi( in.peek().get_string().substr(index + 1, strSize - index) );
+                    node.append( DataNode::list(Number(num, den)) );
+                }
+                else {
+                    node.append( DataNode::list(Number(stoi(in.peek().get_string()))) );
+                }
+                in.get();
                 break;
 
             case shaka::Token::Type::PAREN_START:

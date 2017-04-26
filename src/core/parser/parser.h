@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <exception>
+#include <string>
 #include "core/parser/primitives.h"
 #include "core/parser/list.h"
 #include "core/parser/exception.h"
@@ -62,13 +63,27 @@ bool parse(
                     break;
 
                 case shaka::Token::Type::NUMBER:
-                    node->append(
-                        DataNode::list(
-                            Number(
-                                stod(in.get().get_string())
-                            )
-                        )
-                    );
+                    // TODO: I am unable to use std::string without the program throwing
+                    //       errors on compilation. The below statement throws an error.
+                    //       Being able to create string objects would simplify this code
+                    //       block by several lines.
+                    //
+                    //       std::string testStr;
+                   
+                    if(in.peek().get_string().find(".") != std::string::npos) {
+                        node->append( DataNode::list(Number(stod(in.peek().get_string()))) );
+                    }
+                    else if(in.peek().get_string().find("/") != std::string::npos) {
+                        int strSize = in.peek().get_string().size();
+                        int index   = in.peek().get_string().find("/");
+                        int num = stoi( in.peek().get_string().substr(0, index) );
+                        int den = stoi( in.peek().get_string().substr(index + 1, strSize - index) );
+                        node->append( DataNode::list(Number(num, den)) );
+                    }
+                    else {
+                        node->append( DataNode::list(Number(stoi(in.peek().get_string()))) );
+                    }
+                    in.get();
                     break;
 
                 case shaka::Token::Type::PAREN_START:
