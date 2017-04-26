@@ -6,6 +6,12 @@
 namespace shaka {
 namespace parser {
 
+template <typename T>
+bool parse(
+    InputStream&    in,
+    NodePtr         node
+);
+
 DataNode cons(
     InputStream& in
 );
@@ -37,8 +43,16 @@ DataNode list(
                 break;
 
             case shaka::Token::Type::QUOTE:
-                node.append(DataNode::list(Symbol("quote")));
-                in.get();
+                {
+                    in.get();
+                    auto quote_expr = make_node(DataNode::list(Symbol("quote")));
+                    if(parse<void>(in, quote_expr)) {
+                        node.append(DataNode::list(quote_expr));
+                    }
+                    else {
+                        throw std::runtime_error("List: Invalid quote");
+                    }
+                }
                 break;
 
             case shaka::Token::Type::BOOLEAN_TRUE:
@@ -52,13 +66,22 @@ DataNode list(
                 break;
 
             case shaka::Token::Type::NUMBER:
-                node.append(
-                    DataNode::list(
-                        Number(
-                            stod(in.get().get_string())
-                        )
-                    )
-                );
+                {
+                    std::string numberStr = in.get().get_string();
+
+                    if(numberStr.find(".") != std::string::npos) {
+                        node.append( DataNode::list(Number(stod(numberStr))) );
+                    }
+                    else if(numberStr.find("/") != std::string::npos) {
+                        int index = numberStr.find("/");
+                        int num   = stoi( numberStr.substr(0, index) );
+                        int den   = stoi( numberStr.substr(index + 1, numberStr.size() - index) );
+                        node.append( DataNode::list(Number(num, den)) );
+                    }
+                    else {
+                        node.append( DataNode::list(Number(stoi(numberStr))) );
+                    }
+                }
                 break;
 
             case shaka::Token::Type::PAREN_START:
