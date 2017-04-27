@@ -78,6 +78,9 @@ Args neg_numbers(Args args, EnvPtr env) {
 
 // (- z1 z2 ...)
 Args sub_numbers(Args args, EnvPtr env) {
+	if (args[0]->get_data().type() != typeid(shaka::Number)) {
+		throw std::runtime_error("STDPROC: Incorrect argument type to Native Procedure: -");
+	}
 	shaka::Number result = shaka::get<shaka::Number>(args[0]->get_data());
 
     if (args.size() == 1) {
@@ -99,6 +102,9 @@ Args sub_numbers(Args args, EnvPtr env) {
 
 // (/ z1)
 Args reciprocal_numbers(Args args, EnvPtr env) {
+	if (args[0]->get_data().type() != typeid(shaka::Number)) {
+		throw std::runtime_error("STDPROC: Incorrect argument type to Native Procedure: /");
+	}
 	shaka::Number result = shaka::Number(1);
 	result = result / shaka::get<shaka::Number>(args[0]->get_data());
 	Args result_vector;
@@ -112,6 +118,9 @@ Args reciprocal_numbers(Args args, EnvPtr env) {
 
 // (/ z1 z2 ...)
 Args div_numbers(Args args, EnvPtr env) {
+	if (args[0]->get_data().type() != typeid(shaka::Number)) {
+		throw std::runtime_error("STDPROC: Incorrect argument type to Native Procedure: /");
+	}
 	shaka::Number result = shaka::get<shaka::Number>(args[0]->get_data());
 
 	for (std::size_t i = 1; i < args.size(); i++) {
@@ -128,6 +137,9 @@ Args div_numbers(Args args, EnvPtr env) {
 
 // (abs x)
 Args abs_numbers(Args args, EnvPtr env) {
+	if (args[0]->get_data().type() != typeid(shaka::Number)) {
+		throw std::runtime_error("STDPROC: Incorrect argument type to Native Procedure: abs");
+	}
 
 	shaka::Number result = shaka::Number(0);
 	
@@ -154,6 +166,9 @@ Args abs_numbers(Args args, EnvPtr env) {
 
 // (floor/ n1 n2)
 Args floor_div_numbers(Args args, EnvPtr env) {
+	if (args[0]->get_data().type() != typeid(shaka::Number)) {
+		throw std::runtime_error("STDPROC: Incorrect argument type to Native Procedure: floor/");
+	}
 
 	shaka::Number n1 = shaka::get<shaka::Number>(args[0]->get_data());
 	shaka::Number n2 = shaka::get<shaka::Number>(args[1]->get_data());
@@ -188,7 +203,9 @@ Args floor_div_numbers(Args args, EnvPtr env) {
 
 // (floor-quotient n1 n2)
 Args floor_quotient_numbers(Args args, EnvPtr env) {
-		
+	if (args[0]->get_data().type() != typeid(shaka::Number)) {
+		throw std::runtime_error("STDPROC: Incorrect argument type to Native Procedure: floor-quotient");
+	}
 
 	shaka::Number n1 = shaka::get<shaka::Number>(args[0]->get_data());
 	shaka::Number n2 = shaka::get<shaka::Number>(args[1]->get_data());
@@ -222,6 +239,9 @@ Args floor_quotient_numbers(Args args, EnvPtr env) {
 
 // (floor-remainder n1 n2)
 Args floor_remainder_numbers(Args args, EnvPtr env) {
+	if (args[0]->get_data().type() != typeid(shaka::Number)) {
+		throw std::runtime_error("STDPROC: Incorrect argument type to Native Procedure: floor-remainder")
+	}
 	shaka::Number n1 = shaka::get<shaka::Number>(args[0]->get_data());
 	shaka::Number n2 = shaka::get<shaka::Number>(args[1]->get_data());
 	shaka::Number r;
@@ -639,69 +659,28 @@ Args log_numbers(Args args, EnvPtr env) {
 
 
 // (log z1 z2)
-/*
 Args log_n_numbers(Args args, EnvPtr env) {
-	shaka::Number n1 = shaka::get<shaka::Number>(args[0]->get_data());
-	shaka::Number n2 = shaka::get<shaka::Number>(args[1]->get_data());
+	Args unary_log_arg1 = {args[0]};
+	Args unary_log_arg2 = {args[1]};
 
+	Args unary_log_res1 = log(unary_log_arg1, env);
+	Args unary_log_res2 = log(unary_log_arg2, env);
 
-	if (n1.get_value().type() == typeid(shaka::Integer)) {
-		if (n2.get_value().type() == typeid(shaka::Integer)) {
-		
-			shaka::Number result(log(boost::get<shaka::Integer>(n1.get_value()).get_value())/
-					log(boost::get<shaka::Integer>(n2.get_value()).get_value()));
-			shaka::Number truncated_result(
-					trunc(
-						boost::get<shaka::Real>(
-							result.get_value()).get_value() * 100000000000) / 100000000000);
-			NodePtr result_value = std::make_shared<shaka::DataNode>(truncated_result);
-			Args result_vector = {result_value};
-			return result_vector;
-			
-		
-		}
-		shaka::Number result(log(boost::get<shaka::Integer>(n1.get_value()).get_value()));
-		shaka::Number truncated_result(
-				trunc(
-					boost::get<shaka::Real>(
-						result.get_value()).get_value() * 100000000000) / 100000000000);
-		NodePtr result_value = std::make_shared<shaka::DataNode>(truncated_result);
-		Args result_vector = {result_value};
-		return result_vector;
-	}
-	else if (n1.get_value().type() == typeid(shaka::Real)) {
-		shaka::Number result(log(boost::get<shaka::Real>(n1.get_value()).get_value()));
-		shaka::Number truncated_result(
-				trunc(
-					boost::get<shaka::Real>(
-						result.get_value()).get_value() * 100000000000) / 100000000000);
-		NodePtr result_value = std::make_shared<shaka::DataNode>(truncated_result);
-		Args result_vector = {result_value};
-		return result_vector;
-	}
-	else {
-		int numerator = boost::get<shaka::Rational>(n1.get_value()).get_numerator();
-		int denominator = boost::get<shaka::Rational>(n1.get_value()).get_denominator();
-		shaka::Number result(log((double) numerator / (double) denominator));	
-		shaka::Number truncated_result(
-				trunc(
-					boost::get<shaka::Real>(
-						result.get_value()).get_value() * 100000000000) / 100000000000);
-		NodePtr result_value = std::make_shared<shaka::DataNode>(truncated_result);
-		Args result_vector = {result_value};
-		return result_vector;
-	}
+	shaka::Number log_n1 = shaka::get<shaka::Number>(unary_log_res1[0]->get_data());
+	shaka::Number log_n2 = shaka::get<shaka::Number>(unary_log_res2[0]->get_data());
+
+	shaka::Number result = log_n1 / log_n2;
 
 	shaka::Number truncated_result(
 			trunc(
 				boost::get<shaka::Real>(
 					result.get_value()).get_value() * 100000000000) / 100000000000);
-
+	
 	NodePtr result_value = std::make_shared<shaka::DataNode>(truncated_result);
 	Args result_vector = {result_value};
 	return result_vector;
+
 }
-*/
 // (sin z)
 // (cos z)
 // (tan z)
@@ -749,6 +728,7 @@ Function truncate = impl::truncate_numbers;
 Function round = impl::round_numbers;
 Function exp = impl::exp_numbers;
 Function log = impl::log_numbers;
+Function logn = impl::log_n_numbers;
 } // namespace stdproc
 } // namespace shaka
 
