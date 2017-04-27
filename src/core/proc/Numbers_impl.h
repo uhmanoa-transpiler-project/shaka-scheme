@@ -10,6 +10,7 @@ using EnvPtr = std::shared_ptr<shaka::Environment>;
 using Function = std::function<Args(Args, EnvPtr)>;
 namespace impl{
 Args isnumber(Args a, EnvPtr e){
+static_cast<void>(e);
 if(a[0] -> is_number()){
 	shaka::Boolean b(true);
 	return {std::make_shared<shaka::DataNode>(b)};
