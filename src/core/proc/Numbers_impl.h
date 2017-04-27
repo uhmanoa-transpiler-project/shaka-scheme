@@ -1,22 +1,37 @@
 #ifndef SHAKA_STDPROC_NUMBERS_IMPL_H
 #define SHAKA_STDPROC_NUMBERS_IMPL_H
 
+
 #include "core/base/Number.h"
 #include "core/base/DataNode.h"
 #include "core/base/Data.h"
-
+#include "core/base/Core.h"
 #include "core/base/Environment.h"
 #include <functional>
 #include <typeinfo>
 #include <vector>
 
+using Args = std::vector<std::shared_ptr<shaka::DataNode>>;
+using EnvPtr = std::shared_ptr<shaka::Environment>;
+using Function = std::function<Args(Args, EnvPtr)>;  
 namespace shaka {
 namespace stdproc {
 
-using Args = std::vector<NodePtr>;
-using Function = std::function<Args(Args, EnvPtr)>;
-namespace impl {
 // (number? obj)
+
+namespace impl{
+Args isnumber(Args a, EnvPtr e){
+static_cast<void>(e);
+if(a[0] -> is_number()){
+	shaka::Boolean b(true);
+	return {std::make_shared<shaka::DataNode>(b)};
+}	
+else{
+	shaka::Boolean c(false);
+	return {std::make_shared<shaka::DataNode>(c)};
+}
+
+}
 // (complex? obj)
 // (real? obj)
 // (rational? obj)
@@ -151,8 +166,9 @@ Args num_greater_than_or_eq(Args args, EnvPtr env) {
 
 // (string->number string)
 // (string->number string radix)
-
 } //namespace impl
+Function is_number = impl::isnumber;
+
 Function equals = impl::num_equals;
 Function less_than_or_eq = impl::num_less_than_or_eq;
 Function greater_than_or_eq = impl::num_greater_than_or_eq;
