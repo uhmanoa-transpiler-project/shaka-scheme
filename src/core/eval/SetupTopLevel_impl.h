@@ -7,7 +7,7 @@
 
 #include "core/proc/primitives.h"
 #include "core/proc/Numbers_Arithmetic_impl.h"
-
+#include "core/proc/Pairs_and_Lists_impl.h"
 
 namespace shaka { 
     
@@ -103,8 +103,22 @@ NodePtr SetupTopLevel::evaluate(
 
 
     //env->print_bindings(std::cout);
+	
+	// Pairs and Lists section
 
-    return nullptr;
+	env->set_value(Symbol("cons"),
+			make_node(NativeProcedure(shaka::stdproc::cons, 2)));
+
+	env->set_value(Symbol("car"),
+			make_node(NativeProcedure(shaka::stdproc::car, 1)));
+
+	env->set_value(Symbol("cdr"),
+			make_node(NativeProcedure(shaka::stdproc::cdr, 1)));
+
+	env->set_value(Symbol("list"),
+			make_node(NativeProcedure(shaka::stdproc::list, 0, true)));
+    
+	return nullptr;
 }
 
 
