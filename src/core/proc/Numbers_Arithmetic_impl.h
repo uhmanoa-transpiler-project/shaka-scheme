@@ -240,7 +240,7 @@ Args floor_quotient_numbers(Args args, EnvPtr env) {
 // (floor-remainder n1 n2)
 Args floor_remainder_numbers(Args args, EnvPtr env) {
 	if (args[0]->get_data().type() != typeid(shaka::Number)) {
-		throw std::runtime_error("STDPROC: Incorrect argument type to Native Procedure: floor-remainder")
+		throw std::runtime_error("STDPROC: Incorrect argument type to Native Procedure: floor-remainder");
 	}
 	shaka::Number n1 = shaka::get<shaka::Number>(args[0]->get_data());
 	shaka::Number n2 = shaka::get<shaka::Number>(args[1]->get_data());
@@ -663,8 +663,8 @@ Args log_n_numbers(Args args, EnvPtr env) {
 	Args unary_log_arg1 = {args[0]};
 	Args unary_log_arg2 = {args[1]};
 
-	Args unary_log_res1 = log(unary_log_arg1, env);
-	Args unary_log_res2 = log(unary_log_arg2, env);
+	Args unary_log_res1 = log_numbers(unary_log_arg1, env);
+	Args unary_log_res2 = log_numbers(unary_log_arg2, env);
 
 	shaka::Number log_n1 = shaka::get<shaka::Number>(unary_log_res1[0]->get_data());
 	shaka::Number log_n2 = shaka::get<shaka::Number>(unary_log_res2[0]->get_data());
