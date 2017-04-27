@@ -19,6 +19,14 @@ using Function = std::function<Args(Args, EnvPtr)>;
 
 namespace impl {
 // (pair? obj)
+Args pair_pred_lists(Args args, EnvPtr env) {
+	static_cast<void>(env);
+	NodePtr result = std::make_shared<shaka::DataNode>(
+			shaka::Boolean(args[0]->is_pair()));
+	Args result_vector = {result};
+	return result_vector;
+
+}
 // (cons obj1 obj2)
 Args cons_lists(Args args, EnvPtr env) {
 	static_cast<void>(env);	
@@ -51,8 +59,22 @@ Args cdr_lists(Args args, EnvPtr env) {
 // (cddr pair)
 
 // (null? obj)
-// (list? obj)
+Args null_pred_lists(Args args, EnvPtr env) {
+	static_cast<void>(env);
+	NodePtr result = std::make_shared<shaka::DataNode>(
+			shaka::Boolean(args[0]->is_null()));
+	Args result_vector = {result};
+	return result_vector;
 
+}
+// (list? obj)
+Args list_pred_lists(Args args, EnvPtr env) {
+	static_cast<void>(env);
+	NodePtr result = std::make_shared<shaka::DataNode>(
+			shaka::Boolean(args[0]->is_list()));
+	Args result_vector = {result};
+	return result_vector;
+}
 // (make-list k)
 // (make-list k fill)
 
@@ -95,7 +117,9 @@ Function cons = impl::cons_lists;
 Function car = impl::car_lists;
 Function cdr = impl::cdr_lists;
 Function list = impl::list_lists;
-
+Function pairp = impl::pair_pred_lists;
+Function nullp = impl::null_pred_lists;
+Function listp = impl::list_pred_lists;
 } // namespace stdproc
 } // namespace shaka
 

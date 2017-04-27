@@ -117,7 +117,12 @@ NodePtr SetupTopLevel::evaluate(
 
 	env->set_value(Symbol("list"),
 			make_node(NativeProcedure(shaka::stdproc::list, 0, true)));
-    
+	env->set_value(Symbol("pair?"),
+			make_node(NativeProcedure(shaka::stdproc::pairp, 1)));
+	env->set_value(Symbol("null?"),
+			make_node(NativeProcedure(shaka::stdproc::nullp, 1)));
+	env->set_value(Symbol("list?"),
+			make_node(NativeProcedure(shaka::stdproc::listp, 1)));
 	return nullptr;
 }
 
