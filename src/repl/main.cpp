@@ -41,7 +41,9 @@ int main(int argc, char** argv) {
     do {
         try {
             auto expr = make_node(DataNode::list());
-            std::cout << "\n>>> " << std::flush;
+            if (argc != 2) {
+                std::cout << "\n>>> " << std::flush;
+            }
            
             bool parse_success = false;
             // Determine if we're done parsing yet
@@ -64,9 +66,11 @@ int main(int argc, char** argv) {
                 Evaluator eval(expr->car(), global_env);
                 auto result = eval.evaluate(eval::Expression());
                 //std::cout << "> Done." << std::endl;
-
-                if (result) { std::cout << *result << std::endl; }
-                else {        std::cout << std::endl;           }
+                
+                if (argc != 2) {
+                    if (result) { std::cout << *result << std::endl; }
+                    else {        std::cout << std::endl;           }
+                }
             }
             else {
                 std::cout << "Error: Input rejected by parser." << std::endl;
