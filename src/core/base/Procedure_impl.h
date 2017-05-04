@@ -31,14 +31,23 @@ Procedure::call (std::vector<std::shared_ptr<DataNode>> v,
     //std::cout << "body_expressions: " << *this->body_root->cdr() << std::endl;
 
     /// For each child, verify it's a symbol.
+	
+	std::size_t args_list_length = args_list_root->length();
+	//std::cout << "args_list_length: " << args_list_length << std::endl;
+	// A very subtle bug was occuring here that would undermine multi argument lambdas
+	// The for loop was checking the value of i against args_list_root->length() on each
+	// iteration. However because we set args_list_root to be equal to args_list_root->cdr()
+	// on each iteration, we were missing the last argument every time. The fix was simple,
+	// save the original args_list_length to a variable and check the value of i against
+	// that length on each iteration. Quite a subtle bug indeed. -- Mortrax 
     for (
         std::size_t i = 0;
-        i <= args_list_root->length();
-        ++i
+        i < args_list_length;
+        i++
     ) {
         // Get the child node pointer.
         auto args_symbol_ptr = args_list_root->car();
-        //std::cout << "Symbol(" << i << "): " << *args_symbol_ptr << std::endl;
+       // std::cout << "Symbol(" << i << "): " << *args_symbol_ptr << std::endl;
         // If we have a symbol, bind it.
         if (args_symbol_ptr->is_symbol()) {
             Data symbol = args_symbol_ptr->get_data();
@@ -47,7 +56,7 @@ Procedure::call (std::vector<std::shared_ptr<DataNode>> v,
             curr_env->set_value(
                 shaka::get<shaka::Symbol>(symbol),
                 std::make_shared<DataNode>(value));
-            //std::cout << get<Symbol>(symbol) << " : " << *make_node(value) << std::endl;
+           // std::cout << get<Symbol>(symbol) << " : " << *make_node(value) << std::endl;
         } else {
             /// @todo Define better semantics for procedure call
             ///       failure.
@@ -55,10 +64,13 @@ Procedure::call (std::vector<std::shared_ptr<DataNode>> v,
             throw std::runtime_error("Procedure: argument list member node is not a Symbol");
             return std::vector<std::shared_ptr<DataNode>>{nullptr};
         }
-        if (args_list_root->is_pair()) {
+		// std::cout << *args_list_root << std::endl;
+        if (args_list_root->is_list()) {
             args_list_root = args_list_root->cdr();
+			// std::cout << *args_list_root << std::endl;
         }
         else {
+			// std::cout << "Breaking" << std::endl;
             break;
         }
     }
