@@ -5,7 +5,7 @@
 #include "core/eval/Proccall.h"
 #include "core/base/Core.h"
 #include "core/base/Evaluator.h"
-
+#include "core/eval/Eval.h"
 
 // attempts to get the procedure bound in the current environment
 // and call it on the arguments condained as the child nodes of the
@@ -40,8 +40,8 @@ namespace eval {
             std::vector<NodePtr> args;
             NodePtr next_argument;
             NodePtr args_list = list->cdr();
-            //std::cout << "@ProcCall: Got args_list as list->cdr()." << std::endl;
-            //std::cout << *args_list << std::endl;
+           // std::cout << "@ProcCall: Got args_list as list->cdr()." << std::endl;
+           // std::cout << *args_list << std::endl;
             
             // if so, get all of the data out of the arguments list
             // evaluate the arguments that we get 
@@ -50,7 +50,7 @@ namespace eval {
             if (proc->is_scheme_procedure() ||
                 proc->is_native_procedure()) {
                 while (!args_list->is_null()) {
-                    //std::cout << "arg_no:" << arg_no << ": " << *args_list->car() << std::endl;
+                   // std::cout << "arg_no:" << arg_no << ": " << *args_list->car() << std::endl;
                     next_argument = args_list->car();
                     shaka::Evaluator arg_evaluator(next_argument, env);
                     next_argument = arg_evaluator.evaluate(shaka::eval::Expression());

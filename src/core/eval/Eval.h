@@ -21,5 +21,4 @@
 #include "core/eval/ProcedureBody_impl.h"
 #include "core/eval/Proccall_impl.h"
 
-
 #endif // SHAKA_CORE_EVAL_EVAL_H

@@ -27,12 +27,13 @@ Procedure::call (std::vector<std::shared_ptr<DataNode>> v,
     auto args_list_root = this->body_root->car();
     auto curr_env       = this->curr_env;
     //std::cout << "args_list_root: " << *args_list_root << std::endl;
+	//std::cout << "args_list_root->length(): " << args_list_root->length() << std::endl;
     //std::cout << "body_expressions: " << *this->body_root->cdr() << std::endl;
 
     /// For each child, verify it's a symbol.
     for (
         std::size_t i = 0;
-        i < args_list_root->length();
+        i <= args_list_root->length();
         ++i
     ) {
         // Get the child node pointer.
