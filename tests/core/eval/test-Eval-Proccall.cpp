@@ -108,6 +108,46 @@ TEST(Proccall, three_argument_lambda) {
 
 }
 
+TEST(Proccall, variable_arity_lambda) {
+	
+	using namespace shaka;
+
+
+	auto lambda_list = std::make_shared<DataNode>(DataNode::list(
+		DataNode(Symbol("lambda")),
+		DataNode(Symbol("x")),
+		DataNode(Symbol("x"))
+	));
+
+	std::cout << *lambda_list << std::endl;	
+
+	
+	EnvPtr env = std::make_shared<shaka::Environment>(nullptr);
+	
+	Evaluator lambda_evaluator(lambda_list->cdr(), env);
+	
+	auto proc = lambda_evaluator.evaluate(eval::Lambda());
+	
+	ASSERT_EQ(proc->is_procedure(), true);
+	ASSERT_EQ(get<Procedure>(proc->get_data()).get_fixed_arity(), 0);
+	ASSERT_EQ(get<Procedure>(proc->get_data()).is_variable_arity(), true);
+
+	auto proc_call_list = std::make_shared<DataNode>(DataNode::list(
+		DataNode(proc),
+		DataNode(Number(1)),
+		DataNode(Number(2)),
+		DataNode(Number(3))
+	));
+
+	std::cout << *proc_call_list << std::endl;
+
+	Evaluator proc_call_evaluator(proc_call_list, env);
+
+	auto result = proc_call_evaluator.evaluate(eval::ProcCall());
+	std::cout << *result << std::endl;
+	ASSERT_EQ(Number(1), get<Number>(result->car()->get_data()));
+}
+
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
 
