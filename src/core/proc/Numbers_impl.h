@@ -153,6 +153,20 @@ Args num_greater_than_or_eq(Args args, EnvPtr env) {
 	return result_vector;
 }
 // (zero? z)
+Args num_is_zero(Args args, EnvPtr env) {
+	static_cast<void>(env);
+	shaka::Boolean result(false);
+	if (args[0]->get_data().type() == typeid(shaka::Number) &&
+			shaka::get<shaka::Number>(args[0]->get_data()) == shaka::Number(0)) {
+		result.set_value(true);
+	}
+
+	NodePtr result_value = std::make_shared<shaka::DataNode>(result);
+	Args result_vector = {result_value};
+	
+	return result_vector;
+	
+}
 // (positive? x)
 // (negative? x)
 // (odd? n)
@@ -174,6 +188,7 @@ Function less_than_or_eq = impl::num_less_than_or_eq;
 Function greater_than_or_eq = impl::num_greater_than_or_eq;
 Function less_than = impl::num_less_than;
 Function greater_than = impl::num_greater_than;
+Function zerop = impl::num_is_zero;
 } // namespace stdproc
 } // namespace shaka
 

@@ -8,7 +8,7 @@
 #include "core/proc/primitives.h"
 #include "core/proc/Numbers_Arithmetic_impl.h"
 #include "core/proc/Pairs_and_Lists_impl.h"
-
+#include "core/proc/Numbers_impl.h"
 namespace shaka { 
     
 /// Encapsulates the EvaluatorStrategy classes
@@ -123,6 +123,12 @@ NodePtr SetupTopLevel::evaluate(
 			make_node(NativeProcedure(shaka::stdproc::nullp, 1)));
 	env->set_value(Symbol("list?"),
 			make_node(NativeProcedure(shaka::stdproc::listp, 1)));
+
+	// Numeric Predicates
+
+	env->set_value(Symbol("zero?"),
+			make_node(NativeProcedure(shaka::stdproc::zerop, 1)));
+
 	return nullptr;
 }
 
