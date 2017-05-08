@@ -10,11 +10,14 @@
 #include <functional>
 #include <typeinfo>
 #include <vector>
-namespace shaka{
-namespace stdproc{
+namespace shaka {
+namespace stdproc {
 using Args = std::vector<std::shared_ptr<shaka::DataNode>>;
 using EnvPtr = std::shared_ptr<shaka::Environment>;
+using Function = std::function<Args(Args, EnvPtr)>;
+namespace impl {
 Args eqv(Args list, EnvPtr env){
+	static_cast<void>(env);
 	if(list[0]->is_number() && list[1]->is_number()){
 		if(*list[0] == *list[1]){
 			return {std::make_shared<shaka::DataNode>(shaka::Boolean(true))};
@@ -75,7 +78,7 @@ Args eqv(Args list, EnvPtr env){
 	}
 }
 Args eq(Args list, EnvPtr env){
-
+	static_cast<void>(env);
 	if(list[0]->is_number() && list[1]->is_number()){
 		if(*list[0] == *list[1]){
 			return {std::make_shared<shaka::DataNode>(shaka::Boolean(true))};
@@ -138,6 +141,7 @@ Args eq(Args list, EnvPtr env){
 }
 
 Args equal(Args list, EnvPtr env){
+	static_cast<void>(env);
 	if(*list[0] == *list[1]){
 		return {std::make_shared<shaka::DataNode>(shaka::Boolean(true))};
 	}
@@ -145,6 +149,10 @@ Args equal(Args list, EnvPtr env){
 		return {std::make_shared<shaka::DataNode>(shaka::Boolean(false))};
 	}
 }
+} // namespace impl
+Function eqv = impl::eqv;
+Function eq = impl::eq;
+Function equal = impl::equal;
 }//namespace stdproc
 }//namespace shaka
 /// (eqv? obj1 obj2)

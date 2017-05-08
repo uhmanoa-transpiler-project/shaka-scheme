@@ -9,6 +9,9 @@
 #include "core/proc/Numbers_Arithmetic_impl.h"
 #include "core/proc/Pairs_and_Lists_impl.h"
 #include "core/proc/Numbers_impl.h"
+#include "core/proc/Booleans_impl.h"
+#include "core/proc/EquivalencePredicates_impl.h"
+
 namespace shaka { 
     
 /// Encapsulates the EvaluatorStrategy classes
@@ -129,6 +132,22 @@ NodePtr SetupTopLevel::evaluate(
 	env->set_value(Symbol("zero?"),
 			make_node(NativeProcedure(shaka::stdproc::zerop, 1)));
 
+	
+	// Booleans
+
+	env->set_value(Symbol("not"),
+			make_node(NativeProcedure(shaka::stdproc::notb, 1)));
+	env->set_value(Symbol("boolean?"),
+			make_node(NativeProcedure(shaka::stdproc::booleanp, 1)));
+	
+	// Equivalence Predicates
+	env->set_value(Symbol("eqv?"),
+			make_node(NativeProcedure(shaka::stdproc::eqv, 2)));
+	env->set_value(Symbol("eq?"),
+			make_node(NativeProcedure(shaka::stdproc::eq, 2)));
+	env->set_value(Symbol("equal?"),
+			make_node(NativeProcedure(shaka::stdproc::equal, 2)));
+	
 	return nullptr;
 }
 

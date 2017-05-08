@@ -11,31 +11,47 @@
 #include <typeinfo>
 #include <vector>
 
-using NodePtrs = std::shared_ptr<shaka::DataNode>;
-using Args = std::vector<NodePtrs>;
+namespace shaka {
+namespace stdproc {
+using NodePtr = std::shared_ptr<shaka::DataNode>;
+using Args = std::vector<NodePtr>;
 using Function = std::function<Args(Args, EnvPtr)>;
 
-// (not obj)
-Args nots(Args v, EnvPtr e){
-    //get data from each vector and see if false
-    std::vector<NodePtrs> res;
+namespace impl {
 
-    for(int i = 0; i < v.size(); i++){
-        if (v[i]->get_data() == false) res.push_back(true);
-        else{ return res.push_back(false);} 
-    }
-    return res;
+// (not obj)
+Args nots(Args v, EnvPtr e) {
+	static_cast<void>(e);
+	if (v[0]->is_boolean()) {
+		if (shaka::get<shaka::Boolean>(v[0]->get_data()) ==
+				shaka::Boolean(true)) {
+			NodePtr result_value = std::make_shared<shaka::DataNode>(shaka::Boolean(false));
+			Args result_vector = {result_value};
+			return result_vector;
+		}
+		else {
+			Args result_vector = {v[0]};
+			return result_vector;
+		}
+	}
+	else {
+		throw std::runtime_error("STDPROC: Incorrect argument type to Native Procedure: not");
+		return v;
+	}
 }
 // (boolean? obj)
-Args isboolean(Args v, EnvPtr e){
-    std::vector<NodePtrs> res;
-    //check if data is boolean
-    for(int i = 0; i < v.size(); i++){
-        if(v[i]->is_boolean()){
-            res.push_back(true);
-        }
-        else{res.push_back(false)}
-    }
-    return res;
+Args isboolean(Args v, EnvPtr e) {
+	static_cast<void>(e);
+	NodePtr result_value = std::make_shared<shaka::DataNode>(shaka::Boolean(v[0]->is_boolean()));
+	Args result_vector = {result_value};
+	return result_vector;
 }
+
+} // namespace impl
+
+Function notb = impl::nots;
+Function booleanp = impl::isboolean;
+
+} // namespace stdproc
+} // namespace shaka
 #endif // SHAKA_STDPROC_BOOLEANS_IMPL_H
