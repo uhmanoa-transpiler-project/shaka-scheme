@@ -132,6 +132,16 @@ NodePtr SetupTopLevel::evaluate(
 	env->set_value(Symbol("zero?"),
 			make_node(NativeProcedure(shaka::stdproc::zerop, 1)));
 
+	env->set_value(Symbol("exact?"),
+			make_node(NativeProcedure(shaka::stdproc::exactp, 1)));
+	env->set_value(Symbol("inexact?"),
+			make_node(NativeProcedure(shaka::stdproc::inexactp, 1)));
+
+	env->set_value(Symbol(">"),
+			make_node(NativeProcedure(shaka::stdproc::greater_than, 0, true)));
+	env->set_value(Symbol("<"),
+			make_node(NativeProcedure(shaka::stdproc::less_than, 0, true)));
+	
 	
 	// Booleans
 

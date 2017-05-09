@@ -38,7 +38,31 @@ else{
 // (integer? obj)
 
 // (exact? z)
+Args num_exact_p(Args args, EnvPtr env) {
+	static_cast<void>(env);
+	if (args[0]->get_data().type() == typeid(shaka::Number) &&
+		shaka::get<shaka::Number>(args[0]->get_data()).exact_p()) {
+		shaka::Boolean result(true);
+		return {std::make_shared<shaka::DataNode>(result)};
+	}
+	else {
+		shaka::Boolean result(false);
+		return {std::make_shared<shaka::DataNode>(result)};
+	}
+}
 // (inexact? z)
+Args num_inexact_p(Args args, EnvPtr env) {
+	static_cast<void>(env);
+	if (args[0]->get_data().type() == typeid(shaka::Number) &&
+		shaka::get<shaka::Number>(args[0]->get_data()).inexact_p()) {
+		shaka::Boolean result(true);
+		return {std::make_shared<shaka::DataNode>(result)};
+	}
+	else {
+		shaka::Boolean result(false);
+		return {std::make_shared<shaka::DataNode>(result)};
+	}
+}
 
 // (exact-integer? z)
 // (finite? z)
@@ -189,6 +213,8 @@ Function greater_than_or_eq = impl::num_greater_than_or_eq;
 Function less_than = impl::num_less_than;
 Function greater_than = impl::num_greater_than;
 Function zerop = impl::num_is_zero;
+Function exactp = impl::num_exact_p;
+Function inexactp = impl::num_inexact_p;
 } // namespace stdproc
 } // namespace shaka
 
