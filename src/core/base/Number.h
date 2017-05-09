@@ -38,11 +38,11 @@ public:
 	friend bool operator<=(const Number& n1, const Number& n2);
 	
     friend std::ostream& operator<< (std::ostream& lhs, const Number& rhs);
-	/*
-	// testing for exactness/inexactness R7RS 6.2.2
-	friend bool exact_p(const Number& n);
-	friend bool inexact_p(const Number& n);
 
+	// testing for exactness/inexactness R7RS 6.2.2
+	bool exact_p();
+	bool inexact_p();
+	/*
 	// numerical predicates testing a number for a particular property R7RS 6.2.6
 	friend bool zero_p(const Number& n);
 	friend bool positive_p(const Number& n);
@@ -133,18 +133,18 @@ bool operator>=(const Number& n1, const Number& n2) {
 bool operator<=(const Number& n1, const Number& n2) {
 	return (n1 < n2) || (n1 == n2);
 }
-/*
+
 //---------------------------------------------------
 // Built-in Numeric Predicates
 //---------------------------------------------------
-bool exact_p(const Number& n) {
-	return n.value == trunc(n.value);
+bool Number::exact_p() {
+	return !(this->value.type() == typeid(shaka::Real));
 }
 
-bool inexact_p(const Number& n) {
-	return !(exact_p(n));
+bool Number::inexact_p() {
+	return !this->exact_p();
 }
-
+/*
 bool zero_p(const Number& n) {
 	return (n.value == 0);
 }
