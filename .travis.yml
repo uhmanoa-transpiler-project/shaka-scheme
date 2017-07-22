@@ -20,5 +20,5 @@ script:
     # Check versions of gcc, g++, and cmake
     - gcc -v && g++ -v && cmake --version
     # The build commands
-    - make run-tests
+    - make tests
 
