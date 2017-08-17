@@ -1,4 +1,5 @@
-dep
-./cmake-*
-./cmake-build-debug
+.idea/*
+dep/*
+cmake-build-debug/*
+docs/doxygen/*
 

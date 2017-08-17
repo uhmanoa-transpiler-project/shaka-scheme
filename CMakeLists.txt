@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.7)
+cmake_minimum_required(VERSION 3.2)
 project(shaka-scheme)
 
 ################################################################################
@@ -34,7 +34,14 @@ set(SHAKA_SCHEME_REPL_NAME
 include_directories(./src)
 
 ################################################################################
-# SHAKA SCHEME INTERPRETER
+# SHAKE SCHEME DEPENDENCIES
+################################################################################
+include(config-cmake/dep/boost/boost.cmake)
+find_package(Threads REQUIRED)
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+
+################################################################################
+# SHAKA SCHEME
 ################################################################################
 set(SOURCE_FILES main.cpp src/shaka_scheme/system/base/IEnvironment.hpp
         src/shaka_scheme/system/exceptions/BaseException.hpp
@@ -42,10 +49,6 @@ set(SOURCE_FILES main.cpp src/shaka_scheme/system/base/IEnvironment.hpp
         src/shaka_scheme/system/base/Data.cpp src/shaka_scheme/system/exceptions/TypeException.hpp)
 add_library(${SHAKA_SCHEME_LIBRARY_NAME} SHARED ${SOURCE_FILES})
 
-################################################################################
-# SHAKE SCHEME EXTERNAL LIBRARIES
-################################################################################
-include(config-cmake/dep/boost/boost.cmake)
 
 ################################################################################
 # TEST EXTERNAL LIBRARIES

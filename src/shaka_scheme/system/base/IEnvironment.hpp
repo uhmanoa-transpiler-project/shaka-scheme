@@ -34,7 +34,7 @@ public:
    * @return Whether this environment or its parents contain the key.
    */
   virtual bool
-  contains(const Key &key) = 0;
+  contains(const Key& key) = 0;
 
   /**
    * @brief Returns whether a key definition is directly contained in the
@@ -43,7 +43,7 @@ public:
    * @return Whether the key is defined.
    */
   virtual bool
-  is_defined(const Key &key) = 0;
+  is_defined(const Key& key) = 0;
 
   /**
    * @brief Returns a reference to the value refered
@@ -53,16 +53,16 @@ public:
    * @return The value associated with the given key.
    */
   virtual Value
-  get_value(const Key &key) = 0;
+  get_value(const Key& key) = 0;
 
   /// @brief Sets an element in the Environment referred to be the `key`
   ///        and then sets its value to `value`.
   virtual void
-  set_value(const Key &key,
+  set_value(const Key& key,
             Value value) = 0;
 
   /// @brief Returns a list of all the keys in the Environment.
-  virtual std::vector <Key>
+  virtual std::vector<Key>
   get_keys() = 0;
 
 };
