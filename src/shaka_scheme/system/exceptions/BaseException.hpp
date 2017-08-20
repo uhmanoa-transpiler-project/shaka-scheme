@@ -2,6 +2,7 @@
 #define SHAKA_SCHEME_BASEEXCEPTION_HPP
 
 #include <stdexcept>
+#include <string>
 
 namespace shaka {
 /**

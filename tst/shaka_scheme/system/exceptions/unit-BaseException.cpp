@@ -15,30 +15,6 @@ TEST(BaseExceptionUnitTest, constructor_success) {
 }
 
 /**
- * @brief Test: Expect std::logic_error when trying to construct the
- * std::string with a NULL pointer.
- */
-TEST(BaseExceptionUnitTest, constructor_null_failure) {
-  // When: an shaka::BaseException is thrown with a NULL for a std::string
-  // Then: expect a std::logic_error to occur.
-  EXPECT_THROW(
-      throw shaka::BaseException(
-          23094183428038290, std::string(NULL)), std::logic_error);
-}
-
-/**
- * @brief Test: Expect std::logic_error when trying to construct the
- * std::string with a nullptr pointer.
- */
-TEST(BaseExceptionUnitTest, constructor_nullptr_failure) {
-  // When: an shaka::BaseException is thrown with a nullptr for a std::string
-  // Then: expect a std::logic_error to occur.
-  EXPECT_THROW(
-      throw shaka::BaseException(
-          23094183428038290, std::string(nullptr)), std::logic_error);
-}
-
-/**
  * @brief Test: Verify Unicode character data can still be extracted
  * correctly.
  */
