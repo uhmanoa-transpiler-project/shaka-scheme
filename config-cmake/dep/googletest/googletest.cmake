@@ -13,8 +13,10 @@ set(gtest_main "${CMAKE_SOURCE_DIR}}/dep/googletest/build/googlemock/gtest/libgt
 set(gmock "${CMAKE_SOURCE_DIR}/dep/googletest/build/googlemock/libgmock.a")
 set(gmock_main "${CMAKE_SOURCE_DIR}/dep/googletest/build/googlemock/libgmock_main.a")
 
-# Apple
+# Required for MacOSX systems in order to build successfully with clang++
+# sets compiler flags to use the c++11 standard and libc++ as the C++ Standard Library Version
+# I don't know what -DGTEST_USE_OWN_TR1_TUPLE does
 if (APPLE)
-    add_definitions(-DGTEST_USE_OWN_TR1_TUPLE)
-    add_definitions(-D__GLIBCXX__)
+    add_definitions(-std=c++11 -stdlib=libc++ -DGTEST_USE_OWN_TR1_TUPLE)
 endif (APPLE)
+
