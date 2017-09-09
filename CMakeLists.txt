@@ -43,7 +43,7 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 ################################################################################
 # SHAKA SCHEME
 ################################################################################
-set(SOURCE_FILES main.cpp
+set(SOURCE_FILES
         src/shaka_scheme/system/base/Data.cpp
         src/shaka_scheme/system/base/Boolean.cpp
         src/shaka_scheme/system/base/String.cpp
@@ -72,5 +72,5 @@ add_subdirectory(tst)
 ################################################################################
 # SHAKA SCHEME REPL
 ################################################################################
-add_executable(${SHAKA_SCHEME_REPL_NAME} ${SOURCE_FILES})
+add_executable(${SHAKA_SCHEME_REPL_NAME} ${SOURCE_FILES} main.cpp)
 target_link_libraries(${SHAKA_SCHEME_REPL_NAME} ${SHAKA_SCHEME_LIBRARY_NAME})
