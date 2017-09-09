@@ -38,7 +38,7 @@ shaka::Data::Data(const shaka::Data &other) : type_tag
         "constructor.");
   }
   case Type::INVALID:break;
-  case Type::DATANODE:break;
+  //case Type::DATANODE:break;
   case Type::ENVIRONMENT:break;
   case Type::NUMBER:break;
   }
@@ -75,3 +75,50 @@ shaka::Data::~Data() {
 
 }
 
+template<>
+shaka::String shaka::Data::get<shaka::String>() const {
+  if (this->get_type() != Type::STRING) {
+    throw new shaka::TypeException(3, "Could not get() String from Data");
+  }
+  return this->string;
+}
+
+template<>
+shaka::Symbol shaka::Data::get<shaka::Symbol>() const {
+  if (this->get_type() != Type::SYMBOL) {
+    throw new shaka::TypeException(4, "Could not get() Symbol from Data");
+  }
+  return this->symbol;
+}
+
+template<>
+shaka::Boolean shaka::Data::get<shaka::Boolean>() const {
+  if (this->get_type() != Type::BOOLEAN) {
+    throw new shaka::TypeException(5, "Could not get() Boolean from Data");
+  }
+  return this->boolean;
+}
+
+namespace shaka {
+
+std::ostream& operator<<(std::ostream& lhs, const shaka::Data& rhs) {
+  switch (rhs.get_type()) {
+  case shaka::Data::Type::SYMBOL: {
+    const auto temp = rhs.get<shaka::Symbol>();
+    lhs << temp;
+    break;
+  }
+  case shaka::Data::Type::STRING: {
+    const auto temp = rhs.get<shaka::String>();
+    lhs << temp;
+    break;
+  }
+  case shaka::Data::Type::BOOLEAN: {
+    const auto temp = rhs.get<shaka::Boolean>();
+    lhs << temp;
+    break;
+  }
+  }
+}
+
+} // namespace shaka
