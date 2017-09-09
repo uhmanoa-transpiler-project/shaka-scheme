@@ -55,3 +55,12 @@ TEST(SymbolUnitTest, symbol_comparison) {
   ASSERT_TRUE(symbol2 == symbol2_dup);
   ASSERT_TRUE(symbol2 <= symbol2_dup);
 }
+
+TEST(SymbolUnitTest, printing) {
+  // Given: a Symbol
+  shaka::Symbol sym("Hello world");
+
+  // When: you try to trigger the std::ostream& operator<<
+  std::cout << sym << '\n';
+  // Then: it should work.
+}

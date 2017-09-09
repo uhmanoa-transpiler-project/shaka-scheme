@@ -19,21 +19,11 @@ public:
   // != can be defined in terms of ==
   friend bool operator!=(const Boolean &n1, const Boolean &n2);
 
+  friend std::ostream& operator<<(std::ostream& lhs, const shaka::Boolean& rhs);
+
 private:
   bool value;
 };
 
-bool operator==(const Boolean &n1, const Boolean &n2) {
-  return n1.value == n2.value;
-}
-
-bool operator!=(const Boolean &n1, const Boolean &n2) {
-  return !(n1 == n2);
-}
-
-std::ostream &operator<<(std::ostream &lhs, const shaka::Boolean &rhs) {
-  lhs << ((rhs.get_value()) ? "#t" : "#f");
-  return lhs;
-}
-}
+} // namespace shska
 #endif // SHAKA_CORE_BASE_BOOLEAN_H

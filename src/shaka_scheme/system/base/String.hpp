@@ -166,16 +166,11 @@ public:
     return this->str;
   }
 
+  friend std::ostream& operator<<(std::ostream& lhs, const shaka::String& rhs);
+
 private:
   std::string str;
 };
-
-std::ostream& operator<<(std::ostream& lhs, const shaka::String& rhs) {
-  for (auto it : rhs.get_string()) {
-    lhs << it;
-  }
-  return lhs;
-}
 
 } // namespace shaka
 #endif // SHAKA_ASCII_STRING_H

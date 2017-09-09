@@ -43,12 +43,21 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 ################################################################################
 # SHAKA SCHEME
 ################################################################################
-set(SOURCE_FILES main.cpp src/shaka_scheme/system/base/IEnvironment.hpp
-        src/shaka_scheme/system/exceptions/BaseException.hpp
-        src/shaka_scheme/system/exceptions/InvalidInputException.hpp
-        src/shaka_scheme/system/base/Data.cpp src/shaka_scheme/system/exceptions/TypeException.hpp)
+set(SOURCE_FILES main.cpp
+        src/shaka_scheme/system/base/Data.cpp
+        src/shaka_scheme/system/base/Boolean.cpp
+        src/shaka_scheme/system/base/String.cpp
+        src/shaka_scheme/system/base/Symbol.cpp
+        src/shaka_scheme/system/base/DataPair.cpp
+        )
 add_library(${SHAKA_SCHEME_LIBRARY_NAME} SHARED ${SOURCE_FILES})
-
+# Copy the shared library DLL/dynamic library file also into the
+# bin/tst/ folder so that the tests will also be able to find and link to it.
+add_custom_command(TARGET ${SHAKA_SCHEME_LIBRARY_NAME}
+        POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy
+        $<TARGET_FILE:${SHAKA_SCHEME_LIBRARY_NAME}>
+        "${CMAKE_BINARY_DIR}/bin/tst/${CMAKE_SHARED_LIBRARY_PREFIX}${SHAKA_SCHEME_LIBRARY_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX}")
 
 ################################################################################
 # TEST EXTERNAL LIBRARIES

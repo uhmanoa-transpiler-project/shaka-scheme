@@ -12,6 +12,7 @@
 #include "shaka_scheme/system/base/String.hpp"
 #include "shaka_scheme/system/base/Boolean.hpp"
 #include "shaka_scheme/system/base/IEnvironment.hpp"
+#include "shaka_scheme/system/base/DataPair.hpp"
 
 #include <memory>
 
@@ -23,8 +24,7 @@ class String;
 class Boolean;
 class DataNode;
 class Environment;
-using NodePtr   = std::shared_ptr<DataNode>;
-using EnvPtr    = std::shared_ptr<Environment>;
+class DataPair;
 class UserStructData;
 
 //using Data = boost::variant<
@@ -43,7 +43,7 @@ class Data {
 public:
   enum class Type : int {
     INVALID = -1,
-    DATANODE,
+    DATA_PAIR,
     ENVIRONMENT,
     SYMBOL,
     NUMBER,
@@ -55,8 +55,9 @@ private:
 
   union {
     shaka::String string;
-    shaka::Symbol symbol = shaka::Symbol(std::string());
-    shaka::Boolean boolean;
+    shaka::DataPair data_pair;
+    shaka::Symbol symbol;
+    shaka::Boolean boolean = shaka::Boolean(false);
   };
 
 public:
@@ -88,47 +89,12 @@ public:
   }
 };
 
-template<>
-shaka::String shaka::Data::get<shaka::String>() const {
-  if (type_tag != Type::STRING) {
-    throw new shaka::TypeException(3, "Could not get() String from Data");
-  }
-  return this->string;
-}
+template<> shaka::String shaka::Data::get<shaka::String>() const;
+template<> shaka::Symbol shaka::Data::get<shaka::Symbol>() const;
+template<> shaka::Boolean shaka::Data::get<shaka::Boolean>() const;
 
-template<>
-shaka::Symbol shaka::Data::get<shaka::Symbol>() const {
-  if (type_tag != Type::SYMBOL) {
-    throw new shaka::TypeException(4, "Could not get() Symbol from Data");
-  }
-  return this->symbol;
-}
+std::ostream& operator<<(std::ostream& lhs, const shaka::Data& rhs);
 
-template<>
-shaka::Boolean shaka::Data::get<shaka::Boolean>() const {
-  if (type_tag != Type::BOOLEAN) {
-    throw new shaka::TypeException(5, "Could not get() Boolean from Data");
-  }
-  return this->boolean;
-}
-
-std::ostream& operator<<(std::ostream& lhs, const shaka::Data& rhs) {
-  switch (rhs.get_type()) {
-  case shaka::Data::Type::SYMBOL: {
-    lhs << rhs.get<shaka::Symbol>();
-    break;
-  }
-  case shaka::Data::Type::STRING: {
-    lhs << rhs.get<shaka::String>();
-    break;
-  }
-  case shaka::Data::Type::BOOLEAN: {
-    lhs << rhs.get<shaka::Boolean>();
-    break;
-  }
-  }
-}
-
-}
+} // namespace shaka
 
 #endif //SHAKA_SCHEME_DATA_HPP
