@@ -31,8 +31,8 @@ TEST(DataUnitTest, constructor_string) {
     std::stringstream ss;
     ss << data;
 
-    // Then: the output string should be convertable back into a String
-    ASSERT_EQ(shaka::String(ss.str()), str);
+    // Then: the output string should match "Hello world"
+    ASSERT_EQ(ss.str(), "\"Hello world\"");
 }
 
 /**
