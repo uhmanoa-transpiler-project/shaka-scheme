@@ -20,10 +20,13 @@ void swap (shaka::DataPair& lhs, shaka::DataPair& rhs) {
 
 } // namespace shska
 
+shaka::DataPair::DataPair() :
+  left(create_node(Data())),
+  right(create_node(Data())) {}
 
 shaka::DataPair::DataPair(Data data) :
     left(create_node(data)),
-    right(nullptr) {}
+    right(create_node(Data())) {}
 
 shaka::DataPair::DataPair(Data left_data, Data right_data) :
   left(create_node(left_data)),
@@ -31,15 +34,15 @@ shaka::DataPair::DataPair(Data left_data, Data right_data) :
 
 shaka::DataPair::DataPair(NodePtr node) :
   left(node),
-  right(nullptr) {}
+  right(create_node(Data())) {}
 
 shaka::DataPair::DataPair(NodePtr left_node, NodePtr right_node) :
   left(left_node),
   right(right_node) {}
 
 shaka::DataPair::DataPair(const DataPair& other) :
-  left(other.left),
-  right(other.right) {}
+  left(create_node(*other.left)),
+  right(create_node(*other.right)) {}
 
 shaka::DataPair::DataPair(DataPair&& other) :
   left(std::move(other.left)),

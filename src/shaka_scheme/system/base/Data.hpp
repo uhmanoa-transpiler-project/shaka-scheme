@@ -27,37 +27,30 @@ class Environment;
 class DataPair;
 class UserStructData;
 
-//using Data = boost::variant<
-//    NodePtr,
-//    EnvPtr,
-//    shaka::Symbol,
-//    //shaka::Number,
-//    shaka::String,
-//    shaka::Boolean
-////boost::recursive_wrapper<shaka::Procedure>,
-////boost::recursive_wrapper<shaka::NativeProcedure>,
-////boost::recursive_wrapper<shaka::PrimitiveProcedure>
-//>;
 
+/**
+ * @brief The basic sum type or variant type of all possible Scheme data types.
+ */
 class Data {
 public:
   enum class Type : int {
-    INVALID = -1,
+    UNSPECIFIED = -1,
     DATA_PAIR,
     ENVIRONMENT,
     SYMBOL,
     NUMBER,
     STRING,
-    BOOLEAN
+    BOOLEAN,
+    NULL_LIST
   };
 private:
   Type type_tag;
 
   union {
+    shaka::Boolean boolean = shaka::Boolean(false);
     shaka::String string;
     shaka::DataPair data_pair;
     shaka::Symbol symbol;
-    shaka::Boolean boolean = shaka::Boolean(false);
   };
 
 public:
@@ -77,23 +70,60 @@ public:
     this->type_tag = Type::BOOLEAN;
   }
 
+  Data(shaka::DataPair other) {
+    new(&data_pair) shaka::DataPair(other);
+    this->type_tag = Type::DATA_PAIR;
+  }
+
+  /**
+   * @brief A default constructor that constructs to a null list.
+   */
+  Data() {
+    this->type_tag = Type::NULL_LIST;
+  }
+
+  /**
+   * @brief Copy constructor.
+   * @param other The object to copy from.
+   *
+   * Uses copy-and-swap idiom.
+   */
   Data(const Data& other);
 
+  /**
+   * @brief Destroys the internal data according to the type tag.
+   */
   ~Data();
 
+  /**
+   * @brief Get the internal data, if it matches the type T.
+   * @tparam T The type to get.
+   * @return The object contained within this Data, if it matches the type T.
+   * @throws shaka::TypeException when T does not match the internal data type
+   * currently contained by data.
+   */
   template<typename T>
-  T get() const;
+  T& get();
 
+  /**
+   * @brief Get the type of the currently held internal data.
+   * @return The type tag of the currently held item.
+   */
   Type get_type() const {
     return this->type_tag;
   }
+
+  friend NodePtr create_unspecified();
 };
 
-template<> shaka::String shaka::Data::get<shaka::String>() const;
-template<> shaka::Symbol shaka::Data::get<shaka::Symbol>() const;
-template<> shaka::Boolean shaka::Data::get<shaka::Boolean>() const;
+template<> shaka::String& shaka::Data::get<shaka::String>();
+template<> shaka::Symbol& shaka::Data::get<shaka::Symbol>();
+template<> shaka::Boolean& shaka::Data::get<shaka::Boolean>();
+template<> shaka::DataPair& shaka::Data::get<shaka::DataPair>();
 
-std::ostream& operator<<(std::ostream& lhs, const shaka::Data& rhs);
+std::ostream& operator<<(std::ostream& lhs, shaka::Data rhs);
+
+NodePtr create_unspecified();
 
 } // namespace shaka
 

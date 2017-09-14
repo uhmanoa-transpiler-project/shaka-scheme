@@ -95,7 +95,7 @@ public:
   }
 
   void fill(char fill, int start, int end) {
-    for (std::size_t i = start; i < end; ++i) {
+    for (int i = start; i < end; ++i) {
       this->str.at(i) = fill;
     }
   }
