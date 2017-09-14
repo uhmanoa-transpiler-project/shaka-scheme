@@ -25,10 +25,10 @@ set(CMAKE_CXX_STANDARD 11)
 set(SHAKA_SCHEME_MAJOR_VERSION 0)
 set(SHAKA_SCHEME_MINOR_VERSION 1)
 set(SHAKA_SCHEME_LIBRARY_NAME
-"shaka-scheme-${SHAKA_SCHEME_MAJOR_VERSION}-$\
+"shaka-scheme-${SHAKA_SCHEME_MAJOR_VERSION}.$\
 {SHAKA_SCHEME_MINOR_VERSION}")
 set(SHAKA_SCHEME_REPL_NAME
-"shaka-scheme-repl-${SHAKA_SCHEME_MAJOR_VERSION}-$\
+"shaka-scheme-repl-${SHAKA_SCHEME_MAJOR_VERSION}.$\
 {SHAKA_SCHEME_MINOR_VERSION}")
 
 include_directories(./src)
@@ -43,12 +43,23 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 ################################################################################
 # SHAKA SCHEME
 ################################################################################
-set(SOURCE_FILES main.cpp src/shaka_scheme/system/base/IEnvironment.hpp
-        src/shaka_scheme/system/exceptions/BaseException.hpp
-        src/shaka_scheme/system/exceptions/InvalidInputException.hpp
-        src/shaka_scheme/system/base/Data.cpp src/shaka_scheme/system/exceptions/TypeException.hpp)
+set(SOURCE_FILES
+        src/shaka_scheme/system/base/Data.cpp
+        src/shaka_scheme/system/base/Boolean.cpp
+        src/shaka_scheme/system/base/String.cpp
+        src/shaka_scheme/system/base/Symbol.cpp
+        src/shaka_scheme/system/base/DataPair.cpp
+        src/shaka_scheme/system/exceptions/MissingImplementationException.hpp)
 add_library(${SHAKA_SCHEME_LIBRARY_NAME} SHARED ${SOURCE_FILES})
-
+target_compile_options(${SHAKA_SCHEME_LIBRARY_NAME} PRIVATE -Wall -Wextra
+        -pedantic)
+# Copy the shared library DLL/dynamic library file also into the
+# bin/tst/ folder so that the tests will also be able to find and link to it.
+add_custom_command(TARGET ${SHAKA_SCHEME_LIBRARY_NAME}
+        POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy
+        $<TARGET_FILE:${SHAKA_SCHEME_LIBRARY_NAME}>
+        "${CMAKE_BINARY_DIR}/bin/tst/${CMAKE_SHARED_LIBRARY_PREFIX}${SHAKA_SCHEME_LIBRARY_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX}")
 
 ################################################################################
 # TEST EXTERNAL LIBRARIES
@@ -63,5 +74,5 @@ add_subdirectory(tst)
 ################################################################################
 # SHAKA SCHEME REPL
 ################################################################################
-add_executable(${SHAKA_SCHEME_REPL_NAME} ${SOURCE_FILES})
+add_executable(${SHAKA_SCHEME_REPL_NAME} ${SOURCE_FILES} main.cpp)
 target_link_libraries(${SHAKA_SCHEME_REPL_NAME} ${SHAKA_SCHEME_LIBRARY_NAME})

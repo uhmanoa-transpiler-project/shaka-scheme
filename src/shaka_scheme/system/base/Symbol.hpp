@@ -1,5 +1,6 @@
 #ifndef SHAKA_SCHEME_SYMBOL_H
 #define SHAKA_SCHEME_SYMBOL_H
+
 #include <string>
 
 namespace shaka {
@@ -9,6 +10,12 @@ namespace shaka {
  */
 class Symbol {
 public:
+
+  /**
+   * @brief Default constructor for Symbol to empty string.
+   */
+  Symbol() :
+    value("") {}
 
   /**
    * @brief Constructs a Symbol from a string.
@@ -45,34 +52,7 @@ private:
   std::string value;
 };
 
-bool operator<(const Symbol& n1, const Symbol& n2) {
-  return n1.value < n2.value;
-}
-
-bool operator<=(const Symbol& n1, const Symbol& n2) {
-  return n1.value <= n2.value;
-}
-
-bool operator>(const Symbol& n1, const Symbol& n2) {
-  return n1.value > n2.value;
-}
-
-bool operator>=(const Symbol& n1, const Symbol& n2) {
-  return n1.value >= n2.value;
-}
-
-bool operator==(const Symbol& n1, const Symbol& n2) {
-  return n1.value == n2.value;
-}
-
-bool operator!=(const Symbol& n1, const Symbol& n2) {
-  return !(n1 == n2);
-}
-
-std::ostream& operator<<(std::ostream& lhs, shaka::Symbol rhs) {
-  lhs << rhs.get_value();
-  return lhs;
-}
+std::ostream& operator<<(std::ostream& lhs, shaka::Symbol rhs);
 
 } // namespace shaka
 #endif // SHAKA_SCHEME_SYMBOL_H

@@ -12,6 +12,7 @@
 #include "shaka_scheme/system/base/String.hpp"
 #include "shaka_scheme/system/base/Boolean.hpp"
 #include "shaka_scheme/system/base/IEnvironment.hpp"
+#include "shaka_scheme/system/base/DataPair.hpp"
 
 #include <memory>
 
@@ -23,40 +24,33 @@ class String;
 class Boolean;
 class DataNode;
 class Environment;
-using NodePtr   = std::shared_ptr<DataNode>;
-using EnvPtr    = std::shared_ptr<Environment>;
+class DataPair;
 class UserStructData;
 
-//using Data = boost::variant<
-//    NodePtr,
-//    EnvPtr,
-//    shaka::Symbol,
-//    //shaka::Number,
-//    shaka::String,
-//    shaka::Boolean
-////boost::recursive_wrapper<shaka::Procedure>,
-////boost::recursive_wrapper<shaka::NativeProcedure>,
-////boost::recursive_wrapper<shaka::PrimitiveProcedure>
-//>;
 
+/**
+ * @brief The basic sum type or variant type of all possible Scheme data types.
+ */
 class Data {
 public:
   enum class Type : int {
-    INVALID = -1,
-    DATANODE,
+    UNSPECIFIED = -1,
+    DATA_PAIR,
     ENVIRONMENT,
     SYMBOL,
     NUMBER,
     STRING,
-    BOOLEAN
+    BOOLEAN,
+    NULL_LIST
   };
 private:
   Type type_tag;
 
   union {
+    shaka::Boolean boolean = shaka::Boolean(false);
     shaka::String string;
-    shaka::Symbol symbol = shaka::Symbol(std::string());
-    shaka::Boolean boolean;
+    shaka::DataPair data_pair;
+    shaka::Symbol symbol;
   };
 
 public:
@@ -76,59 +70,61 @@ public:
     this->type_tag = Type::BOOLEAN;
   }
 
+  Data(shaka::DataPair other) {
+    new(&data_pair) shaka::DataPair(other);
+    this->type_tag = Type::DATA_PAIR;
+  }
+
+  /**
+   * @brief A default constructor that constructs to a null list.
+   */
+  Data() {
+    this->type_tag = Type::NULL_LIST;
+  }
+
+  /**
+   * @brief Copy constructor.
+   * @param other The object to copy from.
+   *
+   * Uses copy-and-swap idiom.
+   */
   Data(const Data& other);
 
+  /**
+   * @brief Destroys the internal data according to the type tag.
+   */
   ~Data();
 
+  /**
+   * @brief Get the internal data, if it matches the type T.
+   * @tparam T The type to get.
+   * @return The object contained within this Data, if it matches the type T.
+   * @throws shaka::TypeException when T does not match the internal data type
+   * currently contained by data.
+   */
   template<typename T>
-  T get() const;
+  T& get();
 
+  /**
+   * @brief Get the type of the currently held internal data.
+   * @return The type tag of the currently held item.
+   */
   Type get_type() const {
     return this->type_tag;
   }
+
+  friend NodePtr create_unspecified();
 };
 
-template<>
-shaka::String shaka::Data::get<shaka::String>() const {
-  if (type_tag != Type::STRING) {
-    throw new shaka::TypeException(3, "Could not get() String from Data");
-  }
-  return this->string;
-}
+template<> shaka::String& shaka::Data::get<shaka::String>();
+template<> shaka::Symbol& shaka::Data::get<shaka::Symbol>();
+template<> shaka::Boolean& shaka::Data::get<shaka::Boolean>();
+template<> shaka::DataPair& shaka::Data::get<shaka::DataPair>();
 
-template<>
-shaka::Symbol shaka::Data::get<shaka::Symbol>() const {
-  if (type_tag != Type::SYMBOL) {
-    throw new shaka::TypeException(4, "Could not get() Symbol from Data");
-  }
-  return this->symbol;
-}
+std::ostream& operator<<(std::ostream& lhs, shaka::Data rhs);
 
-template<>
-shaka::Boolean shaka::Data::get<shaka::Boolean>() const {
-  if (type_tag != Type::BOOLEAN) {
-    throw new shaka::TypeException(5, "Could not get() Boolean from Data");
-  }
-  return this->boolean;
-}
+NodePtr create_unspecified();
 
-std::ostream& operator<<(std::ostream& lhs, const shaka::Data& rhs) {
-  switch (rhs.get_type()) {
-  case shaka::Data::Type::SYMBOL: {
-    lhs << rhs.get<shaka::Symbol>();
-    break;
-  }
-  case shaka::Data::Type::STRING: {
-    lhs << rhs.get<shaka::String>();
-    break;
-  }
-  case shaka::Data::Type::BOOLEAN: {
-    lhs << rhs.get<shaka::Boolean>();
-    break;
-  }
-  }
-}
-
-}
+} // namespace shaka
 
 #endif //SHAKA_SCHEME_DATA_HPP

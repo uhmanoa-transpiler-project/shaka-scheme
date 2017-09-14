@@ -4,6 +4,21 @@
 #include <gmock/gmock.h>
 #include <shaka_scheme/system/base/Data.hpp>
 
+TEST(DataUnitTest, constructor_null_list) {
+  // Given: Data default constructed (which means it holds a null list)
+  shaka::Data data;
+
+  ASSERT_EQ(data.get_type(), shaka::Data::Type::NULL_LIST);
+
+  // When: Data is written to std::stringstream
+  std::stringstream ss;
+  ss << data;
+
+  // Then: the output string should be the expected: "()"
+  ASSERT_EQ(ss.str(), "()");
+}
+
+
 /**
  * @brief Test: Data with String
  */

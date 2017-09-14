@@ -44,7 +44,7 @@ public:
    * @brief Returns the exception id.
    * @return The exception id.
    */
-  const std::size_t
+  std::size_t
   get_id() const noexcept {
     return id;
   }
