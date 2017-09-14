@@ -24,7 +24,7 @@ using NodePtr = std::shared_ptr<Data>;
  * or reference counting, we trust that all managed objects will either be
  * managed by user-supplied logic in this function, or through
  */
-NodePtr create_node (Data data);
+NodePtr create_node(Data data);
 
 /**
  * @brief The data representation of a Scheme pair.
@@ -38,6 +38,12 @@ class DataPair {
   NodePtr left;
   NodePtr right;
 public:
+  /**
+   * @brief By default, initializes the DataPair to a dotted pair of
+   * '(() . ()) or just '(()).
+   */
+  DataPair();
+
   /**
    * @brief Basic Data constructor.
    * @param data The shaka::Data to construct from.
@@ -67,7 +73,7 @@ public:
   DataPair(NodePtr left_node, NodePtr right_node);
 
   /**
-   * @brief Copy constructor.
+   * @brief Copy constructor. Must copy all items by value, not reference.
    * @param other The object to copy.
    */
   DataPair(const DataPair& other);
@@ -85,7 +91,7 @@ public:
    * @param lhs
    * @param rhs
    */
-  friend void swap (shaka::DataPair& lhs, shaka::DataPair& rhs);
+  friend void swap(shaka::DataPair& lhs, shaka::DataPair& rhs);
 
   /**
    * @brief Overloaded assignment operator.
@@ -94,14 +100,40 @@ public:
    *
    * Uses the copy-and-swap idiom.
    */
-  shaka::DataPair& operator= (shaka::DataPair other);
+  shaka::DataPair& operator=(shaka::DataPair other);
 
-  NodePtr car () const {
+////////////////////////////////////////////////////////////////////////////////
+
+  /**
+   * @brief Returns the first item of the pair.
+   * @return The left NodePtr.
+   */
+  NodePtr car() const {
     return this->left;
   }
 
-  NodePtr cdr () const {
+  /**
+   * @brief Returns the second item of the pair.
+   * @return The right NodePtr.
+   */
+  NodePtr cdr() const {
     return this->right;
+  }
+
+  /**
+   * @brief Sets the first item of the pair.
+   * @param node The node to set as the left node.
+   */
+  void set_car(NodePtr node) {
+    this->left = node;
+  }
+
+  /**
+   * @brief Sets the second item of the pair.
+   * @param node The node to set as the right node.
+   */
+  void set_cdr(NodePtr node) {
+    this->right = node;
   }
 };
 

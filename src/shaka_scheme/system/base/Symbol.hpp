@@ -12,6 +12,12 @@ class Symbol {
 public:
 
   /**
+   * @brief Default constructor for Symbol to empty string.
+   */
+  Symbol() :
+    value("") {}
+
+  /**
    * @brief Constructs a Symbol from a string.
    * @param v The string to construct from.
    */
