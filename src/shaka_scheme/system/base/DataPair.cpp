@@ -50,7 +50,7 @@ shaka::DataPair::DataPair(DataPair&& other) :
 
 shaka::DataPair& shaka::DataPair::operator= (shaka::DataPair other) {
   shaka::DataPair temp(other);
-  swap(*this, other);
+  swap(*this, temp);
 
   return *this;
 }
