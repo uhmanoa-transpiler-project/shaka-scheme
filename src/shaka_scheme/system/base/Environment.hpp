@@ -7,17 +7,16 @@
 
 #include <map>
 #include "IEnvironment.hpp"
-#include "DataPair.hpp"
+#include "shaka_scheme/system/base/DataPair.hpp"
 #include "Symbol.hpp"
 
 namespace shaka {
-    using PairPtr = std::shared_ptr<DataPair>;
 
-    class Environment : public IEnvironment<shaka::Symbol, PairPtr> {
+    class Environment : public IEnvironment<shaka::Symbol, NodePtr> {
 
     public:
         using Key = shaka::Symbol;
-        using Value = PairPtr;
+        using Value = NodePtr;
 
         /**
         * @brief Constructor for Environment
