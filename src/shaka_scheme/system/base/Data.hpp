@@ -27,6 +27,9 @@ class Environment;
 class DataPair;
 class UserStructData;
 
+class Data;
+
+using NodePtr = std::shared_ptr<Data>;
 
 /**
  * @brief The basic sum type or variant type of all possible Scheme data types.
