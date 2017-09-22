@@ -8,6 +8,8 @@
 #include <shaka_scheme/system/base/Data.hpp>
 #include <shaka_scheme/system/base/DataPair.hpp>
 
+#include <shaka_scheme/system/core/types.hpp>
+
 namespace shaka {
 namespace core {
 
@@ -52,26 +54,15 @@ NodePtr list(NodePtr first, Args... rest) {
   return shaka::core::cons(first, shaka::core::list(rest...));
 }
 
-
+/**
+ * @brief Determines whether a node is a pair.
+ * @param node The node to examine.
+ * @return true if object is a pair, false if otherwise.
+ */
 bool is_pair(NodePtr node) {
   return node->get_type() == Data::Type::DATA_PAIR;
 }
 
-bool is_boolean(NodePtr node) {
-  return node->get_type() == Data::Type::BOOLEAN;
-}
-
-bool is_symbol(NodePtr node) {
-  return node->get_type() == Data::Type::SYMBOL;
-}
-
-bool is_string(NodePtr node) {
-  return node->get_type() == Data::Type::STRING;
-}
-
-bool is_unspecified(NodePtr node) {
-  return node->get_type() == Data::Type::UNSPECIFIED;
-}
 
 bool is_null_list(NodePtr node) {
   return node->get_type() == Data::Type::NULL_LIST;
@@ -104,12 +95,19 @@ bool is_improper_list(NodePtr node) {
 }
 
 std::size_t length(NodePtr node) {
-  if (node->get_type() != shaka::Data::Type::DATA_PAIR) {
+  if (node->get_type() == shaka::Data::Type::NULL_LIST) {
+    return 0;
+  }
+  else if (node->get_type() != shaka::Data::Type::DATA_PAIR) {
     throw shaka::TypeException(1000, "length(): data is not a pair");
   }
   int count = 0;
-  for (auto it = core::car(node); !core::is_null_list(it); it = core::cdr(it)) {
+  auto it = node;
+  for (; core::is_pair(it); it = core::cdr(it)) {
     ++count;
+  }
+  if (it->get_type() != shaka::Data::Type::NULL_LIST) {
+    throw shaka::TypeException(1001, "length(): data is not a proper list");
   }
   return count;
 }
