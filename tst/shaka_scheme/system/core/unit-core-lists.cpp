@@ -101,3 +101,26 @@ TEST(ListsUnitTest, list) {
   ASSERT_EQ(c->get<Symbol>(), core::car(core::cdr(core::cdr(node)))->get<Symbol>());
   ASSERT_TRUE(core::is_null_list(core::cdr(core::cdr(core::cdr(node)))));
 }
+
+/**
+ * @brief Test: (length) for lists
+ */
+TEST(ListsUnitTest, length_success) {
+  using namespace shaka;
+  // Given: three symbols
+  NodePtr a = create_node(Symbol("a"));
+  NodePtr b = create_node(Symbol("b"));
+  NodePtr c = create_node(Symbol("c"));
+
+  // When: you create a node from (list a b c)
+  NodePtr node = core::list(a, b, c);
+
+  std::cout << *node << std::endl;
+
+  std::cout << static_cast<int>(node->get_type()) << std::endl;
+  // Then: the lengths for the list and its cdrs should be correct.
+  ASSERT_EQ(core::length(node), 3);
+  ASSERT_EQ(core::length(core::cdr(node)), 2);
+  ASSERT_EQ(core::length(core::cdr(core::cdr(node))), 1);
+  ASSERT_EQ(core::length(core::cdr(core::cdr(core::cdr(node)))), 0);
+}
