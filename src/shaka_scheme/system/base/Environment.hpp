@@ -6,9 +6,9 @@
 #define SHAKA_SCHEME_ENVIRONMENT_H
 
 #include <map>
-#include "IEnvironment.hpp"
+#include "shaka_scheme/system/base/IEnvironment.hpp"
 #include "shaka_scheme/system/base/DataPair.hpp"
-#include "Symbol.hpp"
+#include "shaka_scheme/system/base/Symbol.hpp"
 
 namespace shaka {
 
