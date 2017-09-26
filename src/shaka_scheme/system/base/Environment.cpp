@@ -2,7 +2,7 @@
 // Created by dylan on 9/18/17.
 //
 
-#include <shaka_scheme/system/exceptions/InvalidInputException.hpp>
+#include "shaka_scheme/system/exceptions/InvalidInputException.hpp"
 #include "shaka_scheme/system/base/Environment.hpp"
 
 namespace shaka {
@@ -35,7 +35,8 @@ Value Environment::get_value(const Key& key) {
     /* Returns null if it does not exist and doesn't have a parent */
   else if (this->parent == nullptr) {
     throw shaka::InvalidInputException(2000,
-                                       "Environment.get_value: key does not have an assigned value");
+                                       "Environment.get_value: key does not "
+                                           "have an assigned value");
   }
     /* Look for key in the parent environment */
   else {
