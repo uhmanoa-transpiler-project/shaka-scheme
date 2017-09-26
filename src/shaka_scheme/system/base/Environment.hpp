@@ -11,7 +11,9 @@
 #include "shaka_scheme/system/base/Symbol.hpp"
 
 namespace shaka {
-
+/**
+ * @brief Representation for a Scheme Environment
+ */
 class Environment : public IEnvironment<shaka::Symbol, NodePtr> {
 
 public:
@@ -61,7 +63,7 @@ public:
   /**
    * @brief Returns whether a key has an associated value in the environment.
    * @param key The key to lookup in the environment
-   * @return Whether this environment or its parents contain the key.
+   * @return Whether this environment contains the key.
    */
   bool contains(const Key& key) override;
 
@@ -83,7 +85,7 @@ public:
    * @brief Returns all bindings in the Environment.
    * @return Bindings for current Environment.
    */
-  const std::map<Key, Value & get_bindings() const;
+  const std::map<Key, Value>& get_bindings() const;
 
   friend bool operator==(const shaka::Environment&, const shaka::Environment&);
 
