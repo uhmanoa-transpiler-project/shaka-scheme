@@ -109,7 +109,22 @@ TEST(EnvironmentUnitTest, get_value_invalid_key_failure) {
 }
 
 TEST(EnvironmentUnitTest, contains) {
+  // Given: an environment and different symbols and values
+  Environment e(nullptr);
+  Symbol key1("x");
+  Symbol key2("y");
+  auto x_value = create_node(String("x test"));
 
+  // When: you define some key to be a specific value in the current
+  //       environment
+  e.set_value(key1, x_value);
+
+  // Then: the correct value will be found in the current environment
+  ASSERT_TRUE(e.contains(key1));
+
+  // When: a key is not contained in the current environment
+  // Then: the key will not be found
+  ASSERT_FALSE(e.contains(key2));
 }
 
 TEST(EnvironmentUnitTest, is_defined) {
