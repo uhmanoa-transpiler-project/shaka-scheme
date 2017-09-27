@@ -57,6 +57,8 @@ public:
    *        must exist, otherwise, it throws a runtime error.
    * @param key The key to lookup and return the value for.
    * @return The value associated with the given key
+   * @throws InvalidInputException when the key does not exist in the
+   *         environment bindings
    */
   Value get_value(const Key& key) override;
 

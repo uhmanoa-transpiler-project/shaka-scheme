@@ -8,6 +8,9 @@
 
 using namespace shaka;
 
+/**
+ * @brief Test: Constructor with null pointer and parent pointer
+ */
 TEST(EnvironmentUnitTest, parent_constructor) {
   // Given: an environment with parent as null pointer.
   Environment e(nullptr);
@@ -26,6 +29,9 @@ TEST(EnvironmentUnitTest, parent_constructor) {
   ASSERT_EQ(e.get_parent(), parent);
 }
 
+/**
+ * @brief Test: Parent Getter
+ */
 TEST(EnvironmentUnitTest, get_parent) {
   // Given: a pointer to a parent Environment
   //        environment with parent as null pointer.
@@ -45,6 +51,9 @@ TEST(EnvironmentUnitTest, get_parent) {
 
 }
 
+/**
+ * @brief Test: Parent Setter
+ */
 TEST(EnvironmentUnitTest, set_parent) {
   // Given: a pointer to a parent Environment.
   //        a child Environment with parent initialized to null pointer.
@@ -58,6 +67,9 @@ TEST(EnvironmentUnitTest, set_parent) {
   ASSERT_EQ(child.get_parent(), parent);
 }
 
+/**
+ * @brief Test: Value Setter
+ */
 TEST(EnvironmentUnitTest, set_value) {
   // Given: an environment with parent initialized to the null pointer.
   //        a Symbol
@@ -72,6 +84,10 @@ TEST(EnvironmentUnitTest, set_value) {
   // Then: the key will have the correct value
   ASSERT_EQ(e.get_value(key), value);
 }
+
+/**
+ * @brief Test: Value Getter with Success
+ */
 TEST(EnvironmentUnitTest, get_value_success) {
   // Given: an environment, key and value
   Environment e(nullptr);
@@ -97,6 +113,10 @@ TEST(EnvironmentUnitTest, get_value_success) {
   // Then: the correct value will be returned
   ASSERT_EQ(e.get_value(key2), value2);
 }
+
+/**
+ * @brief Test: Value Getter with Failure
+ */
 TEST(EnvironmentUnitTest, get_value_invalid_key_failure) {
   // Given: an environment and key
   Environment e(nullptr);
@@ -108,6 +128,9 @@ TEST(EnvironmentUnitTest, get_value_invalid_key_failure) {
 
 }
 
+/**
+ * @brief Test: Environment contains Symbol
+ */
 TEST(EnvironmentUnitTest, contains) {
   // Given: an environment and different symbols and values
   Environment e(nullptr);
@@ -127,6 +150,9 @@ TEST(EnvironmentUnitTest, contains) {
   ASSERT_FALSE(e.contains(key2));
 }
 
+/**
+ * @brief Test: Symbol defined in Environment or Parent Environment
+ */
 TEST(EnvironmentUnitTest, is_defined) {
   // Given: a child environment, parent environment, different symbols and
   //        values
@@ -156,6 +182,10 @@ TEST(EnvironmentUnitTest, is_defined) {
   // Then: the key will not be found
   ASSERT_FALSE(parent->is_defined(child_key));
 }
+
+/**
+ * @brief Test: Environment keys getter
+ */
 TEST(EnvironmentUnitTest, get_keys) {
   // Given: an environment with defined symbols and values
   Environment e(nullptr);
@@ -177,6 +207,9 @@ TEST(EnvironmentUnitTest, get_keys) {
   ASSERT_EQ(static_cast<std::size_t>(2), e.get_keys().size());
 }
 
+/**
+ * @brief Test: Environment bindings getter
+ */
 TEST(EnvironmentUnitTest, get_bindings) {
   // Given: an environment with a symbol/data binding
   Environment e(nullptr);
