@@ -1,5 +1,7 @@
 #include "shaka_scheme/system/base/Symbol.hpp"
 
+#include <iostream>
+
 namespace shaka {
 
 bool operator<(const Symbol& n1, const Symbol& n2) {
@@ -26,7 +28,7 @@ bool operator!=(const Symbol& n1, const Symbol& n2) {
   return !(n1 == n2);
 }
 
-std::ostream& operator<<(std::ostream& lhs, shaka::Symbol rhs) {
+std::ostream& operator<<(std::ostream& lhs, const shaka::Symbol& rhs) {
   lhs << rhs.get_value();
   return lhs;
 }
