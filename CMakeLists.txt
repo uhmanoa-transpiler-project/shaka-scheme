@@ -14,9 +14,9 @@ include(ExternalProject)
 
 # CMake
 set(CMAKE_VERBOSE_MAKEFILE off)
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY  ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY  ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # C++
 set(CMAKE_CXX_STANDARD 11)
@@ -25,10 +25,10 @@ set(CMAKE_CXX_STANDARD 11)
 set(SHAKA_SCHEME_MAJOR_VERSION 0)
 set(SHAKA_SCHEME_MINOR_VERSION 1)
 set(SHAKA_SCHEME_LIBRARY_NAME
-"shaka-scheme-${SHAKA_SCHEME_MAJOR_VERSION}.$\
+        "shaka-scheme-${SHAKA_SCHEME_MAJOR_VERSION}.$\
 {SHAKA_SCHEME_MINOR_VERSION}")
 set(SHAKA_SCHEME_REPL_NAME
-"shaka-scheme-repl-${SHAKA_SCHEME_MAJOR_VERSION}.$\
+        "shaka-scheme-repl-${SHAKA_SCHEME_MAJOR_VERSION}.$\
 {SHAKA_SCHEME_MINOR_VERSION}")
 
 include_directories(./src)
@@ -49,7 +49,8 @@ set(SOURCE_FILES
         src/shaka_scheme/system/base/String.cpp
         src/shaka_scheme/system/base/Symbol.cpp
         src/shaka_scheme/system/base/DataPair.cpp
-        src/shaka_scheme/system/exceptions/MissingImplementationException.hpp)
+        src/shaka_scheme/system/exceptions/MissingImplementationException.hpp
+        src/shaka_scheme/system/base/Environment.cpp)
 add_library(${SHAKA_SCHEME_LIBRARY_NAME} SHARED ${SOURCE_FILES})
 target_compile_options(${SHAKA_SCHEME_LIBRARY_NAME} PRIVATE -Wall -Wextra
         -pedantic)

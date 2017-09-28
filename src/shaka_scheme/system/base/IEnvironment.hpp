@@ -26,7 +26,7 @@ public:
    * @return The pointer to the parent environment.
    */
   virtual std::shared_ptr<IEnvironment<Key, Value>>
-  get_parent() throw() = 0;
+  get_parent() = 0;
 
   /**
    * @brief Returns whether a key has an associated value in the environment.
