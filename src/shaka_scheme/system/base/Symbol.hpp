@@ -47,12 +47,13 @@ public:
   friend bool operator<=(const Symbol& n1, const Symbol& n2);
   friend bool operator>(const Symbol& n1, const Symbol& n2);
   friend bool operator>=(const Symbol& n1, const Symbol& n2);
+  friend std::ostream& operator<<(std::ostream& lhs, const shaka::Symbol& rhs);
 
 private:
   std::string value;
 };
 
-std::ostream& operator<<(std::ostream& lhs, shaka::Symbol rhs);
+
 
 } // namespace shaka
 #endif // SHAKA_SCHEME_SYMBOL_H
