@@ -45,7 +45,7 @@ class HeapVirtualMachine {
       Expression x,
       EnvPtr e,
       ValueRib r,
-      FramePtr s) : a(a), x(x), e(e), r(r), s(s) {}
+      FramePtr s) : acc(a), exp(x), env(e), rib(r), frame(s) {}
 
    ~HeapVirtualMachine();
 
@@ -53,7 +53,7 @@ class HeapVirtualMachine {
     * @brief The method that actually processes the 12 assembly instructions
     * Changes the contents of each register in place
     */
-  void evaluate_assembly_instruction();
+  NodePtr evaluate_assembly_instruction();
 
   /**
   * @brief Returns the current contents of the Accumulator register
@@ -116,11 +116,11 @@ class HeapVirtualMachine {
   void set_value_rib(ValueRib r);
 
 private:
-  Accumulator a;
-  Expression x;
-  EnvPtr e;
-  ValueRib r;
-  FramePtr s;
+  Accumulator acc;
+  Expression exp;
+  EnvPtr env;
+  ValueRib rib;
+  FramePtr frame;
 };
 
 }// namespace shaka
