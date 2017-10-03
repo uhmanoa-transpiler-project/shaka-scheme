@@ -3,8 +3,11 @@
 //
 
 #include "shaka_scheme/system/vm/HeapVirtualMachine.hpp"
+#include "shaka_scheme/system/base/Environment.hpp"
 
 namespace shaka {
+
+HeapVirtualMachine::~HeapVirtualMachine() {}
 
 NodePtr HeapVirtualMachine::evaluate_assembly_instruction() {
   shaka::DataPair& exp_pair = exp->get<DataPair>();
@@ -14,6 +17,19 @@ NodePtr HeapVirtualMachine::evaluate_assembly_instruction() {
     return this->acc;
   }
 
+  if (instruction == shaka::Symbol("refer")) {
+    shaka::DataPair& exp_cdr = exp_pair.cdr()->get<DataPair>();
+    shaka::Symbol& var = exp_cdr.car()->get<Symbol>();
+    this->set_accumulator(env->get_value(var));
+
+    NodePtr next_expression = exp_cdr.cdr();
+
+    this->set_expression(next_expression);
+
+    return nullptr;
+  }
+
+  return nullptr;
 }
 
 Accumulator HeapVirtualMachine::get_accumulator() const {
