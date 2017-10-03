@@ -40,6 +40,8 @@ using FramePtr = std::shared_ptr<CallFrame>;
  */
 class HeapVirtualMachine {
 
+public:
+
   HeapVirtualMachine(
       Accumulator a,
       Expression x,
