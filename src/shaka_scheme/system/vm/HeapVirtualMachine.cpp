@@ -13,18 +13,56 @@ NodePtr HeapVirtualMachine::evaluate_assembly_instruction() {
   shaka::DataPair& exp_pair = exp->get<DataPair>();
   shaka::Symbol& instruction = exp_pair.car()->get<Symbol>();
 
+  // (halt)
   if (instruction == shaka::Symbol("halt")) {
     return this->acc;
   }
 
+  // (refer var x)
   if (instruction == shaka::Symbol("refer")) {
     shaka::DataPair& exp_cdr = exp_pair.cdr()->get<DataPair>();
     shaka::Symbol& var = exp_cdr.car()->get<Symbol>();
     this->set_accumulator(env->get_value(var));
 
-    NodePtr next_expression = exp_cdr.cdr();
+    DataPair& next_pair= exp_cdr.cdr()->get<DataPair>();
+    NodePtr next_expression = next_pair.car();
 
     this->set_expression(next_expression);
+
+    return nullptr;
+  }
+
+  // (constant obj x)
+  if (instruction == shaka::Symbol("constant")) {
+    shaka::DataPair& exp_cdr = exp_pair.cdr()->get<DataPair>();
+    NodePtr obj = exp_cdr.car();
+
+    this->set_accumulator(obj);
+
+    DataPair& next_pair = exp_cdr.cdr()->get<DataPair>();
+
+    NodePtr next_expression = next_pair.car();
+
+    this->set_expression(next_expression);
+  }
+
+  // (test then else)
+  if (instruction == shaka::Symbol("test")) {
+    shaka::DataPair& exp_cdr = exp_pair.cdr()->get<DataPair>();
+    NodePtr then_exp = exp_cdr.car();
+    NodePtr else_exp = exp_cdr.cdr()->get<DataPair>().car();
+
+    if (this->acc->get_type() == shaka::Data::Type::SYMBOL &&
+        this->acc->get<Symbol>() == Symbol("#f")) {
+
+      this->set_expression(else_exp);
+    }
+
+    else {
+      this->set_expression(then_exp);
+    }
+
+
 
     return nullptr;
   }
