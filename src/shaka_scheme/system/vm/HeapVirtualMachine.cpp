@@ -4,6 +4,7 @@
 
 #include "shaka_scheme/system/vm/HeapVirtualMachine.hpp"
 #include "shaka_scheme/system/base/Environment.hpp"
+#include "shaka_scheme/system/vm/CallFrame.hpp"
 
 namespace shaka {
 
@@ -62,7 +63,69 @@ NodePtr HeapVirtualMachine::evaluate_assembly_instruction() {
       this->set_expression(then_exp);
     }
 
+    return nullptr;
+  }
 
+  // (assign var x)
+
+  if (instruction == shaka::Symbol("assign")) {
+    shaka::DataPair& exp_cdr = exp_pair.cdr()->get<DataPair>();
+    shaka::Symbol& var = exp_cdr.car()->get<Symbol>();
+
+    DataPair& next_pair = exp_cdr.cdr()->get<DataPair>();
+
+    NodePtr expression = next_pair.car();
+
+    this->env->set_value(var, this->acc);
+
+    this->set_expression(expression);
+
+    return nullptr;
+  }
+
+  // (frame x ret)
+
+  if (instruction == shaka::Symbol("frame")) {
+    shaka::DataPair& expr_cdr = exp_pair.cdr()->get<DataPair>();
+
+    NodePtr x = expr_cdr.car();
+
+    NodePtr ret = expr_cdr.cdr()->get<DataPair>().car();
+
+    FramePtr new_frame =
+        std::make_shared<CallFrame>(ret, this->env,
+                                    this->rib, this->frame);
+    this->frame = new_frame;
+    this->set_expression(x);
+
+    shaka::ValueRib vr;
+
+    this->set_value_rib(vr);
+
+    return nullptr;
+  }
+
+  // (argument x)
+
+  if (instruction == shaka::Symbol("argument")) {
+    shaka::DataPair& exp_cdr = exp_pair.cdr()->get<DataPair>();
+
+    NodePtr x = exp_cdr.car();
+
+    this->rib.push_back(this->acc);
+
+    this->set_expression(x);
+
+    return nullptr;
+  }
+
+  // (return)
+
+  if (instruction == shaka::Symbol("return")) {
+    this->set_expression(this->frame->get_next_expression());
+    this->set_value_rib(this->frame->get_value_rib());
+    this->set_environment(this->frame->get_environment_pointer());
+    this->frame = this->frame->get_next_frame();
 
     return nullptr;
   }
