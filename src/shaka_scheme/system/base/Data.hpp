@@ -126,6 +126,10 @@ template<> shaka::DataPair& shaka::Data::get<shaka::DataPair>();
 
 std::ostream& operator<<(std::ostream& lhs, shaka::Data rhs);
 
+/**
+ * @brief A method to create an unspecified value.
+ * @return A new allocated node that represents an unspecified value.
+ */
 NodePtr create_unspecified();
 
 } // namespace shaka
