@@ -10,13 +10,13 @@ namespace shaka {
 
 HeapVirtualMachine::~HeapVirtualMachine() {}
 
-NodePtr HeapVirtualMachine::evaluate_assembly_instruction() {
+void HeapVirtualMachine::evaluate_assembly_instruction() {
   shaka::DataPair& exp_pair = exp->get<DataPair>();
   shaka::Symbol& instruction = exp_pair.car()->get<Symbol>();
 
   // (halt)
   if (instruction == shaka::Symbol("halt")) {
-    return this->acc;
+    return;
   }
 
   // (refer var x)
@@ -29,8 +29,6 @@ NodePtr HeapVirtualMachine::evaluate_assembly_instruction() {
     NodePtr next_expression = next_pair.car();
 
     this->set_expression(next_expression);
-
-    return nullptr;
   }
 
   // (constant obj x)
@@ -63,7 +61,6 @@ NodePtr HeapVirtualMachine::evaluate_assembly_instruction() {
       this->set_expression(then_exp);
     }
 
-    return nullptr;
   }
 
   // (assign var x)
@@ -80,7 +77,6 @@ NodePtr HeapVirtualMachine::evaluate_assembly_instruction() {
 
     this->set_expression(expression);
 
-    return nullptr;
   }
 
   // (frame x ret)
@@ -102,7 +98,6 @@ NodePtr HeapVirtualMachine::evaluate_assembly_instruction() {
 
     this->set_value_rib(vr);
 
-    return nullptr;
   }
 
   // (argument x)
@@ -116,7 +111,6 @@ NodePtr HeapVirtualMachine::evaluate_assembly_instruction() {
 
     this->set_expression(x);
 
-    return nullptr;
   }
 
   // (return)
@@ -127,10 +121,8 @@ NodePtr HeapVirtualMachine::evaluate_assembly_instruction() {
     this->set_environment(this->frame->get_environment_pointer());
     this->frame = this->frame->get_next_frame();
 
-    return nullptr;
   }
 
-  return nullptr;
 }
 
 Accumulator HeapVirtualMachine::get_accumulator() const {

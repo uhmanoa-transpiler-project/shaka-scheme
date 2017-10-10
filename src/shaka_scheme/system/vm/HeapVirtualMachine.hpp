@@ -55,7 +55,7 @@ public:
     * @brief The method that actually processes the 12 assembly instructions
     * Changes the contents of each register in place
     */
-  NodePtr evaluate_assembly_instruction();
+  void evaluate_assembly_instruction();
 
   /**
   * @brief Returns the current contents of the Accumulator register

@@ -36,10 +36,10 @@ TEST(HeapVirtualMachineUnitTest, evaluate_halt) {
   HeapVirtualMachine hvm (accumulator, expression, env, vr, nullptr);
 
   // When: You invoke the evaluate_assembly_instruction() method
-  auto result = hvm.evaluate_assembly_instruction();
+  hvm.evaluate_assembly_instruction();
 
   // Then: It will return the contents of the accumulator register
-  ASSERT_EQ(result->get<Symbol>(), Symbol("result"));
+  ASSERT_EQ(hvm.get_accumulator()->get<Symbol>(), Symbol("result"));
 
 }
 
@@ -84,10 +84,11 @@ TEST(HeapVirtualMachineUnitTest, evaluate_refer) {
             Symbol("halt"));
 
   // When: You then invoke the evaluate_assembly_instruction() method again
-  auto result = hvm.evaluate_assembly_instruction();
+  hvm.evaluate_assembly_instruction();
 
   // Then: It will return the contents of the accumulator
-  ASSERT_EQ(result, env->get_value(Symbol("a")));
+  ASSERT_EQ(hvm.get_accumulator()->get<String>(),
+            env->get_value(Symbol("a"))->get<String>());
 }
 
 /**
@@ -137,11 +138,11 @@ TEST(HeapVirtualMachineUnitTest, evaluate_constant) {
 
   // When: You then invoke the evaluate_assembly_instruction method again
 
-  auto result = hvm.evaluate_assembly_instruction();
+  hvm.evaluate_assembly_instruction();
 
   // Then: The result you get back is the String("Hello")
 
-  ASSERT_EQ(result->get<String>(), String("Hello"));
+  ASSERT_EQ(hvm.get_accumulator()->get<String>(), String("Hello"));
 }
 
 /**
@@ -486,11 +487,11 @@ TEST(HeapVirtualMachineUnitTest, evaluate_frame) {
 
   // When: You invoke the evaluate_assembly_instruction() method again
 
-  auto result = hvm.evaluate_assembly_instruction();
+  hvm.evaluate_assembly_instruction();
 
   // Then: It will return the contents of the Accumulator
 
-  ASSERT_EQ(result->get<Symbol>(), Symbol("finale"));
+  ASSERT_EQ(hvm.get_accumulator()->get<Symbol>(), Symbol("finale"));
 
 }
 
@@ -544,11 +545,11 @@ TEST(HeapVirtualMachineUnitTest, evaluate_argument) {
 
   // When: You invoke the evaluate_assembly_instruction() method again
 
-  auto result = hvm.evaluate_assembly_instruction();
+  hvm.evaluate_assembly_instruction();
 
   // Then: You will get back the banana that is in the Accumulator
 
-  ASSERT_EQ(result->get<Symbol>(), Symbol("banana"));
+  ASSERT_EQ(hvm.get_accumulator()->get<Symbol>(), Symbol("banana"));
 
 }
 
@@ -631,10 +632,10 @@ TEST(HeapVirtualMachineUnitTest, evaluate_return) {
 
   // When: You invoke the evaluate_assembly_instruction method again
 
-  auto result = hvm.evaluate_assembly_instruction();
+  hvm.evaluate_assembly_instruction();
 
   // Then: The result you get back is the symbol 'finale
 
-  ASSERT_EQ(result->get<Symbol>(), Symbol("finale"));
+  ASSERT_EQ(hvm.get_accumulator()->get<Symbol>(), Symbol("finale"));
 
 }
