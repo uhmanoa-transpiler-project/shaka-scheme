@@ -38,7 +38,7 @@ TEST(HeapVirtualMachineUnitTest, evaluate_halt) {
   // When: You invoke the evaluate_assembly_instruction() method
   hvm.evaluate_assembly_instruction();
 
-  // Then: It will return the contents of the accumulator register
+  // Then: The accumulator register will contain the symbol 'result
   ASSERT_EQ(hvm.get_accumulator()->get<Symbol>(), Symbol("result"));
 
 }
@@ -86,7 +86,7 @@ TEST(HeapVirtualMachineUnitTest, evaluate_refer) {
   // When: You then invoke the evaluate_assembly_instruction() method again
   hvm.evaluate_assembly_instruction();
 
-  // Then: It will return the contents of the accumulator
+  // Then: The accumulator will contain the string "test"
   ASSERT_EQ(hvm.get_accumulator()->get<String>(),
             env->get_value(Symbol("a"))->get<String>());
 }
@@ -140,7 +140,7 @@ TEST(HeapVirtualMachineUnitTest, evaluate_constant) {
 
   hvm.evaluate_assembly_instruction();
 
-  // Then: The result you get back is the String("Hello")
+  // Then: The accumulator register will contain the string "Hello"
 
   ASSERT_EQ(hvm.get_accumulator()->get<String>(), String("Hello"));
 }
@@ -489,7 +489,7 @@ TEST(HeapVirtualMachineUnitTest, evaluate_frame) {
 
   hvm.evaluate_assembly_instruction();
 
-  // Then: It will return the contents of the Accumulator
+  // Then: The accumulator will hold the symbol 'finale
 
   ASSERT_EQ(hvm.get_accumulator()->get<Symbol>(), Symbol("finale"));
 
@@ -547,7 +547,7 @@ TEST(HeapVirtualMachineUnitTest, evaluate_argument) {
 
   hvm.evaluate_assembly_instruction();
 
-  // Then: You will get back the banana that is in the Accumulator
+  // Then: The accumulator register will hold the symbol 'banana
 
   ASSERT_EQ(hvm.get_accumulator()->get<Symbol>(), Symbol("banana"));
 
@@ -634,7 +634,7 @@ TEST(HeapVirtualMachineUnitTest, evaluate_return) {
 
   hvm.evaluate_assembly_instruction();
 
-  // Then: The result you get back is the symbol 'finale
+  // Then: The accumulator will hold the symbol 'finale
 
   ASSERT_EQ(hvm.get_accumulator()->get<Symbol>(), Symbol("finale"));
 
