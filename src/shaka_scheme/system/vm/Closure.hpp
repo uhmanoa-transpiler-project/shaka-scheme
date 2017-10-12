@@ -10,10 +10,12 @@
 #include "shaka_scheme/system/base/Environment.hpp"
 #include "shaka_scheme/system/vm/CallFrame.hpp"
 #include <vector>
+#include <functional>
 
 namespace shaka {
 
-class Callable;
+using Callable =
+  std::shared_ptr<std::function<std::vector<NodePtr>(std::vector<NodePtr>)>>;
 
 using VariableList = std::vector<Symbol>;
 
@@ -62,7 +64,7 @@ private:
 
   EnvPtr env;
   NodePtr func_body;
-  VarableList variable_list;
+  VariableList variable_list;
   Callable callable;
   FramePtr frame;
 
