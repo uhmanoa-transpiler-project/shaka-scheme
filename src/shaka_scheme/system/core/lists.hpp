@@ -112,6 +112,71 @@ std::size_t length(NodePtr node) {
   return count;
 }
 
+NodePtr append() {
+  return list();
+}
+
+NodePtr append(NodePtr first) {
+  return first;
+}
+
+NodePtr append(NodePtr first, NodePtr second) {
+  // The first argument must be a proper list.
+  if (!is_proper_list(first)) {
+    throw shaka::TypeException(2002, "append(): first argument is not a "
+        "proper list");
+  }
+  // Return the second argument if the first argument is a null list.
+  if (is_null_list(first)) { return second; }
+
+  // Otherwise, cons everything from first with the second after it.
+  // First, create the root node as a list with just the first item of first.
+  NodePtr root = cons(car(first), create_node(Data()));
+  NodePtr list_it = root;
+  // Get the NodePtr iterator for the cdr of the first list.
+  NodePtr it = cdr(first);
+  // While it is still a pair
+  while (it->get_type() == shaka::Data::Type::DATA_PAIR) {
+    // Append the next pair onto the list.
+    set_cdr(list_it, cons(car(it), create_node(Data())));
+    list_it = cdr(list_it);
+    // Iterate.
+    it = cdr(it);
+  }
+
+  // If second is not a pair, set cdr of the list to be second.
+  if (!is_pair(second)) {
+    set_cdr(list_it, second);
+    return root;
+  }
+
+  // Otherwise, we need to iterate through second like first.
+  it = second;
+  set_cdr(list_it, cons(car(second), create_node(Data())));
+
+  // While it is still a pair
+  while (it->get_type() == shaka::Data::Type::DATA_PAIR) {
+    // Append the next pair onto the list.
+    set_cdr(list_it, cons(car(it), create_node(Data())));
+    list_it = cdr(list_it);
+    // Iterate.
+    if (!is_pair(it)) { break; }
+    it = cdr(it);
+  }
+
+  // If the last item is a not a null list, append it.
+  if (!is_null_list(it)) {
+    set_cdr(list_it, it);
+  }
+  return root;
+}
+
+template <typename... Args>
+NodePtr append(NodePtr first, NodePtr second, Args... rest) {
+  auto node = append(first, second);
+  return append(node, rest...);
+}
+
 } // namespace core
 } // namespace shaka
 
