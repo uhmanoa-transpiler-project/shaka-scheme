@@ -9,7 +9,7 @@ namespace shaka {
 Closure::Closure(EnvPtr env,
                  NodePtr fb,
                  VariableList vl,
-                 Callable cl,
+                 CallablePtr cl,
                  FramePtr frame) :
     env(env),
     func_body(fb),
@@ -22,7 +22,7 @@ NodePtr Closure::get_function_body() {
 }
 
 void Closure::extend_environment(ValueRib vr) {
-  for (int i = 0; i < variable_list.size(); i++) {
+  for (size_t i = 0; i < variable_list.size(); i++) {
     env->set_value(variable_list[i], vr[i]);
   }
 }
@@ -33,6 +33,10 @@ EnvPtr Closure::get_environment() {
 
 std::vector<NodePtr> Closure::call(std::vector<NodePtr> args) {
   return (*callable)(args);
+}
+
+FramePtr Closure::get_call_frame() {
+  return this->frame;
 }
 
 

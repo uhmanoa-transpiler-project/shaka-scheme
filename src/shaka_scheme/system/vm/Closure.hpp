@@ -14,8 +14,8 @@
 
 namespace shaka {
 
-using Callable =
-  std::shared_ptr<std::function<std::vector<NodePtr>(std::vector<NodePtr>)>>;
+using Callable = std::function<std::vector<NodePtr>(std::vector<NodePtr>)>;
+using CallablePtr = Callable*;
 
 using VariableList = std::vector<Symbol>;
 
@@ -31,7 +31,7 @@ public:
    * @param frame A pointer to a CallFrame, needed for continuations
    */
   Closure(EnvPtr env, NodePtr fb, VariableList vl,
-          Callable cl, FramePtr frame);
+          CallablePtr cl, FramePtr frame);
 
   /**
    * @brief Method to get the body of the function
@@ -58,6 +58,12 @@ public:
    */
   std::vector<NodePtr> call(std::vector<NodePtr> args);
 
+  /**
+   * @brief A procedure to retrieve the CallFrame from a continuation closure
+   * @return The pointer to the CallFrame held by the continuation
+   */
+  FramePtr get_call_frame();
+
 
 
 private:
@@ -65,7 +71,7 @@ private:
   EnvPtr env;
   NodePtr func_body;
   VariableList variable_list;
-  Callable callable;
+  CallablePtr callable;
   FramePtr frame;
 
 };
