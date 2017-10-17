@@ -16,14 +16,67 @@
 
 namespace shaka {
 
+/**
+ * @brief The monolithic lexer class that implements most of the context-free
+ * grammar and token generation for Scheme.
+ *
+ * @note The Tokenizer class is designed to take input from an std::istream&,
+ * such as std::cin. It is also able to handle backtracking, as it stores
+ * Tokens on an internal deque that allows for queueing and reinserting back
+ * onto the front, as well as popping Tokens from both ends.
+ *
+ * @implementation_specific Shaka Scheme relaxes the #!<directive> rule as
+ * described in R7RS in order to allow for the #!quit directive to be used
+ * to exit from the REPL.
+ *
+ * @throws TokenizerException upon any rule mismatches or errors. It is
+ * expected that code above it will catch it, and then deal with it accordingly.
+ *
+ * @todo Finish the documentation for Tokenizer's methods and rules, or
+ * re-factor the class into a more clean, modular design (idea: parser
+ * combinators, although error handling will be more difficult).
+ */
 class Tokenizer {
 private:
+  /**
+   * @brief The input stream reference for the lexer. The lexer does not own
+   * error handling and state resetting for the stream upon error.
+   */
   std::istream& in;
+
+  /**
+   * @brief The internal double-ended queue for Tokens.
+   */
   std::deque<Token> tokens;
 public:
+  /**
+   * @brief Constructs the Tokenizer.
+   * @param in The stream to take input from.
+   */
   Tokenizer(std::istream& in) :
       in(in) {}
 
+  /**
+   * @brief Returns the mutable reference to the internal std::istream.
+   * @return The istream reference.
+   */
+  std::istream& get_istream() {
+    return this->in;
+  }
+
+  /**
+   * @brief Gets the internal deque of tokens.
+   * @return The deque of Tokens.
+   */
+  std::deque<Token>& get_tokens() {
+    return this->tokens;
+  }
+
+  /**
+   * @brief Returns the cached, unread input Token, or consumes input from
+   * the input stream until it can complete a Token.
+   * @return The token that is immediately read. It is not put onto the queue.
+   */
   Token get() {
     if (!tokens.empty()) {
       auto front = tokens.front();
@@ -42,6 +95,11 @@ public:
     }
   }
 
+  /**
+   * @brief Reads in input until a Token is generated, and then enqueued onto
+   * the internal Token double-ended queue.
+   * @return The token that is at the front of the Token deque.
+   */
   Token peek() {
     if (!tokens.empty()) {
       auto front = tokens.front();
@@ -58,10 +116,18 @@ public:
     }
   }
 
+  /**
+   * @brief Places a Token back onto the front of the internal Token deque.
+   * @param t The token to requeue onto the front of the Token double-ended
+   * queue.
+   */
   void unget(Token t) {
     tokens.push_front(t);
   }
 
+  /**
+   * @brief Parses the next token, and pushes it onto the back of the deque.
+   */
   void read_next_token() {
     Token t = parse_token();
     if (DEBUG_PRINT) {
@@ -71,6 +137,11 @@ public:
     tokens.push_back(t);
   }
 
+  /**
+   * @brief Parses a left parenthesis.
+   * @return The token representing the left parenthesis.
+   * @throws TokenizerException upon the next character not being '('.
+   */
   Token parse_paren_start() {
     // Begin parenthesis
     if (in.peek() == '(') {
@@ -82,6 +153,11 @@ public:
     }
   }
 
+  /**
+   * @brief Parses a right parenthesis.
+   * @return The token representing the right parenthesis.
+   * @throws TokenizerException upon the next character not being ')'.
+   */
   Token parse_paren_end() {
     if (in.peek() == ')') {
       in.get();
@@ -91,6 +167,11 @@ public:
     }
   }
 
+  /**
+   * @brief Parses a string element, complete with possible string escapes.
+   * @param str The string to parse.
+   * @throws TokenizerException upon an invalid character escape sequence.
+   */
   void parse_string_element(std::string& str) {
     if (in.peek() == '\\') {
       in.get();
@@ -213,6 +294,13 @@ public:
     }
   }
 
+  /**
+   * @brief Parses in a string token, as well as it delimiting double quotes.
+   * @return A Token with the correct Token::Type::STRING and std::string
+   * contents.
+   * @throws TokenizerException if the next character from input at the start
+   * of this procedure is not an ASCII double quote.
+   */
   Token parse_string() {
     // String
     if (in.peek() == '\"') {
@@ -229,6 +317,11 @@ public:
     }
   }
 
+  /**
+   * @brief Parses the rest of a line comment.
+   *
+   * Assumes that the first ';' has been parsed already.
+   */
   void parse_line_comment() {
     if (DEBUG_PRINT) {
       std::cout << "What LINE COMMENT is this? \'" <<
@@ -242,6 +335,13 @@ public:
     in.get();
   }
 
+  /**
+   * @brief Parses a single hexidecimal scalar value character.
+   * @param result The Token to write the valid result into.
+   * @return Whether the parse happened successfully (always true in
+   * practice, as an exception is thrown upon error).
+   * @throws TokenizerExcpetion if the hex scalar value character was invalid.
+   */
   bool parse_hex_scalar_value_character(Token& result) {
     if (is_hex_digit(in.peek())) {
       std::string buffer;
