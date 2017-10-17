@@ -1,4 +1,5 @@
 #include <iostream>
+#include <limits> // for std::numeric_limits for std::cin.ignore()
 
 #include "shaka_scheme/system/exceptions/BaseException.hpp"
 #include "shaka_scheme/system/lexer/Tokenizer.hpp"
@@ -22,7 +23,7 @@ int main() {
     } catch (shaka::BaseException e) {
       std::cerr << e.what() << std::endl;
       std::cin.clear();
-      std::cin.ignore(INT_MAX);
+      std::cin.ignore(std::numeric_limits<int>::max());
     }
   }
 
