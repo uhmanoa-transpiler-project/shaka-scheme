@@ -573,23 +573,8 @@ public:
         while (!is_delimiter(in.peek())) {
           buffer += in.get();
         }
-        // fold-case directive?
-        if (buffer == "fold-case") {
-          result = Token(Token::Type::DIRECTIVE, "fold-case");
-          return true;
-          // no-fold-case directive?
-        } else if (buffer == "no-fold-case") {
-          result = Token(Token::Type::DIRECTIVE, "no-fold-case");
-          return true;
-        } else {
-          if (DEBUG_PRINT) {
-            std::cerr << "BROKE ON: " << in.peek() << std::endl;
-          }
-          throw shaka::TokenizerException(20010, "Tokenizer.parse_token: "
-              "invalid directive");
-          result = Token(Token::Type::END_OF_FILE);
-          return false;
-        }
+        result = Token(Token::Type::DIRECTIVE, buffer);
+        return true;
       } else {
         if (DEBUG_PRINT) {
           std::cerr << "BROKE ON: " << in.peek() << std::endl;
