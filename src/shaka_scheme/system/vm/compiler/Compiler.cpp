@@ -40,5 +40,4 @@ Expression Compiler::compile(Expression input, Expression next_instruction) {
     // (list 'constant x next)
   }
 }
-
 }
