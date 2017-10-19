@@ -39,5 +39,17 @@ FramePtr Closure::get_call_frame() {
   return this->frame;
 }
 
+VariableList Closure::get_variable_list() {
+  return this->variable_list;
+}
+
+bool Closure::is_native_closure() {
+  return this->callable != nullptr;
+}
+
+bool Closure::is_continuation_closure() {
+  return this->frame != nullptr;
+}
+
 
 }

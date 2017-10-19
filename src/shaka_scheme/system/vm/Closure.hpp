@@ -15,7 +15,7 @@
 namespace shaka {
 
 using Callable = std::function<std::vector<NodePtr>(std::vector<NodePtr>)>;
-using CallablePtr = Callable*;
+using CallablePtr = std::shared_ptr<Callable>;
 
 using VariableList = std::vector<Symbol>;
 
@@ -63,6 +63,24 @@ public:
    * @return The pointer to the CallFrame held by the continuation
    */
   FramePtr get_call_frame();
+
+  /**
+   * @brief A procedure to retrieve the parameter variable list
+   * @return The vector of symbols comprising the variable list
+   */
+  VariableList get_variable_list();
+
+  /**
+   * @brief Method to determine whether or not this is a Native Closure
+   * @return true if the CallablePtr is not null, false otherwise
+   */
+  bool is_native_closure();
+
+  /**
+   * @brief Method to determine wheter or not this is a Continuation Closure
+   * @return true if the FramePtr is not null, false otherwise
+   */
+  bool is_continuation_closure();
 
 
 
