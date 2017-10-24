@@ -4,6 +4,8 @@
 #include <gmock/gmock.h>
 #include <shaka_scheme/system/core/lists.hpp>
 
+#include <string>
+#include <sstream>
 
 
 /**
@@ -123,4 +125,188 @@ TEST(ListsUnitTest, length_success) {
   ASSERT_EQ(core::length(core::cdr(node)), 2);
   ASSERT_EQ(core::length(core::cdr(core::cdr(node))), 1);
   ASSERT_EQ(core::length(core::cdr(core::cdr(core::cdr(node)))), 0);
+}
+
+/**
+ * @brief Test: (append) with no arguments
+ */
+TEST(ListsUnitTest, append_0_args_success) {
+  using namespace shaka;
+  // When: you call (append) with no arguments
+  NodePtr node = core::append();
+  // Then: it will return a null list
+  ASSERT_EQ(node->get_type(), shaka::Data::Type::NULL_LIST);
+}
+
+/**
+ * @brief Test: (append x) with 1 argument
+ */
+TEST(ListsUnitTest, append_1_args_success) {
+  using namespace shaka;
+
+  // Given: a single node of data
+  auto data = create_node(Data(Symbol("hello")));
+
+  // When: you call (append) with 1 argument with that data
+  NodePtr node = core::append(data);
+
+  // Then: it will return the data
+  ASSERT_EQ(node, data);
+}
+
+/**
+ * @brief Test: (append list second) for single item
+ */
+TEST(ListsUnitTest, append_2_args_single_item_success) {
+  using namespace shaka;
+
+  // Given: a list of data
+  auto data = core::list(
+      create_node(Data(Symbol("a"))),
+      create_node(Data(Symbol("b"))),
+      create_node(Data(Symbol("c")))
+  );
+  // Given: a second argument
+  auto second = create_node(Data(String("hello")));
+
+  // When: you call (append) with 2 argument
+  NodePtr node = core::append(data, second);
+
+  // Then: it will return a fresh list with the second appended.
+  ASSERT_NE(node, data);
+
+  std::stringstream ss;
+  ss << *node;
+
+  // Then: the string output is as follows
+  ASSERT_EQ(std::string("(a b c . \"hello\")"), ss.str());
+}
+
+/**
+ * @brief Test: (append list second) for proper list
+ */
+TEST(ListsUnitTest, append_2_args_proper_list_success) {
+  using namespace shaka;
+
+  // Given: a list of data
+  auto data = core::list(
+      create_node(Data(Symbol("a"))),
+      create_node(Data(Symbol("b"))),
+      create_node(Data(Symbol("c")))
+  );
+  // Given: a second list of data
+  auto second = core::list(
+      create_node(Data(String("x"))),
+      create_node(Data(String("y"))),
+      create_node(Data(String("z")))
+  );
+
+  // When: you call (append) with 2 argument
+  NodePtr node = core::append(data, second);
+
+  // Then: it will return a fresh list with the second appended.
+  ASSERT_NE(node, data);
+
+  std::stringstream ss;
+  ss << *node;
+
+  // Then: the string output is as follows
+  ASSERT_EQ(std::string("(a b c \"x\" \"y\" \"z\")"), ss.str());
+}
+
+/**
+ * @brief Test: (append list second) for improper list
+ */
+TEST(ListsUnitTest, append_2_args_improper_list_success) {
+  using namespace shaka;
+
+  // Given: a list of data
+  auto data = core::list(
+      create_node(Data(Symbol("a"))),
+      create_node(Data(Symbol("b"))),
+      create_node(Data(Symbol("c")))
+  );
+  // Given: a second improper list of data
+  auto second = core::list(
+      create_node(Data(String("x"))),
+      create_node(Data(String("y")))
+  );
+  // Placing "z" onto the end of the list in place of '()
+  core::set_cdr(core::cdr(second), create_node(Data(String("z"))));
+
+  // When: you call (append) with 2 argument
+  NodePtr node = core::append(data, second);
+
+  // Then: it will return a fresh list with the second appended.
+  ASSERT_NE(node, data);
+
+  std::stringstream ss;
+  ss << *node;
+
+  // Then: the string output is as follows
+  ASSERT_EQ(std::string("(a b c \"x\" \"y\" . \"z\")"), ss.str());
+}
+
+/**
+ * @brief Test: (append list second) for improper list
+ */
+TEST(ListsUnitTest, append_2_args_first_argument_not_proper_list_failure) {
+  using namespace shaka;
+
+  // Given: a first argument that is an improper list
+  auto data = core::list(
+      create_node(Data(String("x"))),
+      create_node(Data(String("y")))
+  );
+  core::set_cdr(core::cdr(data), create_node(Data(String("z"))));
+
+  // Given: a second argument
+  auto second = core::list(
+      create_node(Data(Symbol("a"))),
+      create_node(Data(Symbol("b"))),
+      create_node(Data(Symbol("c")))
+  );
+
+  // When: you call (append) with 2 arguments, but with the improper list as
+  // the first arugment
+  // Then: except a TypeException
+  EXPECT_THROW({
+    NodePtr node = core::append(data, second);
+  }, shaka::TypeException);
+}
+
+/**
+ * @brief Test: (append list second) for 3 or more arguments
+ */
+TEST(ListsUnitTest, append_3_args_success) {
+  using namespace shaka;
+
+  // Given: a list of data
+  auto data = core::list(
+      create_node(Data(Symbol("a"))),
+      create_node(Data(Symbol("b"))),
+      create_node(Data(Symbol("c")))
+  );
+
+  auto second = core::list(create_node(Data(Boolean(false))));
+
+  // Given: a third improper list of data
+  auto third = core::list(
+      create_node(Data(String("x"))),
+      create_node(Data(String("y")))
+  );
+  // Placing "z" onto the end of the list in place of '()
+  core::set_cdr(core::cdr(third), create_node(Data(String("z"))));
+
+  // When: you call (append) with 2 argument
+  NodePtr node = core::append(data, second, third);
+
+  // Then: it will return a fresh list with the second appended.
+  ASSERT_NE(node, data);
+
+  std::stringstream ss;
+  ss << *node;
+
+  // Then: the string output is as follows
+  ASSERT_EQ(std::string("(a b c #f \"x\" \"y\" . \"z\")"), ss.str());
 }
