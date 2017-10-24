@@ -14,29 +14,31 @@ Compiler::~Compiler() {}
 Expression Compiler::compile(Expression input, Expression next_instruction) {
   // (symbol? input)
   // (list 'refer x next)
-  if (is_symbol(car(input))) {
+  if (is_symbol(input)) {
     Symbol instruction("refer");
     Data instruction_data(instruction);
 
-    DataPair next(*car(input), *list(create_node(*next_instruction)));
+    DataPair next(*input, *list(create_node(*next_instruction)));
     DataPair assembly(instruction_data, next);
-    Expression expression = create_node(assembly);
 
-    return expression;
+    return create_node(assembly);
   }
   // (pair? input)
   else if (is_pair(input)) {
     // (list 'constant obj next)
+    if(car(input)->get<Symbol>() == Symbol("quote")){
+      Symbol instruction("constant");
+      Data instruction_data(instruction);
+
+      DataPair next(*cdr(input), *list(create_node(*next_instruction)));
+      DataPair assembly(instruction_data, next);
+
+      return create_node(assembly);
+    }
   }
   else {
     // (list 'constant x next)
   }
 }
-
-//void Compiler::compile_step(Expression input, Expression output) {
-//  if (core::is_symbol(core::car(input))) {
-//   // append(output, input);
-//  }
-//}
 
 }
