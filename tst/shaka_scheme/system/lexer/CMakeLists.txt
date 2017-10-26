@@ -1,1 +1,1 @@
-macro_shaka_scheme_test(unit-Tokenizer)
+macro_shaka_scheme_test(unit-LexerInput)
