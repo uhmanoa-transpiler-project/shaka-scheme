@@ -1,6 +1,8 @@
 #ifndef SHAKA_LEXER_TOKEN_H
 #define SHAKA_LEXER_TOKEN_H
 
+#include "shaka_scheme/system/lexer/LexInfo.hpp"
+
 #include <iostream>
 #include <string>
 
@@ -34,8 +36,7 @@ public:
 
   Token::Type type;
   std::string str;
-  int line_no;
-  int col_no;
+  LexInfo lex_info;
 
   Token(Token::Type type) :
       type(type),
@@ -44,6 +45,11 @@ public:
   Token(Token::Type type, const std::string& str) :
       type(type),
       str(str) {}
+
+  Token(Token::Type type, const std::string& str, LexInfo lex_info) :
+      type(type),
+      str(str),
+      lex_info(lex_info) {}
 
   bool operator==(const Token& other) {
     return (this->type == other.type &&
@@ -62,26 +68,19 @@ public:
     return this->str;
   }
 
+  LexInfo get_lex_info() const {
+    return this->lex_info;
+  }
+
   friend bool operator==(const Token& lhs, const Token& rhs);
   friend bool operator!=(const Token& lhs, const Token& rhs);
 
 };
 
-std::ostream& operator<<(std::ostream& out, Token rhs) {
-  out << "Token(" << static_cast<int>(rhs.type) << ",\"" << rhs.str << "\")";
-  return out;
-}
 
-bool operator==(const Token& lhs, const Token& rhs) {
-  return (
-      lhs.type == rhs.type &&
-          lhs.str == rhs.str
-  );
-}
-
-bool operator!=(const Token& lhs, const Token& rhs) {
-  return !operator==(lhs, rhs);
-}
+std::ostream& operator<<(std::ostream& out, Token rhs);
+bool operator==(const Token& lhs, const Token& rhs);
+bool operator!=(const Token& lhs, const Token& rhs);
 
 } // namespace shaka
 
