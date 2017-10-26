@@ -1,4 +1,4 @@
-#include "shaka_scheme/system/lexer/Lexer.hpp"
+#include "shaka_scheme/system/lexer/LexerInput.hpp"
 
 #include <gmock/gmock.h>
 
