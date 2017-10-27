@@ -2,7 +2,9 @@
 // Created by Billy Wooton on 9/18/17.
 //
 
-#include "CallFrame.hpp"
+#include "shaka_scheme/system/vm/CallFrame.hpp"
+#include "shaka_scheme/system/base/Data.hpp"
+
 
 
 shaka::CallFrame::CallFrame(shaka::Expression ret,
@@ -13,6 +15,13 @@ shaka::CallFrame::CallFrame(shaka::Expression ret,
   env(env),
   value_rib(rib),
   next_frame(next_frame) {}
+
+shaka::CallFrame::CallFrame() {
+  return_expression = std::make_shared<Data>();
+  env = std::make_shared<Environment>(nullptr);
+  value_rib = std::vector<NodePtr>(0);
+  next_frame = nullptr;
+}
 
 
 shaka::Expression shaka::CallFrame::get_next_expression() {

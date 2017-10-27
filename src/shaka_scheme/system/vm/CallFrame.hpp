@@ -5,12 +5,14 @@
 #ifndef SHAKA_SCHEME_CONTROLFRAME_HPP
 #define SHAKA_SCHEME_CONTROLFRAME_HPP
 
-#include "shaka_scheme/system/base/Data.hpp"
+#include "shaka_scheme/system/base/Environment.hpp"
 #include <vector>
 
 namespace shaka {
 
 class CallFrame;
+class Data;
+using NodePtr = std::shared_ptr<Data>;
 
 using EnvPtr = std::shared_ptr<Environment>;
 using FramePtr = std::shared_ptr<CallFrame>;
@@ -31,6 +33,15 @@ public:
    */
   CallFrame(Expression ret, EnvPtr env, ValueRib rib, FramePtr
   next_frame);
+
+  /**
+   * @brief Default constructor for CallFrame
+   * Initializes the return expression to be the null list
+   * Initializes the environment to be an empty environment
+   * Intializes the value rib to be an empty vector of NodePtr
+   * Initializes the FramePtr to be a nullptr
+   */
+  CallFrame();
 
   /**
    * @brief Getter method for next_expression (return address)
