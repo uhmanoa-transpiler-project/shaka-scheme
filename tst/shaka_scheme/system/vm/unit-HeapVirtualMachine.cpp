@@ -639,3 +639,90 @@ TEST(HeapVirtualMachineUnitTest, evaluate_return) {
   ASSERT_EQ(hvm.get_accumulator()->get<Symbol>(), Symbol("finale"));
 
 }
+
+/**
+ * @brief Test: evaluate_assembly_instruction() w/ (close vars body x) as expr
+ */
+TEST(HeapVirtualMachineUnitTest, evaluate_close) {
+
+  // Given: An empty accumulator
+
+  Accumulator acc = std::make_shared<Data>();
+
+  // Given: An assembly instruction of the form...
+  // (close (a) (refer a (halt)) (halt))
+
+  Data close_data = shaka::Data(shaka::Symbol("close"));
+  Data halt_data = shaka::Data(shaka::Symbol("halt"));
+  DataPair halt_pair = shaka::DataPair(halt_data);
+  Data symbol_a = shaka::Data(shaka::Symbol("a"));
+  Data refer_data = shaka::Data(shaka::Symbol("refer"));
+
+  DataPair a_halt_pair = shaka::DataPair(symbol_a,
+                                         *core::list(create_node(halt_pair)));
+
+  DataPair refer_a_halt = shaka::DataPair(
+      refer_data,
+      a_halt_pair
+  );
+
+  DataPair a_pair = shaka::DataPair(symbol_a);
+
+  NodePtr expression = core::list(
+      create_node(close_data),
+      create_node(a_pair),
+      create_node(refer_a_halt),
+      create_node(halt_pair)
+  );
+
+  //std::cout << *expression << std::endl;
+
+  // Given: An EnvPtr to an environment with a binding for [a : "hello"]
+  EnvPtr env = std::make_shared<Environment>(nullptr);
+  env->set_value(shaka::Symbol("a"), create_node(shaka::String("hello")));
+
+  // Given: An empty value rib
+
+  ValueRib vr;
+
+  // Given: A null FramePtr
+
+  FramePtr frame = nullptr;
+
+  // Given: An instance of the HVM constructed with these items
+
+  HeapVirtualMachine hvm(acc, expression, env, vr, frame);
+
+  // When: You invoke the evaluate assembly instruction method on the hvm
+
+  hvm.evaluate_assembly_instruction();
+
+  // Then: The accumulator register will contain a new Closure object
+
+  ASSERT_EQ(hvm.get_accumulator()->get_type(), shaka::Data::Type::CLOSURE);
+
+  // Then: The closure will have a variable list with Symbol("a")
+
+  ASSERT_EQ(
+      hvm.get_accumulator()->get<Closure>().get_variable_list()[0],
+      shaka::Symbol("a")
+  );
+
+  // Then: The closure's environment will have the top-level binding for 'a
+
+  ASSERT_EQ(
+      hvm.get_accumulator()->
+          get<Closure>().get_environment()->get_value(shaka::Symbol("a"))
+          ->get<String>(),
+      shaka::String("hello")
+  );
+
+  // Then: The closure will have a function body that is (refer a (halt))
+
+  hvm.set_expression(hvm.get_accumulator()->get<Closure>().get_function_body());
+
+  hvm.evaluate_assembly_instruction();
+
+  ASSERT_EQ(hvm.get_accumulator()->get<String>(), shaka::String("hello"));
+
+}

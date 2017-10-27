@@ -3,8 +3,8 @@
 //
 
 #include "shaka_scheme/system/vm/HeapVirtualMachine.hpp"
-#include "shaka_scheme/system/base/Environment.hpp"
 #include "shaka_scheme/system/vm/CallFrame.hpp"
+#include "shaka_scheme/system/core/lists.hpp"
 
 namespace shaka {
 
@@ -44,6 +44,47 @@ void HeapVirtualMachine::evaluate_assembly_instruction() {
 
     this->set_expression(next_expression);
   }
+
+  // (close vars body x)
+  if (instruction == shaka::Symbol("close")) {
+
+    // Get the rest of the instruction
+    shaka::DataPair& exp_cdr = exp_pair.cdr()->get<DataPair>();
+
+    // Get the variable list for the closure object
+    NodePtr vars_list = exp_cdr.car();
+
+    // Put the variables into a std::vector
+
+    std::vector<shaka::Symbol> vars;
+
+    while (!core::is_null_list(vars_list)) {
+      vars.push_back((vars_list->get<DataPair>().car()->get<Symbol>()));
+      vars_list = vars_list->get<DataPair>().cdr();
+    }
+
+    // Get the body expression for the closure object
+    NodePtr body = exp_cdr.cdr()->get<DataPair>().car();
+
+    // Get the next assembly instruction
+    NodePtr next_expression = exp_cdr.cdr()->
+        get<DataPair>().cdr()->get<DataPair>().car();
+
+    NodePtr closure = create_node(
+        Closure(
+            this->get_environment(),
+            body,
+            vars,
+            nullptr,
+            nullptr
+        )
+    );
+
+    this->set_accumulator(closure);
+    this->set_expression(next_expression);
+
+  }
+
 
   // (test then else)
   if (instruction == shaka::Symbol("test")) {
