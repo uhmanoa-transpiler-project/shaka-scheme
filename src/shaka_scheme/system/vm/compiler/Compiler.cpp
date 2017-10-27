@@ -25,6 +25,7 @@ Expression Compiler::compile(Expression input, Expression next_instruction) {
   }
   // (pair? input)
   else if (is_pair(input)) {
+    // quote case
     // (list 'constant obj next)
     if(car(input)->get<Symbol>() == Symbol("quote")){
       Symbol instruction("constant");
@@ -35,9 +36,35 @@ Expression Compiler::compile(Expression input, Expression next_instruction) {
 
       return create_node(assembly);
     }
+    // lambda case
+    // (list ’close vars (compile body ’(return)) next)
+    else if (car(input)->get<Symbol>() == Symbol("lamnbda")) {
+
+    }
+    // if (test then else) case
+    else if (){
+
+    }
+    // set! case
+    else if (){
+
+    }
+    // call/cc case
+    else if () {
+
+    }
+    else {
+    }
   }
   else {
     // (list 'constant x next)
+    Symbol instruction("constant");
+    Data instruction_data(instruction);
+
+    DataPair next(*input, *list(create_node(*next_instruction)));
+    DataPair assembly(instruction_data, next);
+
+    return create_node(assembly);
   }
 }
 }
