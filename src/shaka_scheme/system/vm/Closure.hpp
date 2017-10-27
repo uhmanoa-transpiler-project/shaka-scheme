@@ -5,15 +5,18 @@
 #ifndef SHAKA_SCHEME_CLOSURE_HPP
 #define SHAKA_SCHEME_CLOSURE_HPP
 
-#include "shaka_scheme/system/base/Data.hpp"
-#include "shaka_scheme/system/base/DataPair.hpp"
 #include "shaka_scheme/system/base/Environment.hpp"
-#include "shaka_scheme/system/vm/CallFrame.hpp"
 #include <vector>
 #include <functional>
 
 namespace shaka {
 
+class Data;
+class CallFrame;
+
+using EnvPtr = std::shared_ptr<Environment>;
+using FramePtr = std::shared_ptr<CallFrame>;
+using ValueRib = std::vector<NodePtr>;
 using Callable = std::function<std::vector<NodePtr>(std::vector<NodePtr>)>;
 using CallablePtr = std::shared_ptr<Callable>;
 
@@ -32,6 +35,16 @@ public:
    */
   Closure(EnvPtr env, NodePtr fb, VariableList vl,
           CallablePtr cl, FramePtr frame);
+
+  /**
+   * @brief Default constructor for Closure class
+   * Initializes environment to be an empty environment
+   * Initializes function body to be the empty list
+   * Initializes the variable list to be an empty vector
+   * Initializes the callable to be a nullptr
+   * Initializes the FramePtr to point to a default frame
+   */
+  Closure();
 
   /**
    * @brief Method to get the body of the function

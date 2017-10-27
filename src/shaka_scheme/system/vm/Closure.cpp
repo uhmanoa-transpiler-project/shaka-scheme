@@ -3,8 +3,13 @@
 //
 
 #include "shaka_scheme/system/vm/Closure.hpp"
+#include "shaka_scheme/system/base/Data.hpp"
+#include "shaka_scheme/system/vm/CallFrame.hpp"
+
 
 namespace shaka {
+
+class Data;
 
 Closure::Closure(EnvPtr env,
                  NodePtr fb,
@@ -16,6 +21,17 @@ Closure::Closure(EnvPtr env,
     variable_list(vl),
     callable(cl),
     frame(frame) {}
+
+Closure::Closure() {
+  env = std::make_shared<Environment>(nullptr);
+  func_body = std::make_shared<Data>();
+  variable_list = std::vector<shaka::Symbol>(0);
+  callable = nullptr;
+  frame = std::make_shared<CallFrame>();
+
+}
+
+
 
 NodePtr Closure::get_function_body() {
   return this->func_body;
