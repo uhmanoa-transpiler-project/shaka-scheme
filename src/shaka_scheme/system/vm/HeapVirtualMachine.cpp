@@ -3,7 +3,6 @@
 //
 
 #include "shaka_scheme/system/vm/HeapVirtualMachine.hpp"
-#include "shaka_scheme/system/vm/CallFrame.hpp"
 #include "shaka_scheme/system/core/lists.hpp"
 
 namespace shaka {
@@ -117,6 +116,47 @@ void HeapVirtualMachine::evaluate_assembly_instruction() {
     this->env->set_value(var, this->acc);
 
     this->set_expression(expression);
+
+  }
+
+  // (conti x)
+
+  if (instruction == shaka::Symbol("conti")) {
+
+    // Create the function body for the continuation
+
+    NodePtr call_frame = std::make_shared<Data>(*this->frame);
+    NodePtr nuate = std::make_shared<Data>(Symbol("nuate"));
+    NodePtr var = std::make_shared<Data>(Symbol("kont_v000"));
+
+    // Create the variable list
+
+    std::vector<Symbol> vars;
+    vars.push_back(Symbol("kont_v000"));
+
+
+    // Create the continuation
+
+    NodePtr func_body = core::list(nuate, call_frame, var);
+    EnvPtr empty_env = std::make_shared<Environment>(nullptr);
+    NodePtr continuation =
+        std::make_shared<Data>(
+            Closure(
+                empty_env,
+                func_body,
+                vars,
+                nullptr,
+                this->frame
+            )
+        );
+
+    // Place the continuation in the accumulator
+
+    this->set_accumulator(continuation);
+
+    // Set the next expression register to x
+
+    this->set_expression(exp_pair.cdr()->get<DataPair>().car());
 
   }
 

@@ -726,3 +726,96 @@ TEST(HeapVirtualMachineUnitTest, evaluate_close) {
   ASSERT_EQ(hvm.get_accumulator()->get<String>(), shaka::String("hello"));
 
 }
+
+
+/**
+ * @brief Test: evaluate_assembly_instruction() with (conti x) as expr
+ */
+TEST(HeapVirtualMachineUnitTest, evaluate_conti) {
+
+  // Given: An assembly instruction of the form (conti (halt))
+
+  Data halt_data = Data(Symbol("halt"));
+  Data conti_data = Data(Symbol("conti"));
+  DataPair halt_pair = DataPair(halt_data);
+  NodePtr expression = core::list(
+      create_node(conti_data),
+      create_node(halt_pair)
+  );
+
+  //std::cout << *expression << std::endl;
+
+  // Given: An emtpy value rib
+
+  ValueRib vr;
+
+  // Given: A pointer to an empty environment
+
+  EnvPtr env = std::make_shared<Environment>(nullptr);
+
+  // Given: A pointer to a CallFrame constructed as follows
+
+  EnvPtr call_frame_env = std::make_shared<Environment>(nullptr);
+  call_frame_env->set_value(Symbol("a"), create_node(String("Hello")));
+  call_frame_env->set_value(Symbol("b"), create_node(String("World")));
+
+  ValueRib call_frame_vr = {
+      create_node(String("VR1")),
+      create_node(String("VR2"))
+  };
+
+  NodePtr call_frame_exp = create_node(halt_pair);
+
+  FramePtr frame =
+      std::make_shared<CallFrame>(call_frame_exp, call_frame_env,
+                                  call_frame_vr, nullptr);
+
+  // Given: An instance of the HeapVirtualMachine constructed with these items
+
+  HeapVirtualMachine hvm(nullptr, expression, env, vr, frame);
+
+  // When: You invoke the evaluate_assembly_instruction_method on the hvm
+
+  hvm.evaluate_assembly_instruction();
+
+  // Then: The accumulator will contain a continuation closure
+
+  ASSERT_EQ(hvm.get_accumulator()->get_type(), shaka::Data::Type::CLOSURE);
+
+  ASSERT_TRUE(hvm.get_accumulator()->get<Closure>().is_continuation_closure());
+
+  // Then: The continuation will hold a reference to the CallFrame
+
+  ASSERT_EQ(hvm.get_accumulator()->get<Closure>().get_call_frame(), frame);
+
+  ASSERT_EQ(hvm.get_accumulator()->
+      get<Closure>().get_call_frame()->
+      get_environment_pointer()->get_value(Symbol("a"))->get<String>(),
+            String("Hello"));
+
+  // Then: The body of the continuation will be (nuate s kont_v000)
+
+  ASSERT_EQ(hvm.get_accumulator()->
+      get<Closure>().get_function_body()->get<DataPair>().car()->
+            get<Symbol>(),
+            Symbol("nuate")
+  );
+
+  ASSERT_EQ(hvm.get_accumulator()->
+      get<Closure>().get_function_body()->get<DataPair>().cdr()->
+            get<DataPair>().car()->
+      get<CallFrame>().get_environment_pointer()->get_value(Symbol("b"))->
+            get<String>(),
+            String("World")
+  );
+
+  ASSERT_EQ(hvm.get_accumulator()->
+            get<Closure>().get_function_body()->get<DataPair>().cdr()->
+            get<DataPair>().cdr()->
+            get<DataPair>().car()->get<Symbol>(),
+            Symbol("kont_v000")
+  );
+
+
+
+}
