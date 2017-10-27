@@ -30,6 +30,10 @@ shaka::Data::Data(const shaka::Data& other) :
     new(&data_pair) shaka::DataPair(other.data_pair);
     break;
   }
+  case shaka::Data::Type::CLOSURE: {
+    new(&closure) shaka::Closure(other.closure);
+    break;
+  }
 //  case shaka::Data::Type::DATA_NODE: {
 //    new(&data_node) std::shared_ptr<shaka::DataNode>(other.data_node);
 //    break;
@@ -75,6 +79,10 @@ shaka::Data::~Data() {
     this->data_pair.~DataPair();
     break;
   }
+  case shaka::Data::Type::CLOSURE: {
+    this->closure.~Closure();
+    break;
+  }
 //  case shaka::Data::Type::ENVIRONMENT: {
 //    this->environment::~environment();
 //    break;
@@ -117,6 +125,14 @@ shaka::DataPair& shaka::Data::get<shaka::DataPair>() {
     throw new shaka::TypeException(6, "Could not get() DataPair from Data");
   }
   return this->data_pair;
+}
+
+template<>
+shaka::Closure& shaka::Data::get<shaka::Closure>() {
+  if (this->get_type() != Type::CLOSURE) {
+    throw new shaka::TypeException(7, "Could not get() Closure from Data");
+  }
+  return this->closure;
 }
 
 namespace shaka {
@@ -165,6 +181,10 @@ std::ostream& operator<<(std::ostream& lhs, shaka::Data rhs) {
                                                 "DataPair printing is not supported yet "
                                                     "(implement in Data.cpp after adding more helper functions for "
                                                     "determining whether the current item is a list, dotted pair, etc.)");
+  }
+  case shaka::Data::Type::CLOSURE: {
+    lhs << "#<procedure>";
+    break;
   }
   case shaka::Data::Type::ENVIRONMENT: {
     throw shaka::MissingImplementationException(1337,

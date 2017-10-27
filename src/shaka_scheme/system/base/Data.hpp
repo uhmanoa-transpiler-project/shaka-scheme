@@ -13,6 +13,8 @@
 #include "shaka_scheme/system/base/Boolean.hpp"
 #include "shaka_scheme/system/base/IEnvironment.hpp"
 #include "shaka_scheme/system/base/DataPair.hpp"
+#include "shaka_scheme/system/vm/Closure.hpp"
+
 
 #include <memory>
 
@@ -26,6 +28,8 @@ class DataNode;
 class Environment;
 class DataPair;
 class UserStructData;
+class Closure;
+class CallFrame;
 
 class Data;
 
@@ -44,6 +48,7 @@ public:
     NUMBER,
     STRING,
     BOOLEAN,
+    CLOSURE,
     NULL_LIST
   };
 private:
@@ -54,6 +59,7 @@ private:
     shaka::String string;
     shaka::DataPair data_pair;
     shaka::Symbol symbol;
+    shaka::Closure closure;
   };
 
 public:
@@ -76,6 +82,11 @@ public:
   Data(shaka::DataPair other) {
     new(&data_pair) shaka::DataPair(other);
     this->type_tag = Type::DATA_PAIR;
+  }
+
+  Data(shaka::Closure other) {
+    new(&closure) shaka::Closure(other);
+    this->type_tag = Type::CLOSURE;
   }
 
   /**
@@ -123,6 +134,7 @@ template<> shaka::String& shaka::Data::get<shaka::String>();
 template<> shaka::Symbol& shaka::Data::get<shaka::Symbol>();
 template<> shaka::Boolean& shaka::Data::get<shaka::Boolean>();
 template<> shaka::DataPair& shaka::Data::get<shaka::DataPair>();
+template<> shaka::Closure& shaka::Data::get<shaka::Closure>();
 
 std::ostream& operator<<(std::ostream& lhs, shaka::Data rhs);
 
