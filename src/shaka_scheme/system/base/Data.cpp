@@ -34,6 +34,10 @@ shaka::Data::Data(const shaka::Data& other) :
     new(&closure) shaka::Closure(other.closure);
     break;
   }
+  case shaka::Data::Type::CALL_FRAME: {
+    new(&call_frame) shaka::CallFrame(other.call_frame);
+    break;
+  }
 //  case shaka::Data::Type::DATA_NODE: {
 //    new(&data_node) std::shared_ptr<shaka::DataNode>(other.data_node);
 //    break;
@@ -81,6 +85,10 @@ shaka::Data::~Data() {
   }
   case shaka::Data::Type::CLOSURE: {
     this->closure.~Closure();
+    break;
+  }
+  case shaka::Data::Type::CALL_FRAME: {
+    this->call_frame.~CallFrame();
     break;
   }
 //  case shaka::Data::Type::ENVIRONMENT: {
@@ -135,6 +143,14 @@ shaka::Closure& shaka::Data::get<shaka::Closure>() {
   return this->closure;
 }
 
+template<>
+shaka::CallFrame& shaka::Data::get<shaka::CallFrame>() {
+  if (this->get_type() != Type::CALL_FRAME) {
+    throw new shaka::TypeException(8, "Could not get() CallFrame from Data");
+  }
+  return this->call_frame;
+}
+
 namespace shaka {
 
 std::ostream& operator<<(std::ostream& lhs, shaka::Data rhs) {
@@ -186,6 +202,12 @@ std::ostream& operator<<(std::ostream& lhs, shaka::Data rhs) {
     lhs << "#<procedure>";
     break;
   }
+
+  case shaka::Data::Type::CALL_FRAME: {
+    lhs << "#<stack-frame>";
+    break;
+  }
+
   case shaka::Data::Type::ENVIRONMENT: {
     throw shaka::MissingImplementationException(1337,
                                                 "Environment printing is not supported "

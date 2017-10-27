@@ -14,6 +14,7 @@
 #include "shaka_scheme/system/base/IEnvironment.hpp"
 #include "shaka_scheme/system/base/DataPair.hpp"
 #include "shaka_scheme/system/vm/Closure.hpp"
+#include "shaka_scheme/system/vm/CallFrame.hpp"
 
 
 #include <memory>
@@ -49,6 +50,7 @@ public:
     STRING,
     BOOLEAN,
     CLOSURE,
+    CALL_FRAME,
     NULL_LIST
   };
 private:
@@ -60,6 +62,7 @@ private:
     shaka::DataPair data_pair;
     shaka::Symbol symbol;
     shaka::Closure closure;
+    shaka::CallFrame call_frame;
   };
 
 public:
@@ -87,6 +90,11 @@ public:
   Data(shaka::Closure other) {
     new(&closure) shaka::Closure(other);
     this->type_tag = Type::CLOSURE;
+  }
+
+  Data(shaka::CallFrame other) {
+    new(&call_frame) shaka::CallFrame(other);
+    this->type_tag = Type::CALL_FRAME;
   }
 
   /**
@@ -135,6 +143,7 @@ template<> shaka::Symbol& shaka::Data::get<shaka::Symbol>();
 template<> shaka::Boolean& shaka::Data::get<shaka::Boolean>();
 template<> shaka::DataPair& shaka::Data::get<shaka::DataPair>();
 template<> shaka::Closure& shaka::Data::get<shaka::Closure>();
+template<> shaka::CallFrame& shaka::Data::get<shaka::CallFrame>();
 
 std::ostream& operator<<(std::ostream& lhs, shaka::Data rhs);
 
