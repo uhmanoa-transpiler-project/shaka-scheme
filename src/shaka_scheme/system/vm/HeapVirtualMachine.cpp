@@ -194,6 +194,23 @@ void HeapVirtualMachine::evaluate_assembly_instruction() {
 
   }
 
+  // (apply)
+
+  if (instruction == shaka::Symbol("apply")) {
+    shaka::Closure& closure = this->get_accumulator()->get<Closure>();
+
+    if (closure.is_native_closure()) {
+      this->set_value_rib(closure.call(this->get_value_rib()));
+    }
+
+    else {
+      closure.extend_environment(this->get_value_rib());
+      this->set_environment(closure.get_environment());
+      this->set_value_rib(std::vector<NodePtr>(0));
+      this->set_expression(closure.get_function_body());
+    }
+  }
+
   // (return)
 
   if (instruction == shaka::Symbol("return")) {

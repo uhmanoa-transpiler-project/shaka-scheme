@@ -5,9 +5,8 @@
 #include <gmock/gmock.h>
 #include "shaka_scheme/system/base/Data.hpp"
 #include "shaka_scheme/system/vm/HeapVirtualMachine.hpp"
-#include "shaka_scheme/system/base/Environment.hpp"
-#include "shaka_scheme/system/vm/CallFrame.hpp"
 #include "shaka_scheme/system/core/lists.hpp"
+#include "shaka_scheme/system/vm/strings.hpp"
 
 using namespace shaka;
 
@@ -815,7 +814,234 @@ TEST(HeapVirtualMachineUnitTest, evaluate_conti) {
             get<DataPair>().car()->get<Symbol>(),
             Symbol("kont_v000")
   );
+}
+
+/**
+ * @brief Test: evaluate_assembly_instruction() with (apply) as expr
+ */
+TEST(HeapVirtualMachineUnitTest, eval_apply) {
+
+  // Given: A native-closure to wrap the append method for strings
+
+  Closure str_append(
+      nullptr,
+      nullptr,
+      std::vector<Symbol>(0),
+      std::make_shared<Callable>(string_append),
+      nullptr
+  );
+
+  // Given: A function body of the form...
+  // (refer s2 (argument (refer s1 (argument (refer string-append (apply))))))
+
+  NodePtr apply = core::list(create_node(Data(Symbol("apply"))));
+  NodePtr refer_string_append = core::list(
+      create_node(Data(Symbol("refer"))),
+      create_node(Data(Symbol("string-append"))),
+      apply
+  );
+
+  NodePtr arg1 = core::list(
+      create_node(Data(Symbol("argument"))),
+      refer_string_append
+  );
+
+  NodePtr refer_s1 = core::list(
+      create_node(Data(Symbol("refer"))),
+      create_node(Data(Symbol("s1"))),
+      arg1
+  );
+
+  NodePtr arg2 = core::list(
+      create_node(Data(Symbol("argument"))),
+      refer_s1
+  );
+
+  NodePtr func_body = core::list(
+      create_node(Data(Symbol("refer"))),
+      create_node(Data(Symbol("s2"))),
+      arg2
+  );
+
+  std::cout << *func_body << std::endl;
+
+  // Given: A pointer to an environment that has a binding for string-append
+
+  EnvPtr env = std::make_shared<Environment>(nullptr);
+  env->set_value(Symbol("string-append"), create_node(str_append));
 
 
+
+  // Given: A closure constructed with the above function body and environment
+
+
+  Closure string_closure(
+      env,
+      func_body,
+      std::vector<Symbol>{Symbol("s2"), Symbol("s1")},
+      nullptr,
+      nullptr
+  );
+
+
+  env->set_value(Symbol("my-procedure"), create_node(string_closure));
+
+
+  // Given: An assembly instruction of the form...
+  // (frame (args... apply) (return))
+
+  Data frame_data(Symbol("frame"));
+  Data string1_data(String("Hello"));
+  Data string2_data(String("World"));
+  Data constant_data(Symbol("constant"));
+  Data return_data(Symbol("return"));
+  Data apply_data(Symbol("apply"));
+  Data argument_data(Symbol("argument"));
+  Data procedure_data(Symbol("my-procedure"));
+  Data refer_data(Symbol("refer"));
+
+  NodePtr return_list = core::list(create_node(return_data));
+
+  NodePtr args_apply_list = core::list(
+      create_node(constant_data),
+      create_node(string2_data),
+      core::list(
+          create_node(argument_data),
+          core::list(
+              create_node(constant_data),
+              create_node(string1_data),
+              core::list(
+                  create_node(argument_data),
+                  core::list(
+                      create_node(refer_data),
+                      create_node(procedure_data),
+                      core::list(
+                          create_node(apply_data)
+                      )
+                  )
+              )
+          )
+      )
+  );
+
+  //std::cout << *args_apply_list << std::endl;
+
+  NodePtr expression = core::list(
+      create_node(frame_data),
+      args_apply_list,
+      return_list
+  );
+
+  //std::cout << *expression << std::endl;
+
+  // Given: An empty ValueRib
+
+  ValueRib vr;
+
+  // Given: An instance of the HeapVirtualMachine constructed with these items
+
+  HeapVirtualMachine hvm(nullptr, expression, env, vr, nullptr);
+
+  // When: You invoke the evaluate assembly instruction method
+
+  hvm.evaluate_assembly_instruction();
+
+  // Then: A new call frame will have been created for the procedure call
+
+  ASSERT_NE(hvm.get_call_frame(), nullptr);
+
+  // Then: The call frame will have a return expression that is (return)
+
+  ASSERT_EQ(
+      hvm.get_call_frame()->
+          get_next_expression()->get<DataPair>().car()->get<Symbol>(),
+      Symbol("return")
+  );
+
+  // Then: The expression register of the VM will contain the (args..apply)
+
+  ASSERT_EQ(
+      hvm.get_expression()->get<DataPair>().car()->get<Symbol>(),
+      Symbol("constant")
+  );
+
+  // When: You invoke the evaluate assembly instruction method again
+
+  hvm.evaluate_assembly_instruction();
+
+  // Then: The accumulator register will contain the string "World"
+
+  ASSERT_EQ(hvm.get_accumulator()->get<String>(), String("World"));
+
+  // When: You invoke the evaluate assembly instruction method again
+
+  hvm.evaluate_assembly_instruction();
+
+  // Then: The string "World" will have been moved into the value rib
+
+  ASSERT_EQ(hvm.get_value_rib()[0]->get<String>(), String("World"));
+
+  // When: You invoke the evaluate assembly instruction method again
+
+  hvm.evaluate_assembly_instruction();
+
+  // Then: The string "Hello" will have been placed in the accumulator
+
+  ASSERT_EQ(hvm.get_accumulator()->get<String>(), String("Hello"));
+
+  // When: You invoke the evaluate assembly instruction method again
+
+  hvm.evaluate_assembly_instruction();
+
+  // Then: The string "Hello" will have been moved to the value rib
+
+  ASSERT_EQ(hvm.get_value_rib()[1]->get<String>(), String("Hello"));
+
+  // When: You invoke the evaluate assembly instruction method again
+
+  hvm.evaluate_assembly_instruction();
+
+  // Then: The closure bound to "my-procedure" will be in the accumulator
+
+  ASSERT_EQ(hvm.get_accumulator()->get_type(), shaka::Data::Type::CLOSURE);
+
+  ASSERT_EQ(
+      hvm.get_accumulator()->get<Closure>().get_variable_list()[0],
+      Symbol("s2")
+  );
+
+  // When: You invoke the evaluate assembly instruction method again
+
+  hvm.evaluate_assembly_instruction();
+
+
+  // Then: The environment will have the bindings [s1 : "Hello", s2 : "World]
+
+  ASSERT_EQ(
+      hvm.get_environment()->get_value(Symbol("s1"))->get<String>(),
+      String("Hello")
+  );
+
+  ASSERT_EQ(
+      hvm.get_environment()->get_value(Symbol("s2"))->get<String>(),
+      String("World")
+  );
+
+  // Then: The expression register should contain the body of my-procedure
+
+  ASSERT_EQ( hvm.get_expression(), string_closure.get_function_body());
+
+  // When: You evaluate the function body
+
+  hvm.evaluate_assembly_instruction(); // refer s2
+  hvm.evaluate_assembly_instruction(); // argument
+  hvm.evaluate_assembly_instruction(); // refer s1
+  hvm.evaluate_assembly_instruction(); // argument
+  hvm.evaluate_assembly_instruction(); // refer string-append
+  hvm.evaluate_assembly_instruction(); // apply
+
+  // Then: The string "HelloWorld" is in the ValueRib
+
+  ASSERT_EQ(hvm.get_value_rib()[0]->get<String>(), String("HelloWorld"));
 
 }
