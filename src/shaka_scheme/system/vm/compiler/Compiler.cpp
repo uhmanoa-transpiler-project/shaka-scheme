@@ -25,9 +25,11 @@ Expression Compiler::compile(Expression input, Expression next_instruction) {
   }
   // (pair? input)
   else if (is_pair(input)) {
+    Symbol expression_type = car(input)->get<Symbol>();
+
     // quote case
     // (list 'constant obj next)
-    if(car(input)->get<Symbol>() == Symbol("quote")){
+    if(expression_type == Symbol("quote")){
       Symbol instruction("constant");
       Data instruction_data(instruction);
 
@@ -38,19 +40,19 @@ Expression Compiler::compile(Expression input, Expression next_instruction) {
     }
     // lambda case
     // (list ’close vars (compile body ’(return)) next)
-    else if (car(input)->get<Symbol>() == Symbol("lamnbda")) {
+    else if (expression_type == Symbol("lambda")) {
 
     }
     // if (test then else) case
-    else if (){
+    else if (expression_type == Symbol("if")){
 
     }
     // set! case
-    else if (){
+    else if (expression_type == Symbol("set!")){
 
     }
     // call/cc case
-    else if () {
+    else if (expression_type == Symbol("call/cc")) {
 
     }
     else {
