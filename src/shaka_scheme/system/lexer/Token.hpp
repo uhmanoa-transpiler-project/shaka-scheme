@@ -10,43 +10,20 @@ namespace shaka {
 
 struct Token {
 public:
-  enum class Type : int {
-    INVALID = 255,
-    IDENTIFIER = 1,
-    BOOLEAN_TRUE = 2,
-    BOOLEAN_FALSE = 3,
-    NUMBER = 4,
-    CHARACTER = 5,
-    STRING = 6,
-    PAREN_START = 7,
-    VECTOR_START = 8,
-    BYTEVECTOR_START = 9,
-    PAREN_END = 10,
-    QUOTE = 11,
-    BACKTICK = 12,
-    COMMA = 13,
-    COMMA_ATSIGN = 14,
-    PERIOD = 15,
-    DATUM_COMMENT = 16,
-    COMMENT_START = 17,
-    COMMENT_END = 18,
-    DIRECTIVE = 19,
-    END_OF_FILE = 0
-  };
 
-  Token::Type type;
+  std::string type;
   std::string str;
   LexInfo lex_info;
 
-  Token(Token::Type type) :
+  Token(std::string type) :
       type(type),
       str("") {}
 
-  Token(Token::Type type, const std::string& str) :
+  Token(std::string type, const std::string& str) :
       type(type),
       str(str) {}
 
-  Token(Token::Type type, const std::string& str, LexInfo lex_info) :
+  Token(std::string type, const std::string& str, LexInfo lex_info) :
       type(type),
       str(str),
       lex_info(lex_info) {}
@@ -60,7 +37,7 @@ public:
     return !(operator==(other));
   }
 
-  shaka::Token::Type get_type() const {
+  std::string get_type() const {
     return this->type;
   }
 
