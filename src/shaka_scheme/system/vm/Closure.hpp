@@ -7,6 +7,7 @@
 
 #include "shaka_scheme/system/base/Environment.hpp"
 #include <vector>
+#include <deque>
 #include <functional>
 
 namespace shaka {
@@ -16,8 +17,8 @@ class CallFrame;
 
 using EnvPtr = std::shared_ptr<Environment>;
 using FramePtr = std::shared_ptr<CallFrame>;
-using ValueRib = std::vector<NodePtr>;
-using Callable = std::function<std::vector<NodePtr>(std::vector<NodePtr>)>;
+using ValueRib = std::deque<NodePtr>;
+using Callable = std::function<std::deque<NodePtr>(std::deque<NodePtr>)>;
 using CallablePtr = std::shared_ptr<Callable>;
 
 using VariableList = std::vector<Symbol>;
@@ -34,7 +35,7 @@ public:
    * @param frame A pointer to a CallFrame, needed for continuations
    */
   Closure(EnvPtr env, NodePtr fb, VariableList vl,
-          CallablePtr cl, FramePtr frame);
+          CallablePtr cl, FramePtr frame, bool arity);
 
   /**
    * @brief Default constructor for Closure class
@@ -69,7 +70,7 @@ public:
    * @param args The arguments to the procedure
    * @return A vector containing the result(s) of the procedure call
    */
-  std::vector<NodePtr> call(std::vector<NodePtr> args);
+  std::deque<NodePtr> call(std::deque<NodePtr> args);
 
   /**
    * @brief A procedure to retrieve the CallFrame from a continuation closure
@@ -95,6 +96,12 @@ public:
    */
   bool is_continuation_closure();
 
+  /**
+   * @brief Method to determine whether or ot this Closure has variable arity
+   * @return true if this accepts a variable number of args, else false
+   */
+  bool is_variable_arity();
+
 
 
 private:
@@ -104,6 +111,7 @@ private:
   VariableList variable_list;
   CallablePtr callable;
   FramePtr frame;
+  bool variable_arity;
 
 };
 
