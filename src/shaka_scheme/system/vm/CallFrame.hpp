@@ -2,11 +2,12 @@
 // Created by Billy Wooton on 9/14/17.
 //
 
-#ifndef SHAKA_SCHEME_CONTROLFRAME_HPP
-#define SHAKA_SCHEME_CONTROLFRAME_HPP
+#ifndef SHAKA_SCHEME_CALLFRAME_HPP
+#define SHAKA_SCHEME_CALLFRAME_HPP
 
 #include "shaka_scheme/system/base/Environment.hpp"
 #include <vector>
+#include <deque>
 
 namespace shaka {
 
@@ -16,7 +17,7 @@ using NodePtr = std::shared_ptr<Data>;
 
 using EnvPtr = std::shared_ptr<Environment>;
 using FramePtr = std::shared_ptr<CallFrame>;
-using ValueRib = std::vector<NodePtr>;
+using ValueRib = std::deque<NodePtr>;
 using Expression = NodePtr;
 
 class CallFrame {

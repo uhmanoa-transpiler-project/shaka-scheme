@@ -19,7 +19,7 @@ shaka::CallFrame::CallFrame(shaka::Expression ret,
 shaka::CallFrame::CallFrame() {
   return_expression = std::make_shared<Data>();
   env = std::make_shared<Environment>(nullptr);
-  value_rib = std::vector<NodePtr>(0);
+  value_rib = std::deque<NodePtr>(0);
   next_frame = nullptr;
 }
 
