@@ -15,7 +15,7 @@ namespace core {
  * @param node The data to take in
  * @return A boolean of whether the predicate was satisfied.
  */
-bool is_boolean(NodePtr node) {
+inline bool is_boolean(NodePtr node) {
   return node->get_type() == Data::Type::BOOLEAN;
 }
 
@@ -24,7 +24,7 @@ bool is_boolean(NodePtr node) {
  * @param node The data to take in
  * @return A boolean of whether the predicate was satisfied.
  */
-bool is_symbol(NodePtr node) {
+inline bool is_symbol(NodePtr node) {
   return node->get_type() == Data::Type::SYMBOL;
 }
 
@@ -33,7 +33,7 @@ bool is_symbol(NodePtr node) {
  * @param node The data to take in
  * @return A boolean of whether the predicate was satisfied.
  */
-bool is_string(NodePtr node) {
+inline bool is_string(NodePtr node) {
   return node->get_type() == Data::Type::STRING;
 }
 
@@ -50,7 +50,7 @@ bool is_string(NodePtr node) {
  * system. Here, we provide this function to act as the type predicate for the
  * "unspecified" value.
  */
-bool is_unspecified(NodePtr node) {
+inline bool is_unspecified(NodePtr node) {
   return node->get_type() == Data::Type::UNSPECIFIED;
 }
 
@@ -60,7 +60,7 @@ bool is_unspecified(NodePtr node) {
  *
  * @implementation_specific
  */
-NodePtr create_unspecified_node() {
+inline NodePtr create_unspecified_node() {
   return shaka::create_unspecified();
 }
 
@@ -70,7 +70,7 @@ NodePtr create_unspecified_node() {
  * @param right The right object
  * @return A boolean denoting the equivalence predicate
  */
-bool is_eqv(NodePtr left, NodePtr right) {
+inline bool is_eqv(NodePtr left, NodePtr right) {
   auto left_type = left->get_type();
   auto right_type = right->get_type();
   if (left_type != right_type) {
