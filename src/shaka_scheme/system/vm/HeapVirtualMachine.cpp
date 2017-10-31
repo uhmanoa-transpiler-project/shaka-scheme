@@ -5,6 +5,7 @@
 #include "shaka_scheme/system/vm/HeapVirtualMachine.hpp"
 #include "shaka_scheme/system/core/lists.hpp"
 
+
 namespace shaka {
 
 HeapVirtualMachine::~HeapVirtualMachine() {}
@@ -53,34 +54,58 @@ void HeapVirtualMachine::evaluate_assembly_instruction() {
     // Get the variable list for the closure object
     NodePtr vars_list = exp_cdr.car();
 
-    // Put the variables into a std::vector
-
+    // std::vector for storing the variables
     std::vector<shaka::Symbol> vars;
 
-    while (!core::is_null_list(vars_list)) {
-      vars.push_back((vars_list->get<DataPair>().car()->get<Symbol>()));
-      vars_list = vars_list->get<DataPair>().cdr();
+    bool variable_arity = false;
+
+    if (vars_list->get_type() == shaka::Data::Type::DATA_PAIR) {
+      // Check for proper or improper list
+      if (core::is_proper_list(vars_list)) {
+        while (!core::is_null_list(vars_list)) {
+          vars.push_back((vars_list->get<DataPair>().car()->get<Symbol>()));
+          vars_list = vars_list->get<DataPair>().cdr();
+        }
+      }
+        // Improper variable list (lambda (a b c . d) ...)
+      else {
+        while(!core::is_symbol(vars_list)) {
+          vars.push_back((vars_list->get<DataPair>().car()->get<Symbol>()));
+          vars_list = vars_list->get<DataPair>().cdr();
+        }
+        vars.push_back((vars_list->get<Symbol>()));
+        variable_arity = true;
+      }
+
     }
 
-    // Get the body expression for the closure object
-    NodePtr body = exp_cdr.cdr()->get<DataPair>().car();
+      // Check whether or not we have a variadic lambda (lambda x ...)
+    else if (vars_list->get_type() == shaka::Data::Type::SYMBOL) {
+      variable_arity = true;
+      vars.push_back((vars_list->get<Symbol>()));
+    }
 
-    // Get the next assembly instruction
-    NodePtr next_expression = exp_cdr.cdr()->
-        get<DataPair>().cdr()->get<DataPair>().car();
+  // Get the body expression for the closure object
+  NodePtr body = exp_cdr.cdr()->get<DataPair>().car();
 
-    NodePtr closure = create_node(
-        Closure(
-            this->get_environment(),
-            body,
-            vars,
-            nullptr,
-            nullptr
-        )
-    );
+  // Get the next assembly instruction
+  NodePtr next_expression = exp_cdr.cdr()->
+      get<DataPair>().cdr()->get<DataPair>().car();
 
-    this->set_accumulator(closure);
-    this->set_expression(next_expression);
+  NodePtr closure = create_node(
+      Closure(
+          this->get_environment(),
+          body,
+          vars,
+          nullptr,
+          nullptr,
+          variable_arity
+
+      )
+  );
+
+  this->set_accumulator(closure);
+  this->set_expression(next_expression);
 
   }
 
@@ -146,7 +171,8 @@ void HeapVirtualMachine::evaluate_assembly_instruction() {
                 func_body,
                 vars,
                 nullptr,
-                this->frame
+                this->frame,
+                false
             )
         );
 
@@ -160,14 +186,36 @@ void HeapVirtualMachine::evaluate_assembly_instruction() {
 
   }
 
-  // (frame x ret)
+  // (nuate s var)
+
+  if (instruction == shaka::Symbol("nuate")) {
+    // Set the top of the control stack to be s
+    NodePtr continuation_frame = exp_pair.cdr()->get<DataPair>().car();
+    FramePtr frame = std::make_shared<CallFrame>(
+        continuation_frame->get<CallFrame>()
+    );
+    this->set_call_frame(frame);
+
+    // Set the accumulator to be the value of var in the environment
+    NodePtr exp_cdr = exp_pair.cdr();
+
+    NodePtr exp_cddr = exp_cdr->get<DataPair>().cdr();
+
+    Symbol var = exp_cddr->get<DataPair>().car()->get<Symbol>();
+    this->set_accumulator(this->get_environment()->get_value(var));
+
+    // Set the next expression to be (return)
+    this->set_expression(core::list(create_node(Data(Symbol("return")))));
+  }
+
+  // (frame ret x)
 
   if (instruction == shaka::Symbol("frame")) {
     shaka::DataPair& expr_cdr = exp_pair.cdr()->get<DataPair>();
 
-    NodePtr x = expr_cdr.car();
+    NodePtr ret = expr_cdr.car();
 
-    NodePtr ret = expr_cdr.cdr()->get<DataPair>().car();
+    NodePtr x = expr_cdr.cdr()->get<DataPair>().car();
 
     FramePtr new_frame =
         std::make_shared<CallFrame>(ret, this->env,
@@ -188,7 +236,7 @@ void HeapVirtualMachine::evaluate_assembly_instruction() {
 
     NodePtr x = exp_cdr.car();
 
-    this->rib.push_back(this->acc);
+    this->rib.push_front(this->acc);
 
     this->set_expression(x);
 
@@ -206,7 +254,7 @@ void HeapVirtualMachine::evaluate_assembly_instruction() {
     else {
       closure.extend_environment(this->get_value_rib());
       this->set_environment(closure.get_environment());
-      this->set_value_rib(std::vector<NodePtr>(0));
+      this->set_value_rib(std::deque<NodePtr>(0));
       this->set_expression(closure.get_function_body());
     }
   }
@@ -251,7 +299,7 @@ void HeapVirtualMachine::set_expression(Expression x) {
   this->exp = x;
 }
 
-void HeapVirtualMachine::push_call_frame(FramePtr s) {
+void HeapVirtualMachine::set_call_frame(FramePtr s) {
   this->frame = s;
 }
 

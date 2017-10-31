@@ -6,7 +6,7 @@
 #define SHAKA_SCHEME_HEAPVIRTUALMACHINE_HPP
 
 
-#include <vector>
+#include <deque>
 #include "shaka_scheme/system/base/Data.hpp"
 
 namespace shaka {
@@ -29,7 +29,7 @@ class CallFrame;
 using Accumulator = NodePtr;
 using Expression = NodePtr;
 using EnvPtr = std::shared_ptr<Environment>;
-using ValueRib = std::vector<NodePtr>;
+using ValueRib = std::deque<NodePtr>;
 using FramePtr = std::shared_ptr<CallFrame>;
 
 
@@ -103,7 +103,7 @@ public:
    * @brief Restores parameter s to be the CurrentStack
    * @param s The pointer to a CallFrame to represent the new CurrentStack
    */
-  void push_call_frame(FramePtr s);
+  void set_call_frame(FramePtr s);
 
   /**
    * @brief Sets the value of the Environment register to be the parameter e
