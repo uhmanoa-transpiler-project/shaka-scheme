@@ -1073,30 +1073,22 @@ TEST(HeapVirtualMachineUnitTest, eval_nuate) {
   );
   DataPair constant_a_rest(Data(Symbol("constant")), a_rest);
 
-
-
-
-  NodePtr x = core::list(create_node(apply_pair),
-                         create_node(constant_a_rest));
-
-  DataPair frame_rest(Data(Symbol("frame")), *x);
-
-  DataPair argument_rest(
-      Data(Symbol("argument")),
-      *core::list(create_node(frame_rest)));
-
-  NodePtr func_body = core::list(
+  NodePtr constant_b_halt = core::list(
       create_node(Symbol("constant")),
       create_node(Symbol("b")),
-      create_node(argument_rest)
+      core::list(create_node(Symbol("halt")))
   );
+
+  NodePtr x = core::list(constant_b_halt,
+                         create_node(constant_a_rest));
+
+  DataPair func_body(Data(Symbol("frame")), *x);
 
   std::vector<Symbol> vars{Symbol("k")};
 
-  Closure f(env, func_body, vars, nullptr, nullptr, false);
+  Closure f(env, create_node(func_body), vars, nullptr, nullptr, false);
 
-  //std::cout << *func_body << std::endl;
-
+  std::cout << func_body << std::endl;
 
   // Given: An environment that has a binding for that Closure to 'f
   env->set_value(Symbol("f"), create_node(f));
@@ -1125,7 +1117,7 @@ TEST(HeapVirtualMachineUnitTest, eval_nuate) {
   // Given: A default constructed CallFrame
 
   FramePtr frame = std::make_shared<CallFrame>(
-      core::list(create_node(Symbol("return"))),
+      core::list(create_node(Symbol("halt"))),
       env,
       vr,
       nullptr
@@ -1175,83 +1167,44 @@ TEST(HeapVirtualMachineUnitTest, eval_nuate) {
           .is_continuation_closure()
   );
 
+
   // When: You invoke the evaluate assembly instruction method
 
   hvm.evaluate_assembly_instruction();
 
-  // Then: The symbol 'b will be in the accumulator
-
-  ASSERT_EQ(hvm.get_accumulator()->get<Symbol>(), Symbol("b"));
-
-  // When: You invoke the evaluate assembly instruction method again
-
-  hvm.evaluate_assembly_instruction();
-
-  // Then: The symbol 'b will have been moved to the ValueRib
-
-  ASSERT_EQ(hvm.get_value_rib()[0]->get<Symbol>(), Symbol("b"));
-
-  // When: You invoke the evaluate assembly instruction method again
-
-  hvm.evaluate_assembly_instruction();
-
-  // Then: A frame will have been created to wrap the value rib and '(apply)
-
-  ASSERT_EQ(
-      hvm.get_call_frame()->get_next_expression()->
-          get<DataPair>().car()->get<Symbol>(),
-      Symbol("apply")
-  );
-
-  ASSERT_EQ(
-      hvm.get_call_frame()->get_value_rib()[0]->get<Symbol>(), Symbol("b")
-  );
-
-  // Then: The next expression will be (constant a (argument (refer k (apply)))
+  // Then: The expression register will contain...
+  // (constant a (argument (refer k (apply))))
 
   ASSERT_EQ(
       hvm.get_expression()->get<DataPair>().car()->get<Symbol>(),
       Symbol("constant")
-
   );
 
-  // When: You invoke the evaluate assembly instruction method until (refer k..)
+  // When: You invoke the evaluate assembly instruction method until (apply)
 
-  hvm.evaluate_assembly_instruction(); // constant
-
+  hvm.evaluate_assembly_instruction(); // constant a
   hvm.evaluate_assembly_instruction(); // argument
-
   hvm.evaluate_assembly_instruction(); // refer k
-
-  // Then: The continuation closure will be in the accumulator
-
-  ASSERT_TRUE(hvm.get_accumulator()->get<Closure>().is_continuation_closure());
-
-  // When: You invoke the evaluate assembly instruction method again
-
   hvm.evaluate_assembly_instruction(); // apply
 
-  // Then: A binding for [kont_v000 : Symbol("a")] will be in the environment
-
+  // Then: The environment will have a binding for [kont_v000 : a]
   ASSERT_EQ(
       hvm.get_environment()->get_value(Symbol("kont_v000"))->get<Symbol>(),
       Symbol("a")
   );
 
-  // Then: The function body of the closure will be in the expression register
-
-  //std::cout << *hvm.get_expression() << std::endl;
+  // Then: The next expression will be (nuate s kont_v000)
 
   ASSERT_EQ(
       hvm.get_expression()->get<DataPair>().car()->get<Symbol>(),
       Symbol("nuate")
   );
 
-  // When: You invoke the evaluate_assembly_instruction method again
+  // When: You invoke the evaluate assembly instruction method again
 
-  hvm.evaluate_assembly_instruction(); // (nuate s var)
+  hvm.evaluate_assembly_instruction(); // nuate
 
-  // Then: The Symbol("a") will be in the accumulator
+  // Then: The symbol 'a will be in the accumulator
 
   ASSERT_EQ(
       hvm.get_accumulator()->get<Symbol>(),
@@ -1268,25 +1221,10 @@ TEST(HeapVirtualMachineUnitTest, eval_nuate) {
   // Then: The top CallFrame on the stack will be the original frame
 
   ASSERT_EQ(
-      hvm.get_call_frame()->get_next_expression()->
-          get<DataPair>().car()->get<Symbol>(),
-      Symbol("return")
+      hvm.get_call_frame()->get_next_expression()->get<DataPair>().car()
+          ->get<Symbol>(), Symbol("halt")
   );
 
-  // When: You invoke the evaluate assembly instruction method again
-
-  hvm.evaluate_assembly_instruction(); // return
-
-  // Then: The current environment will only contain the binding for f
-
-  ASSERT_EQ(
-    hvm.get_environment()->get_value(Symbol("f"))->get_type(),
-    shaka::Data::Type::CLOSURE
-  );
-
-  ASSERT_FALSE(
-    hvm.get_environment()->is_defined(Symbol("kont_v000"))
-  );
 
 
 }
@@ -1315,28 +1253,22 @@ TEST(HeapVirtualMachineUnitTest, closure_vs_continuation) {
   );
   DataPair constant_a_rest(Data(Symbol("constant")), a_rest);
 
-
-
-  NodePtr x = core::list(create_node(apply_pair),
-                         create_node(constant_a_rest));
-
-  DataPair frame_rest(Data(Symbol("frame")), *x);
-
-  DataPair argument_rest(
-      Data(Symbol("argument")),
-      *core::list(create_node(frame_rest)));
-
-  NodePtr func_body = core::list(
+  NodePtr constant_b_halt = core::list(
       create_node(Symbol("constant")),
       create_node(Symbol("b")),
-      create_node(argument_rest)
+      core::list(create_node(Symbol("halt")))
   );
+
+  NodePtr x = core::list(constant_b_halt,
+                         create_node(constant_a_rest));
+
+  DataPair func_body(Data(Symbol("frame")), *x);
 
   std::vector<Symbol> vars{Symbol("k")};
 
-  Closure f(env, func_body, vars, nullptr, nullptr, false);
+  Closure f(env, create_node(func_body), vars, nullptr, nullptr, false);
 
-  //std::cout << *func_body << std::endl;
+  //std::cout << func_body << std::endl;
 
 
   // Given: An environment that has a binding for that Closure to 'f
@@ -1422,19 +1354,22 @@ TEST(HeapVirtualMachineUnitTest, closure_vs_continuation) {
 
   // When: You invoke the evaluate_assembly_instruction() method until (apply)
 
-  hvm.evaluate_assembly_instruction(); // constant b
-  hvm.evaluate_assembly_instruction(); // argument
   hvm.evaluate_assembly_instruction(); // frame
+
+  // Then: The expression register will contain...
+  // (constant a (argument (refer k (apply))))
+
+  ASSERT_EQ(
+    hvm.get_expression()->get<DataPair>().car()->get<Symbol>(),
+    Symbol("constant")
+  );
+
+  // When: You invoke the evaluate_assembly_instruction method until (apply)
+
   hvm.evaluate_assembly_instruction(); // constant a
   hvm.evaluate_assembly_instruction(); // argument
   hvm.evaluate_assembly_instruction(); // refer k
   hvm.evaluate_assembly_instruction(); // apply
-
-  // Then: The body of the identity function will be in the expression register
-
-  ASSERT_EQ(
-    hvm.get_expression(), identity.get_function_body()
-  );
 
   // Then: The environment will have a binding for [x : 'a]
 
@@ -1443,25 +1378,33 @@ TEST(HeapVirtualMachineUnitTest, closure_vs_continuation) {
     Symbol("a")
   );
 
-  // When: You invoke the evaluate assembly instruction method through return
+  // Then: The expression register will have (refer x (return))
+
+  ASSERT_EQ(
+    hvm.get_expression(), identity.get_function_body()
+  );
+
+  // When: You invoke the evaluate assembly instruction method through (return)
 
   hvm.evaluate_assembly_instruction(); // refer x
   hvm.evaluate_assembly_instruction(); // return
 
-  // Then: The value rib will have the symbol 'b in it
-
-  ASSERT_EQ(
-    hvm.get_value_rib()[0]->get<Symbol>(), Symbol("b")
-  );
-
-  // Then: The expression register will hold '(apply)
+  // Then: The expression register will hold '(constant b (return))
 
   ASSERT_EQ(
     hvm.get_expression()->get<DataPair>().car()->get<Symbol>(),
-    Symbol("apply")
+    Symbol("constant")
   );
 
-  ASSERT_NE(hvm.get_accumulator()->get_type(), shaka::Data::Type::CLOSURE);
+  // When: You invoke the evaluate assembly instruction method until (halt)
 
+  hvm.evaluate_assembly_instruction(); // constant b
+  hvm.evaluate_assembly_instruction(); // halt
 
+  // Then: The symbol 'b will be in the accumulator
+
+  ASSERT_EQ(
+      hvm.get_accumulator()->get<Symbol>(),
+      Symbol("b")
+  );
 }
