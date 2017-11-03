@@ -72,6 +72,7 @@ inline bool is_proper_list(NodePtr node) {
   // The empty list is a proper list
   if (is_null_list(node)) { return true; }
   // Lists must be pairs.
+  if (is_null_list(node)) { return true; }
   if (!is_pair(node)) { return false; }
   // Get the last cdr of the last pair in the
   // nested structure of pairs within pairs (the list)

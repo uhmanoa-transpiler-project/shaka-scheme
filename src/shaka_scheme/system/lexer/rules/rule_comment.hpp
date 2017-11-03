@@ -27,6 +27,7 @@ LexerRule nested_comment = [&](LexerInput& input) {
         nested_comment_right) / "nested-comment")(input);
 };
 
+LexerRule comment = line_comment | nested_comment;
 
 } // namespace rules
 } // namespace lexer

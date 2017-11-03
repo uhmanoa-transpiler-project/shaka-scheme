@@ -22,7 +22,8 @@ int main() {
       lex.append_input(buf + "\n");
     }
     do  {
-      result = (skip_ws + rules::token)(lex);
+      skip_ws(lex);
+      result = rules::scheme_lexer(lex);
       std::cout << "<< " << result << std::endl;
     } while (result.is_token());
 

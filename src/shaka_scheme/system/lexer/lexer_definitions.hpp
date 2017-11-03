@@ -91,6 +91,19 @@ struct LexResult {
   bool is_incomplete() const { return type == "incomplete"; }
 };
 
+bool operator==(const LexResult& left, const LexResult& right) {
+  return (
+    left.info == right.info &&
+      left.token_type == right.token_type &&
+      left.str == right.str &&
+      left.type == right.type
+  );
+}
+
+bool operator!=(const LexResult& left, const LexResult& right) {
+  return !operator==(left, right);
+}
+
 /**
  * @brief A pseudo-constructor for an LexResult error.
  * @param str The part of input that caused the error.
@@ -347,6 +360,8 @@ auto make_terminal = [](std::string str, std::string type = "") -> LexerRule {
             "could not match to \"" + str + "\"");
       }
     } catch (LexerException e) {
+      auto result = Incomplete(buf, saved_info);
+      lex.unget({result});
       return Incomplete(e.what(), lex.get_info());
     }
   };
@@ -379,6 +394,8 @@ auto make_class = [](std::function<bool(char)> pred, std::string type) {
             "character did not pass predicate");
       }
     } catch (LexerException e) {
+      auto result = Incomplete(buf, saved_info);
+      lex.unget({result});
       return Incomplete(e.what(), lex.get_info());
     }
   };
