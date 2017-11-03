@@ -5,7 +5,7 @@
 #ifndef SHAKA_SCHEME_RULE_COMMENT_HPP
 #define SHAKA_SCHEME_RULE_COMMENT_HPP
 
-#include "shaka_scheme/system/lexer/lexer_definitions.hpp"
+#include "shaka_scheme/system/lexer/rules/common_rules.hpp"
 
 namespace shaka {
 namespace lexer {

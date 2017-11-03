@@ -58,7 +58,6 @@ LexerRule intertoken_space = *atmosphere;
 LexerRule scheme_lexer = [](LexerInput& lex) {
   intertoken_space(lex);
   auto result = token(lex);
-  intertoken_space(lex);
   return result;
 };
 
