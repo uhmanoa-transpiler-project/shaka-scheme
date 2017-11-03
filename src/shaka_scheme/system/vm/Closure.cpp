@@ -3,35 +3,82 @@
 //
 
 #include "shaka_scheme/system/vm/Closure.hpp"
+#include "shaka_scheme/system/base/Data.hpp"
+#include "shaka_scheme/system/core/lists.hpp"
 
 namespace shaka {
+
+class Data;
 
 Closure::Closure(EnvPtr env,
                  NodePtr fb,
                  VariableList vl,
                  CallablePtr cl,
-                 FramePtr frame) :
+                 FramePtr frame,
+                 bool arity) :
     env(env),
     func_body(fb),
     variable_list(vl),
     callable(cl),
-    frame(frame) {}
+    frame(frame),
+    variable_arity(arity) {}
+
+Closure::Closure() {
+  env = std::make_shared<Environment>(nullptr);
+  func_body = std::make_shared<Data>();
+  variable_list = std::vector<shaka::Symbol>(0);
+  callable = nullptr;
+  frame = std::make_shared<CallFrame>();
+  variable_arity = false;
+
+}
+
+
 
 NodePtr Closure::get_function_body() {
   return this->func_body;
 }
 
 void Closure::extend_environment(ValueRib vr) {
-  for (size_t i = 0; i < variable_list.size(); i++) {
-    env->set_value(variable_list[i], vr[i]);
+
+  EnvPtr new_frame = std::make_shared<Environment>(env);
+
+  if (this->variable_arity) {
+
+    size_t i = 0;
+    // The var_args parameter should always be last in the variable list
+    while (i < variable_list.size() - 1) {
+      new_frame->set_value(variable_list[i], vr[i]);
+      i++;
+    }
+
+    if (i < vr.size()) {
+      NodePtr var_args = core::list();
+      for (;i < vr.size(); i++) {
+        var_args = core::append(var_args, core::list(vr[i]));
+      }
+      new_frame->set_value(
+          variable_list[variable_list.size() - 1],
+          var_args
+      );
+    }
+
   }
+
+  else {
+    for (size_t i = 0; i < variable_list.size(); i++) {
+      new_frame->set_value(variable_list[i], vr[i]);
+    }
+  }
+
+  this->env = new_frame;
 }
 
 EnvPtr Closure::get_environment() {
   return this->env;
 }
 
-std::vector<NodePtr> Closure::call(std::vector<NodePtr> args) {
+std::deque<NodePtr> Closure::call(std::deque<NodePtr> args) {
   return (*callable)(args);
 }
 
@@ -49,6 +96,10 @@ bool Closure::is_native_closure() {
 
 bool Closure::is_continuation_closure() {
   return this->frame != nullptr;
+}
+
+bool Closure::is_variable_arity() {
+  return this->variable_arity;
 }
 
 

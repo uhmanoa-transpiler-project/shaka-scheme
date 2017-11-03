@@ -5,16 +5,20 @@
 #ifndef SHAKA_SCHEME_CLOSURE_HPP
 #define SHAKA_SCHEME_CLOSURE_HPP
 
-#include "shaka_scheme/system/base/Data.hpp"
-#include "shaka_scheme/system/base/DataPair.hpp"
 #include "shaka_scheme/system/base/Environment.hpp"
-#include "shaka_scheme/system/vm/CallFrame.hpp"
 #include <vector>
+#include <deque>
 #include <functional>
 
 namespace shaka {
 
-using Callable = std::function<std::vector<NodePtr>(std::vector<NodePtr>)>;
+class Data;
+class CallFrame;
+
+using EnvPtr = std::shared_ptr<Environment>;
+using FramePtr = std::shared_ptr<CallFrame>;
+using ValueRib = std::deque<NodePtr>;
+using Callable = std::function<std::deque<NodePtr>(std::deque<NodePtr>)>;
 using CallablePtr = std::shared_ptr<Callable>;
 
 using VariableList = std::vector<Symbol>;
@@ -31,7 +35,17 @@ public:
    * @param frame A pointer to a CallFrame, needed for continuations
    */
   Closure(EnvPtr env, NodePtr fb, VariableList vl,
-          CallablePtr cl, FramePtr frame);
+          CallablePtr cl, FramePtr frame, bool arity);
+
+  /**
+   * @brief Default constructor for Closure class
+   * Initializes environment to be an empty environment
+   * Initializes function body to be the empty list
+   * Initializes the variable list to be an empty vector
+   * Initializes the callable to be a nullptr
+   * Initializes the FramePtr to point to a default frame
+   */
+  Closure();
 
   /**
    * @brief Method to get the body of the function
@@ -56,7 +70,7 @@ public:
    * @param args The arguments to the procedure
    * @return A vector containing the result(s) of the procedure call
    */
-  std::vector<NodePtr> call(std::vector<NodePtr> args);
+  std::deque<NodePtr> call(std::deque<NodePtr> args);
 
   /**
    * @brief A procedure to retrieve the CallFrame from a continuation closure
@@ -82,6 +96,12 @@ public:
    */
   bool is_continuation_closure();
 
+  /**
+   * @brief Method to determine whether or ot this Closure has variable arity
+   * @return true if this accepts a variable number of args, else false
+   */
+  bool is_variable_arity();
+
 
 
 private:
@@ -91,6 +111,7 @@ private:
   VariableList variable_list;
   CallablePtr callable;
   FramePtr frame;
+  bool variable_arity;
 
 };
 
