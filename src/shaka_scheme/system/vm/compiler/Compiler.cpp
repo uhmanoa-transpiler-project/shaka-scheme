@@ -22,11 +22,12 @@ Expression Compiler::compile(Expression input, Expression next_instruction) {
   }
   // (pair? input)
   else if (is_pair(input)) {
+
     Symbol expression_type = car(input)->get<Symbol>();
 
     // quote case
     // (list 'constant obj next)
-    if(expression_type == Symbol("quote")){
+    if (expression_type == Symbol("quote")) {
       Symbol instruction("constant");
       Data instruction_data(instruction);
 
@@ -44,35 +45,37 @@ Expression Compiler::compile(Expression input, Expression next_instruction) {
       NodePtr body = car(cdr(cdr(input)));
 
       return list(create_node(instruction_data),
-                  vars,
-                  compile(body,list(create_node(return_op))),
+                  list(vars),
+                  compile_lambda(body, list(create_node(return_op))),
                   next_instruction);
 
     }
     // if (test then else) case
-    else if (expression_type == Symbol("if")){
+    else if (expression_type == Symbol("if")) {
       Symbol instruction("test");
       Data instruction_data(instruction);
 
-      NodePtr _test = car(cdr(input));
-      NodePtr _then = car(cdr(cdr(input)));
-      NodePtr _else = cdr(cdr(cdr(input)));
+      NodePtr test_expression = car(cdr(input));
+      NodePtr then_expression = car(cdr(cdr(input)));
+      NodePtr else_expression = car(cdr(cdr(cdr(input))));
 
-      Expression thenc = compile(_then, next_instruction);
-      Expression elsec = compile(_else, next_instruction);
+      Expression thenc = compile(then_expression, next_instruction);
+      Expression elsec = compile(else_expression, next_instruction);
 
-      return compile(_test, list(create_node(instruction_data), thenc, elsec));
+      return compile(test_expression, list(create_node(instruction_data),
+                                           thenc, elsec));
 
     }
     // set! case
-    else if (expression_type == Symbol("set!")){
+    else if (expression_type == Symbol("set!")) {
       Symbol instruction("assign");
       Data instruction_data(instruction);
 
       NodePtr var = car(cdr(input));
       NodePtr x = car(cdr(cdr(input)));
 
-      return compile(x, list(create_node(instruction_data), var, next_instruction));
+      return compile(x,list(create_node(instruction_data),
+                            var,next_instruction));
     }
     // call/cc case
     else if (expression_type == Symbol("call/cc")) {
@@ -82,12 +85,11 @@ Expression Compiler::compile(Expression input, Expression next_instruction) {
 
       Expression x = car(cdr(input));
       DataPair argument_compile(argument_op, *compile(x, apply_op));
-      Expression c = list(create_node(conti_op), list(create_node
-                                                     (argument_compile)));
+      Expression c = list(create_node(conti_op),
+                          list(create_node(argument_compile)));
       if (is_tail(next_instruction)) {
         return c;
-      }
-      else {
+      } else {
         Data frame_op(Symbol("frame"));
         return list(create_node(frame_op), next_instruction, c);
       }
@@ -100,12 +102,11 @@ Expression Compiler::compile(Expression input, Expression next_instruction) {
       NodePtr args = cdr(input);
       Expression c = compile(car(input), list(apply_op));
 
-      while(true) {
+      while (true) {
         if (is_null_list(args)) {
-          if(is_tail(next_instruction)) {
-           return c;
-          }
-          else {
+          if (is_tail(next_instruction)) {
+            return c;
+          } else {
             Data frame_op(Symbol("frame"));
 
             // return (frame next c)
@@ -120,8 +121,7 @@ Expression Compiler::compile(Expression input, Expression next_instruction) {
         args = cdr(args);
       }
     }
-  }
-  else {
+  } else {
     // (list 'constant x next)
     Symbol instruction("constant");
     Data instruction_data(instruction);
@@ -132,7 +132,16 @@ Expression Compiler::compile(Expression input, Expression next_instruction) {
 }
 
 bool Compiler::is_tail(Expression next) {
- return car(next)->get<Symbol>() == Symbol("return");
+  return car(next)->get<Symbol>() == Symbol("return");
+}
+
+Expression Compiler::compile_lambda(Expression body, Expression next) {
+  if (is_null_list(cdr(body))) {
+    return compile(car(body), next);
+  }
+  else {
+   return compile(car(body), compile_lambda(cdr(body), next));
+  }
 }
 
 }
