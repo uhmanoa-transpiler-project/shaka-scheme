@@ -72,12 +72,29 @@ TEST(CompilerUnitTest, lambda_test) {
   ss << *expression;
   std::string output = ss.str();
 
+ // Then: The resulting assembly instruction should have the following form.
+ // ASSERT_EQ(output, "(close (x y) (refer y (argument (refer x (argument "
+ //     "(refer + (apply)))))) (halt))");
+
+  // Given: The expression (lambda (k) (k 'a) 'b)
+  Data k_data(Symbol("k"));
+  Data a_data(Symbol("a"));
+  Data b_data(Symbol("b"));
+
+  vars = create_node(k_data);
+  Expression k_a = list(vars, create_node(a_data));
+
+  body = list(k_a, create_node(b_data));
+  e = list(create_node(lambda), vars, body);
+  std::cout << *e << std::endl;
+
+  // When: You compile the expression.
+  expression = compiler.compile(e);
+
   // Then: The resulting assembly instruction should have the following form.
-  ASSERT_EQ(output, "(close (x y) (refer y (argument (refer x (argument "
-      "(refer + (apply)))))) (halt))");
-
-
+  std::cout << *expression << std::endl;
 }
+
 
 /**
  * @brief Test: compile() changing if expressions to 'test' instructions
@@ -90,12 +107,16 @@ TEST(CompilerUnitTest, if_test) {
   Data minus(Symbol("-"));
   Data plus(Symbol("+"));
 
-
-  Expression _then = list(create_node(plus), create_node(x_data), create_node
+  // NEED TO CHECK LENGTH OF EXPRESSION
+  Expression then_expression = list(create_node(plus), create_node(x_data),
+                              create_node
       (y_data));
-  Expression _else = list(create_node(minus), create_node(x_data),
+  Expression else_expression = list(create_node(minus), create_node(x_data),
                           create_node(y_data));
-  Expression e = list(create_node(if_op), _then, _else);
+
+  Expression e = list(create_node(if_op), create_node(x_data), then_expression,
+                      else_expression);
+  std::cout << *e << std::endl;
 
   Expression expression = compiler.compile(e);
 
