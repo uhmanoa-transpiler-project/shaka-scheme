@@ -1,1 +1,4 @@
-macro_shaka_scheme_test(unit-Tokenizer)
+add_subdirectory(rules)
+
+macro_shaka_scheme_test(unit-Lexer)
+
