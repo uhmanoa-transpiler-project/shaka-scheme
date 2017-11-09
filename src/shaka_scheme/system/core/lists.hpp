@@ -26,7 +26,7 @@ inline NodePtr car(NodePtr node) {
 
 inline NodePtr cdr(NodePtr node) {
   if (node->get_type() != Data::Type::DATA_PAIR) {
-    throw shaka::TypeException(10001, "car(): Data does not hold DataPair");
+    throw shaka::TypeException(10001, "cdr(): Data does not hold DataPair");
   }
   return node->get<DataPair>().cdr();
 }
