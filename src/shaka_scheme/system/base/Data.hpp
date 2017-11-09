@@ -102,7 +102,7 @@ public:
   }
 
   Data(shaka::PrimitiveFormMarker other) {
-    new(&call_frame) shaka::PrimitiveFormMarker(other);
+    new(&primitive_form) shaka::PrimitiveFormMarker(other);
     this->type_tag = Type::PRIMITIVE_FORM;
   }
 
