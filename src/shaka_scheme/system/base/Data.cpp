@@ -38,6 +38,10 @@ shaka::Data::Data(const shaka::Data& other) :
     new(&call_frame) shaka::CallFrame(other.call_frame);
     break;
   }
+  case shaka::Data::Type::PRIMITIVE_FORM: {
+    new(&primitive_form) shaka::PrimitiveFormMarker(other.primitive_form);
+    break;
+  }
 //  case shaka::Data::Type::DATA_NODE: {
 //    new(&data_node) std::shared_ptr<shaka::DataNode>(other.data_node);
 //    break;
@@ -89,6 +93,10 @@ shaka::Data::~Data() {
   }
   case shaka::Data::Type::CALL_FRAME: {
     this->call_frame.~CallFrame();
+    break;
+  }
+  case shaka::Data::Type::PRIMITIVE_FORM: {
+    this->primitive_form.~PrimitiveFormMarker();
     break;
   }
 //  case shaka::Data::Type::ENVIRONMENT: {
@@ -151,6 +159,15 @@ shaka::CallFrame& shaka::Data::get<shaka::CallFrame>() {
   return this->call_frame;
 }
 
+template<>
+shaka::PrimitiveFormMarker& shaka::Data::get<shaka::PrimitiveFormMarker>() {
+  if (this->get_type() != Type::PRIMITIVE_FORM) {
+    throw new shaka::TypeException(9, "Could not get() PrimitiveFormMarker "
+        "from Data");
+  }
+  return this->primitive_form;
+}
+
 namespace shaka {
 
 std::ostream& operator<<(std::ostream& lhs, shaka::Data rhs) {
@@ -200,6 +217,11 @@ std::ostream& operator<<(std::ostream& lhs, shaka::Data rhs) {
   }
   case shaka::Data::Type::CLOSURE: {
     lhs << "#<procedure>";
+    break;
+  }
+  case shaka::Data::Type::PRIMITIVE_FORM: {
+    PrimitiveFormMarker& temp = rhs.get<PrimitiveFormMarker>();
+    lhs << temp;
     break;
   }
 

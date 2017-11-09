@@ -55,6 +55,7 @@ set(SOURCE_FILES
         src/shaka_scheme/system/vm/HeapVirtualMachine.cpp
         src/shaka_scheme/system/vm/Closure.cpp
         src/shaka_scheme/system/vm/compiler/Compiler.cpp
+        src/shaka_scheme/system/base/PrimitiveFormMarker.cpp
         )
 
 add_library(${SHAKA_SCHEME_LIBRARY_NAME} SHARED ${SOURCE_FILES})

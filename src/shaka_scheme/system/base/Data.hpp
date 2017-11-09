@@ -13,6 +13,7 @@
 #include "shaka_scheme/system/base/Boolean.hpp"
 #include "shaka_scheme/system/base/IEnvironment.hpp"
 #include "shaka_scheme/system/base/DataPair.hpp"
+#include "shaka_scheme/system/base/PrimitiveFormMarker.hpp"
 #include "shaka_scheme/system/vm/Closure.hpp"
 #include "shaka_scheme/system/vm/CallFrame.hpp"
 
@@ -31,6 +32,7 @@ class DataPair;
 class UserStructData;
 class Closure;
 class CallFrame;
+class PrimitiveFormMarker;
 
 class Data;
 
@@ -51,7 +53,8 @@ public:
     BOOLEAN,
     CLOSURE,
     CALL_FRAME,
-    NULL_LIST
+    NULL_LIST,
+    PRIMITIVE_FORM
   };
 private:
   Type type_tag;
@@ -63,6 +66,7 @@ private:
     shaka::Symbol symbol;
     shaka::Closure closure;
     shaka::CallFrame call_frame;
+    shaka::PrimitiveFormMarker primitive_form;
   };
 
 public:
@@ -95,6 +99,11 @@ public:
   Data(shaka::CallFrame other) {
     new(&call_frame) shaka::CallFrame(other);
     this->type_tag = Type::CALL_FRAME;
+  }
+
+  Data(shaka::PrimitiveFormMarker other) {
+    new(&call_frame) shaka::PrimitiveFormMarker(other);
+    this->type_tag = Type::PRIMITIVE_FORM;
   }
 
   /**
@@ -144,6 +153,7 @@ template<> shaka::Boolean& shaka::Data::get<shaka::Boolean>();
 template<> shaka::DataPair& shaka::Data::get<shaka::DataPair>();
 template<> shaka::Closure& shaka::Data::get<shaka::Closure>();
 template<> shaka::CallFrame& shaka::Data::get<shaka::CallFrame>();
+template<> shaka::PrimitiveFormMarker& shaka::Data::get<shaka::PrimitiveFormMarker>();
 
 std::ostream& operator<<(std::ostream& lhs, shaka::Data rhs);
 
