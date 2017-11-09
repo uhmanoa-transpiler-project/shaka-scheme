@@ -6,7 +6,7 @@
 #include "shaka_scheme/system/base/Data.hpp"
 #include "shaka_scheme/system/vm/HeapVirtualMachine.hpp"
 #include "shaka_scheme/system/core/lists.hpp"
-#include "shaka_scheme/system/vm/strings.hpp"
+#include "shaka_scheme/system/core/strings.hpp"
 
 using namespace shaka;
 
