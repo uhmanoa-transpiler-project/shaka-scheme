@@ -54,9 +54,9 @@ next_instruction) {
       Symbol instruction("test");
       Data instruction_data(instruction);
 
-      NodePtr test_expression = car(cdr(input));
-      NodePtr then_expression = car(cdr(cdr(input)));
-      NodePtr else_expression = car(cdr(cdr(cdr(input))));
+      Expression test_expression = car(cdr(input));
+      Expression then_expression = car(cdr(cdr(input)));
+      Expression else_expression = car(cdr(cdr(cdr(input))));
 
       Expression thenc = compile(then_expression, next_instruction);
       Expression elsec = compile(else_expression, next_instruction);
