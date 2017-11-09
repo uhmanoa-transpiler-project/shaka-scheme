@@ -11,7 +11,8 @@ Compiler::Compiler() {}
 
 Compiler::~Compiler() {}
 
-Expression Compiler::compile(Expression input, Expression next_instruction) {
+Expression Compiler::compile(Expression input, Expression
+next_instruction) {
   // (symbol? input)
   // (list 'refer x next)
   if (is_symbol(input)) {
@@ -38,15 +39,13 @@ Expression Compiler::compile(Expression input, Expression next_instruction) {
     else if (expression_type == Symbol("lambda")) {
       Symbol instruction("close");
       Data instruction_data(instruction);
-
       Data return_op(Symbol("return"));
 
       NodePtr vars = car(cdr(input));
       NodePtr body = car(cdr(cdr(input)));
 
-      return list(create_node(instruction_data),
-                  list(vars),
-                  compile_lambda(body, list(create_node(return_op))),
+      return list(create_node(instruction), vars,
+                  compile_lambda(body,list(create_node(return_op))),
                   next_instruction);
 
     }
@@ -79,20 +78,7 @@ Expression Compiler::compile(Expression input, Expression next_instruction) {
     }
     // call/cc case
     else if (expression_type == Symbol("call/cc")) {
-      Data argument_op(Symbol("argument"));
-      Data conti_op(Symbol("conti"));
-      Expression apply_op = create_node(Data(Symbol("apply")));
-
-      Expression x = car(cdr(input));
-      DataPair argument_compile(argument_op, *compile(x, apply_op));
-      Expression c = list(create_node(conti_op),
-                          list(create_node(argument_compile)));
-      if (is_tail(next_instruction)) {
-        return c;
-      } else {
-        Data frame_op(Symbol("frame"));
-        return list(create_node(frame_op), next_instruction, c);
-      }
+      std::cout << "call/cc" << std::endl;
     }
     // application
     else {
