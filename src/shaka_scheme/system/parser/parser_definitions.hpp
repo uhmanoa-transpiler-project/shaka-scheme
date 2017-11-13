@@ -179,6 +179,19 @@ ParserRule parse_datum = [&](ParserInput& in) -> ParserResult {
     }
   }
 
+  if (in.peek().token_type == "quote") {
+    auto saved_token = in.get();
+    auto parsed_datum = parse_datum(in);
+    if (!parsed_datum.is_complete()) {
+      in.unget(saved_token);
+      return parsed_datum;
+    } else {
+      return Complete(core::list(
+          create_node(Symbol("quote")),
+          parsed_datum.it));
+    }
+  }
+
   auto simple_datum = parse_simple(in);
   if (simple_datum.is_complete()) {
     return simple_datum;
