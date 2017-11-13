@@ -131,18 +131,24 @@ auto parse_simple = [](ParserInput& in) {
 
 ParserRule parse_datum = [&](ParserInput& in) -> ParserResult {
   auto parse_list = [&](ParserInput& in) {
-    std::cout << "parse-list" << std::endl;
+    //std::cout << "parse-list" << std::endl;
     auto data_list = core::list();
+    //std::cout << "TOKEN: " << in.peek() << std::endl;
     if (in.peek().token_type == "paren-left") {
       in.get();
     }
     while (in.peek().token_type != "paren-right") {
+      //std::cout << "TOKEN: " << in.peek() << std::endl;
       ParserResult datum_result = parse_datum(in);
+      //std::cout << "DATUM:" << datum_result << std::endl;
       if (datum_result.is_complete()) {
         data_list = core::append(data_list, core::list(datum_result.it));
       } else if (in.peek().token_type == "dot") {
         in.get();
+        //std::cout << "in.peek(): " << in.peek() << std::endl;
         datum_result = parse_datum(in);
+        //std::cout << "IMPROPER LIST LAST DATUM: " << datum_result <<
+        // std::endl;
         if (datum_result.is_complete()) {
           data_list = core::append(data_list, datum_result.it);
         } else {
@@ -180,6 +186,8 @@ ParserRule parse_datum = [&](ParserInput& in) -> ParserResult {
     auto next = in.peek();
     if (next.token_type == "paren-left") {
       return parse_list(in);
+    } else {
+      return ParserError(next, "could not parse non-simple datum");
     }
   }
 
