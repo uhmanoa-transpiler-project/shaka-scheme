@@ -318,7 +318,7 @@ void run_macro_expansion(
     auto item = core::car(it);
     //std::cout << "#" << count << ": " << *it << " | " << *item << std::endl;
     if (core::is_proper_list(item)) {
-      traverse_tree(item, macro_context);
+      run_macro_expansion(item, macro_context);
     }
   }
   if (need_to_pop_scope) {

@@ -124,7 +124,7 @@ TEST(MacroContext, other) {
 
   std::cout << *result.it << std::endl;
 
-  traverse_tree(result.it, context);
+  run_macro_expansion(result.it, context);
 
   for (
     auto binding :
