@@ -9,7 +9,7 @@ using namespace shaka::macro;
 using namespace shaka;
 
 
-TEST(MacroContextChecker, setup_vm) {
+TEST(MacroContext, setup_vm) {
   const auto& c = create_node;
   NodePtr acc = create_node(Symbol("hi"));
 
@@ -60,11 +60,15 @@ TEST(MacroContextChecker, setup_vm) {
 /**
  * @brief Test: mock define expression
  */
-TEST(MacroContextChecker, other) {
+TEST(MacroContext, other) {
   using namespace shaka::parser;
   using namespace shaka;
   // Given: an input string
-  std::string buf = "(lambda (x) (+ x z) (lambda (y) (- y a)) (lambda (q) a))";
+  //std::string buf = "(lambda (x) (+ x z) (lambda (y) (- y a)) (lambda (q)
+  // a))";
+  //std::string buf = "(quote (lambda (x) (+ x x)))";
+  std::string buf = "((lambda (x) (lambda (y) (define (hi x) y) (+ x y))) "
+      "(lambda (x) (+ x x)))";
 
   // Given: a ParserInput loaded with the input string.
   parser::ParserInput input(buf);
@@ -82,6 +86,7 @@ TEST(MacroContextChecker, other) {
 
   EnvPtr env = hvm.get_environment();
 
+  env->set_value(Symbol("define"), create_node(PrimitiveFormMarker("define")));
   env->set_value(Symbol("set!"), create_node(PrimitiveFormMarker("set!")));
   env->set_value(Symbol("lambda"), create_node(PrimitiveFormMarker("lambda")));
   env->set_value(Symbol("quote"), create_node(PrimitiveFormMarker("quote")));
@@ -92,6 +97,8 @@ TEST(MacroContextChecker, other) {
   env->set_value(Symbol("syntax-rules"),
                  create_node(PrimitiveFormMarker("syntax-rules")));
 
+  ASSERT_EQ(PrimitiveFormMarker("define"),
+            env->get_value(Symbol("define"))->get<PrimitiveFormMarker>());
   ASSERT_EQ(PrimitiveFormMarker("set!"),
             env->get_value(Symbol("set!"))->get<PrimitiveFormMarker>());
   ASSERT_EQ(PrimitiveFormMarker("lambda"),
@@ -107,7 +114,7 @@ TEST(MacroContextChecker, other) {
             env->get_value(Symbol("syntax-rules"))->get<PrimitiveFormMarker>());
 
   // Given: an environment to hold bindings
-  MacroContextChecker context(hvm);
+  MacroContext context(hvm);
   std::cout << context << std::endl;
   std::cout << result << std::endl;
 
@@ -117,65 +124,6 @@ TEST(MacroContextChecker, other) {
 
   std::cout << *result.it << std::endl;
 
-  std::function<void(NodePtr, MacroContextChecker&)> traverse_tree;
-  traverse_tree = [&](
-      NodePtr root,
-      MacroContextChecker& macro_context) {
-    int count = 0;
-    bool need_to_pop_scope = false;
-    if (core::is_pair(root)) {
-      NodePtr it = core::car(root);
-      if (core::is_symbol(it)) {
-        Symbol identifier = it->get<Symbol>();
-        if (auto macro = get_macro(identifier, macro_context)) {
-          std::cout << "NEED TO EXPAND MACRO HERE!" << std::endl;
-        } else {
-          macro_context.map_symbol(identifier);
-          if (is_primitive_set(identifier, macro_context)) {
-            std::cout << "PRIMITIVE: set" << std::endl;
-          } else if (is_primitive_lambda(identifier, macro_context)) {
-            std::cout << "PRIMITIVE: lambda" << std::endl;
-            need_to_pop_scope = true;
-            macro_context.push_scope();
-          } else if (is_primitive_quote(identifier, macro_context)) {
-            std::cout << "PRIMITIVE: quote" << std::endl;
-            return;
-          } else if (is_primitive_define_syntax(identifier, macro_context)) {
-            std::cout << "PRIMITIVE: define-syntax" << std::endl;
-            need_to_pop_scope = true;
-            macro_context.push_scope();
-          } else if (is_primitive_let_syntax(identifier, macro_context)) {
-            std::cout << "PRIMITIVE: let-syntax" << std::endl;
-            need_to_pop_scope = true;
-            macro_context.push_scope();
-          } else if (is_primitive_syntax_rules(identifier, macro_context)) {
-            std::cout << "PRIMITIVE: syntax-rules" << std::endl;
-            need_to_pop_scope = true;
-            macro_context.push_scope();
-          } else {
-            std::cout << "NON-PRIMITIVE: " << *it << std::endl;
-          }
-        }
-      } else {
-        return;
-      }
-    }
-    for (NodePtr it = cdr(root);
-         core::is_pair(it);
-         it = cdr(it), count++) {
-      auto item = car(it);
-      if (core::is_proper_list(item)) {
-        traverse_tree(item, macro_context);
-      }
-      if (core::is_symbol(item)) {
-        macro_context.map_symbol(item->get<Symbol>());
-      }
-      std::cout << "#" << count << ": " << *it << " | " << *item << std::endl;
-    }
-    if (need_to_pop_scope) {
-      macro_context.pop_scope();
-    }
-  };
   traverse_tree(result.it, context);
 
   for (
