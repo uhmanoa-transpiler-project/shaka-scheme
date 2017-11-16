@@ -78,7 +78,25 @@ next_instruction) {
     }
     // call/cc case
     else if (expression_type == Symbol("call/cc")) {
-      std::cout << "call/cc" << std::endl;
+      Symbol conti_instruction("conti");
+      Expression conti_op = create_node(Data(conti_instruction));
+
+      Symbol argument_instruction("argument");
+      Expression argument_op = create_node(Data(argument_instruction));
+
+      Symbol apply_instruction("apply");
+      Expression apply_op = create_node(Data(apply_instruction));
+
+      Expression c = list(conti_op, list(argument_op,
+                                         compile(car(cdr(input)),
+                                                 list(apply_op))));
+      if (is_tail(next_instruction)) {
+        return c;
+      }
+      else {
+        Data frame_op(Symbol("frame"));
+        return list(create_node(frame_op), next_instruction, c);
+      }
     }
     // application
     else {
