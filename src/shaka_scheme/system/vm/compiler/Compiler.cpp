@@ -52,14 +52,18 @@ next_instruction) {
 
       Expression test_expression = car(cdr(input));
       Expression then_expression = car(cdr(cdr(input)));
-      Expression else_expression = car(cdr(cdr(cdr(input))));
+      Expression then_compiled = compile(then_expression, next_instruction);
 
-      Expression thenc = compile(then_expression, next_instruction);
-      Expression elsec = compile(else_expression, next_instruction);
+      if (length(input) > 3) {
+        Expression else_expression = car(cdr(cdr(cdr(input))));
+        Expression else_compiled = compile(else_expression, next_instruction);
+
+        return compile(test_expression, list(create_node(instruction_data),
+                                             then_compiled, else_compiled));
+      }
 
       return compile(test_expression, list(create_node(instruction_data),
-                                           thenc, elsec));
-
+                                           then_compiled));
     }
     // set! case
     else if (expression_type == Symbol("set!")) {
