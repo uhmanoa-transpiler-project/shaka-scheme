@@ -228,18 +228,21 @@ TEST(CompilerUnitTest, application_test) {
   Data plus(Symbol("+"));
 
   // Given: The expression (+ x y)
-  Expression e = list(create_node(plus), create_node(x_data), create_node
-      (y_data));
+  Expression e = list(create_node(plus), create_node(x_data),
+                      create_node(y_data));
 
   // When: You compile the expression.
   Expression expression = compiler.compile(e);
 
-  // Then: The resulting assembly instruction should have the following form.
   std::stringstream ss;
   ss << *expression;
   std::string output = ss.str();
-  ASSERT_EQ(output, "(frame (halt) (refer y (argument (refer x (argument "
-      "(refer + (apply)))))))");
+
+  // Then: The resulting assembly instruction should have the following form.
+  std::stringstream ss_test;
+  ss_test << "(frame (halt) (refer y (argument (refer x (argument (refer";
+  ss_test << " + (apply)))))))";
+  ASSERT_EQ(output, ss_test.str());
 }
 
 /**
@@ -261,12 +264,3 @@ TEST(CompilerUnitTest, constant_test) {
   std::string output = ss.str();
   ASSERT_EQ(output, "(constant \"hello\" (halt))");
 }
-
-/**
- * @brief Test: If an expression is a tail call.
- */
-//TEST(CompilerUnitTest, is_tail_test) {
-//  ASSERT_TRUE(false);
-//}
-
-
