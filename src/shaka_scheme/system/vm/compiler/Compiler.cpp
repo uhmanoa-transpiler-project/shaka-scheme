@@ -14,7 +14,6 @@ Compiler::~Compiler() {}
 Expression Compiler::compile(Expression input, Expression
 next_instruction) {
   // (symbol? input)
-  // (list 'refer x next)
   if (is_symbol(input)) {
     Symbol instruction("refer");
     Data instruction_data(instruction);
@@ -24,10 +23,9 @@ next_instruction) {
   // (pair? input)
   else if (is_pair(input)) {
 
-    Symbol expression_type = car(input)->get<Symbol>();
+    Symbol& expression_type = car(input)->get<Symbol>();
 
     // quote case
-    // (list 'constant obj next)
     if (expression_type == Symbol("quote")) {
       Symbol instruction("constant");
       Data instruction_data(instruction);
@@ -35,7 +33,6 @@ next_instruction) {
       return list(create_node(instruction_data), cdr(input), next_instruction);
     }
     // lambda case
-    // (list ’close vars (compile body ’(return)) next)
     else if (expression_type == Symbol("lambda")) {
       Symbol instruction("close");
       Data instruction_data(instruction);
@@ -47,10 +44,10 @@ next_instruction) {
       return list(create_node(instruction), vars,
                   compile_lambda(body,list(create_node(return_op))),
                   next_instruction);
-
     }
     // if (test then else) case
     else if (expression_type == Symbol("if")) {
+
       Symbol instruction("test");
       Data instruction_data(instruction);
 
@@ -94,15 +91,10 @@ next_instruction) {
             return c;
           } else {
             Data frame_op(Symbol("frame"));
-
-            // return (frame next c)
             return list(create_node(frame_op), next_instruction, c);
           }
         }
         Data argument_op(Symbol("argument"));
-        DataPair argument_c(argument_op, *c);
-
-        // (compile (car args) (argument c))
         c = compile(car(args), list(create_node(argument_op), c));
         args = cdr(args);
       }
