@@ -63,21 +63,21 @@ TEST(CompilerUnitTest, lambda_test) {
   NodePtr vars = list(create_node(x_data), create_node(y_data));
   NodePtr body = list(create_node(plus), create_node(x_data),
                       create_node(y_data));
-  body = list(body);
   Expression e = list(create_node(lambda), vars, body);
 
   // When: You compile the expression.
   Expression expression = compiler.compile(e);
 
 
- // Then: The resulting assembly instruction should have the following form.
   std::stringstream ss;
   ss << *expression;
   std::string output = ss.str();
 
-  std::cout << output << std::endl;
- ASSERT_EQ(output, "(close (x y) (refer y (argument (refer x (argument "
-      "(refer + (apply)))))) (halt))");
+  // Then: The resulting assembly instruction should have the following form.
+  std::stringstream ss_test;
+  ss_test << "(close (x y) (frame (halt) (refer y (argument (refer x (argument";
+  ss_test << " (refer + (apply))))))) (halt))";
+  ASSERT_EQ(output, ss_test.str());
 
   // Given: The expression (lambda (k) (k 'a) 'b)
   Data k_data(Symbol("k"));
@@ -88,20 +88,40 @@ TEST(CompilerUnitTest, lambda_test) {
   NodePtr k_a = list(create_node(k_data), create_node(a_data));
   body = list(k_a, create_node(b_data));
 
-  e = list(create_node(lambda), vars, body);
-
+  e = cons(create_node(lambda), cons(vars, body));
   // When: You compile the expression.
   Expression expression_two = compiler.compile(e);
 
-  // Then: The resulting assembly instruction should have the following form.
-  std::cout << *expression_two << std::endl;
   std::stringstream ss2;
   ss2 << *expression_two;
   output = ss2.str();
 
-  ASSERT_EQ(output, "(close (k) (frame (refer b (halt)) (refer a (argument (refer k (apply))))) (halt))");
-}
+  // Then: The resulting assembly instruction should have the following form.
+  std::stringstream ss_test_two;
+  ss_test_two << "(close (k) (frame (refer b (halt)) (refer a (argument ";
+  ss_test_two << "(refer k (apply))))) (halt))";
+  ASSERT_EQ(output, ss_test_two.str());
 
+  // Given: The expression (lambda (a b c) a b c)
+  Data c_data(Symbol("c"));
+
+  vars = list(create_node(a_data), create_node(b_data), create_node(c_data));
+  e = list(create_node(lambda), vars, create_node(a_data), create_node(b_data),
+           create_node(c_data));
+
+  // When: You compile the expression.
+  Expression expression_three = compiler.compile(e);
+
+  std::stringstream ss3;
+  ss3 << *expression_three;
+  output = ss3.str();
+
+  // Then: The resulting assembly instruction should have the following form.
+  std::stringstream ss_test_three;
+  ss_test_three <<"(close (a b c) (refer a (refer b (refer c (halt)))) (halt))";
+  ASSERT_EQ(output, ss_test_three.str());
+
+}
 
 /**
  * @brief Test: compile() changing if expressions to 'test' instructions
