@@ -36,13 +36,12 @@ next_instruction) {
     else if (expression_type == Symbol("lambda")) {
       Symbol instruction("close");
       Data instruction_data(instruction);
-      Data return_op(Symbol("return"));
+      Data halt_op(Symbol("halt"));
 
       NodePtr vars = car(cdr(input));
-      NodePtr body = car(cdr(cdr(input)));
-
+      NodePtr body = cdr(cdr(input));
       return list(create_node(instruction), vars,
-                  compile_lambda(body,list(create_node(return_op))),
+                  compile_lambda(body,list(create_node(halt_op))),
                   next_instruction);
     }
     // if (test then else) case
@@ -114,12 +113,11 @@ bool Compiler::is_tail(Expression next) {
 }
 
 Expression Compiler::compile_lambda(Expression body, Expression next) {
-  if (is_null_list(cdr(body))) {
+  // Check if body is single expression
+  if (length(body) <= 1) {
     return compile(car(body), next);
   }
-  else {
-   return compile(car(body), compile_lambda(cdr(body), next));
-  }
+  return compile(car(body), compile_lambda(cdr(body), next));
 }
 
 }
