@@ -126,30 +126,39 @@ TEST(CompilerUnitTest, lambda_test) {
 /**
  * @brief Test: compile() changing if expressions to 'test' instructions
  */
-//TEST(CompilerUnitTest, if_test) {
-//  Compiler compiler;
-//  Data x_data(Symbol("x"));
-//  Data y_data(Symbol("y"));
-//  Data if_op(Symbol("if"));
-//  Data minus(Symbol("-"));
-//  Data plus(Symbol("+"));
-//
-//  // TODO: NEED TO CHECK LENGTH OF EXPRESSION
-//  Expression then_expression = list(create_node(plus), create_node(x_data),
-//                              create_node
-//      (y_data));
-//  Expression else_expression = list(create_node(minus), create_node(x_data),
-//                          create_node(y_data));
-//
-//  Expression e = list(create_node(if_op), create_node(x_data), then_expression,
-//                      else_expression);
-//  std::cout << *e << std::endl;
-//
-//  Expression expression = compiler.compile(e);
+TEST(CompilerUnitTest, if_test) {
+  Compiler compiler;
+  Data x_data(Symbol("x"));
+  Data y_data(Symbol("y"));
+  Data if_op(Symbol("if"));
+  Data minus(Symbol("-"));
+  Data plus(Symbol("+"));
 
-//  std::cout << *expression << std::endl;
-//  ASSERT_TRUE(false);
-//}
+  Expression then_expression = list(create_node(plus), create_node(x_data),
+                                    create_node(y_data));
+
+  Expression else_expression = list(create_node(minus), create_node(x_data),
+                                    create_node(y_data));
+
+  // Given: The expression (if x (+ x y) (- x y))
+  Expression e = list(create_node(if_op), create_node(x_data), then_expression,
+                      else_expression);
+
+  // When: You compile the expression.
+  Expression expression = compiler.compile(e);
+
+  std::stringstream ss;
+  ss << *expression;
+  std::string output = ss.str();
+
+
+  // Then: The resulting assembly instruction will have the following form.
+  std::stringstream ss_test;
+  ss_test << "(refer x (test (frame (halt) (refer y (argument (refer x ";
+  ss_test <<"(argument (refer + (apply))))))) (frame (halt) (refer y (argument";
+  ss_test << " (refer x (argument (refer - (apply)))))))))";
+  ASSERT_EQ(output, ss_test.str());
+}
 
 /**
  * @brief Test: compile() changing set expressions to 'assign' instructions
