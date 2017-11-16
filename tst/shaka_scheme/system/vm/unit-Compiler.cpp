@@ -31,16 +31,18 @@ TEST(CompilerUnitTest, is_symbol_test) {
  * @brief Test: compile() changing quote expressions to 'constant' instructions
  */
 TEST(CompilerUnitTest, quote_test) {
+  Compiler compiler;
+
   // Given: The expression (quote "Hello")
   String obj("Hello");
   Symbol quote("quote");
   Data obj_data(obj);
   Data quote_data(quote);
-  DataPair constant_obj_pair(quote_data, obj_data);
-  Compiler compiler;
+
+  Expression e = list(create_node(quote_data), create_node(obj_data));
 
   // When: You send the expression to the compiler.
-  Expression expression = compiler.compile(create_node(constant_obj_pair));
+  Expression expression = compiler.compile(e);
 
   // Then: The resulting assembly instruction will match the following format.
   std::stringstream ss;
