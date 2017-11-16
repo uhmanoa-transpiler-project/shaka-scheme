@@ -187,9 +187,35 @@ TEST(CompilerUnitTest, set_test) {
  * @brief Test: compile() changing call/cc expressions to 'frame' instructions
  */
 TEST(CompilerUnitTest, call_cc_test) {
+  Compiler compiler;
 
-  ASSERT_TRUE(false);
+  // Given: The expression (lambda (k) (k 'a) 'b)
+  Data k_data(Symbol("k"));
+  Data a_data(Symbol("a"));
+  Data b_data(Symbol("b"));
+  Data lambda(Symbol("lambda"));
+  Data call_cc(Symbol("call/cc"));
 
+  NodePtr vars = list(create_node(k_data));
+  NodePtr k_a = list(create_node(k_data), create_node(a_data));
+  NodePtr body = list(k_a, create_node(b_data));
+
+  Expression e = cons(create_node(lambda), cons(vars, body));
+  Expression input = list(create_node(call_cc), e);
+
+  // When: You compile the expression.
+  Expression expression_two = compiler.compile(input);
+
+  std::stringstream ss;
+  ss << *expression_two;
+  std::string output = ss.str();
+
+  // Then: The resulting assembly instruction will have the following form.
+  std::stringstream ss_test;
+  ss_test << "(frame (halt) (conti (argument (close (k) (frame";
+  ss_test << " (refer b (halt)) (refer a (argument (refer k (apply)))))";
+  ss_test << " (apply)))))";
+  ASSERT_EQ(output, ss_test.str());
 }
 
 /**
