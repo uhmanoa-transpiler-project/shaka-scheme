@@ -30,7 +30,8 @@ next_instruction) {
       Symbol instruction("constant");
       Data instruction_data(instruction);
 
-      return list(create_node(instruction_data), cdr(input), next_instruction);
+      return list(create_node(instruction_data), car(cdr(input)),
+                  next_instruction);
     }
     // lambda case
     else if (expression_type == Symbol("lambda")) {
