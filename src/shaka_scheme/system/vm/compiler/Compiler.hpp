@@ -51,6 +51,20 @@ public:
    */
   void compile_step(Expression input, Expression output);
 
+  /**
+   * @brief Compiles the body of a lambda expression
+   * @param body The expression to compile.
+   * @param next The next instruction to execute
+   * @return The assembly instruction of the lambda expression.
+   */
+  Expression compile_lambda(Expression body,Expression next);
+
+  /**
+   * @brief Checks if expression is a tail call.
+   * @param next The expression to check.
+   * @return Whether or not the expression is a tail call.
+   */
+  bool is_tail(Expression next);
 };
 
 }
