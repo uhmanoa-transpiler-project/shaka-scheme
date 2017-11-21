@@ -16,6 +16,9 @@ void HeapVirtualMachine::evaluate_assembly_instruction() {
 
   // (halt)
   if (instruction == shaka::Symbol("halt")) {
+    if (this->get_call_frame() != nullptr) {
+      this->set_expression(core::list(create_node(Symbol("return"))));
+    }
     return;
   }
 
@@ -249,6 +252,13 @@ void HeapVirtualMachine::evaluate_assembly_instruction() {
 
     if (closure.is_native_closure()) {
       this->set_value_rib(closure.call(this->get_value_rib()));
+      this->set_accumulator(this->get_value_rib()[0]);
+      if (this->get_call_frame() != nullptr) {
+        this->set_expression(core::list(create_node(Symbol("return"))));
+      }
+      else {
+        this->set_expression(core::list(create_node(Symbol("halt"))));
+      }
     }
 
     else {
