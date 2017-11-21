@@ -40,6 +40,7 @@ int main() {
                                std::vector<shaka::Symbol>(0),
   std::make_shared<shaka::Callable>(shaka::string_append), nullptr, true);
 
+
   top_level->set_value(shaka::Symbol("string-append"), create_node
       (string_append));
 
@@ -59,28 +60,14 @@ int main() {
       std::cin >> buf;
       shaka::parser::ParserInput input(buf);
       auto result = shaka::parser::parse_datum(input);
-      std::cout << *result.it << std::endl;
       shaka::Expression expr = result.it;
-      std::cout << *result.it << std::endl;
       shaka::Expression compiled = compiler.compile(expr, halt_instruction);
       hvm.set_expression(compiled);
-      while (shaka::core::car(hvm.get_expression())->get<shaka::Symbol>() !=
-          shaka::Symbol("halt")) {
+      do {
           hvm.evaluate_assembly_instruction();
-          if (shaka::core::car(hvm.get_expression())->get<shaka::Symbol>() ==
-              shaka::Symbol("halt")) {
-            if (hvm.get_call_frame() != nullptr) {
-              hvm.set_expression(
-                  shaka::core::list(create_node(shaka::Symbol("return")))
-              );
-            }
-          }
-        else if (shaka::core::car(hvm.get_expression())->get<shaka::Symbol>()
-              == shaka::Symbol("apply")) {
-            hvm.set_expression(halt_instruction);
-            std::cout << hvm.get_value_rib().size() << std::endl;
-          }
-      }
+
+      } while (shaka::core::car(hvm.get_expression())->get<shaka::Symbol>() !=
+          shaka::Symbol("halt"));
       std::cout << *hvm.get_accumulator() << std::endl;
     } catch (shaka::InvalidInputException e) {
       std::cerr << e.what() << std::endl;
