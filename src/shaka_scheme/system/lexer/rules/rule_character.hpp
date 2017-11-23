@@ -10,6 +10,8 @@ namespace rules {
 extern LexerRule character_name;
 extern LexerRule character;
 
+void init_rule_character();
+
 } // namespace rules
 } // namespace lexer
 } // namespace shaka

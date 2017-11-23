@@ -29,6 +29,8 @@ extern LexerRule symbol_element;
 
 extern LexerRule identifier;
 
+void init_rule_identifier();
+
 } // namespace rules
 } // namespace lexer
 } // namespace shaka

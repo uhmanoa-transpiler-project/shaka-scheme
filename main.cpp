@@ -1,15 +1,20 @@
 #include <iostream>
 #include <limits> // for std::numeric_limits for std::cin.ignore()
 #include <vector>
+
 #include "shaka_scheme/system/exceptions/BaseException.hpp"
 #include "shaka_scheme/system/exceptions/TypeException.hpp"
 #include "shaka_scheme/system/vm/HeapVirtualMachine.hpp"
 #include "shaka_scheme/system/vm/compiler/Compiler.hpp"
 #include "shaka_scheme/system/vm/strings.hpp"
 #include "shaka_scheme/system/lexer/rules/rule_token.hpp"
+#include "shaka_scheme/system/lexer/rules/init.hpp"
 #include "shaka_scheme/system/parser/parser_definitions.hpp"
 
 int main() {
+  // Given: the lexer rules are initialized
+  shaka::lexer::rules::init_lexer_rules();
+
   std::cout << "Welcome to Shaka Scheme!" << std::endl;
 
   bool done = false;

@@ -61,7 +61,8 @@ using DataConstructor = std::function<NodePtr(ParserResult)>;
 
 ParserResult parse_simple(ParserInput& in);
 
-extern ParserRule parse_datum;
+ParserResult parse_list(ParserInput& in);
+ParserResult parse_datum(ParserInput& in);
 
 } // namespace shaka
 } // namespace parser

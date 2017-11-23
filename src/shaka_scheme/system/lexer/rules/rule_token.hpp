@@ -35,6 +35,8 @@ extern LexerRule intertoken_space;
 
 extern LexerRule scheme_lexer;
 
+void init_rule_token();
+
 } // namespace rules
 } // namespace lexer
 } // namespace shaka

@@ -68,6 +68,7 @@ set(SOURCE_FILES
         src/shaka_scheme/system/lexer/rules/rule_string.cpp
         src/shaka_scheme/system/lexer/rules/rule_token.cpp
         src/shaka_scheme/system/parser/parser_definitions.cpp
+        src/shaka_scheme/system/lexer/rules/init.cpp
         )
 
 add_library(${SHAKA_SCHEME_LIBRARY_NAME} SHARED ${SOURCE_FILES})

@@ -18,6 +18,8 @@ extern LexerRule boolean_false;
 
 extern LexerRule boolean;
 
+void init_rule_boolean();
+
 } // namespace rules
 } // namespace lexer
 } // namespace shaka

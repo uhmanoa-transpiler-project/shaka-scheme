@@ -24,6 +24,8 @@ extern LexerRule nested_comment;
 
 extern LexerRule comment;
 
+void init_rule_comment();
+
 } // namespace rules
 } // namespace lexer
 } // namespace shaka

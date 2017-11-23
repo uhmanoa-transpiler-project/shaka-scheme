@@ -11,6 +11,8 @@ extern LexerRule double_quote;
 extern LexerRule string_element;
 extern LexerRule string_rule;
 
+void init_rule_string();
+
 } // namespace rules
 } // namespace lexer
 } // namespace shaka

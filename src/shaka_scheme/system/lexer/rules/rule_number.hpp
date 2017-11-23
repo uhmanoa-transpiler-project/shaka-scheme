@@ -20,6 +20,8 @@ extern LexerRule real;
 extern LexerRule rational;
 extern LexerRule number;
 
+void init_rule_number();
+
 } // namespace rules
 } // namespace lexer
 } // namespace shaka

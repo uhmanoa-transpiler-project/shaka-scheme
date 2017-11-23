@@ -1,13 +1,16 @@
 #include <gmock/gmock.h>
 
+#include "shaka_scheme/system/lexer/rules/init.hpp"
 #include "shaka_scheme/system/parser/parser_definitions.hpp"
-
 
 using namespace shaka;
 /**
  * @brief Test: mock define expression
  */
 TEST(ParserUnitTest, define) {
+  // Given: the lexer rules are initialized
+  lexer::rules::init_lexer_rules();
+
   // Given: an input string
   std::string buf = "(define a \"hello world\")";
 
@@ -23,6 +26,9 @@ TEST(ParserUnitTest, define) {
  * @brief Test: mock define expression
  */
 TEST(ParserUnitTest, set) {
+  // Given: the lexer rules are initialized
+  lexer::rules::init_lexer_rules();
+
   // Given: an input string
   std::string buf = "(set! |low vara| \"hello world\")";
 

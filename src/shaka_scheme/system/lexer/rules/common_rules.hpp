@@ -51,6 +51,8 @@ extern LexerRule newline;
 
 extern LexerRule line_ending;
 
+void init_common_rules();
+
 } // namespace rules
 } // namespace lexer
 } // namespace shaka
