@@ -12,26 +12,17 @@ namespace lexer {
 namespace rules {
 
 // line comment
-LexerRule line_comment = (semicolon + *not_newline + newline) / "line-comment";
+extern LexerRule line_comment;
 
 // nested comment
-LexerRule nested_comment_left = make_terminal("#|", "nested-comment-left");
-LexerRule nested_comment_right = make_terminal("|#", "nested-comment-right");
-LexerRule nested_comment_delimiter = nested_comment_left | nested_comment_right;
-LexerRule comment_text = (!nested_comment_delimiter + make_class([](char c) { return true; }, "non-nested-comment-delimiter")) / "comment-text";
+extern LexerRule nested_comment_left;
+extern LexerRule nested_comment_right;
+extern LexerRule nested_comment_delimiter;
+extern LexerRule comment_text;
 
-LexerRule nested_comment = [](LexerInput& input) {
-  LexerRule recurse;
-  recurse = [&](LexerInput& input) {
-      LexerRule comment_cont = (recurse + comment_text);
-      return ((nested_comment_left + *comment_text +
-          *comment_cont +
-          nested_comment_right) / "nested-comment")(input);
-  };
-  return recurse(input);
-};
+extern LexerRule nested_comment;
 
-LexerRule comment = line_comment | nested_comment;
+extern LexerRule comment;
 
 } // namespace rules
 } // namespace lexer

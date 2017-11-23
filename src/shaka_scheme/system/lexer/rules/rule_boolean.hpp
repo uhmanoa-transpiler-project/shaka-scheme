@@ -1,7 +1,6 @@
 //
 // Created by aytas on 10/31/2017.
 //
-
 #ifndef SHAKA_SCHEME_RULE_BOOLEAN_HPP
 #define SHAKA_SCHEME_RULE_BOOLEAN_HPP
 
@@ -13,13 +12,11 @@ namespace shaka {
 namespace lexer {
 namespace rules {
 
-LexerRule boolean_true = (make_terminal("#true") | make_terminal("#t"))
-    /"boolean-true";
+extern LexerRule boolean_true;
 
-LexerRule boolean_false = (make_terminal("#false") | make_terminal("#f"))
-  /"boolean-false";
+extern LexerRule boolean_false;
 
-LexerRule boolean = boolean_true | boolean_false;
+extern LexerRule boolean;
 
 } // namespace rules
 } // namespace lexer

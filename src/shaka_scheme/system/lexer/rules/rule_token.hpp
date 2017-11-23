@@ -1,7 +1,3 @@
-//
-// Created by aytas on 10/31/2017.
-//
-
 #ifndef SHAKA_SCHEME_RULE_TOKEN_HPP
 #define SHAKA_SCHEME_RULE_TOKEN_HPP
 
@@ -18,50 +14,26 @@ namespace shaka {
 namespace lexer {
 namespace rules {
 
-LexerRule dot = make_terminal(".", "dot");
-LexerRule comma_atsign = make_terminal(",@", "comma-atsign");
-LexerRule comma = make_terminal(",", "comma");
-LexerRule backtick = make_terminal("`", "backtick");
-LexerRule quote = make_terminal("'", "quote");
-LexerRule bytevector_left = make_terminal("#u8(", "bytevector-left");
-LexerRule vector_left = make_terminal("#(", "vector-left");
-LexerRule paren_right = make_terminal(")", "paren-right");
-LexerRule paren_left = make_terminal("(", "paren-left");
-LexerRule datum_comment = make_terminal("#;", "datum-comment");
+extern LexerRule dot;
+extern LexerRule comma_atsign;
+extern LexerRule comma;
+extern LexerRule backtick;
+extern LexerRule quote;
+extern LexerRule bytevector_left;
+extern LexerRule vector_left;
+extern LexerRule paren_right;
+extern LexerRule paren_left;
+extern LexerRule datum_comment;
 
-LexerRule directive = ((make_terminal("#!") & ignore_string) + identifier) /
-    "directive";
+extern LexerRule directive;
 
-LexerRule token = identifier
-    | boolean
-    | number
-    | character
-    | string_rule
-    | directive
-    | paren_left
-    | paren_right
-    | vector_left
-    | bytevector_left
-    | datum_comment
-    | quote
-    | backtick
-    | comma_atsign
-    | comma
-    | dot;
+extern LexerRule token;
 
-LexerRule atmosphere = (make_class([](char c) {
-  return std::isspace(c);
-}, "whitespace") | comment);
+extern LexerRule atmosphere;
 
-LexerRule intertoken_space = *atmosphere;
+extern LexerRule intertoken_space;
 
-LexerRule scheme_lexer = [](LexerInput& lex) {
-  intertoken_space(lex);
-  auto result = token(lex);
-  return result;
-};
-
-
+extern LexerRule scheme_lexer;
 
 } // namespace rules
 } // namespace lexer
