@@ -3,11 +3,12 @@
 
 #include "shaka_scheme/system/base/Symbol.hpp"
 #include "shaka_scheme/system/base/Data.hpp"
+#include "shaka_scheme/system/base/String.hpp"
 #include <functional>
+#include <vector>
+#include <string>
 
 namespace shaka {
-
-using Callable = std::function<std::deque<NodePtr>(std::deque<NodePtr>)>;
 
 namespace core {
 
@@ -28,10 +29,29 @@ inline bool are_symbols(std::deque<NodePtr> args){
     return true;
 }
 
-std::deque<NodePtr> strToSym (std::deque<NodePtr> args){
+inline NodePtr string_to_symbol(NodePtr arg){
+    if (arg->get_type() != Data::Type::STRING) {
+        throw TypeException(10001, "Incompatible argument type to NativeClosure");
+    }
 
+    String str(arg->get<String>());
+
+    NodePtr results = create_node(Data(Symbol(str.get_string())));
+    return results;
+}
+
+inline NodePtr symbol_to_string(NodePtr arg) {
+    if (arg->get_type() != Data::Type::SYMBOL) {
+        throw TypeException(10001, "Incompatible argument type to NativeClosure");
+    }
+
+    Symbol sym(arg->get<Symbol>());
+
+    NodePtr results = create_node(Data(String(sym.get_value())));
+    return results;
 }
 
 } //core
+
 } //shaka
 #endif //SHAKA_SCHEME_SYMBOLS_HPP
