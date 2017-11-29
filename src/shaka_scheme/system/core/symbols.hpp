@@ -29,6 +29,11 @@ inline bool are_symbols(std::deque<NodePtr> args){
     return true;
 }
 
+/**
+ * @brief Implements (string->symbol)
+ * @param arg The data to take in
+ * @return A NodePtr containing the symbol
+ */
 inline NodePtr string_to_symbol(NodePtr arg){
     if (arg->get_type() != Data::Type::STRING) {
         throw TypeException(10001, "Incompatible argument type to NativeClosure");
@@ -40,6 +45,11 @@ inline NodePtr string_to_symbol(NodePtr arg){
     return results;
 }
 
+/**
+ * @brief Implements (symbol->string)
+ * @param arg The data to take in
+ * @return A NodePtr containing the string
+ */
 inline NodePtr symbol_to_string(NodePtr arg) {
     if (arg->get_type() != Data::Type::SYMBOL) {
         throw TypeException(10001, "Incompatible argument type to NativeClosure");
