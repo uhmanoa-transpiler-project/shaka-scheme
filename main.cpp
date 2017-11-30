@@ -62,11 +62,13 @@ int main() {
   while (!done) {
     std::cout << "> " << std::flush;
     try {
-      std::cin >> buf;
+      getline(std::cin, buf);
       shaka::parser::ParserInput input(buf);
       auto result = shaka::parser::parse_datum(input);
       shaka::Expression expr = result.it;
+      //std::cout << *expr << std::endl;
       shaka::Expression compiled = compiler.compile(expr, halt_instruction);
+      //std::cout << *compiled << std::endl;
       hvm.set_expression(compiled);
       do {
           hvm.evaluate_assembly_instruction();
