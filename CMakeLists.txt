@@ -58,7 +58,11 @@ set(SOURCE_FILES
         src/shaka_scheme/system/base/PrimitiveFormMarker.cpp
         src/shaka_scheme/system/parser/syntax_rules/MacroContext.cpp
         src/shaka_scheme/system/parser/syntax_rules/SyntaxRulesMacro.cpp
-        )
+        src/shaka_scheme/system/base/Integer.cpp
+        src/shaka_scheme/system/base/Rational.cpp
+        src/shaka_scheme/system/base/Real.cpp
+        src/shaka_scheme/system/base/Number.cpp)
+
 
 add_library(${SHAKA_SCHEME_LIBRARY_NAME} SHARED ${SOURCE_FILES})
 target_compile_options(${SHAKA_SCHEME_LIBRARY_NAME} PRIVATE -Wall -Wextra
