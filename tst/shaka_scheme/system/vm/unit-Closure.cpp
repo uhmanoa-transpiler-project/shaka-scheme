@@ -6,7 +6,7 @@
 #include "shaka_scheme/system/vm/Closure.hpp"
 #include "shaka_scheme/system/vm/CallFrame.hpp"
 #include "shaka_scheme/system/core/lists.hpp"
-#include "shaka_scheme/system/vm/strings.hpp"
+#include "shaka_scheme/system/core/strings.hpp"
 
 using namespace shaka;
 
