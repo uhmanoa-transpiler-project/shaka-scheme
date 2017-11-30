@@ -201,8 +201,8 @@ Args floor_div_numbers(Args args) {
                             "floor/");
   }
 
-  shaka::Number n1 = shaka::get<shaka::Number>(args[0]->get_data());
-  shaka::Number n2 = shaka::get<shaka::Number>(args[1]->get_data());
+  shaka::Number n1 = args[0]->get<shaka::Number>();
+  shaka::Number n2 = args[1]->get<shaka::Number>();
   shaka::Number r;
   shaka::Number q;
 
@@ -222,8 +222,8 @@ Args floor_div_numbers(Args args) {
     q = (n1 - r) / n2;
   }
 
-  NodePtr v1 = std::make_shared<shaka::DataNode>(q);
-  NodePtr v2 = std::make_shared<shaka::DataNode>(r);
+  NodePtr v1 = create_node(Data(q));
+  NodePtr v2 = create_node(Data(r));
 
   Args result_vector = {v1, v2};
 
@@ -242,8 +242,8 @@ Args floor_quotient_numbers(Args args) {
                             "floor-quotient");
   }
 
-  shaka::Number n1 = shaka::get<shaka::Number>(args[0]->get_data());
-  shaka::Number n2 = shaka::get<shaka::Number>(args[1]->get_data());
+  shaka::Number n1 = args[0]->get<shaka::Number>();
+  shaka::Number n2 = args[1]->get<shaka::Number>();
   shaka::Number r;
   shaka::Number q;
 
@@ -263,7 +263,7 @@ Args floor_quotient_numbers(Args args) {
     q = (n1 - r) / n2;
   }
 
-  NodePtr v1 = std::make_shared<shaka::DataNode>(q);
+  NodePtr v1 = create_node(Data(q));
 
   Args result_vector = {v1};
 
@@ -281,8 +281,8 @@ Args floor_remainder_numbers(Args args) {
                             "Procedure: "
                             "floor-remainder");
   }
-  shaka::Number n1 = shaka::get<shaka::Number>(args[0]->get_data());
-  shaka::Number n2 = shaka::get<shaka::Number>(args[1]->get_data());
+  shaka::Number n1 = args[0]->get<shaka::Number>();
+  shaka::Number n2 = args[1]->get<shaka::Number>();
   shaka::Number r;
 
   if (n1 > shaka::Number(0) && n2 > shaka::Number(0)) {
@@ -298,7 +298,7 @@ Args floor_remainder_numbers(Args args) {
     r = n1 % n2 * shaka::Number(-1);
   }
 
-  NodePtr v1 = std::make_shared<shaka::DataNode>(r);
+  NodePtr v1 = create_node(Data(r));
 
   Args result_vector = {v1};
 
@@ -310,8 +310,8 @@ Args floor_remainder_numbers(Args args) {
 // (truncate/ n1 n2)
 Args truncate_div_numbers(Args args) {
 
-  shaka::Number n1 = shaka::get<shaka::Number>(args[0]->get_data());
-  shaka::Number n2 = shaka::get<shaka::Number>(args[1]->get_data());
+  shaka::Number n1 = args[0]->get<shaka::Number>();
+  shaka::Number n2 = args[1]->get<shaka::Number>();
 
   shaka::Number r;
   shaka::Number q;
@@ -320,8 +320,8 @@ Args truncate_div_numbers(Args args) {
   r = n1 % n2;
   q = (n1 - r) / n2;
 
-  NodePtr v1 = std::make_shared<shaka::DataNode>(q);
-  NodePtr v2 = std::make_shared<shaka::DataNode>(r);
+  NodePtr v1 = create_node(Data(q));
+  NodePtr v2 = create_node(Data(r));
 
   Args result_vector = {v1, v2};
 
@@ -333,13 +333,13 @@ Args truncate_div_numbers(Args args) {
 // (truncate-quotient n1 n2)
 Args truncate_quotient_numbers(Args args) {
 
-  shaka::Number n1 = shaka::get<shaka::Number>(args[0]->get_data());
-  shaka::Number n2 = shaka::get<shaka::Number>(args[1]->get_data());
+  shaka::Number n1 = args[0]->get<shaka::Number>();
+  shaka::Number n2 = args[1]->get<shaka::Number>();
 
   shaka::Number r = n1 % n2;
   shaka::Number q = (n1 - r) / n2;
 
-  NodePtr v = std::make_shared<shaka::DataNode>(q);
+  NodePtr v = create_node(Data(q));
 
   Args result_vector = {v};
 
@@ -350,12 +350,12 @@ Args truncate_quotient_numbers(Args args) {
 // (truncate-remainder n1 n2)
 Args truncate_remainder_numbers(Args args) {
 
-  shaka::Number n1 = shaka::get<shaka::Number>(args[0]->get_data());
-  shaka::Number n2 = shaka::get<shaka::Number>(args[1]->get_data());
+  shaka::Number n1 = args[0]->get<shaka::Number>()
+  shaka::Number n2 = args[1]->get<shaka::Number>();
 
   shaka::Number r = n1 % n2;
 
-  NodePtr v = std::make_shared<shaka::DataNode>(r);
+  NodePtr v = create_node(Data(r));
 
   Args result_vector = {v};
 
@@ -366,13 +366,13 @@ Args truncate_remainder_numbers(Args args) {
 Args quotient_numbers(Args args) {
 
 
-  shaka::Number n1 = shaka::get<shaka::Number>(args[0]->get_data());
-  shaka::Number n2 = shaka::get<shaka::Number>(args[1]->get_data());
+  shaka::Number n1 = args[0]->get<shaka::Number>();
+  shaka::Number n2 = args[1]->get<shaka::Number>();
 
   shaka::Number r = n1 % n2;
   shaka::Number q = (n1 - r) / n2;
 
-  NodePtr v = std::make_shared<shaka::DataNode>(q);
+  NodePtr v = create_node(Data(q));
 
   Args result_vector = {v};
 
@@ -383,12 +383,12 @@ Args quotient_numbers(Args args) {
 // (remainder n1 n2)
 Args remainder_numbers(Args args) {
 
-  shaka::Number n1 = shaka::get<shaka::Number>(args[0]->get_data());
-  shaka::Number n2 = shaka::get<shaka::Number>(args[1]->get_data());
+  shaka::Number n1 = args[0]->get<shaka::Number>();
+  shaka::Number n2 = args[1]->get<shaka::Number>();
 
   shaka::Number r = n1 % n2;
 
-  NodePtr v = std::make_shared<shaka::DataNode>(r);
+  NodePtr v = create_node(Data(r));
 
   Args result_vector = {v};
 
@@ -399,8 +399,8 @@ Args remainder_numbers(Args args) {
 Args modulo_numbers(Args args) {
 
 
-  shaka::Number n1 = shaka::get<shaka::Number>(args[0]->get_data());
-  shaka::Number n2 = shaka::get<shaka::Number>(args[1]->get_data());
+  shaka::Number n1 = args[0]->get<shaka::Number>();
+  shaka::Number n2 = args[1]->get<shaka::Number>();
   shaka::Number r;
 
   if (n1 > shaka::Number(0) && n2 > shaka::Number(0)) {
@@ -415,7 +415,7 @@ Args modulo_numbers(Args args) {
     r = n1 % n2 * shaka::Number(-1);
   }
 
-  NodePtr v1 = std::make_shared<shaka::DataNode>(r);
+  NodePtr v1 = create_node(Data(r));
 
   Args result_vector = {v1};
 
@@ -433,17 +433,16 @@ shaka::Number gcd_pair(shaka::Number n1, shaka::Number n2) {
   return n1;
 }
 
-Args gcd_numbers(Args args, EnvPtr env) {
+Args gcd_numbers(Args args) {
 
-
-  shaka::Number result = shaka::get<shaka::Number>(args[0]->get_data());
+  shaka::Number result = args[0]->get<Number>();
   shaka::Number next;
   for (std::size_t i = 1; i < args.size(); i++) {
-    next = shaka::get<shaka::Number>(args[i]->get_data());
+    next = args[i]->get<Number>();
     result = gcd_pair(result, next);
   }
 
-  NodePtr result_value = std::make_shared<shaka::DataNode>(result);
+  NodePtr result_value = create_node(Data(result));
 
   Args result_vector = {result_value};
 
@@ -456,16 +455,16 @@ Args gcd_numbers(Args args, EnvPtr env) {
 Args lcm_numbers(Args args) {
 
 
-  shaka::Number result = shaka::get<shaka::Number>(args[0]->get_data());
+  shaka::Number result = args[0]->get<shaka::Number>();
   shaka::Number next;
   shaka::Number gcd;
   for (std::size_t i = 1; i < args.size(); i++) {
-    next = shaka::get<shaka::Number>(args[i]->get_data());
+    next = args[i]->get<shaka::Number>();
     gcd = gcd_pair(result, next);
     result = (result*next)|gcd;
   }
 
-  NodePtr result_value = std::make_shared<shaka::DataNode>(result);
+  NodePtr result_value = create_node(Data(result));
 
   Args result_vector = {result_value};
 
@@ -477,11 +476,11 @@ Args lcm_numbers(Args args) {
 // (numerator q)
 Args numerator_numbers(Args args) {
 
-  shaka::Number n1 = shaka::get<shaka::Number>(args[0]->get_data());
+  shaka::Number n1 = args[0]->get<shaka::Number>();
 
-  shaka::Number result(boost::get<shaka::Rational>(n1.get_value()).get_numerator());
+  shaka::Number result(n1.get<Rational>().get_numerator());
 
-  NodePtr result_value = std::make_shared<shaka::DataNode>(result);
+  NodePtr result_value = create_node(Data(result));
 
   Args result_vector = {result_value};
 
@@ -493,11 +492,11 @@ Args numerator_numbers(Args args) {
 // (denominator q)
 Args denominator_numbers(Args args) {
 
-  shaka::Number n1 = shaka::get<shaka::Number>(args[0]->get_data());
+  shaka::Number n1 = args[0]->get<shaka::Number>();
 
-  shaka::Number result(boost::get<shaka::Rational>(n1.get_value()).get_denominator());
+  shaka::Number result(n1.get<Rational>().get_denominator());
 
-  NodePtr result_value = std::make_shared<shaka::DataNode>(result);
+  NodePtr result_value = create_node(Data(result));
 
   Args result_vector = {result_value};
 
@@ -508,25 +507,25 @@ Args denominator_numbers(Args args) {
 // (floor x)
 Args floor_numbers(Args args) {
 
-  shaka::Number n1 = shaka::get<shaka::Number>(args[0]->get_data());
-  if (n1.get_value().type() == typeid(shaka::Real)) {
-    shaka::Number result(floor(boost::get<shaka::Real>(n1.get_value()).get_value()));
-    NodePtr result_value = std::make_shared<shaka::DataNode>(result);
+  shaka::Number n1 = args[0]->get<shaka::Number>();
+  if (n1.get_type() == Number::NumberType::REAL) {
+    shaka::Number result(floor(n1.get<Real>().get_value()));
+    NodePtr result_value = create_node(Data(result));
     Args result_vector = {result_value};
     return result_vector;
   }
-  else if (n1.get_value().type() == typeid(shaka::Integer)) {
-    shaka::Number result(floor(boost::get<shaka::Integer>(n1.get_value()).get_value()));
-    NodePtr result_value = std::make_shared<shaka::DataNode>(result);
+  else if (n1.get_type() == Number::NumberType::INTEGER) {
+    shaka::Number result(floor(n1.get<Integer>().get_value()));
+    NodePtr result_value = create_node(Data(result));
     Args result_vector = {result_value};
     return result_vector;
   }
   else {
-    int numerator = boost::get<shaka::Rational>(n1.get_value()).get_numerator();
-    int denominator = boost::get<shaka::Rational>(n1.get_value()).get_denominator();
+    int numerator = n1.get<Rational>().get_numerator();
+    int denominator = n1.get<Rational>().get_denominator();
 
     shaka::Number result(floor((double) numerator / (double) denominator));
-    NodePtr result_value = std::make_shared<shaka::DataNode>(result);
+    NodePtr result_value = create_node(Data(result));
     Args result_vector = {result_value};
     return result_vector;
   }
@@ -535,25 +534,25 @@ Args floor_numbers(Args args) {
 // (ceiling x)
 Args ceiling_numbers(Args args) {
 
-  shaka::Number n1 = shaka::get<shaka::Number>(args[0]->get_data());
-  if (n1.get_value().type() == typeid(shaka::Real)) {
-    shaka::Number result(ceil(boost::get<shaka::Real>(n1.get_value()).get_value()));
-    NodePtr result_value = std::make_shared<shaka::DataNode>(result);
+  shaka::Number n1 = args[0]->get<shaka::Number>()
+  if (n1.get_type() == Number::NumberType::REAL) {
+    shaka::Number result(ceil(n1.get<Real>().get_value()));
+    NodePtr result_value = create_node(Data(result));
     Args result_vector = {result_value};
     return result_vector;
   }
-  else if (n1.get_value().type() == typeid(shaka::Integer)) {
-    shaka::Number result(ceil(boost::get<shaka::Integer>(n1.get_value()).get_value()));
-    NodePtr result_value = std::make_shared<shaka::DataNode>(result);
+  else if (n1.get_type() == Number::NumberType::INTEGER) {
+    shaka::Number result(ceil(n1.get<Integer>().get_value()));
+    NodePtr result_value = create_node(Data(result));
     Args result_vector = {result_value};
     return result_vector;
   }
   else {
-    int numerator = boost::get<shaka::Rational>(n1.get_value()).get_numerator();
-    int denominator = boost::get<shaka::Rational>(n1.get_value()).get_denominator();
+    int numerator = n1.get<Rational>().get_numerator();
+    int denominator = n1.get<Rational>().get_denominator();
 
     shaka::Number result(ceil((double) numerator / (double) denominator));
-    NodePtr result_value = std::make_shared<shaka::DataNode>(result);
+    NodePtr result_value = create_node(Data(result));
     Args result_vector = {result_value};
     return result_vector;
   }
@@ -562,25 +561,25 @@ Args ceiling_numbers(Args args) {
 // (truncate x)
 Args truncate_numbers(Args args) {
 
-  shaka::Number n1 = shaka::get<shaka::Number>(args[0]->get_data());
-  if (n1.get_value().type() == typeid(shaka::Real)) {
-    shaka::Number result(trunc(boost::get<shaka::Real>(n1.get_value()).get_value()));
-    NodePtr result_value = std::make_shared<shaka::DataNode>(result);
+  shaka::Number n1 = args[0]->get<shaka::Number>();
+  if (n1.get_type() == Number::NumberType::REAL) {
+    shaka::Number result(trunc(n1.get<Real>().get_value()));
+    NodePtr result_value = create_node(Data(result));
     Args result_vector = {result_value};
     return result_vector;
   }
-  else if (n1.get_value().type() == typeid(shaka::Integer)) {
-    shaka::Number result(trunc(boost::get<shaka::Integer>(n1.get_value()).get_value()));
-    NodePtr result_value = std::make_shared<shaka::DataNode>(result);
+  else if (n1.get_type() == Number::NumberType::INTEGER) {
+    shaka::Number result(trunc(n1.get<Integer>().get_value()));
+    NodePtr result_value = create_node(Data(result));
     Args result_vector = {result_value};
     return result_vector;
   }
   else {
-    int numerator = boost::get<shaka::Rational>(n1.get_value()).get_numerator();
-    int denominator = boost::get<shaka::Rational>(n1.get_value()).get_denominator();
+    int numerator = n1.get<Rational>().get_numerator();
+    int denominator = n1.get<Rational>().get_denominator();
 
     shaka::Number result(trunc((double) numerator / (double) denominator));
-    NodePtr result_value = std::make_shared<shaka::DataNode>(result);
+    NodePtr result_value = create_node(Data(result));
     Args result_vector = {result_value};
     return result_vector;
   }
@@ -589,25 +588,25 @@ Args truncate_numbers(Args args) {
 // (round x)
 Args round_numbers(Args args) {
 
-  shaka::Number n1 = shaka::get<shaka::Number>(args[0]->get_data());
+  shaka::Number n1 = args[0]->get<shaka::Number>();
 
-  if (n1.get_value().type() == typeid(shaka::Real)) {
-    shaka::Number result(round(boost::get<shaka::Real>(n1.get_value()).get_value()));
-    NodePtr result_value = std::make_shared<shaka::DataNode>(result);
+  if (n1.get_type() == Number::NumberType::REAL) {
+    shaka::Number result(round(n1.get<Real>().get_value()));
+    NodePtr result_value = create_node(Data(result));
     Args result_vector = {result_value};
     return result_vector;
   }
-  else if (n1.get_value().type() == typeid(shaka::Integer)) {
-    shaka::Number result(round(boost::get<shaka::Integer>(n1.get_value()).get_value()));
-    NodePtr result_value = std::make_shared<shaka::DataNode>(result);
+  else if (n1.get_type() == Number::NumberType::INTEGER) {
+    shaka::Number result(round(n1.get<Integer>().get_value()));
+    NodePtr result_value = create_node(Data(result));
     Args result_vector = {result_value};
     return result_vector;
   }
   else {
-    int numerator = boost::get<shaka::Rational>(n1.get_value()).get_numerator();
-    int denominator = boost::get<shaka::Rational>(n1.get_value()).get_denominator();
+    int numerator = n1.get<Rational>().get_numerator();
+    int denominator = n1.get<Rational>().get_denominator();
     shaka::Number result(round((double) numerator / (double) denominator));
-    NodePtr result_value = std::make_shared<shaka::DataNode>(result);
+    NodePtr result_value = create_node(Data(result));
     Args result_vector = {result_value};
     return result_vector;
   }
@@ -618,37 +617,34 @@ Args round_numbers(Args args) {
 // (exp z)
 Args exp_numbers(Args args) {
 
-  shaka::Number n1 = shaka::get<shaka::Number>(args[0]->get_data());
+  shaka::Number n1 = args[0]->get<shaka::Number>();
 
-  if (n1.get_value().type() == typeid(shaka::Integer)) {
-    shaka::Number result(exp(boost::get<shaka::Integer>(n1.get_value()).get_value()));
+  if (n1.get_type() == Number::NumberType::INTEGER) {
+    shaka::Number result(exp(n1.get<Integer>().get_value()));
     shaka::Number truncated_result(
         trunc(
-            boost::get<shaka::Real>(
-                result.get_value()).get_value() * 100000000000) / 100000000000);
-    NodePtr result_value = std::make_shared<shaka::DataNode>(truncated_result);
+           result.get<Real>().get_value() * 100000000000) / 100000000000);
+    NodePtr result_value = create_node(Data(truncated_result));
     Args result_vector = {result_value};
     return result_vector;
   }
-  else if (n1.get_value().type() == typeid(shaka::Real)) {
-    shaka::Number result(exp(boost::get<shaka::Real>(n1.get_value()).get_value()));
+  else if (n1.get_type == Number::NumberType::REAL) {
+    shaka::Number result(exp(n1.get<Real>().get_value()));
     shaka::Number truncated_result(
         trunc(
-            boost::get<shaka::Real>(
-                result.get_value()).get_value() * 100000000000) / 100000000000);
-    NodePtr result_value = std::make_shared<shaka::DataNode>(truncated_result);
+            result.get<Real>().get_value() * 100000000000) / 100000000000);
+    NodePtr result_value = create_node(Data(truncated_result));
     Args result_vector = {result_value};
     return result_vector;
   }
   else {
-    int numerator = boost::get<shaka::Rational>(n1.get_value()).get_numerator();
-    int denominator = boost::get<shaka::Rational>(n1.get_value()).get_denominator();
+    int numerator = n1.get<Rational>().get_numerator();
+    int denominator = n1.get<Rational>().get_denominator();
     shaka::Number result(exp((double) numerator / (double) denominator));
     shaka::Number truncated_result(
         trunc(
-            boost::get<shaka::Real>(
-                result.get_value()).get_value() * 100000000000) / 100000000000);
-    NodePtr result_value = std::make_shared<shaka::DataNode>(truncated_result);
+            result.get<Real>().get_value() * 100000000000) / 100000000000);
+    NodePtr result_value = create_node(Data(truncated_result));
     Args result_vector = {result_value};
     return result_vector;
   }
@@ -659,37 +655,34 @@ Args exp_numbers(Args args) {
 
 Args log_numbers(Args args) {
 
-  shaka::Number n1 = shaka::get<shaka::Number>(args[0]->get_data());
+  shaka::Number n1 = args[0]->get<shaka::Number>();
 
-  if (n1.get_value().type() == typeid(shaka::Integer)) {
-    shaka::Number result(log(boost::get<shaka::Integer>(n1.get_value()).get_value()));
+  if (n1.get_type() == Number::NumberType::INTEGER) {
+    shaka::Number result(log(n1.get<Integer>().get_value()));
     shaka::Number truncated_result(
         trunc(
-            boost::get<shaka::Real>(
-                result.get_value()).get_value() * 100000000000) / 100000000000);
-    NodePtr result_value = std::make_shared<shaka::DataNode>(truncated_result);
+            result.get<Real>().get_value() * 100000000000) / 100000000000);
+    NodePtr result_value = create_node(Data(truncated_result));
     Args result_vector = {result_value};
     return result_vector;
   }
-  else if (n1.get_value().type() == typeid(shaka::Real)) {
-    shaka::Number result(log(boost::get<shaka::Real>(n1.get_value()).get_value()));
+  else if (n1.get_type() == Number::NumberType::REAL) {
+    shaka::Number result(log(n1.get<Real>().get_value()));
     shaka::Number truncated_result(
         trunc(
-            boost::get<shaka::Real>(
-                result.get_value()).get_value() * 100000000000) / 100000000000);
-    NodePtr result_value = std::make_shared<shaka::DataNode>(truncated_result);
+           result.get<Real>().get_value() * 100000000000) / 100000000000);
+    NodePtr result_value = create_node(Data(truncated_result));
     Args result_vector = {result_value};
     return result_vector;
   }
   else {
-    int numerator = boost::get<shaka::Rational>(n1.get_value()).get_numerator();
-    int denominator = boost::get<shaka::Rational>(n1.get_value()).get_denominator();
+    int numerator = n1.get<Rational>().get_numerator();
+    int denominator = n1.get<Rational>().get_denominator();
     shaka::Number result(log((double) numerator / (double) denominator));
     shaka::Number truncated_result(
         trunc(
-            boost::get<shaka::Real>(
-                result.get_value()).get_value() * 100000000000) / 100000000000);
-    NodePtr result_value = std::make_shared<shaka::DataNode>(truncated_result);
+            result.get<Real>().get_value() * 100000000000) / 100000000000);
+    NodePtr result_value = create_node(Data(truncated_result));
     Args result_vector = {result_value};
     return result_vector;
   }
@@ -703,20 +696,19 @@ Args log_n_numbers(Args args) {
   Args unary_log_arg1 = {args[0]};
   Args unary_log_arg2 = {args[1]};
 
-  Args unary_log_res1 = log_numbers(unary_log_arg1, env);
-  Args unary_log_res2 = log_numbers(unary_log_arg2, env);
+  Args unary_log_res1 = log_numbers(unary_log_arg1);
+  Args unary_log_res2 = log_numbers(unary_log_arg2);
 
-  shaka::Number log_n1 = shaka::get<shaka::Number>(unary_log_res1[0]->get_data());
-  shaka::Number log_n2 = shaka::get<shaka::Number>(unary_log_res2[0]->get_data());
+  shaka::Number log_n1 = unary_log_res1[0]->get<shaka::Number>();
+  shaka::Number log_n2 = unary_log_res2[0]->get<shaka::Number>();
 
   shaka::Number result = log_n1 / log_n2;
 
   shaka::Number truncated_result(
       trunc(
-          boost::get<shaka::Real>(
-              result.get_value()).get_value() * 100000000000) / 100000000000);
+          result.get<Real>().get_value() * 100000000000) / 100000000000);
 
-  NodePtr result_value = std::make_shared<shaka::DataNode>(truncated_result);
+  NodePtr result_value = create_node(Data(truncated_result));
   Args result_vector = {result_value};
   return result_vector;
 
@@ -733,37 +725,28 @@ Args log_n_numbers(Args args) {
 // (sqrt z)
 Args sqrt_numbers(Args args) {
 
-
-  shaka::Number num = shaka::get<shaka::Number>(args[0]->get_data());
+  shaka::Number num = args[0]->get<shaka::Number>();
   double inter = 0;
 
   // First, convert our numbers into double.
-  if (num.get_value().type() == typeid(shaka::Integer)) {
-    inter = shaka::get<shaka::Integer>(num.get_value()).get_value();
+  if (num.get_type() == Number::NumberType::INTEGER) {
+    inter = num.get<Integer>().get_value();
   }
-  else if (num.get_value().type() == typeid(shaka::Rational)) {
-    auto rat = shaka::get<shaka::Rational>(num.get_value());
+  else if (num.get_type() == Number::NumberType::RATIONAL) {
+    auto rat = num.get<Rational>();
     inter = static_cast<double>(rat.get_numerator()) /
         static_cast<double>(rat.get_denominator());
   }
-  else if (num.get_value().type() == typeid(shaka::Real)) {
-    inter = shaka::get<shaka::Real>(num.get_value()).get_value();
+  else if (num.get_type() == Number::NumberType::REAL) {
+    inter = num.get<Real>().get_value();
   }
 
   // Then, square root the double.
   inter = std::sqrt(inter);
 
   // Rewrap it in a NodePtr
-  return {make_node(shaka::Number(inter))};
+  return {create_node(Data(shaka::Number(inter)))};
 }
-
-// (exact-integer-sqrt k)
-// (expt z1 z2)
-
-// DON'T DO THE COMPLEX LIBRARY PROCEDURES
-
-// (inexact z)
-// (exact z)
 
 } // namespace impl
 
