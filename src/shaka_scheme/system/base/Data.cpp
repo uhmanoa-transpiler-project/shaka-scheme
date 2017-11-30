@@ -14,10 +14,10 @@ shaka::Data::Data(const shaka::Data& other) :
     new(&symbol) shaka::Symbol(other.symbol);
     break;
   }
-//  case shaka::Data::Type::NUMBER: {
-//    this->number = other.number;
-//    break;
-//  }
+  case shaka::Data::Type::NUMBER: {
+    this->number = other.number;
+    break;
+  }
   case shaka::Data::Type::STRING: {
     new(&string) shaka::String(other.string);
     break;
@@ -42,6 +42,7 @@ shaka::Data::Data(const shaka::Data& other) :
     new(&primitive_form) shaka::PrimitiveFormMarker(other.primitive_form);
     break;
   }
+
 //  case shaka::Data::Type::DATA_NODE: {
 //    new(&data_node) std::shared_ptr<shaka::DataNode>(other.data_node);
 //    break;
@@ -60,7 +61,6 @@ shaka::Data::Data(const shaka::Data& other) :
   case Type::UNSPECIFIED:break;
     //case Type::DATANODE:break;
   case Type::ENVIRONMENT:break;
-  case Type::NUMBER:break;
   }
   this->type_tag = other.type_tag;
 }
@@ -71,10 +71,10 @@ shaka::Data::~Data() {
     this->symbol.~Symbol();
     break;
   }
-//  case shaka::Data::Type::NUMBER: {
-//    this->number = other.number;
-//    break;
-//  }
+  case shaka::Data::Type::NUMBER: {
+    this->number.~Number();
+    break;
+  }
   case shaka::Data::Type::STRING: {
     this->string.~String();
     break;
@@ -168,6 +168,14 @@ shaka::PrimitiveFormMarker& shaka::Data::get<shaka::PrimitiveFormMarker>() {
   return this->primitive_form;
 }
 
+template<>
+shaka::Number& shaka::Data::get<shaka::Number>() {
+  if (this->get_type() != Type::NUMBER) {
+    throw new shaka::TypeException(10, "Could not get() Number from Data");
+  }
+  return this->number;
+}
+
 namespace shaka {
 
 std::ostream& operator<<(std::ostream& lhs, shaka::Data rhs) {
@@ -237,9 +245,7 @@ std::ostream& operator<<(std::ostream& lhs, shaka::Data rhs) {
     break;
   }
   case shaka::Data::Type::NUMBER: {
-    throw shaka::MissingImplementationException(1337,
-                                                "Number has not been implemented in "
-                                                    "master yet");
+    lhs << rhs.get<shaka::Number>();
     break;
   }
   case shaka::Data::Type::NULL_LIST: {

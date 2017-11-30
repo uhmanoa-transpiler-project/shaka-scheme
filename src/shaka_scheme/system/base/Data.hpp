@@ -7,7 +7,7 @@
 
 #include "shaka_scheme/system/exceptions/InvalidInputException.hpp"
 #include "shaka_scheme/system/exceptions/TypeException.hpp"
-
+#include "shaka_scheme/system/base/Number.hpp"
 #include "shaka_scheme/system/base/Symbol.hpp"
 #include "shaka_scheme/system/base/String.hpp"
 #include "shaka_scheme/system/base/Boolean.hpp"
@@ -64,6 +64,7 @@ private:
     shaka::String string;
     shaka::DataPair data_pair;
     shaka::Symbol symbol;
+    shaka::Number number;
     shaka::Closure closure;
     shaka::CallFrame call_frame;
     shaka::PrimitiveFormMarker primitive_form;
@@ -84,6 +85,11 @@ public:
   Data(shaka::Boolean other) {
     new(&boolean) shaka::Boolean(other);
     this->type_tag = Type::BOOLEAN;
+  }
+
+  Data(shaka::Number other) {
+    new(&number) shaka::Number(other);
+    this->type_tag = Type::NUMBER;
   }
 
   Data(shaka::DataPair other) {
@@ -154,6 +160,7 @@ template<> shaka::DataPair& shaka::Data::get<shaka::DataPair>();
 template<> shaka::Closure& shaka::Data::get<shaka::Closure>();
 template<> shaka::CallFrame& shaka::Data::get<shaka::CallFrame>();
 template<> shaka::PrimitiveFormMarker& shaka::Data::get<shaka::PrimitiveFormMarker>();
+template<> shaka::Number& shaka::Data::get<shaka::Number>();
 
 std::ostream& operator<<(std::ostream& lhs, shaka::Data rhs);
 

@@ -69,6 +69,10 @@ set(SOURCE_FILES
         src/shaka_scheme/system/lexer/rules/rule_token.cpp
         src/shaka_scheme/system/parser/parser_definitions.cpp
         src/shaka_scheme/system/lexer/rules/init.cpp
+        src/shaka_scheme/system/base/Integer.cpp
+        src/shaka_scheme/system/base/Rational.cpp
+        src/shaka_scheme/system/base/Real.cpp
+        src/shaka_scheme/system/base/Number.cpp
         )
 
 add_library(${SHAKA_SCHEME_LIBRARY_NAME} SHARED ${SOURCE_FILES})
