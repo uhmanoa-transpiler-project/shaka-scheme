@@ -16,8 +16,10 @@
 namespace shaka {
 
 using Callable = std::function<std::deque<NodePtr>(std::deque<NodePtr>)>;
+using BoolCall = std::function<bool(std::deque<NodePtr>)>;
 using NodeCall = std::function<NodePtr(NodePtr)>;
 using DblNodeCall = std::function<NodePtr(NodePtr, NodePtr)>;
+using TplNodeCall = std::function<NodePtr(NodePtr, NodePtr, NodePtr)>;
 using DequeCall = std::function<NodePtr(std::deque<NodePtr>)>;
 
 namespace core {
@@ -91,6 +93,12 @@ NodePtr str_length(NodePtr node) {
     return result;
 }
 
+/**
+ * @brief Implements (string-ref string k)
+ * @param str string being analyzed
+ * @param k index of string
+ * @return character k of string
+ */
 NodePtr str_ref(NodePtr str, NodePtr k) {
     if(str->get_type() != Data::Type::STRING) {
         throw TypeException(10001, "Incompatible argument type to NativeClosure");
@@ -105,6 +113,109 @@ NodePtr str_ref(NodePtr str, NodePtr k) {
     return result;
 }
 
+/**
+ * @brief Implements (string-set! string k char)
+ * @param str Input String
+ * @param k Index in String
+ * @param ch Character to be Placed in Index k
+ * @return String with ch in element k
+ */
+NodePtr str_set(NodePtr str, NodePtr k, NodePtr ch) {
+    if(str->get_type() != Data::Type::STRING) {
+        throw TypeException(10001, "Incompatible argument type to NativeClosure");
+    }
+
+    std::string s = str->get<String>().get_string();
+    int ref = stoi(k->get<String>().get_string());
+    std::string cStr = ch->get<String>().get_string();
+    char c = cStr[0];
+
+    s[ref] = c;
+    NodePtr result = create_node(Data(String(s)));
+    return result;
+
+}
+
+/**
+ * @brief Implements (string =? string1 string2 ...)
+ * @param str array of input strings
+ * @return True if all strings are the same, false otherwise
+ */
+bool are_strings(std::deque<NodePtr> str) {
+    for(std::size_t i = 0; i < str.size(); i++){
+        if(str[i]->get_type() != Data::Type::STRING)
+            return false;
+
+        if(i+1 != str.size()){
+            if(str[i]->get<String>().get_string() !=
+               str[i+1]->get<String>().get_string()) return false;
+        }
+    }
+
+    return true;
+}
+
+bool str_lt(std::deque<NodePtr> str) {
+    for(std::size_t i = 0; i < str.size(); i++){
+        if(str[i]->get_type() != Data::Type::STRING)
+            return false;
+
+        if(i+1 != str.size()) {
+            if(str[i]->get<String>() >= str[i+1]->get<String>())
+                return false;
+        }
+    }
+
+    return true;
+}
+
+bool str_gt(std::deque<NodePtr> str) {
+    for(std::size_t i = 0; i < str.size(); i++){
+        if(str[i]->get_type() != Data::Type::STRING)
+            return false;
+
+        if(i+1 != str.size()) {
+            if(str[i]->get<String>() <= str[i+1]->get<String>())
+                return false;
+        }
+    }
+
+    return true;
+}
+
+bool str_lte(std::deque<NodePtr> str) {
+    for(std::size_t i = 0; i < str.size(); i++){
+        if(str[i]->get_type() != Data::Type::STRING)
+            return false;
+
+        if(i+1 != str.size()) {
+            if(str[i]->get<String>() > str[i+1]->get<String>())
+                return false;
+        }
+    }
+
+    return true;
+}
+
+bool str_gte(std::deque<NodePtr> str) {
+    for(std::size_t i = 0; i < str.size(); i++){
+        if(str[i]->get_type() != Data::Type::STRING)
+            return false;
+
+        if(i+1 != str.size()) {
+            if(str[i]->get<String>() < str[i+1]->get<String>())
+                return false;
+        }
+    }
+
+    return true;
+}
+
+/**
+ * @brief Implements (string-append string ...)
+ * @param args Strings to be appended
+ * @return A string whose characters are the concatenation of the characters of the given strings
+ */
 std::deque<NodePtr> str_append(std::deque<NodePtr> args) {
   if (args[0]->get_type() != Data::Type::STRING) {
     throw TypeException(10001, "Incompatible argument type to NativeClosure");
@@ -148,13 +259,23 @@ inline NodePtr list_to_str(NodePtr lst) {
 
 }
 
-NodeCall make_string_blank = core::make_str_blank;
-DblNodeCall make_string = core::make_str;
-DequeCall char_string = core::ch_str;
-NodeCall string_length = core::str_length;
-DblNodeCall string_ref = core::str_ref;
-Callable string_append = core::str_append;
-NodeCall list_to_string = core::list_to_str;
+NodeCall make_string_blank = core::make_str_blank;  //(make-string k)
+DblNodeCall make_string = core::make_str;           //(make-string k char)
+
+DequeCall char_string = core::ch_str;               //(string char ...)
+
+NodeCall string_length = core::str_length;          //(string-length string)
+DblNodeCall string_ref = core::str_ref;             //(string-ref string k)
+TplNodeCall string_set = core::str_set;             //(string-set! string k char)
+
+BoolCall eq_strings = core::are_strings;            //(string=? string1 string2 ...)
+BoolCall lt_strings = core::str_lt;                 //(string<? string1 string2 ...)
+BoolCall gt_strings = core::str_gt;                 //(string>? string1 string2 ...)
+BoolCall lt_eq_strings = core::str_lte;             //(string<=? string1 string2 ...)
+BoolCall gt_eq_strings = core::str_gte;             //(string>=? string1 string2 ...)
+
+Callable string_append = core::str_append;          //(string-append string ...)
+NodeCall list_to_string = core::list_to_str;        //(list->string list)
 
 }
 #endif //SHAKA_SCHEME_STRINGS_HPP
