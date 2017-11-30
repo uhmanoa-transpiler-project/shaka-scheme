@@ -8,6 +8,10 @@ using namespace shaka::lexer;
  * @brief Test: hex digits
  */
 TEST(rule_identifier_UnitTest, hex_digits) {
+  // Given: the lexer rules are initialized
+  rules::init_common_rules();
+  rules::init_rule_identifier();
+
   // Given: an input with a hexidecimal number
   std::string buf = "0123456789adcf";
 
@@ -26,6 +30,10 @@ TEST(rule_identifier_UnitTest, hex_digits) {
  * @brief Test: inline hex escape
  */
 TEST(rule_identifier_UnitTest, inline_hex_escape) {
+  // Given: the lexer rules are initialized
+  rules::init_common_rules();
+  rules::init_rule_identifier();
+
   // Given: an input with a hexidecimal number
   std::string buf = "\\x20;";
 
@@ -44,6 +52,10 @@ TEST(rule_identifier_UnitTest, inline_hex_escape) {
  * @brief Test: identifier
  */
 TEST(rule_identifier_UnitTest, identifier) {
+  // Given: the lexer rules are initialized
+  rules::init_common_rules();
+  rules::init_rule_identifier();
+
   // Given: an input with a hexidecimal number
   std::string buf = "... + +soup+ <=? ->string a34kTMNs lambda list->vector q"
       " V17a |two words| |two\\x20;words| the-word-recursion-has-many-meanings";

@@ -1,5 +1,6 @@
 #include <gmock/gmock.h>
 
+#include "shaka_scheme/system/lexer/rules/init.hpp"
 #include "shaka_scheme/system/lexer/rules/rule_token.hpp"
 
 using namespace shaka::lexer;
@@ -7,6 +8,8 @@ using namespace shaka::lexer;
  * @brief Test: token rule
  */
 TEST(rule_token_UnitTest, token_literals) {
+  // Given: the lexer rules are initialized
+  rules::init_lexer_rules();
 
   // Given: an input with various tokens
   std::string buf = "( ) #( #u8( , . ` ,@";

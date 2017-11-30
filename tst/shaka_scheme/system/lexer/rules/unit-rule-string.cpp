@@ -8,6 +8,10 @@ using namespace shaka::lexer;
  * @brief Test: string
  */
 TEST(rule_string_UnitTest, string) {
+  // Given: the lexer rules are initialized
+  rules::init_common_rules();
+  rules::init_rule_string();
+  
   // Given: an input with a hexidecimal number
   std::string buf = "\"two\\x20;words\"";
 

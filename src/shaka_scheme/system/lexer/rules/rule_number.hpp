@@ -13,14 +13,14 @@ namespace shaka {
 namespace lexer {
 namespace rules {
 
-LexerRule sign = (make_terminal("+") | make_terminal("-")) / "sign";
-LexerRule whole_number = (digit + *digit) / "whole_number";
-LexerRule integer   = ((sign|empty_string) + whole_number) / "integer";
-LexerRule real      = (integer + make_terminal(".") +
-    whole_number) / "real";
-LexerRule rational  = (integer + make_terminal("/") + integer) / "rational";
+extern LexerRule sign;
+extern LexerRule whole_number;
+extern LexerRule integer;
+extern LexerRule real;
+extern LexerRule rational;
+extern LexerRule number;
 
-LexerRule number = rational | real | integer;
+void init_rule_number();
 
 } // namespace rules
 } // namespace lexer

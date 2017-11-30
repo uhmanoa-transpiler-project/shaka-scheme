@@ -8,6 +8,10 @@ using namespace shaka::lexer;
  * @brief Test: hex digits
  */
 TEST(rule_number_UnitTest, number) {
+  // Given: the lexer rules are initialized
+  rules::init_common_rules();
+  rules::init_rule_number();
+
   // Given: input with integer, real, and rational
   std::string buf = "123456 -123.123 +123/-123";
 

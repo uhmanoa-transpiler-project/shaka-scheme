@@ -6,4 +6,5 @@ macro_shaka_scheme_test(unit-rule-string)
 macro_shaka_scheme_test(unit-rule-character)
 macro_shaka_scheme_test(unit-rule-number)
 macro_shaka_scheme_test(EXAMPLE-scheme-lexer)
+macro_shaka_scheme_test(unit-rule-lexer)
 

@@ -9,6 +9,10 @@ using namespace shaka::lexer;
  * @brief Test: character
  */
 TEST(rule_character_UnitTest, character) {
+  // Given: the lexer rules are initialized
+  rules::init_common_rules();
+  rules::init_rule_character();
+
   // Given: an input with a hexidecimal number
   std::string buf = "#\\x20 #\\; #\\tab";
 

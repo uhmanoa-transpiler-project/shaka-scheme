@@ -18,7 +18,7 @@ using Callable = std::function<std::deque<NodePtr>(std::deque<NodePtr>)>;
 namespace core {
 
 std::deque<NodePtr> str_append(std::deque<NodePtr> args) {
-  if (args[0]->get_type() != Data::Type::STRING) {
+  if (args.size() > 0 && args[0]->get_type() != Data::Type::STRING) {
     throw TypeException(10001, "Incompatible argument type to NativeClosure");
   }
 

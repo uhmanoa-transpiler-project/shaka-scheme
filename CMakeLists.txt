@@ -58,11 +58,22 @@ set(SOURCE_FILES
         src/shaka_scheme/system/base/PrimitiveFormMarker.cpp
         src/shaka_scheme/system/parser/syntax_rules/MacroContext.cpp
         src/shaka_scheme/system/parser/syntax_rules/SyntaxRulesMacro.cpp
+        src/shaka_scheme/system/lexer/lexer_definitions.cpp
+        src/shaka_scheme/system/lexer/rules/rule_boolean.cpp
+        src/shaka_scheme/system/lexer/rules/common_rules.cpp
+        src/shaka_scheme/system/lexer/rules/rule_character.cpp
+        src/shaka_scheme/system/lexer/rules/rule_comment.cpp
+        src/shaka_scheme/system/lexer/rules/rule_identifier.cpp
+        src/shaka_scheme/system/lexer/rules/rule_number.cpp
+        src/shaka_scheme/system/lexer/rules/rule_string.cpp
+        src/shaka_scheme/system/lexer/rules/rule_token.cpp
+        src/shaka_scheme/system/parser/parser_definitions.cpp
+        src/shaka_scheme/system/lexer/rules/init.cpp
         src/shaka_scheme/system/base/Integer.cpp
         src/shaka_scheme/system/base/Rational.cpp
         src/shaka_scheme/system/base/Real.cpp
-        src/shaka_scheme/system/base/Number.cpp)
-
+        src/shaka_scheme/system/base/Number.cpp
+        )
 
 add_library(${SHAKA_SCHEME_LIBRARY_NAME} SHARED ${SOURCE_FILES})
 target_compile_options(${SHAKA_SCHEME_LIBRARY_NAME} PRIVATE -Wall -Wextra
