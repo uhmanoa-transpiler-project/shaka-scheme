@@ -1,4 +1,5 @@
 #include "shaka_scheme/system/lexer/rules/rule_token.hpp"
+#include "shaka_scheme/system/lexer/rules/init.hpp"
 
 
 #include <iostream>
@@ -6,7 +7,7 @@
 
 int main() {
   using namespace shaka::lexer;
-
+  shaka::lexer::rules::init_lexer_rules();
   LexResult result = Incomplete("lol", LexInfo());
   LexerInput lex(std::string(), "test");
   std::string buf;
