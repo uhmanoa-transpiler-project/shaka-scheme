@@ -1,6 +1,9 @@
 //
-// Created by Billy Wooton on 11/29/17.
+// Created by Billy Wooton on 11/30/17.
 //
+
+#ifndef SHAKA_SCHEME_NUMBERS_ARITHMETIC_HPP
+#define SHAKA_SCHEME_NUMBERS_ARITHMETIC_HPP
 
 #include "shaka_scheme/system/base/Number.hpp"
 #include "shaka_scheme/system/base/Data.hpp"
@@ -25,8 +28,8 @@ Args add_numbers(Args args) {
   if (args[0]->get_type() != Data::Type::NUMBER) {
     throw TypeException(117,
                         "STDPROC: Incorrect argument type to Native "
-                             "Procedure: "
-                          "+");
+                            "Procedure: "
+                            "+");
   }
 
   shaka::Number result = shaka::Number(0);
@@ -623,7 +626,7 @@ Args exp_numbers(Args args) {
     shaka::Number result(exp(n1.get<Integer>().get_value()));
     shaka::Number truncated_result(
         trunc(
-           result.get<Real>().get_value() * 100000000000) / 100000000000);
+            result.get<Real>().get_value() * 100000000000) / 100000000000);
     NodePtr result_value = create_node(Data(truncated_result));
     Args result_vector = {result_value};
     return result_vector;
@@ -670,7 +673,7 @@ Args log_numbers(Args args) {
     shaka::Number result(log(n1.get<Real>().get_value()));
     shaka::Number truncated_result(
         trunc(
-           result.get<Real>().get_value() * 100000000000) / 100000000000);
+            result.get<Real>().get_value() * 100000000000) / 100000000000);
     NodePtr result_value = create_node(Data(truncated_result));
     Args result_vector = {result_value};
     return result_vector;
@@ -781,3 +784,6 @@ Callable sqrt = impl::sqrt_numbers;
 } // namespace stdproc
 } // namespace shaka
 
+
+
+#endif //SHAKA_SCHEME_NUMBERS_ARITHMETIC_HPP
