@@ -91,6 +91,20 @@ NodePtr str_length(NodePtr node) {
     return result;
 }
 
+NodePtr str_ref(NodePtr str, NodePtr k) {
+    if(str->get_type() != Data::Type::STRING) {
+        throw TypeException(10001, "Incompatible argument type to NativeClosure");
+    }
+
+    std::string s = str->get<String>().get_string();
+    int ref = stoi(k->get<String>().get_string());
+
+    String strref(s[ref],1);
+
+    NodePtr result = create_node(strref);
+    return result;
+}
+
 std::deque<NodePtr> str_append(std::deque<NodePtr> args) {
   if (args[0]->get_type() != Data::Type::STRING) {
     throw TypeException(10001, "Incompatible argument type to NativeClosure");
@@ -129,6 +143,7 @@ inline NodePtr list_to_str(NodePtr lst) {
     }
 
     NodePtr result = create_node(Data(String(s)));
+    return result;
 }
 
 }
@@ -137,6 +152,7 @@ NodeCall make_string_blank = core::make_str_blank;
 DblNodeCall make_string = core::make_str;
 DequeCall char_string = core::ch_str;
 NodeCall string_length = core::str_length;
+DblNodeCall string_ref = core::str_ref;
 Callable string_append = core::str_append;
 NodeCall list_to_string = core::list_to_str;
 

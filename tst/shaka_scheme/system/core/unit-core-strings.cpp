@@ -49,6 +49,17 @@ TEST(StringsUnitTest, string_length) {
 
 }
 
+TEST(StringsUnitTest, string_ref) {
+    using namespace shaka;
+
+    NodePtr str = create_node(Data(String("hola")));
+    NodePtr k = create_node(Data(String("3")));
+    NodePtr test = string_ref(str,k);
+
+    ASSERT_TRUE(core::is_string(test));
+    ASSERT_EQ("a", test->get<String>().get_string());
+}
+
 TEST(StringsUnitTest, list_to_string) {
     using namespace shaka;
 
@@ -60,6 +71,24 @@ TEST(StringsUnitTest, list_to_string) {
 
     NodePtr test = list_to_string(lst);
     ASSERT_TRUE(core::is_string(test));
+    ASSERT_EQ("abc", test->get<String>().get_string());
 
-    std::cout << test->get<String>().get_string() << std::endl;
+    NodePtr x = create_node(Data(Symbol("x")));
+    NodePtr y = create_node(Data(Symbol("y")));
+    NodePtr z = create_node(Data(Symbol("z")));
+
+    NodePtr lst2 = core::list(x, y, z);
+
+    NodePtr test2 = list_to_string(lst2);
+    ASSERT_TRUE(core::is_string(test2));
+    ASSERT_EQ("xyz", test2->get<String>().get_string());
+
+    NodePtr lst3 = core::append(lst,lst2);
+
+    NodePtr test3 = list_to_string(lst3);
+    ASSERT_TRUE(core::is_string(test3));
+    ASSERT_EQ("abcxyz", test3->get<String>().get_string());
+
 }
+
+
