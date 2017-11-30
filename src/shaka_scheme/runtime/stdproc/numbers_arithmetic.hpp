@@ -57,11 +57,11 @@ Args mul_numbers(Args args) {
 
   shaka::Number result = shaka::Number(1);
   for (std::size_t i = 0; i < args.size(); i++) {
-    result = result * shaka::get<shaka::Number>(args[i]->get_data());
+    result = result * args[i]->get<shaka::Number>();
   }
 
   Args result_vector;
-  NodePtr result_value = std::make_shared<shaka::DataNode>(result);
+  NodePtr result_value = create_node(Data(result));
   result_vector.push_back(result_value);
 
   return result_vector;
@@ -353,7 +353,7 @@ Args truncate_quotient_numbers(Args args) {
 // (truncate-remainder n1 n2)
 Args truncate_remainder_numbers(Args args) {
 
-  shaka::Number n1 = args[0]->get<shaka::Number>()
+  shaka::Number n1 = args[0]->get<shaka::Number>();
   shaka::Number n2 = args[1]->get<shaka::Number>();
 
   shaka::Number r = n1 % n2;
@@ -537,7 +537,7 @@ Args floor_numbers(Args args) {
 // (ceiling x)
 Args ceiling_numbers(Args args) {
 
-  shaka::Number n1 = args[0]->get<shaka::Number>()
+  shaka::Number n1 = args[0]->get<shaka::Number>();
   if (n1.get_type() == Number::NumberType::REAL) {
     shaka::Number result(ceil(n1.get<Real>().get_value()));
     NodePtr result_value = create_node(Data(result));
@@ -631,7 +631,7 @@ Args exp_numbers(Args args) {
     Args result_vector = {result_value};
     return result_vector;
   }
-  else if (n1.get_type == Number::NumberType::REAL) {
+  else if (n1.get_type() == Number::NumberType::REAL) {
     shaka::Number result(exp(n1.get<Real>().get_value()));
     shaka::Number truncated_result(
         trunc(
