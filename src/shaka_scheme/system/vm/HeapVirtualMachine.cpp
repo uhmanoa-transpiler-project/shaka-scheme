@@ -16,9 +16,7 @@ void HeapVirtualMachine::evaluate_assembly_instruction() {
 
   // (halt)
   if (instruction == shaka::Symbol("halt")) {
-    if (this->get_call_frame() != nullptr) {
-      this->set_expression(core::list(create_node(Symbol("return"))));
-    }
+
     return;
   }
 
