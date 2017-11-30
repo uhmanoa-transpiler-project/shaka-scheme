@@ -143,6 +143,6 @@ Expression Compiler::compile_lambda(Expression body, Expression next) {
     return compile(car(body), next);
   }
   return compile(car(body), compile_lambda(cdr(body), next));
-}q
+}
 
 }
