@@ -10,6 +10,9 @@
 
 namespace shaka {
 
+using BoolCall = std::function<bool(std::deque<NodePtr>)>;
+using NodeCall = std::function<NodePtr(NodePtr)>;
+
 namespace core {
 
 /**
@@ -19,12 +22,14 @@ namespace core {
  */
 inline bool are_symbols(std::deque<NodePtr> nodes){
     for(std::size_t i = 0; i < nodes.size(); i++) {
-        if (nodes[i]->get_type() != Data::Type::SYMBOL)
+        if (nodes[i]->get_type() != Data::Type::SYMBOL) {
             return false;
+        }
 
-        if(nodes[i+1] != nullptr)
-            if(nodes[i] !=  nodes[i+1])
+        if(i+1 != nodes.size()) {
+            if (nodes[i] != nodes[i + 1])
                 return false;
+        }
     }
     return true;
 }
@@ -62,6 +67,10 @@ inline NodePtr symbol_to_string(NodePtr node) {
 }
 
 } //core
+
+BoolCall eq_symbols = core::are_symbols;
+NodeCall string_to_symbol = core::string_to_symbol;
+NodeCall symbol_to_string = core::symbol_to_string;
 
 } //shaka
 #endif //SHAKA_SCHEME_SYMBOLS_HPP
