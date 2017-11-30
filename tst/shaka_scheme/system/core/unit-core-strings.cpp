@@ -60,6 +60,37 @@ TEST(StringsUnitTest, string_ref) {
     ASSERT_EQ("a", test->get<String>().get_string());
 }
 
+TEST(StringsUnitTest, string_set) {
+    using namespace shaka;
+
+    NodePtr str = create_node(Data(String("asdf")));
+    NodePtr k = create_node(Data(String("2")));
+    NodePtr ch = create_node(Data(String("o")));
+
+    NodePtr test = string_set(str,k,ch);
+
+    ASSERT_TRUE(core::is_string(test));
+    ASSERT_EQ(str->get<String>().get_string(), "asdf");
+    ASSERT_EQ(test->get<String>().get_string(), "asof");
+}
+
+TEST(StringsUnitTest, eq_strings_true) {
+    using namespace shaka;
+
+    NodePtr str1 = create_node(Data(String("hello")));
+    NodePtr str2 = str1;
+    NodePtr str3 = create_node(Data(String("hello")));
+
+    std::deque<NodePtr> str_test = {str1, str1, str1};
+    ASSERT_TRUE(eq_strings(str_test));
+
+    std::deque<NodePtr> str_test2 = {str1, str2};
+    ASSERT_TRUE(eq_strings(str_test2));
+
+    std::deque<NodePtr> str_test3 = {str1, str2, str3};
+    ASSERT_TRUE(eq_strings(str_test3));
+}
+
 TEST(StringsUnitTest, list_to_string) {
     using namespace shaka;
 
