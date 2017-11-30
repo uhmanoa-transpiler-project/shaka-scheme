@@ -7,10 +7,13 @@
 TEST(StringsUnitTest, make_string) {
     using namespace shaka;
 
-    NodePtr str1 = core::make_string(3);
+    NodePtr size1 = create_node(Data(String("3")));
+    NodePtr str1 = core::make_string(size1);
     ASSERT_TRUE(core::is_string(str1));
 
-    NodePtr str2 = core::make_string(5, 'z');
+    NodePtr size2 = create_node(Data(String("5")));
+    NodePtr c = create_node(Data(String("z")));
+    NodePtr str2 = core::make_string(size2, c);
     ASSERT_TRUE(core::is_string(str2));
 
     String s1(str1->get<String>());
@@ -21,13 +24,28 @@ TEST(StringsUnitTest, make_string) {
 
 }
 
-TEST(StringsUnitTest, string_list) {
+TEST(StringsUnitTest, string_char_list) {
     using namespace shaka;
 
-    std::deque<char> charList = {'a', 's', 'd', 'f'};
-    NodePtr str = core::string_list(charList);
+    std::deque<NodePtr> charList = {create_node(Data(String("a"))),
+                                    create_node(Data(String("s"))),
+                                    create_node(Data(String("d"))),
+                                    create_node(Data(String("f")))};
+
+    NodePtr str = core::string_char_list(charList);
     ASSERT_TRUE(core::is_string(str));
 
     String s(str->get<String>());
     ASSERT_EQ(s.get_string(), "asdf");
+}
+
+TEST(StringsUnitTest, string_length) {
+    using namespace shaka;
+
+    NodePtr str = create_node(Data(String("asdfghjkl;")));
+
+    NodePtr l = core::string_length(str);
+    std::cout << l->get<String>() << std::endl;
+
+
 }

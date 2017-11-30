@@ -23,9 +23,10 @@ namespace core {
  * @param size the size of the string
  * @return the newly allocated string of length k
  */
-inline NodePtr make_string(int size) {
+inline NodePtr make_string(NodePtr size) {
+    int sz = std::stoi(size->get<String>().get_string());
     std::string s;
-    for(std::size_t i = 0; i < size; i++)
+    for(std::size_t i = 0; i < sz; i++)
         s.push_back(' ');
 
     String str(s);
@@ -39,10 +40,13 @@ inline NodePtr make_string(int size) {
  * @param c The Initialized characters of the string
  * @return the newly allocated string of length k
  */
-inline NodePtr make_string(int size, char c) {
+inline NodePtr make_string(NodePtr size, NodePtr c) {
+    int sz = std::stoi(size->get<String>().get_string());
+    char ch = c->get<String>().get_string()[0];
+
     std::string s;
-    for(std::size_t i = 0; i < size; i++){
-        s.push_back(c);
+    for(std::size_t i = 0; i < sz; i++){
+        s.push_back(ch);
     }
 
     String str(s);
@@ -52,19 +56,32 @@ inline NodePtr make_string(int size, char c) {
 
 /**
  * @brief Implements (string char ...)
- * @param args list of chars to be added to the string
+ * @param nodes list of chars to be added to the string
  * @return the newly allocated string composed of the args
  */
-inline NodePtr string_list(std::deque<char> args) {
-    std::string s;
-    for (std::size_t i = 0; i < args.size(); i++){
-        s.push_back(args[i]);
+inline NodePtr string_char_list(std::deque<NodePtr> nodes) {
+    String str("");
+    for (std::size_t i = 0; i < nodes.size(); i++){
+        str.append(nodes[i]->get<String>());
     }
 
-    String str(s);
     NodePtr result = create_node(str);
     return result;
 }
+
+inline NodePtr string_length(NodePtr node) {
+    if(node->get_type() != Data::Type::STRING) {
+        throw TypeException(10001, "Incompatible argument type to NativeClosure");
+    }
+
+    String str(node->get<String>());
+    int l = str.get_string().size();
+    String len(l);
+
+    NodePtr result = create_node(len);
+    return result;
+}
+
 std::deque<NodePtr> str_append(std::deque<NodePtr> args) {
   if (args[0]->get_type() != Data::Type::STRING) {
     throw TypeException(10001, "Incompatible argument type to NativeClosure");
