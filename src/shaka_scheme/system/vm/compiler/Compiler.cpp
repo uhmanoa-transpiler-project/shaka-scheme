@@ -22,8 +22,10 @@ next_instruction) {
   }
   // (pair? input)
   else if (is_pair(input)) {
-
-    Symbol& expression_type = car(input)->get<Symbol>();
+    Symbol expression_type;
+    if (car(input)->get_type() == shaka::Data::Type::SYMBOL) {
+     expression_type = car(input)->get<Symbol>();
+    }
 
     // quote case
     if (expression_type == Symbol("quote")) {
@@ -37,7 +39,7 @@ next_instruction) {
     else if (expression_type == Symbol("lambda")) {
       Symbol instruction("close");
       Data instruction_data(instruction);
-      Data halt_op(Symbol("halt"));
+      Data halt_op(Symbol("return"));
 
       NodePtr vars = car(cdr(input));
       NodePtr body = cdr(cdr(input));
@@ -141,6 +143,6 @@ Expression Compiler::compile_lambda(Expression body, Expression next) {
     return compile(car(body), next);
   }
   return compile(car(body), compile_lambda(cdr(body), next));
-}
+}q
 
 }
