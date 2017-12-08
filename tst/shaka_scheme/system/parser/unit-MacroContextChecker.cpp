@@ -1,5 +1,6 @@
 #include <gmock/gmock.h>
 
+#include "shaka_scheme/system/lexer/rules/init.hpp"
 #include "shaka_scheme/system/parser/parser_definitions.hpp"
 #include "shaka_scheme/system/vm/HeapVirtualMachine.hpp"
 #include "shaka_scheme/system/parser/syntax_rules/macro_engine.hpp"
@@ -63,6 +64,8 @@ TEST(MacroContext, setup_vm) {
 TEST(MacroContext, other) {
   using namespace shaka::parser;
   using namespace shaka;
+
+  lexer::rules::init_lexer_rules();
   // Given: an input string
   //std::string buf = "(lambda (x) (+ x z) (lambda (y) (- y a)) (lambda (q)
   // a))";
@@ -125,6 +128,8 @@ TEST(MacroContext, other) {
   std::cout << *result.it << std::endl;
 
   run_macro_expansion(result.it, context);
+
+  std::cout << *result.it << std::endl;
 
   for (
     auto binding :

@@ -60,7 +60,7 @@ LexResult Token(std::string str, LexInfo info, std::string token_type) {
 }
 
 LexResult Incomplete(std::string str, LexInfo info) {
-  return LexResult("incomplete", "", info);
+  return LexResult("incomplete", str, info);
 }
 
 std::ostream& operator<<(std::ostream& left, LexResult right) {
@@ -299,7 +299,7 @@ LexerRule alternative(LexerRule left,
     std::string buf;
 
     auto lresult = left(lex);
-    if (lresult.is_token() || lresult.is_incomplete()) {
+    if (lresult.is_token()) {
       return lresult;
     }
     auto rresult = right(lex);

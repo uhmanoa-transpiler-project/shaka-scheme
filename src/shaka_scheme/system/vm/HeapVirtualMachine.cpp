@@ -117,8 +117,8 @@ void HeapVirtualMachine::evaluate_assembly_instruction() {
     NodePtr then_exp = exp_cdr.car();
     NodePtr else_exp = exp_cdr.cdr()->get<DataPair>().car();
 
-    if (this->acc->get_type() == shaka::Data::Type::SYMBOL &&
-        this->acc->get<Symbol>() == Symbol("#f")) {
+    if (this->acc->get_type() == shaka::Data::Type::BOOLEAN &&
+        this->acc->get<Boolean>() == Boolean(false)) {
 
       this->set_expression(else_exp);
     }

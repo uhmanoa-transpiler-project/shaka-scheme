@@ -114,7 +114,7 @@ shaka::Data::~Data() {
 template<>
 shaka::String& shaka::Data::get<shaka::String>() {
   if (this->get_type() != Type::STRING) {
-    throw new shaka::TypeException(3, "Could not get() String from Data");
+    throw shaka::TypeException(3, "Could not get() String from Data");
   }
   return this->string;
 }
@@ -122,7 +122,7 @@ shaka::String& shaka::Data::get<shaka::String>() {
 template<>
 shaka::Symbol& shaka::Data::get<shaka::Symbol>() {
   if (this->get_type() != Type::SYMBOL) {
-    throw new shaka::TypeException(4, "Could not get() Symbol from Data");
+    throw shaka::TypeException(4, "Could not get() Symbol from Data");
   }
   return this->symbol;
 }
@@ -130,7 +130,7 @@ shaka::Symbol& shaka::Data::get<shaka::Symbol>() {
 template<>
 shaka::Boolean& shaka::Data::get<shaka::Boolean>() {
   if (this->get_type() != Type::BOOLEAN) {
-    throw new shaka::TypeException(5, "Could not get() Boolean from Data");
+    throw shaka::TypeException(5, "Could not get() Boolean from Data");
   }
   return this->boolean;
 }
@@ -138,7 +138,7 @@ shaka::Boolean& shaka::Data::get<shaka::Boolean>() {
 template<>
 shaka::DataPair& shaka::Data::get<shaka::DataPair>() {
   if (this->get_type() != Type::DATA_PAIR) {
-    throw new shaka::TypeException(6, "Could not get() DataPair from Data");
+    throw shaka::TypeException(6, "Could not get() DataPair from Data");
   }
   return this->data_pair;
 }
@@ -146,7 +146,7 @@ shaka::DataPair& shaka::Data::get<shaka::DataPair>() {
 template<>
 shaka::Closure& shaka::Data::get<shaka::Closure>() {
   if (this->get_type() != Type::CLOSURE) {
-    throw new shaka::TypeException(7, "Could not get() Closure from Data");
+    throw shaka::TypeException(7, "Could not get() Closure from Data");
   }
   return this->closure;
 }
@@ -154,7 +154,7 @@ shaka::Closure& shaka::Data::get<shaka::Closure>() {
 template<>
 shaka::CallFrame& shaka::Data::get<shaka::CallFrame>() {
   if (this->get_type() != Type::CALL_FRAME) {
-    throw new shaka::TypeException(8, "Could not get() CallFrame from Data");
+    throw shaka::TypeException(8, "Could not get() CallFrame from Data");
   }
   return this->call_frame;
 }
@@ -162,7 +162,7 @@ shaka::CallFrame& shaka::Data::get<shaka::CallFrame>() {
 template<>
 shaka::PrimitiveFormMarker& shaka::Data::get<shaka::PrimitiveFormMarker>() {
   if (this->get_type() != Type::PRIMITIVE_FORM) {
-    throw new shaka::TypeException(9, "Could not get() PrimitiveFormMarker "
+    throw shaka::TypeException(9, "Could not get() PrimitiveFormMarker "
         "from Data");
   }
   return this->primitive_form;
@@ -171,7 +171,7 @@ shaka::PrimitiveFormMarker& shaka::Data::get<shaka::PrimitiveFormMarker>() {
 template<>
 shaka::Number& shaka::Data::get<shaka::Number>() {
   if (this->get_type() != Type::NUMBER) {
-    throw new shaka::TypeException(10, "Could not get() Number from Data");
+    throw shaka::TypeException(10, "Could not get() Number from Data");
   }
   return this->number;
 }
