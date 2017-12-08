@@ -61,6 +61,12 @@ public:
   set_value(const Key& key,
             Value value) = 0;
 
+  /// @brief Modifies an element in the Environment referred to be the `key`
+  ///        and then sets its value to `value`.
+  virtual void
+  modify_value(const Key& key,
+               Value value) = 0;
+
   /// @brief Returns a list of all the keys in the Environment.
   virtual std::vector<Key>
   get_keys() = 0;

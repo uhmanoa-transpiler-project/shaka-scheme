@@ -69,10 +69,19 @@ next_instruction) {
                                            then_compiled));
     }
       // set! case
-    else if (
-        expression_type == Symbol("set!") ||
-        expression_type == Symbol("define")) {
+    else if (expression_type == Symbol("set!")) {
       Symbol instruction("assign");
+      Data instruction_data(instruction);
+
+      NodePtr var = car(cdr(input));
+      NodePtr x = car(cdr(cdr(input)));
+
+      return compile(x,list(create_node(instruction_data),
+                            var,next_instruction));
+    }
+
+    else if (expression_type == Symbol("define")) {
+      Symbol instruction("define");
       Data instruction_data(instruction);
 
       NodePtr var = car(cdr(input));

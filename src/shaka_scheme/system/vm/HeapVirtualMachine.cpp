@@ -130,8 +130,22 @@ void HeapVirtualMachine::evaluate_assembly_instruction() {
   }
 
   // (assign var x)
-
   if (instruction == shaka::Symbol("assign")) {
+    shaka::DataPair& exp_cdr = exp_pair.cdr()->get<DataPair>();
+    shaka::Symbol& var = exp_cdr.car()->get<Symbol>();
+
+    DataPair& next_pair = exp_cdr.cdr()->get<DataPair>();
+
+    NodePtr expression = next_pair.car();
+
+    this->env->modify_value(var, this->acc);
+
+    this->set_expression(expression);
+
+  }
+
+  // (define var x)
+  if (instruction == shaka::Symbol("define")) {
     shaka::DataPair& exp_cdr = exp_pair.cdr()->get<DataPair>();
     shaka::Symbol& var = exp_cdr.car()->get<Symbol>();
 
