@@ -213,7 +213,10 @@ bool process_lambda_form(NodePtr& it, MacroContext& context) {
   std::vector<Symbol> identifiers;
   // If the lambda is a proper or improper list, we must figure out
   // if it consists of only identifiers.
-  if (core::is_pair(args)) {
+  if (core::is_null_list(args)) {
+    context.push_scope();
+    return true;
+  } else if (core::is_pair(args)) {
     auto jt = args;
     //std::cout << "jt: " << *jt << std::endl;
     for (;

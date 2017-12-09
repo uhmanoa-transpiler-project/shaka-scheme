@@ -119,6 +119,17 @@ int main() {
       shaka::Symbol("/"),
       create_node(div_numbers));
 
+  shaka::Closure display_datum(
+      top_level,
+      nullptr,
+      std::vector<shaka::Symbol>(0),
+      std::make_shared<shaka::Callable>(shaka::stdproc::display),
+      nullptr,
+      true);
+  top_level->set_value(
+      shaka::Symbol("display"),
+      create_node(display_datum));
+
   shaka::ValueRib vr;
 
   shaka::HeapVirtualMachine hvm(nullptr, nullptr, top_level, vr, nullptr);
