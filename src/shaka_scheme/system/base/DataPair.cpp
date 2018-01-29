@@ -7,7 +7,7 @@
 
 namespace shaka {
 
-NodePtr create_node(Data data) {
+NodePtr create_node(const Data& data) {
   return std::make_shared<Data>(data);
 }
 

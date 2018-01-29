@@ -180,6 +180,22 @@ inline NodePtr append(NodePtr first, NodePtr second, Args... rest) {
   return append(node, rest...);
 }
 
+inline NodePtr reverse_helper(const NodePtr left, const NodePtr right) {
+  return core::cons(right, left);
+}
+
+inline NodePtr reverse(NodePtr first) {
+  if (first->get_type() != shaka::Data::Type::DATA_PAIR) {
+    return create_node(*first);
+  }
+  if (core::is_null_list(core::cdr(first)))  {
+    return core::list(core::car(first));
+  } else {
+    return shaka::core::reverse_helper(core::car(first), reverse(core::cdr(first)));
+  }
+}
+
+
 } // namespace core
 } // namespace shaka
 

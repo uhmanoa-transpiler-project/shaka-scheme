@@ -53,6 +53,14 @@ public:
   void set_value(const Key& key, Value data) override;
 
   /**
+   * @brief Sets an element in the Environment referred to by the 'key'
+   *        and sets its value to 'data'
+   * @param key They key to be used for lookup in the environment
+   * @param data The data associated with the key
+   */
+  void modify_value(const Key& key, Value data) override;
+
+  /**
    * @brief Returns a reference to the value referred to by the key. Key
    *        must exist, otherwise, it throws a runtime error.
    * @param key The key to lookup and return the value for.

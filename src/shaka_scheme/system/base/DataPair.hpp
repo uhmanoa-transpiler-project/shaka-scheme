@@ -24,7 +24,7 @@ using NodePtr = std::shared_ptr<Data>;
  * or reference counting, we trust that all managed objects will either be
  * managed by user-supplied logic in this function, or through
  */
-NodePtr create_node(Data data);
+NodePtr create_node(const Data& data);
 
 /**
  * @brief The data representation of a Scheme pair.

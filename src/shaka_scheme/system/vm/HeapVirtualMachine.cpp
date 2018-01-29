@@ -117,8 +117,8 @@ void HeapVirtualMachine::evaluate_assembly_instruction() {
     NodePtr then_exp = exp_cdr.car();
     NodePtr else_exp = exp_cdr.cdr()->get<DataPair>().car();
 
-    if (this->acc->get_type() == shaka::Data::Type::SYMBOL &&
-        this->acc->get<Symbol>() == Symbol("#f")) {
+    if (this->acc->get_type() == shaka::Data::Type::BOOLEAN &&
+        this->acc->get<Boolean>() == Boolean(false)) {
 
       this->set_expression(else_exp);
     }
@@ -130,8 +130,22 @@ void HeapVirtualMachine::evaluate_assembly_instruction() {
   }
 
   // (assign var x)
-
   if (instruction == shaka::Symbol("assign")) {
+    shaka::DataPair& exp_cdr = exp_pair.cdr()->get<DataPair>();
+    shaka::Symbol& var = exp_cdr.car()->get<Symbol>();
+
+    DataPair& next_pair = exp_cdr.cdr()->get<DataPair>();
+
+    NodePtr expression = next_pair.car();
+
+    this->env->modify_value(var, this->acc);
+
+    this->set_expression(expression);
+
+  }
+
+  // (define var x)
+  if (instruction == shaka::Symbol("define")) {
     shaka::DataPair& exp_cdr = exp_pair.cdr()->get<DataPair>();
     shaka::Symbol& var = exp_cdr.car()->get<Symbol>();
 

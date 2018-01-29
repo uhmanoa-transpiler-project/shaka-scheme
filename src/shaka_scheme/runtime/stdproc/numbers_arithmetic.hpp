@@ -22,6 +22,12 @@ using Args = std::deque<NodePtr>;
 
 using Callable = std::function<std::deque<NodePtr>(std::deque<NodePtr>)>;
 namespace impl {
+
+Args display(Args args) {
+  std::cout << *args[0] << std::endl;
+  return Args{create_unspecified()};
+}
+
 // (+ z1 ...)
 Args add_numbers(Args args) {
 
@@ -781,6 +787,8 @@ Callable exp = impl::exp_numbers;
 Callable log = impl::log_numbers;
 Callable logn = impl::log_n_numbers;
 Callable sqrt = impl::sqrt_numbers;
+
+Callable display = impl::display;
 } // namespace stdproc
 } // namespace shaka
 

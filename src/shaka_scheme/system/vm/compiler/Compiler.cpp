@@ -20,11 +20,11 @@ next_instruction) {
 
     return list(create_node(instruction_data), input, next_instruction);
   }
-  // (pair? input)
+    // (pair? input)
   else if (is_pair(input)) {
     Symbol expression_type;
     if (car(input)->get_type() == shaka::Data::Type::SYMBOL) {
-     expression_type = car(input)->get<Symbol>();
+      expression_type = car(input)->get<Symbol>();
     }
 
     // quote case
@@ -35,7 +35,7 @@ next_instruction) {
       return list(create_node(instruction_data), car(cdr(input)),
                   next_instruction);
     }
-    // lambda case
+      // lambda case
     else if (expression_type == Symbol("lambda")) {
       Symbol instruction("close");
       Data instruction_data(instruction);
@@ -47,7 +47,7 @@ next_instruction) {
                   compile_lambda(body,list(create_node(halt_op))),
                   next_instruction);
     }
-    // if (test then else) case
+      // if (test then else) case
     else if (expression_type == Symbol("if")) {
 
       Symbol instruction("test");
@@ -68,7 +68,7 @@ next_instruction) {
       return compile(test_expression, list(create_node(instruction_data),
                                            then_compiled));
     }
-    // set! case
+      // set! case
     else if (expression_type == Symbol("set!")) {
       Symbol instruction("assign");
       Data instruction_data(instruction);
@@ -79,8 +79,19 @@ next_instruction) {
       return compile(x,list(create_node(instruction_data),
                             var,next_instruction));
     }
-    // call/cc case
-    else if (expression_type == Symbol("call/cc")) {
+
+    else if (expression_type == Symbol("define")) {
+      Symbol instruction("define");
+      Data instruction_data(instruction);
+
+      NodePtr var = car(cdr(input));
+      NodePtr x = car(cdr(cdr(input)));
+
+      return compile(x,list(create_node(instruction_data),
+                            var,next_instruction));
+    }
+      // call/cc case
+        else if (expression_type == Symbol("call/cc")) {
       Symbol conti_instruction("conti");
       Expression conti_op = create_node(Data(conti_instruction));
 
@@ -101,7 +112,7 @@ next_instruction) {
         return list(create_node(frame_op), next_instruction, c);
       }
     }
-    // application
+      // application
     else {
       Symbol apply_instruction("apply");
       Expression apply_op = create_node(Data(apply_instruction));

@@ -24,6 +24,8 @@ bool is_primitive_set(Symbol symbol, MacroContext& context) {
     }
   } catch (shaka::InvalidInputException e) {
     return false;
+  } catch (shaka::TypeException e) {
+    return false;
   }
   return false;
 };
@@ -59,6 +61,8 @@ bool is_primitive_syntax_rules(Symbol symbol, MacroContext& context) {
     }
   } catch (shaka::InvalidInputException e) {
     return false;
+  } catch (shaka::TypeException e) {
+    return false;
   }
   return false;
 };
@@ -70,6 +74,8 @@ bool is_primitive_lambda(Symbol symbol, MacroContext& context) {
       return true;
     }
   } catch (shaka::InvalidInputException e) {
+    return false;
+  } catch (shaka::TypeException e) {
     return false;
   }
   return false;
@@ -83,6 +89,8 @@ bool is_primitive_define(Symbol symbol, MacroContext& context) {
     }
   } catch (shaka::InvalidInputException e) {
     return false;
+  } catch (shaka::TypeException e) {
+    return false;
   }
   return false;
 };
@@ -94,6 +102,8 @@ bool is_primitive_quote(Symbol symbol, MacroContext& context) {
       return true;
     }
   } catch (shaka::InvalidInputException e) {
+    return false;
+  } catch (shaka::TypeException e) {
     return false;
   }
   return false;
@@ -108,6 +118,8 @@ bool is_primitive_define_syntax(Symbol symbol, MacroContext& context) {
     }
   } catch (shaka::InvalidInputException e) {
     return false;
+  } catch (shaka::TypeException e) {
+    return false;
   }
   return false;
 };
@@ -121,6 +133,8 @@ bool is_primitive_let_syntax(Symbol symbol, MacroContext& context) {
     }
   } catch (shaka::InvalidInputException e) {
     return false;
+  } catch (shaka::TypeException e) {
+    return false;
   }
   return false;
 };
@@ -130,18 +144,19 @@ bool process_define_form(NodePtr& it, MacroContext& context) {
     return false;
   }
   using namespace shaka::core;
+  //std::cout << "cadr of it: " << *car(cdr(it)) << std::endl;
   if (is_proper_list(car(cdr(it))) || is_improper_list(car(cdr(it)))) {
+    //std::cout << "yes, needs to be lambda transformed" << std::endl;
     auto lambda_form = list(
         create_node(Symbol("lambda")),
         cdr(car(cdr(it)))
     );
     set_cdr(cdr(lambda_form), cdr(cdr(it)));
     auto rewritten_form = list(
-        create_node(Symbol("define")),
         car(car(cdr(it))),
         lambda_form
     );
-    it = rewritten_form;
+    set_cdr(it, rewritten_form);
     //std::cout << "DEFINE: rewriting define procedure form: " << *it <<
     //          std::endl;
     return process_define_form(it, context);
@@ -198,7 +213,10 @@ bool process_lambda_form(NodePtr& it, MacroContext& context) {
   std::vector<Symbol> identifiers;
   // If the lambda is a proper or improper list, we must figure out
   // if it consists of only identifiers.
-  if (core::is_pair(args)) {
+  if (core::is_null_list(args)) {
+    context.push_scope();
+    return true;
+  } else if (core::is_pair(args)) {
     auto jt = args;
     //std::cout << "jt: " << *jt << std::endl;
     for (;

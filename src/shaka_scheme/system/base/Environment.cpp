@@ -26,6 +26,17 @@ void Environment::set_value(const Key& key, Value data) {
   local[key] = data;
 }
 
+void Environment::modify_value(const Key& key, Value data) {
+  if (this->contains(key)) {
+    local[key] = data;
+  } else if (this->parent == nullptr) {
+    throw shaka::InvalidInputException(2001, "Environment.modify_value: key "
+        "does not exist in current environment or parent environments");
+  } else {
+    this->parent->modify_value(key, data);
+  }
+}
+
 Value Environment::get_value(const Key& key) {
 
   /* Check if the key exists in local */

@@ -7,6 +7,9 @@ ParserInput::ParserInput(std::string str, std::string origin) :
     lex(str, origin) {}
 
 void ParserInput::append_input(std::string str) {
+  if (tokens.size() > 0 && tokens.back().is_incomplete()) {
+    tokens.pop_back();
+  }
   lex.append_input(str);
 }
 
@@ -88,8 +91,19 @@ ParserResult Incomplete(lexer::LexResult result) {
 using ParserRule = std::function<ParserResult(ParserInput&)>;
 using DataConstructor = std::function<NodePtr(ParserResult)>;
 
+/**
+ * @brief Parses in fundamental primitive types, or simple datums.
+ * @param in The input parser input to be used in this subfunction
+ * @return The result of the parse, whether complete or erroneous
+ */
 ParserResult parse_simple(ParserInput& in) {
   auto next = in.peek();
+  if (next.is_incomplete()) {
+    return Incomplete(next);
+  } else if (next.is_error()) {
+    return LexerError(next);
+  }
+  //std::cout << next << std::endl;
   if (next.token_type == "string") {
     in.get();
     return Complete(create_node(String(next.str)));
@@ -102,21 +116,42 @@ ParserResult parse_simple(ParserInput& in) {
   } else if (next.token_type == "boolean-false") {
     in.get();
     return Complete(create_node(Boolean(false)));
+  } else if (next.token_type == "integer") {
+    in.get();
+    return Complete(create_node(Number(Integer(std::stoi(next.str)))));
+  } else if (next.token_type == "rational") {
+    in.get();
+    const auto slash_it = next.str.find("/");
+    return Complete(
+        create_node(
+            Number(
+                Rational(
+                    std::stoi(next.str.substr(0, slash_it)),
+                    std::stoi(next.str.substr(slash_it+1, next.str.length()))
+                ))));
+  } else if (next.token_type == "real") {
+    in.get();
+    return Complete(create_node(Number(Real(std::stod(next.str)))));
   } else {
     return ParserError(in.peek(), "could not match to simple datum");
   }
 }
 
-
 ParserResult parse_list(ParserInput& in) {
   //std::cout << "parse-list" << std::endl;
   auto data_list = core::list();
   //std::cout << "TOKEN: " << in.peek() << std::endl;
+  std::vector<lexer::LexResult> tokens;
   if (in.peek().token_type == "paren-left") {
-    in.get();
+    tokens.emplace_back(in.get());
   }
+
   while (in.peek().token_type != "paren-right") {
     //std::cout << "TOKEN: " << in.peek() << std::endl;
+    if (in.peek().is_incomplete()) {
+      auto incomp = in.peek();
+      auto reversed_list = core::reverse(data_list);
+    }
     ParserResult datum_result = parse_datum(in);
     //std::cout << "DATUM:" << datum_result << std::endl;
     if (datum_result.is_complete()) {
@@ -125,8 +160,7 @@ ParserResult parse_list(ParserInput& in) {
       in.get();
       //std::cout << "in.peek(): " << in.peek() << std::endl;
       datum_result = parse_datum(in);
-      //std::cout << "IMPROPER LIST LAST DATUM: " << datum_result <<
-      // std::endl;
+      //std::cout << "IMPROPER LIST LAST DATUM: " << datum_result << std::endl;
       if (datum_result.is_complete()) {
         data_list = core::append(data_list, datum_result.it);
       } else {
@@ -138,7 +172,9 @@ ParserResult parse_list(ParserInput& in) {
     }
   }
   if (in.peek().token_type == "paren-right") {
+    //std::cout << "RPAREN: " << in.peek() << std::endl;
     in.get();
+    //std::cout << "END OF LIST: " << in.peek() << std::endl;
     return Complete(data_list);
   } else {
     return ParserError(in.peek(),
@@ -174,6 +210,9 @@ ParserResult parse_datum(ParserInput& in) {
   }
 
   auto simple_datum = parse_simple(in);
+  if (simple_datum.is_lexer_error()) {
+    return simple_datum;
+  }
   if (simple_datum.is_complete()) {
     return simple_datum;
   } else {
@@ -181,7 +220,7 @@ ParserResult parse_datum(ParserInput& in) {
     if (next.token_type == "paren-left") {
       return parse_list(in);
     } else {
-      return ParserError(next, "could not parse non-simple datum");
+      return ParserError(next, "could not parse datum");
     }
   }
 }
