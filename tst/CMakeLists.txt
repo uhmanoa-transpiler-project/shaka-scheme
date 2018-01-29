@@ -11,7 +11,7 @@ macro(macro_shaka_scheme_test TEST_NAME)
     add_executable(${TEST_NAME}
             ${TEST_NAME}.cpp)
     target_link_libraries(${TEST_NAME} Threads::Threads)
-    target_link_libraries(${TEST_NAME} gmock gtest gmock_main)
+    target_link_libraries(${TEST_NAME} gmock gtest gtest_main)
     target_link_libraries(${TEST_NAME} ${SHAKA_SCHEME_LIBRARY_NAME})
     set_target_properties(${TEST_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY
             ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/tst)
