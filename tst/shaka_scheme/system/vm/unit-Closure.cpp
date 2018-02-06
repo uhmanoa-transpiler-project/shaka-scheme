@@ -114,6 +114,37 @@ TEST(ClosureUnitTest, extend_environment) {
 }
 
 /**
+ * @brief Test: Using the specialized constructor for NativeClosures
+ */
+TEST(ClosureUnitTest, native_constructor) {
+
+    // Given: A NativeClosure constructed with the specialized Constructor
+
+    Closure string_append_closure(string_append, true);
+
+    // Given: A ValueRib containing the strings "Hello", "Libraries", "Team"
+
+    ValueRib vr = {
+            create_node(String("Hello")),
+            create_node(String("Libraries")),
+            create_node(String("Team"))
+    };
+
+    // When: You invoke the call method on the Value Rib
+
+    ValueRib result = string_append_closure.call(vr);
+
+    // Then: The result will be the string "HelloLibrariesTeam"
+
+    ASSERT_EQ(result[0]->get<shaka::String>(), String("HelloLibrariesTeam"));
+
+    // Then: The Closure object will be correctly identifiable as Native
+
+    ASSERT_TRUE(string_append_closure.is_native_closure());
+
+}
+
+/**
  * @brief Test: Using the call method for a NativeClosure string-append
  */
 TEST(ClosureUnitTest, native_closure) {
