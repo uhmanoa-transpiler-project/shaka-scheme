@@ -38,6 +38,13 @@ public:
           CallablePtr cl, FramePtr frame, bool arity);
 
   /**
+   * @brief Special purpose constructor for creating NativeClosure instances
+   * @param cl The Callable function object bound to a native C++ function
+   * @param arity Whether or not this object is of variable arity
+   */
+  Closure(Callable cl, bool arity);
+
+  /**
    * @brief Default constructor for Closure class
    * Initializes environment to be an empty environment
    * Initializes function body to be the empty list
