@@ -23,6 +23,16 @@ Closure::Closure(EnvPtr env,
     frame(frame),
     variable_arity(arity) {}
 
+Closure::Closure(Callable cl, bool arity) {
+
+    this->env = nullptr;
+    this->func_body = nullptr;
+    this->variable_list = std::vector<shaka::Symbol>(0);
+    this->callable = std::make_shared<Callable>(cl);
+    this->frame = nullptr,
+    this->variable_arity = arity;
+}
+
 Closure::Closure() {
   env = std::make_shared<Environment>(nullptr);
   func_body = std::make_shared<Data>();
@@ -32,8 +42,6 @@ Closure::Closure() {
   variable_arity = false;
 
 }
-
-
 
 NodePtr Closure::get_function_body() {
   return this->func_body;
