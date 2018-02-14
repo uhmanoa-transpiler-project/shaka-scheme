@@ -43,6 +43,9 @@ script:
     - ls ./bin/
     - ls ./bin/tst/
     # Run unit tests
-    - for file in ./bin/tst/unit-*; do "$file"; done
+    - run_unit () { for file in ./bin/tst/unit-*; do "$file" || exit 1337; done }
+    - run_unit
     # Run integration tests
-    - for file in ./bin/tst/integ-*; do "$file"; done
+    - run_integ () { for file in ./bin/tst/unit-*; do "$file" || exit 1337; done }
+    - run_integ
+
