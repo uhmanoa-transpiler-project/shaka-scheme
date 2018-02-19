@@ -7,12 +7,33 @@
 
 namespace shaka {
 
-    GCList::GCList() {}
+    GCList::GCList() {
+        this->size = 0;
+        this->head = nullptr;
+    }
 
-    GCList::~GCList() {}
+    GCList::~GCList() {
+        /*
+        GCData *head;
+        GCData *conductor = head;
+
+        while(conductor != nullptr) {
+            GCData *newptr = conductor;
+            conductor = conductor->get_next();
+            delete newptr;
+        }
+         */
+    }
+
+    bool GCList::is_empty() {
+        return this->size == 0 && this->head == nullptr;
+    }
 
     void GCList::add_data(GCData *data) {
-
+    /*
+        data->set_next(head);
+        this->head = data;
+        */
     }
 
     void GCList::sweep() {
