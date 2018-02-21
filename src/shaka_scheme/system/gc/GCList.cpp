@@ -13,16 +13,14 @@ namespace shaka {
     }
 
     GCList::~GCList() {
-        /*
-        GCData *head;
-        GCData *conductor = head;
+        GCData *conductor = this->head; //GCData *conductor = set_next(head);
 
         while(conductor != nullptr) {
             GCData *newptr = conductor;
             conductor = conductor->get_next();
             delete newptr;
         }
-         */
+
     }
 
     bool GCList::is_empty() {
@@ -30,13 +28,23 @@ namespace shaka {
     }
 
     void GCList::add_data(GCData *data) {
-    /*
         data->set_next(head);
         this->head = data;
-        */
     }
 
     void GCList::sweep() {
+        GCData *conductor = this->head;
 
+        if(this->head == nullptr || this->head->get_next() == nullptr) return;
+
+        while(conductor != nullptr) {
+            if(!conductor->is_marked()) {
+                GCData *newptr = conductor;
+                conductor = conductor->get_next();
+                delete newptr;
+            }
+            else
+                conductor = conductor->get_next();
+        }
     }
 }
