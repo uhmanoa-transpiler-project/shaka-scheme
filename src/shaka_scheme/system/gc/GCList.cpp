@@ -42,6 +42,12 @@ namespace shaka {
                 GCData *newptr = conductor;
                 conductor = conductor->get_next();
                 delete newptr;
+
+                //Second implementation
+                /*GCData *newptr = conductor->get_next();
+                conductor->get_data() = conductor->get_next()->get_data();
+                conductor->get_next() = newptr->get_next();
+                delete newptr;*/
             }
             else
                 conductor = conductor->get_next();
