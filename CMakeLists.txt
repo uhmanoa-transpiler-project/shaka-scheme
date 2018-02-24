@@ -73,6 +73,7 @@ set(SOURCE_FILES
         src/shaka_scheme/system/base/Rational.cpp
         src/shaka_scheme/system/base/Real.cpp
         src/shaka_scheme/system/base/Number.cpp
+        src/shaka_scheme/system/gc/GCData.cpp
         )
 
 add_library(${SHAKA_SCHEME_LIBRARY_NAME} SHARED ${SOURCE_FILES})
