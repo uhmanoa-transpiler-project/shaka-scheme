@@ -151,7 +151,7 @@ TEST(HeapVirtualMachineUnitTest, evaluate_test_else) {
 
   // Given: An Accumulator that is the symbol #f
 
-  NodePtr accumulator = std::make_shared<Data>(Symbol("#f"));
+  NodePtr accumulator = std::make_shared<Data>(Boolean(false));
 
   // Given: A then expression of the form (constant "then" (halt))
   Symbol then_inst("constant");
@@ -240,9 +240,9 @@ TEST(HeapVirtualMachineUnitTest, evaluate_test_else) {
  */
 TEST(HeapVirtualMachineUnitTest, evaluate_test_then) {
 
-  // Given: An Accumulator that is the symbol #t
+  // Given: An Accumulator that is the boolean #t
 
-  NodePtr accumulator = std::make_shared<Data>(Symbol("#t"));
+  NodePtr accumulator = std::make_shared<Data>(Boolean(true));
 
   // Given: A then expression of the form (constant "then" (halt))
   Symbol then_inst("constant");
@@ -351,9 +351,10 @@ TEST(HeapVirtualMachineUnitTest, evaluate_assign) {
 
   NodePtr expression = std::make_shared<Data>(assign_var_halt);
 
-  // Given: An EnvPtr that points to an empty environment
+  // Given: An EnvPtr that points to an environment with a binding for 'a
 
   EnvPtr env = std::make_shared<Environment>(nullptr);
+  env->set_value(Symbol("a"), create_node(Number(1)));
 
   // Given: An empty ValueRib
 

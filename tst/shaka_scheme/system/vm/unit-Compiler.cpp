@@ -77,8 +77,8 @@ TEST(CompilerUnitTest, lambda_test) {
 
   // Then: The resulting assembly instruction should have the following form.
   std::stringstream ss_test;
-  ss_test << "(close (x y) (frame (halt) (refer y (argument (refer x (argument";
-  ss_test << " (refer + (apply))))))) (halt))";
+  ss_test << "(close (x y) (refer y (argument (refer x (argument";
+  ss_test << " (refer + (apply)))))) (halt))";
   ASSERT_EQ(output, ss_test.str());
 
   // Given: The expression (lambda (k) (k 'a) 'b)
@@ -100,7 +100,7 @@ TEST(CompilerUnitTest, lambda_test) {
 
   // Then: The resulting assembly instruction should have the following form.
   std::stringstream ss_test_two;
-  ss_test_two << "(close (k) (frame (refer b (halt)) (refer a (argument ";
+  ss_test_two << "(close (k) (frame (refer b (return)) (refer a (argument ";
   ss_test_two << "(refer k (apply))))) (halt))";
   ASSERT_EQ(output, ss_test_two.str());
 
@@ -120,7 +120,7 @@ TEST(CompilerUnitTest, lambda_test) {
 
   // Then: The resulting assembly instruction should have the following form.
   std::stringstream ss_test_three;
-  ss_test_three <<"(close (a b c) (refer a (refer b (refer c (halt)))) (halt))";
+  ss_test_three <<"(close (a b c) (refer a (refer b (refer c (return)))) (halt))";
   ASSERT_EQ(output, ss_test_three.str());
 
 }
@@ -215,7 +215,7 @@ TEST(CompilerUnitTest, call_cc_test) {
   // Then: The resulting assembly instruction will have the following form.
   std::stringstream ss_test;
   ss_test << "(frame (halt) (conti (argument (close (k) (frame";
-  ss_test << " (refer b (halt)) (refer a (argument (refer k (apply)))))";
+  ss_test << " (refer b (return)) (refer a (argument (refer k (apply)))))";
   ss_test << " (apply)))))";
   ASSERT_EQ(output, ss_test.str());
 }
