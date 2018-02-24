@@ -33,7 +33,7 @@ namespace shaka {
     }
 
     void GCList::sweep() {
-        GCData **ptp = this->head;
+        /*GCData **ptp = this->head;
 
         if(this->is_empty()) return;
 
@@ -46,6 +46,6 @@ namespace shaka {
             }
             else
                 conductor = conductor->get_next();
-        }
+        }*/
     }
 }
