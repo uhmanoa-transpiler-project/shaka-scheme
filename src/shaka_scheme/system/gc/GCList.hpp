@@ -16,6 +16,7 @@ namespace shaka {
         ~GCList();
 
         bool is_empty();
+        int get_size();
         void add_data(GCData *data);
         void sweep();
 
