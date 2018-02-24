@@ -19,6 +19,7 @@ namespace shaka {
             GCData *newptr = conductor;
             conductor = conductor->get_next();
             delete newptr;
+            this->size--;
         }
     }
 
@@ -26,9 +27,14 @@ namespace shaka {
         return this->size == 0 && this->head == nullptr;
     }
 
+    int GCList::get_size() {
+        return this->size;
+    }
+
     void GCList::add_data(GCData *data) {
         data->set_next(head);
         this->head = data;
+        this->size++;
     }
 
     void GCList::sweep() {
