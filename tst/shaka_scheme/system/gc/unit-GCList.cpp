@@ -52,6 +52,9 @@ TEST(GCListUnitTest, destructor_test_nonempty) {
 
     // Given: A constructed GCList
 
+    // When: There are 3 GCData in GCList
+
+    // Then: Size of GCList should be 0
 }
 
 /**
@@ -61,4 +64,7 @@ TEST(GCListUnitTest, sweep_GCList) {
 
     // Given: A constructed GCList
 
+    // When: There is a GCList of marked and unmarked GCData
+
+    // Then: All unmarked GCData should be deleted, and remaining marked GCData should be unmarked in GCList
 }
