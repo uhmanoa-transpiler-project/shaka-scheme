@@ -38,11 +38,23 @@ TEST(GCListUnitTest, destructor_test_empty) {
  */
 TEST(GCListUnitTest, add_GCData) {
 
-    // Given: A constructed GCList
+    // Given: A constructed GCList and 3 GCData on the heap
+
+    shaka::GCList list;
+
+    shaka::GCData *gcd1 = new shaka::GCData(shaka::Data(shaka::Number(1)));
+    shaka::GCData *gcd2 = new shaka::GCData(shaka::Data(shaka::Number(2)));
+    shaka::GCData *gcd3 = new shaka::GCData(shaka::Data(shaka::Number(3)));
 
     // When: You add 3 GCData to GCList
 
+    list.add_data(gcd1);
+    list.add_data(gcd2);
+    list.add_data(gcd3);
+
     // Then: Size of GCList should be 3
+
+    ASSERT_EQ(list.get_size(), 3);
 }
 
 /**
@@ -50,11 +62,25 @@ TEST(GCListUnitTest, add_GCData) {
  */
 TEST(GCListUnitTest, destructor_test_nonempty) {
 
-    // Given: A constructed GCList
+    // Given: A constructed GCList and 3 GCData on the heap
 
-    // When: There are 3 GCData in GCList
+    shaka::GCList list;
+
+    shaka::GCData *gcd1 = new shaka::GCData(shaka::Data(shaka::Number(1)));
+    shaka::GCData *gcd2 = new shaka::GCData(shaka::Data(shaka::Number(2)));
+    shaka::GCData *gcd3 = new shaka::GCData(shaka::Data(shaka::Number(3)));
+
+    // When: There are 3 GCData in GCList and you invoke destructor
+
+    list.add_data(gcd1);
+    list.add_data(gcd2);
+    list.add_data(gcd3);
+
+    list.~GCList();
 
     // Then: Size of GCList should be 0
+
+    ASSERT_EQ(list.get_size(), 0);
 }
 
 /**
