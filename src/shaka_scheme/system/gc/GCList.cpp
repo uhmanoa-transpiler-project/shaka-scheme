@@ -33,21 +33,16 @@ namespace shaka {
     }
 
     void GCList::sweep() {
-        GCData *conductor = this->head;
+        GCData **ptp = this->head;
 
-        if(this->head == nullptr || this->head->get_next() == nullptr) return;
+        if(this->is_empty()) return;
+
 
         while(conductor != nullptr) {
             if(!conductor->is_marked()) {
                 GCData *newptr = conductor;
                 conductor = conductor->get_next();
                 delete newptr;
-
-                //Second implementation
-                /*GCData *newptr = conductor->get_next();
-                conductor->get_data() = conductor->get_next()->get_data();
-                conductor->get_next() = newptr->get_next();
-                delete newptr;*/
             }
             else
                 conductor = conductor->get_next();
