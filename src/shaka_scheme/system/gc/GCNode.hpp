@@ -25,7 +25,7 @@ namespace shaka {
         Data* operator->();
 
     private:
-        GCData *gc_data;
+        GCData* gc_data;
     };
 
 

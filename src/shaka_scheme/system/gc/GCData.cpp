@@ -6,7 +6,7 @@
 namespace shaka {
 
     GCData::GCData(const Data& data): data(data),
-    marked(false), next(nullptr) {}
+            marked(false), next(nullptr) {}
 
     GCData::~GCData() {}
 
