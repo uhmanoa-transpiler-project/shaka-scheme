@@ -26,11 +26,11 @@ TEST(GCListUnitTest, destructor_test_empty) {
 
     // Given: A constructed GCList
 
-    shaka::GCList list;
+    shaka::GCList *list = new shaka::GCList();
 
     // Then: You can invoke destructor
 
-    list.~GCList();
+    delete list;
 }
 
 /**
@@ -62,35 +62,66 @@ TEST(GCListUnitTest, add_GCData) {
  */
 TEST(GCListUnitTest, destructor_test_nonempty) {
 
-    // Given: A constructed GCList and 3 GCData on the heap
+    // Given: A constructed GCList and 4 GCData on the heap
+
+    shaka::GCList *list = new shaka::GCList();
+
+    shaka::GCData *gcd1 = new shaka::GCData(shaka::Data(shaka::Number(1)));
+    shaka::GCData *gcd2 = new shaka::GCData(shaka::Data(shaka::Number(2)));
+    shaka::GCData *gcd3 = new shaka::GCData(shaka::Data(shaka::Number(3)));
+    shaka::GCData *gcd4 = new shaka::GCData(shaka::Data(shaka::Number(4)));
+
+    // When: There are 4 GCData in GCList
+
+    list->add_data(gcd1);
+    list->add_data(gcd2);
+    list->add_data(gcd3);
+    list->add_data(gcd4);
+
+    // Then: You invoke destructor
+
+    delete list;
+}
+
+/**
+ * @Test: Sweep GCList
+ */
+
+TEST(GCListUnitTest, sweep_GCList) {
+
+    // Given: A constructed GCList and 5 GCData on the heap
 
     shaka::GCList list;
 
     shaka::GCData *gcd1 = new shaka::GCData(shaka::Data(shaka::Number(1)));
     shaka::GCData *gcd2 = new shaka::GCData(shaka::Data(shaka::Number(2)));
     shaka::GCData *gcd3 = new shaka::GCData(shaka::Data(shaka::Number(3)));
+    shaka::GCData *gcd4 = new shaka::GCData(shaka::Data(shaka::Number(4)));
+    shaka::GCData *gcd5 = new shaka::GCData(shaka::Data(shaka::Number(5)));
 
-    // When: There are 3 GCData in GCList and you invoke destructor
+    // When: There is a GCList of 2 marked and 3 unmarked GCData
+
+    gcd1->unmark();
+    gcd2->unmark();
+    gcd3->mark();
+    gcd4->unmark();
+    gcd5->mark();
 
     list.add_data(gcd1);
     list.add_data(gcd2);
     list.add_data(gcd3);
+    list.add_data(gcd4);
+    list.add_data(gcd5);
 
-    list.~GCList();
+    // Then: Size of list should be 5
 
-    // Then: Size of GCList should be 0
+    ASSERT_EQ(list.get_size(), 5);
 
-    ASSERT_EQ(list.get_size(), 0);
-}
+    // When: We invoke the sweep method
 
-/**
- * @Test: Sweep GCList
- */
-TEST(GCListUnitTest, sweep_GCList) {
+    list.sweep();
 
-    // Given: A constructed GCList
+    // Then: All unmarked GCData should be deleted, and size of GCList should be 2
 
-    // When: There is a GCList of marked and unmarked GCData
-
-    // Then: All unmarked GCData should be deleted, and remaining marked GCData should be unmarked in GCList
+    ASSERT_EQ(list.get_size(), 2);
 }
