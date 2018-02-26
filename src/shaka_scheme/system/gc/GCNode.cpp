@@ -6,12 +6,13 @@
 
 namespace shaka {
 
-    GCNode::GCNode(const Data& data) {
-        GCData temp = GCData(data);
-        gc_data = &temp;
+    GCNode::GCNode(GCData* data) {
+        gc_data = data;
     }
 
+
     GCNode::~GCNode() {
+
     }
 
     Data& GCNode::operator*() {

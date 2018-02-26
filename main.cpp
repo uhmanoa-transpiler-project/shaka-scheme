@@ -127,7 +127,7 @@ int main() {
             nullptr,
             true);
     top_level->set_value(
-            shaka::Symbol("%"),
+            shaka::Symbol("remainder"),
             create_node(remainder_numbers));
 
   shaka::Closure display_datum(
