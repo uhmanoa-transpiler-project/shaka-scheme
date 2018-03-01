@@ -16,26 +16,18 @@ using Args = std::deque<NodePtr>;
 using Callable = std::function<std::deque<NodePtr>(std::deque<NodePtr>)>;
 
 namespace impl{
-Args not_boolean(Args args){
-  if (args.size() > 1) {
-    throw InvalidInputException(1, "not: Too many arguments: +");
-  }
-  Args result;
-  if (args[0]->get_type() == Data::Type::BOOLEAN) {
-    if (args[0]->get<shaka::Boolean>() == false) {
-      result.push_back(create_node(shaka::Boolean(true)));
-    } else {
-      result.push_back(create_node(shaka::Boolean(false)));
-    }
-  } else {
-    result.push_back(create_node(shaka::Boolean(false)));
-  }
-  return result;
-}
+
+Args not_boolean(Args);
+
+Args check_boolean(Args);
+
+Args alltf(Args);
 
 }
 
 Callable notbool = impl::not_boolean;
+Callable checkbool = impl::check_boolean;
+Callable alltf = impl::alltf;
 
 } //namespace stdproc
 } //namespace shaka
