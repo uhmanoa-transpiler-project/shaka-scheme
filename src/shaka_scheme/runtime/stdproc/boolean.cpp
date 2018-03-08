@@ -8,33 +8,20 @@ namespace shaka {
 namespace stdproc {
 namespace impl {
 
-/**
- * @brief Implemenataion of not function
- * @param args - List of data of various types
- * @return single shaka::Boolean with True or False
- */
 Args not_boolean(Args args) {
   if (args.size() > 1) {
     throw InvalidInputException(1, "not: Too many arguments: +");
   }
   Args result;
   if (args[0]->get_type() == Data::Type::BOOLEAN) {
-    if (args[0]->get<shaka::Boolean>() == false) {
-      result.push_back(create_node(shaka::Boolean(true)));
-    } else {
-      result.push_back(create_node(shaka::Boolean(false)));
-    }
+    return {create_node(shaka::Boolean(
+        !args[0]->get<shaka::Boolean>().get_value()
+    ))};
   } else {
-    result.push_back(create_node(shaka::Boolean(false)));
+    return {create_node(shaka::Data(shaka::Boolean(false)))};
   }
-  return result;
 }
 
-/**
- * @brief Implements function to check if variable is a shaka::Boolean
- * @param args - List of data of various types
- * @return Single shaka::Boolean with True or False
- */
 Args check_boolean(Args args) {
   if (args.size() > 1) {
     throw InvalidInputException(1, "boolean?: Too many arguments: +");
@@ -48,11 +35,6 @@ Args check_boolean(Args args) {
   return result;
 }
 
-/**
- * @brief Checks if all are boolean and whether all true or all false.
- * @param args - List of arguments of different types
- * @return Single shaka::Boolean with True or False
- */
 Args alltf(Args args) {
   Args result;
 
