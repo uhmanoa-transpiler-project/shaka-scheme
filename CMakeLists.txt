@@ -73,6 +73,7 @@ set(SOURCE_FILES
         src/shaka_scheme/system/base/Rational.cpp
         src/shaka_scheme/system/base/Real.cpp
         src/shaka_scheme/system/base/Number.cpp
+        src/shaka_scheme/system/base/BigInteger.cpp
         src/shaka_scheme/system/gc/GCData.cpp
         src/shaka_scheme/system/gc/GCList.cpp
         src/shaka_scheme/system/gc/GCNode.cpp
