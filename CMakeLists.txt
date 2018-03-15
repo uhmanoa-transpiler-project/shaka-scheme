@@ -25,10 +25,10 @@ set(CMAKE_CXX_STANDARD 11)
 set(SHAKA_SCHEME_MAJOR_VERSION 0)
 set(SHAKA_SCHEME_MINOR_VERSION 1)
 set(SHAKA_SCHEME_LIBRARY_NAME
-        "shaka-scheme-${SHAKA_SCHEME_MAJOR_VERSION}.$\
+"shaka-scheme-${SHAKA_SCHEME_MAJOR_VERSION}.$\
 {SHAKA_SCHEME_MINOR_VERSION}")
 set(SHAKA_SCHEME_REPL_NAME
-        "shaka-scheme-repl-${SHAKA_SCHEME_MAJOR_VERSION}.$\
+"shaka-scheme-repl-${SHAKA_SCHEME_MAJOR_VERSION}.$\
 {SHAKA_SCHEME_MINOR_VERSION}")
 
 include_directories(./src)
@@ -93,14 +93,14 @@ set(SOURCE_FILES
 
 add_library(${SHAKA_SCHEME_LIBRARY_NAME} SHARED ${SOURCE_FILES})
 target_compile_options(${SHAKA_SCHEME_LIBRARY_NAME} PRIVATE -Wall -Wextra
-        -pedantic)
+-pedantic)
 # Copy the shared library DLL/dynamic library file also into the
 # bin/tst/ folder so that the tests will also be able to find and link to it.
 add_custom_command(TARGET ${SHAKA_SCHEME_LIBRARY_NAME}
-        POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy
-        $<TARGET_FILE:${SHAKA_SCHEME_LIBRARY_NAME}>
-        "${CMAKE_BINARY_DIR}/bin/tst/${CMAKE_SHARED_LIBRARY_PREFIX}${SHAKA_SCHEME_LIBRARY_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX}")
+POST_BUILD
+COMMAND ${CMAKE_COMMAND} -E copy
+$<TARGET_FILE:${SHAKA_SCHEME_LIBRARY_NAME}>
+"${CMAKE_BINARY_DIR}/bin/tst/${CMAKE_SHARED_LIBRARY_PREFIX}${SHAKA_SCHEME_LIBRARY_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX}")
 
 ################################################################################
 # TEST EXTERNAL LIBRARIES
