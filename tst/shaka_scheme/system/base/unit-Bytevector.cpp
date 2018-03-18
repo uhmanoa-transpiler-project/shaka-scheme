@@ -1,5 +1,6 @@
 #include <gmock/gmock.h>
 #include <shaka_scheme/system/base/Bytevector.hpp>
+#include <shaka_scheme/system/exceptions/IndexOutOfBoundsException.hpp>
 
 /**
  * @brief Test: Constructors for Bytevector.
@@ -62,6 +63,10 @@ TEST(BytevectorUnitTest, copy) {
   // When: you copy the vector over
   shaka::Bytevector bv_other = bv;
 
+  // Then: the two bytevectors should have the same length
+  ASSERT_EQ(bv.length(), 3);
+  ASSERT_EQ(bv_other.length(), 3);
+
   // Then: they should have the same elements
   for (std::size_t i = 0; i < bv.length(); ++i) {
     ASSERT_EQ(bv[i], bv_other[i]);
@@ -75,12 +80,24 @@ TEST(BytevectorUnitTest, move) {
   // Given: a Bytevector of size 3 with all elements as 0xaa;
   shaka::Bytevector bv({ 0xaa, 0xaa, 0xaa });
 
-  // When: you copy the vector over
+  // When: you move the bytevector over
   shaka::Bytevector bv_other = std::move(bv);
 
-  // Then: they should have the same elements
+  // Then: you should be able to access the moved-into bytevector
+  ASSERT_NO_THROW(bv_other[0]);
+  // Then: you should get an exception for trying to access the moved-out of
+  // bytevector
+  ASSERT_THROW(bv[0], shaka::IndexOutOfBoundsException);
+  // Then: the moved-into bytevector should have the same elements as the one
+  // that was moved out of
   for (std::size_t i = 0; i < bv_other.length(); ++i) {
     ASSERT_EQ(bv_other[i], 0xaa);
   }
+  // Then: the moved-out of bytevector should have length 0, but the one that
+  // was moved into should have the length of that which was moved-from
+  // before it was moved
+  ASSERT_EQ(bv.length(), 0);
+  ASSERT_EQ(bv_other.length(), 3);
+
 }
 

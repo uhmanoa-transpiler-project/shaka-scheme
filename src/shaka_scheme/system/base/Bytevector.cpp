@@ -40,8 +40,8 @@ Bytevector::Bytevector(const Bytevector& other) :
 Bytevector::Bytevector(Bytevector&& other) :
     arr(std::move(other.arr)),
     size(std::move(other.size)) {
-  this->arr = nullptr;
-  this->size = 0;
+  other.arr = nullptr;
+  other.size = 0;
 }
 
 Bytevector::~Bytevector() {
