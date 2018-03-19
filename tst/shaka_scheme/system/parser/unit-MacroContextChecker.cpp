@@ -39,6 +39,18 @@ TEST(MacroContext, setup_vm) {
   std::cout << *expr << std::endl;
 
   EnvPtr env = std::make_shared<Environment>(nullptr);
+
+  env->set_value(Symbol("define"), create_node(PrimitiveFormMarker("define")));
+  env->set_value(Symbol("set!"), create_node(PrimitiveFormMarker("set!")));
+  env->set_value(Symbol("lambda"), create_node(PrimitiveFormMarker("lambda")));
+  env->set_value(Symbol("quote"), create_node(PrimitiveFormMarker("quote")));
+  env->set_value(Symbol("define-syntax"),
+                 create_node(PrimitiveFormMarker("define-syntax")));
+  env->set_value(Symbol("let-syntax"),
+                 create_node(PrimitiveFormMarker("let-syntax")));
+  env->set_value(Symbol("syntax-rules"),
+                 create_node(PrimitiveFormMarker("syntax-rules")));
+
   std::deque<NodePtr> value_rib;
   std::shared_ptr<CallFrame> frame_ptr = std::make_shared<CallFrame>();
 

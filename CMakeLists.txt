@@ -73,7 +73,11 @@ set(SOURCE_FILES
         src/shaka_scheme/system/base/Rational.cpp
         src/shaka_scheme/system/base/Real.cpp
         src/shaka_scheme/system/base/Number.cpp
-        src/shaka_scheme/system/gc/GCData.cpp)
+        src/shaka_scheme/system/gc/GCData.cpp
+        src/shaka_scheme/system/gc/GCList.cpp
+        src/shaka_scheme/runtime/stdproc/boolean.cpp
+        src/shaka_scheme/system/base/Bytevector.cpp
+        )
 
 add_library(${SHAKA_SCHEME_LIBRARY_NAME} SHARED ${SOURCE_FILES} src/shaka_scheme/system/gc/GCNode.cpp)
 target_compile_options(${SHAKA_SCHEME_LIBRARY_NAME} PRIVATE -Wall -Wextra
