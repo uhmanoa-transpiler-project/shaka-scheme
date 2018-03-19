@@ -45,7 +45,7 @@ Bytevector::Bytevector(Bytevector&& other) :
 }
 
 Bytevector::~Bytevector() {
-  delete arr;
+  delete[] arr;
 }
 
 std::size_t Bytevector::length() const {
