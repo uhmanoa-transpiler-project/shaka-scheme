@@ -1,14 +1,17 @@
 #ifndef SHAKA_SCHEME_CORE_BASE_VECTOR_HPP
 #define SHAKA_SCHEME_CORE_BASE_VECTOR_HPP
 
+#include "shaka_scheme/system/base/Data.hpp"
+
 #include <initializer_list>
 #include <cctype>
+
 
 namespace shaka {
 
 class Vector {
-  const std::size_t size;
   NodePtr* arr;
+  std::size_t size;
 public:
   /**
    * @brief Constructs a fixed-size vector of size k.
@@ -42,10 +45,15 @@ public:
   Vector(Vector&& other);
 
   /**
+   * @brief Destroys the Vector's internal array.
+   */
+  ~Vector();
+
+  /**
    * @brief Gets the length of the vector.
    * @return The length of the vector.
    */
-  const std::size_t length() const;
+  std::size_t length() const;
 
   /**
    * @brief Gets a mutable-reference to an element in the vector.
@@ -54,14 +62,6 @@ public:
    * @return A mutable reference to the element in the vector.
    */
   NodePtr& operator[](std::size_t k);
-
-  /**
-   * @brief Gets a read-only reference to an element in the vector.
-   * @param k The index of the element to access.
-   * @throws IndexOutOfBoundsException upon providing an invalid k >= size.
-   * @return A read-only reference to the element in the vector.
-   */
-  const NodePtr& operator[](std::size_t k);
 
   /**
    * @brief Assignment operator for Vector. Uses copy-and-swap idiom.
@@ -73,9 +73,9 @@ public:
   /**
    * @brief Swaps the contents of this and the other Vector.
    */
-  friend void swap(Vector& other);
+  friend void swap(Vector& lhs, Vector& rhs);
 };
 
 } // namespace shaka
 
-#define // SHAKA_SCHEME_CORE_BASE_VECTOR_HPP
+#endif // SHAKA_SCHEME_CORE_BASE_VECTOR_HPP
