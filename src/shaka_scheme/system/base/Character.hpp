@@ -27,7 +27,7 @@ public:
    * @brief Constructor created via a char.
    * @param val Character to be added.
    */
-  Character(char val) : value(val) {};
+  Character(unsigned char val) : value(val) {};
 
   /**
    * @brief Empty constructor sets value at null character.
