@@ -23,7 +23,7 @@ TEST (GCNodeUnitTest, test_constructor) {
 /**
  * @Test: Test dreference operator of GCNode
  */
-TEST (GCNodeUnitTest, test_) {
+TEST (GCNodeUnitTest, test_dreference) {
 
     //Given: You construct a GCNode as follows
     shaka::GCData* gcd = new shaka::GCData(shaka::Data(shaka::Number(5)));
