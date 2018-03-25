@@ -7,7 +7,7 @@
 #include "shaka_scheme/system/gc/GCNode.hpp"
 
 /**
- * @Test: Test constructor of GCNode
+ * @Test: test_arrow_operator
  */
 TEST (GCNodeUnitTest, test_constructor) {
 
