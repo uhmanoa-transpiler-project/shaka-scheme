@@ -119,17 +119,6 @@ int main() {
       shaka::Symbol("/"),
       create_node(div_numbers));
 
-    shaka::Closure remainder_numbers(
-            top_level,
-            nullptr,
-            std::vector<shaka::Symbol>(0),
-            std::make_shared<shaka::Callable>(shaka::stdproc::remainder),
-            nullptr,
-            true);
-    top_level->set_value(
-            shaka::Symbol("remainder"),
-            create_node(remainder_numbers));
-
   shaka::Closure display_datum(
       top_level,
       nullptr,
