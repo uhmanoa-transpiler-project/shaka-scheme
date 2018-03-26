@@ -4,11 +4,8 @@
 
 // I included this so I can create unspecified values
 #include "shaka_scheme/system/core/types.hpp"
-#include "shaka_scheme/system/base/Data.hpp"
 
-#include <cctype>
 #include <cstring>
-#include <utility>
 
 namespace shaka {
 

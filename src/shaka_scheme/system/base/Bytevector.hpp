@@ -3,8 +3,13 @@
 
 #include <initializer_list>
 #include <cctype>
+#include <memory>
 
 namespace shaka {
+
+class Data;
+
+using NodePtr = std::shared_ptr<Data>;
 
 /**
  * @brief Represents a Scheme bytevector, a vector which holds only bytes.
