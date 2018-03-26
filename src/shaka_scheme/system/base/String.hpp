@@ -14,11 +14,11 @@ public:
   String() {}
 
   // Construction from a std::string with iterators
-  String(std::string& str) :
+  explicit String(std::string& str) :
       str(str) {}
 
   // make new string with length "size"
-  String(std::size_t size) :
+  explicit String(std::size_t size) :
       str(size, ' ') {}
 
   // Create string with size "size" and initialize with character "b""
@@ -26,10 +26,10 @@ public:
       str(size, b) {}
 
   //Makes a copy of a string
-  String(const String& c) :
+  explicit String(const String& c) :
       str(c.str) {}
 
-  String(String&& c) :
+  explicit String(String&& c) :
       str(std::move(c.str)) {}
 
   // Copy and swap operator= assignment
