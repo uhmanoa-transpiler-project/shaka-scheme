@@ -1,7 +1,4 @@
-#ifndef SHAKA_SCHEME_TYPES_HPP
-#define SHAKA_SCHEME_TYPES_HPP
-
-#include "shaka_scheme/system/base/Data.hpp"
+#include "shaka_scheme/system/core/types.hpp"
 
 namespace shaka {
 namespace core {
@@ -11,21 +8,27 @@ namespace core {
  * @param node The data to take in
  * @return A boolean of whether the predicate was satisfied.
  */
-bool is_boolean(NodePtr node);
+bool is_boolean(NodePtr node) {
+  return node->get_type() == Data::Type::BOOLEAN;
+}
 
 /**
  * @brief Implements (symbol?).
  * @param node The data to take in
  * @return A boolean of whether the predicate was satisfied.
  */
-bool is_symbol(NodePtr node);
+bool is_symbol(NodePtr node) {
+  return node->get_type() == Data::Type::SYMBOL;
+}
 
 /**
  * @brief Implements (string?).
  * @param node The data to take in
  * @return A boolean of whether the predicate was satisfied.
  */
-bool is_string(NodePtr node);
+bool is_string(NodePtr node) {
+  return node->get_type() == Data::Type::STRING;
+}
 
 /**
  * @brief Checks to see whether a value is the "unspecified" value.
@@ -40,7 +43,9 @@ bool is_string(NodePtr node);
  * system. Here, we provide this function to act as the type predicate for the
  * "unspecified" value.
  */
-bool is_unspecified(NodePtr node);
+bool is_unspecified(NodePtr node) {
+  return node->get_type() == Data::Type::UNSPECIFIED;
+}
 
 /**
  * @brief A helper function to create a Data value with an unspecified value.
@@ -48,7 +53,9 @@ bool is_unspecified(NodePtr node);
  *
  * @implementation_specific
  */
-NodePtr create_unspecified_node();
+NodePtr create_unspecified_node() {
+  return shaka::create_unspecified();
+}
 
 /**
  * @brief Implements (eqv), the literal/memory-equivalence comparison operator.
@@ -56,9 +63,23 @@ NodePtr create_unspecified_node();
  * @param right The right object
  * @return A boolean denoting the equivalence predicate
  */
-bool is_eqv(NodePtr left, NodePtr right);
+bool is_eqv(NodePtr left, NodePtr right) {
+  auto left_type = left->get_type();
+  auto right_type = right->get_type();
+  if (left_type != right_type) {
+    return false;
+  }
+  if (left_type == Data::Type::SYMBOL) {
+    return left->get<Symbol>() == right->get<Symbol>();
+  }
+  else if (left_type == Data::Type::BOOLEAN) {
+    return left->get<Boolean>() == right->get<Boolean>();
+  }
+  else if (left_type == Data::Type::NULL_LIST) {
+    return true;
+  }
+  else return left == right;
+}
 
 } // namespace core
 } // namespace shaka
-
-#endif //SHAKA_SCHEME_TYPES_HPP
