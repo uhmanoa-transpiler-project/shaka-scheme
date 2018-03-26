@@ -1,5 +1,5 @@
-#ifndef SHAKA_SCHEME_VECTORS_HPP
-#define SHAKA_SCHEME_VECTORS_HPP
+#ifndef SHAKA_SCHEME_CORE_VECTORS_HPP
+#define SHAKA_SCHEME_CORE_VECTORS_HPP
 
 #include "shaka_scheme/system/base/Data.hpp"
 #include "shaka_scheme/system/core/lists.hpp"
