@@ -5,21 +5,24 @@
 #include "shaka_scheme/system/gc/GCNode.hpp"
 
 namespace shaka {
-
-    GCNode::GCNode(GCData* data) {
-        gc_data = data;
-    }
+    namespace gc {
 
 
-    GCNode::~GCNode() {
+        GCNode::GCNode(GCData *data) {
+            gc_data = data;
+        }
 
-    }
 
-    Data& GCNode::operator*() {
-        return this->gc_data->get_data();
-    }
+        GCNode::~GCNode() {
 
-    Data* GCNode::operator->() {
-        return this->gc_data->get_data_address();
+        }
+
+        Data &GCNode::operator*() {
+            return this->gc_data->get_data();
+        }
+
+        Data *GCNode::operator->() {
+            return this->gc_data->get_data_address();
+        }
     }
 }
