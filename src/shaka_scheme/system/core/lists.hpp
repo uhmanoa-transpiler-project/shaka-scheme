@@ -2,8 +2,8 @@
 // Created by aytas on 9/12/2017.
 //
 
-#ifndef SHAKA_SCHEME_LISTS_HPP
-#define SHAKA_SCHEME_LISTS_HPP
+#ifndef SHAKA_SCHEME_CORE_LISTS_HPP
+#define SHAKA_SCHEME_CORE_LISTS_HPP
 
 #include <shaka_scheme/system/base/Data.hpp>
 #include <shaka_scheme/system/base/DataPair.hpp>

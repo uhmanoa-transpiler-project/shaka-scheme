@@ -1,5 +1,5 @@
-#ifndef SHAKA_SCHEME_TYPES_HPP
-#define SHAKA_SCHEME_TYPES_HPP
+#ifndef SHAKA_SCHEME_CORE_TYPES_HPP
+#define SHAKA_SCHEME_CORE_TYPES_HPP
 
 #include "shaka_scheme/system/base/Data.hpp"
 
