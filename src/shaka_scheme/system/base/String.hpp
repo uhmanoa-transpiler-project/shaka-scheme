@@ -14,7 +14,7 @@ public:
   String() {}
 
   // Construction from a std::string with iterators
-  explicit String(std::string& str) :
+  explicit String(std::string str) :
       str(str) {}
 
   // make new string with length "size"
