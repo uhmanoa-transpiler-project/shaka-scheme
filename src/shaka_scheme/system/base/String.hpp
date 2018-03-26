@@ -14,16 +14,16 @@ public:
   String() {}
 
   // Construction from a std::string with iterators
-  String(std::string str) :
+  String(std::string& str) :
       str(str) {}
 
   // make new string with length "size"
-  String(int size) :
-      str(' ', size) {}
+  String(std::size_t size) :
+      str(size, ' ') {}
 
   // Create string with size "size" and initialize with character "b""
-  String(int size, char b) :
-      str(b, size) {}
+  String(std::size_t size, char b) :
+      str(size, b) {}
 
   //Makes a copy of a string
   String(const String& c) :
@@ -39,30 +39,30 @@ public:
   }
 
   // Copy assignment with substring.
-  String(String& c, int index) :
+  String(String& c, std::size_t index) :
       str(c.str.substr(index, std::string::npos)) {
   }
 
   // Makes a string out of part of another string
-  String(String& c, int index, int length) :
+  String(String& c, std::size_t index, std::size_t length) :
       str(c.str.substr(index, length)) {}
 
   // return length of a_string
-  int length() const {
+  std::size_t length() const {
     return str.size();
   }
 
   // takes the index, and returns the value of the index
-  char ref(int index) const {
+  char ref(std::size_t index) const {
     return str.at(index);
   }
 
   // Set the internal string as another's shaka::String's substring
-  void substring(const String& other, int start, int end) {
+  void substring(const String& other, std::size_t start, std::size_t end) {
     this->str = other.str.substr(start, end-start);
   }
 
-  void set(int index, char a) {
+  void set(std::size_t index, char a) {
     this->str.at(index) = a;
   }
 
@@ -74,11 +74,11 @@ public:
     this->str = other.str;
   }
 
-  void copy(const String& other, int start) {
+  void copy(const String& other, std::size_t start) {
     this->str = other.str.substr(start, std::string::npos);
   }
 
-  void copy(const String& other, int start, int end) {
+  void copy(const String& other, std::size_t start, std::size_t end) {
     this->str = other.str.substr(start, end);
   }
 
@@ -88,14 +88,14 @@ public:
     }
   }
 
-  void fill(char fill, int start) {
+  void fill(char fill, std::size_t start) {
     for (std::size_t i = start; i < this->str.size(); ++i) {
       this->str.at(i) = fill;
     }
   }
 
-  void fill(char fill, int start, int end) {
-    for (int i = start; i < end; ++i) {
+  void fill(char fill, std::size_t start, std::size_t end) {
+    for (std::size_t i = start; i < end; ++i) {
       this->str.at(i) = fill;
     }
   }
@@ -113,53 +113,26 @@ public:
   }
 
   friend bool operator==(const String& s1, const String& s2) {
-    if (s1.get_string().size() != s2.get_string().size()) {
-      return false;
-    }
-    for (int i = 0; i < static_cast<int>(s1.get_string().size()); i++) {
-
-      if (s1.get_string()[i] != s2.get_string()[i]) {
-        return false;
-      }
-    }
-    return true;
+    return s1.str.compare(s2.str) == 0;
   }
 
   friend bool operator!=(const String& s1, const String& s2) {
-    if (s1.get_string().size() != s2.get_string().size()) {
-      return true;
-    }
-    for (int i = 0; i < static_cast<int>(s1.get_string().size()); i++) {
-
-      if (s1.get_string()[i] != s2.get_string()[i]) {
-        return true;
-      }
-    }
-    return false;
+    return s1.str.compare(s2.str) != 0;
   }
 
   //  return !(s1 == s2);
 
   friend bool operator<(const String& s1, const String& s2) {
-    if (s1.length() < s2.length())
-      return true;
-    return false;
-    //return s1.a_string < s2.a_string;
+    return s1.str.compare(s2.str) < 0;
   }
   friend bool operator>(const String& s1, const String& s2) {
-    if (s1.length() > s2.length())
-      return true;
-    return false;
+    return s1.str.compare(s2.str) > 0;
   }
-  friend bool operator<=(const String& s1, const String s2) {
-    if (s1.length() <= s2.length())
-      return true;
-    return false;
+  friend bool operator<=(const String& s1, const String& s2) {
+    return s1.str.compare(s2.str) <= 0;
   }
   friend bool operator>=(const String& s1, const String& s2) {
-    if (s1.length() >= s2.length())
-      return true;
-    return false;
+    return s1.str.compare(s2.str) >= 0;
   }
 
   const std::string get_string() const {
