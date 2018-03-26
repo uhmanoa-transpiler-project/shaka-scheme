@@ -1,13 +1,15 @@
 #ifndef SHAKA_SCHEME_CORE_BASE_VECTOR_HPP
 #define SHAKA_SCHEME_CORE_BASE_VECTOR_HPP
 
-#include "shaka_scheme/system/base/Data.hpp"
-
 #include <initializer_list>
 #include <cctype>
-
+#include <memory>
 
 namespace shaka {
+
+class Data;
+
+using NodePtr = std::shared_ptr<Data>;
 
 class Vector {
   NodePtr* arr;
@@ -74,6 +76,7 @@ public:
    * @brief Swaps the contents of this and the other Vector.
    */
   friend void swap(Vector& lhs, Vector& rhs);
+
 };
 
 } // namespace shaka
