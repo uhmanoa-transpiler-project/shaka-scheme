@@ -18,14 +18,14 @@ namespace shaka {
     class GCNode {
     public:
 
-        GCNode(const Data& data);
+        GCNode(GCData* data);
         ~GCNode();
 
         Data& operator*();
         Data* operator->();
 
     private:
-        GCData *gc_data;
+        GCData* gc_data;
     };
 
 
