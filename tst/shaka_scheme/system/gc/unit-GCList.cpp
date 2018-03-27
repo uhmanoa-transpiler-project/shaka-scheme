@@ -4,6 +4,7 @@
 
 #include <gmock/gmock.h>
 #include "shaka_scheme/system/gc/GCList.hpp"
+#include "shaka_scheme/system/gc/GC.hpp"
 
 /**
  * @Test: Construction of GCList
@@ -12,7 +13,7 @@ TEST(GCListUnitTest, constructor_test) {
 
     // Given: A constructed GCList
 
-    shaka::GCList list;
+    shaka::gc::GCList list;
 
     // Then: It is empty
     
@@ -26,7 +27,7 @@ TEST(GCListUnitTest, destructor_test_empty) {
 
     // Given: A constructed GCList
 
-    shaka::GCList *list = new shaka::GCList();
+    shaka::gc::GCList *list = new shaka::gc::GCList();
 
     // Then: You can invoke destructor
 
@@ -38,49 +39,19 @@ TEST(GCListUnitTest, destructor_test_empty) {
  */
 TEST(GCListUnitTest, add_GCData) {
 
-    // Given: A constructed GCList and 3 GCData on the heap
+    // Given: You constructed a GC
 
-    shaka::GCList list;
+    shaka::gc::GC garbage_collector;
 
-    shaka::GCData *gcd1 = new shaka::GCData(shaka::Data(shaka::Number(1)));
-    shaka::GCData *gcd2 = new shaka::GCData(shaka::Data(shaka::Number(2)));
-    shaka::GCData *gcd3 = new shaka::GCData(shaka::Data(shaka::Number(3)));
+    // When: You use the GC to construct 3 GCData
 
-    // When: You add 3 GCData to GCList
-
-    list.add_data(gcd1);
-    list.add_data(gcd2);
-    list.add_data(gcd3);
+    garbage_collector.create_data(shaka::Number(1));
+    garbage_collector.create_data(shaka::Number(2));
+    garbage_collector.create_data(shaka::Number(3));
 
     // Then: Size of GCList should be 3
 
-    ASSERT_EQ(list.get_size(), 3);
-}
-
-/**
- * @Test: Destruction of nonempty GCList
- */
-TEST(GCListUnitTest, destructor_test_nonempty) {
-
-    // Given: A constructed GCList and 4 GCData on the heap
-
-    shaka::GCList *list = new shaka::GCList();
-
-    shaka::GCData *gcd1 = new shaka::GCData(shaka::Data(shaka::Number(1)));
-    shaka::GCData *gcd2 = new shaka::GCData(shaka::Data(shaka::Number(2)));
-    shaka::GCData *gcd3 = new shaka::GCData(shaka::Data(shaka::Number(3)));
-    shaka::GCData *gcd4 = new shaka::GCData(shaka::Data(shaka::Number(4)));
-
-    // When: There are 4 GCData in GCList
-
-    list->add_data(gcd1);
-    list->add_data(gcd2);
-    list->add_data(gcd3);
-    list->add_data(gcd4);
-
-    // Then: You invoke destructor
-
-    delete list;
+    ASSERT_EQ(garbage_collector.get_size(), 3);
 }
 
 /**
@@ -89,15 +60,15 @@ TEST(GCListUnitTest, destructor_test_nonempty) {
 
 TEST(GCListUnitTest, sweep_GCList) {
 
-    // Given: A constructed GCList and 5 GCData on the heap
+    // Given: You constructed a GC and constructed 5 GCData
 
-    shaka::GCList list;
+    shaka::gc::GC garbage_collector;
 
-    shaka::GCData *gcd1 = new shaka::GCData(shaka::Data(shaka::Number(1)));
-    shaka::GCData *gcd2 = new shaka::GCData(shaka::Data(shaka::Number(2)));
-    shaka::GCData *gcd3 = new shaka::GCData(shaka::Data(shaka::Number(3)));
-    shaka::GCData *gcd4 = new shaka::GCData(shaka::Data(shaka::Number(4)));
-    shaka::GCData *gcd5 = new shaka::GCData(shaka::Data(shaka::Number(5)));
+    shaka::gc::GCData *gcd1 = garbage_collector.create_data(shaka::Number(1));
+    shaka::gc::GCData *gcd2 = garbage_collector.create_data(shaka::Number(2));
+    shaka::gc::GCData *gcd3 = garbage_collector.create_data(shaka::Number(3));
+    shaka::gc::GCData *gcd4 = garbage_collector.create_data(shaka::Number(4));
+    shaka::gc::GCData *gcd5 = garbage_collector.create_data(shaka::Number(5));
 
     // When: There is a GCList of 2 marked and 3 unmarked GCData
 
@@ -107,21 +78,16 @@ TEST(GCListUnitTest, sweep_GCList) {
     gcd4->unmark();
     gcd5->mark();
 
-    list.add_data(gcd1);
-    list.add_data(gcd2);
-    list.add_data(gcd3);
-    list.add_data(gcd4);
-    list.add_data(gcd5);
-
     // Then: Size of list should be 5
 
-    ASSERT_EQ(list.get_size(), 5);
+    ASSERT_EQ(garbage_collector.get_size(), 5);
 
     // When: We invoke the sweep method
 
-    list.sweep();
+    garbage_collector.sweep();
 
-    // Then: All unmarked GCData should be deleted, and size of GCList should be 2
+    // Then: All unmarked GCData should be deleted, and size of GCList should
+    // be 2
 
-    ASSERT_EQ(list.get_size(), 2);
+    ASSERT_EQ(garbage_collector.get_size(), 2);
 }

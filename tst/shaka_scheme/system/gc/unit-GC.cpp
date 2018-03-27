@@ -26,5 +26,5 @@ TEST(GCUnitTest, create_GCData) {
     // Then: GCData value should be 1 and size of GCList should be 1
 
     ASSERT_EQ(gcd->get_data().get<shaka::Number>(), shaka::Number(1));
-    ASSERT_EQ(garbage_collector.get_list_size(), 1);
+    ASSERT_EQ(garbage_collector.get_size(), 1);
 }
