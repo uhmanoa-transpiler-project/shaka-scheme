@@ -16,6 +16,8 @@ namespace shaka {
 
             GCList();
             ~GCList();
+            GCList(const GCList& other) = delete;
+            GCList(GCList&& other);
 
             bool is_empty();
             int get_size();
@@ -23,6 +25,8 @@ namespace shaka {
             void sweep();
 
         private:
+            void swap(GCList& list1, GCList& list2);
+          
             GCData *head;
             int size;
         };

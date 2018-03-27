@@ -8,6 +8,11 @@ namespace shaka {
 
     namespace gc {
 
+        GC::GC() {}
+        GC::~GC() {}
+
+        GC::GC(GC&& other) : list(std::move(other.list)) {}
+
         GCData* GC::create_data(const shaka::Data& data) {
             GCData *gcd = new GCData(data);
             this->list.add_data(gcd);
@@ -19,7 +24,7 @@ namespace shaka {
         }
 
         void GC::sweep() {
-            return this->list.sweep();
+            this->list.sweep();
         }
     }
 }

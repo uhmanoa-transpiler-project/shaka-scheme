@@ -4,6 +4,7 @@
 
 #include "shaka_scheme/system/gc/GCData.hpp"
 #include "shaka_scheme/system/gc/GCList.hpp"
+#include <utility>
 
 namespace shaka {
     namespace gc {
@@ -22,6 +23,10 @@ namespace shaka {
                 delete temp;
                 this->size--;
             }
+        }
+    
+        GCList::GCList(GCList&& other) : size(0), head(nullptr) {
+            swap(*this, other);
         }
 
         bool GCList::is_empty() {
@@ -65,6 +70,12 @@ namespace shaka {
                     curr = curr->get_next();
                 }
             }
+        }
+        
+        void GCList::swap(GCList& list1, GCList& list2) {
+            using std::swap;
+            swap(list1.size, list2.size);
+            swap(list1.head, list2.head);
         }
     }
 }

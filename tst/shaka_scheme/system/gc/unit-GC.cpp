@@ -8,6 +8,34 @@
 #include "shaka_scheme/system/gc/GC.hpp"
 
 /**
+ * @Test: Move constructor of GCList
+ */
+TEST(GCUnitTest, move_constructor_test) {
+
+    // Given: You construct a GC
+
+    shaka::gc::GC garbage_collector;
+
+    // When: You use it to construct 3 GCData
+
+    garbage_collector.create_data(shaka::Number(1));
+    garbage_collector.create_data(shaka::Number(2));
+    garbage_collector.create_data(shaka::Number(3));
+
+    // When: You invoke the move constructor
+
+    shaka::gc::GC garbage_collector_2(std::move(garbage_collector));
+
+    // Then: The size of GCList of garbage collector of 2 is 3
+
+    ASSERT_EQ(garbage_collector_2.get_size(), 3);
+
+    // Then: The original garbage collector should be empty
+
+    ASSERT_TRUE(garbage_collector.get_size() == 0);
+}
+
+/**
  * @Test: Construction of GCData
  */
 

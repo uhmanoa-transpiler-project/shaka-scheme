@@ -21,6 +21,11 @@ namespace shaka {
         class GC {
         public:
 
+            GC();
+            ~GC();
+            GC(const GC& other) = delete;
+            GC(GC&& other);
+
             GCData *create_data(const shaka::Data& data);
             int get_size();
             void sweep();
