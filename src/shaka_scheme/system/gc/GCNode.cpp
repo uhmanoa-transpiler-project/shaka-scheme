@@ -5,17 +5,14 @@
 #include "shaka_scheme/system/gc/GCNode.hpp"
 
 namespace shaka {
-    namespace gc {
 
+    namespace gc {
 
         GCNode::GCNode(GCData *data) {
             gc_data = data;
         }
 
-
-        GCNode::~GCNode() {
-
-        }
+        GCNode::~GCNode() {}
 
         Data &GCNode::operator*() {
             return this->gc_data->get_data();

@@ -10,6 +10,7 @@
 #include "shaka_scheme/system/gc/GCData.hpp"
 
 namespace shaka {
+
     namespace gc {
 
 /**
@@ -20,11 +21,9 @@ namespace shaka {
         public:
 
             GCNode(GCData *data);
-
             ~GCNode();
 
             Data &operator*();
-
             Data *operator->();
 
         private:
