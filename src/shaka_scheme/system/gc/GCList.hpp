@@ -20,15 +20,15 @@ namespace shaka {
             GCList(GCList&& other);
 
             bool is_empty();
-            int get_size();
+            int get_size() const;
             void add_data(shaka::gc::GCData *data);
             void sweep();
 
         private:
             void swap(GCList& list1, GCList& list2);
-          
-            GCData *head;
+
             int list_size;
+            GCData *head;
         };
     }
 }

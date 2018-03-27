@@ -20,7 +20,6 @@ namespace shaka {
                 GCData *temp = conductor;
                 conductor = conductor->get_next();
                 delete temp;
-                //this->size--;
             }
         }
     
@@ -32,7 +31,7 @@ namespace shaka {
             return this->list_size == 0 && this->head == nullptr;
         }
 
-        int GCList::get_size() {
+        int GCList::get_size() const {
             return this->list_size;
         }
 
@@ -46,7 +45,7 @@ namespace shaka {
             GCData *prev = nullptr;
             GCData *curr = this->head;
 
-            //Check if the GCList is empty, return the list
+            //If the GCList is empty, return the list
             if (this->is_empty()) {
                 return;
             }
