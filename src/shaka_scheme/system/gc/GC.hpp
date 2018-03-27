@@ -13,11 +13,17 @@ namespace shaka {
 
     namespace gc {
 
+    /**
+         * @brief Implements the factory method of the GC, which allows the
+         * construction of GCData and automatically adds those GCData to the
+         * GCList
+         */
         class GC {
         public:
 
             GCData *create_data(const shaka::Data& data);
-            int get_list_size();
+            int get_size();
+            void sweep();
 
         private:
             GCList list;

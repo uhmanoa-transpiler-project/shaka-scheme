@@ -14,8 +14,12 @@ namespace shaka {
             return gcd;
         }
 
-        int GC::get_list_size() {
+        int GC::get_size() {
             return this->list.get_size();
+        }
+
+        void GC::sweep() {
+            return this->list.sweep();
         }
     }
 }
