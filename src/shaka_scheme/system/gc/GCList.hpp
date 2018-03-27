@@ -28,7 +28,7 @@ namespace shaka {
             void swap(GCList& list1, GCList& list2);
           
             GCData *head;
-            int size;
+            int list_size;
         };
     }
 }

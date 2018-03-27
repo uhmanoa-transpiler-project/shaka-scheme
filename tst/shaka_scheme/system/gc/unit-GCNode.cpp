@@ -17,6 +17,9 @@ TEST (GCNodeUnitTest, test_constructor) {
     shaka::gc::GC garbage_collector;
 
     shaka::gc::GCData *gcd = garbage_collector.create_data(shaka::Number(5));
+    
+    //When: You wrap the GCData in a GCNode
+    
     shaka::gc::GCNode gcn(gcd);
 
     //Then: the data in gcn is equal to 5
@@ -34,6 +37,9 @@ TEST (GCNodeUnitTest, test_dreference) {
     shaka::gc::GC garbage_collector;
 
     shaka::gc::GCData *gcd = garbage_collector.create_data(shaka::Number(5));
+
+    //When: You wrap the GCData in a GCNode
+    
     shaka::gc::GCNode gcn(gcd);
     
     //Then: the data in gcn is equal to 5
