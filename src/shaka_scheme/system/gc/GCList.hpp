@@ -21,7 +21,7 @@ namespace shaka {
 
             bool is_empty();
             int get_size() const;
-            void add_data(shaka::gc::GCData *data);
+            void add_data(GCData *data);
             void sweep();
 
         private:
