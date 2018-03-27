@@ -89,6 +89,9 @@ set(SOURCE_FILES
         src/shaka_scheme/system/gc/init_gc.cpp
         src/shaka_scheme/system/base/BigInteger.cpp
         src/shaka_scheme/system/gc/mark_procedures.cpp
+        src/shaka_scheme/system/core/lists.cpp
+        src/shaka_scheme/system/core/types.cpp
+        src/shaka_scheme/system/core/vectors.cpp
         )
 
 add_library(${SHAKA_SCHEME_LIBRARY_NAME} SHARED ${SOURCE_FILES})
