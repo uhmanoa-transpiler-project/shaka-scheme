@@ -4,6 +4,7 @@
 #include "shaka_scheme/system/gc/GCData.hpp"
 
 namespace shaka {
+
     namespace gc {
 
         GCData::GCData(const Data &data) :

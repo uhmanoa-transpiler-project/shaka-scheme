@@ -7,6 +7,7 @@
 #include <utility>
 
 namespace shaka {
+
     namespace gc {
 
         GCList::GCList() :
@@ -23,7 +24,9 @@ namespace shaka {
             }
         }
     
-        GCList::GCList(GCList&& other) : list_size(0), head(nullptr) {
+        GCList::GCList(GCList&& other) :
+            list_size(0),
+            head(nullptr) {
             swap(*this, other);
         }
 
@@ -35,7 +38,7 @@ namespace shaka {
             return this->list_size;
         }
 
-        void GCList::add_data(shaka::gc::GCData *data) {
+        void GCList::add_data(GCData *data) {
             data->set_next(head);
             this->head = data;
             this->list_size++;

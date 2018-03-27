@@ -13,7 +13,7 @@ namespace shaka {
 
         GC::GC(GC&& other) : list(std::move(other.list)) {}
 
-        GCData* GC::create_data(const shaka::Data& data) {
+        GCData* GC::create_data(const Data& data) {
             GCData *gcd = new GCData(data);
             this->list.add_data(gcd);
             return gcd;
