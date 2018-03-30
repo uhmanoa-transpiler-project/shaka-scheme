@@ -118,7 +118,6 @@ extern Callable list_set;
 //extern Callable assv;
 //extern Callable assoc;
 extern Callable list_copy;
-
 } // namespace stdproc
 } // namespace shaka
 

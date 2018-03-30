@@ -7,6 +7,10 @@
 namespace shaka {
 namespace stdproc {
 
+using Args = std::deque<NodePtr>;
+
+using Callable = std::function<std::deque<NodePtr>(std::deque<NodePtr>)>;
+
 namespace impl {
 
 //(pair? ...)
@@ -115,6 +119,7 @@ Args is_list(Args args) {
                                 "list?: Invalid number of arguments for "
                                     "procedure");
   }
+
   if (args[0]->get_type() != Data::Type::DATA_PAIR) {
     throw InvalidInputException(27,
                                 "list?: Invalid number of arguments for "
