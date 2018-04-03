@@ -11,24 +11,26 @@
 
 namespace shaka {
 
+    namespace gc {
+
 /**
  * @brief Defines the type of GCNode, the object which will
  * wrap over GCData, providing a managed interface to Data
  */
-    class GCNode {
-    public:
+        class GCNode {
+        public:
 
-        GCNode(GCData* data);
-        ~GCNode();
+            GCNode(GCData *data);
+            ~GCNode();
 
-        Data& operator*();
-        Data* operator->();
+            Data &operator*();
+            Data *operator->();
 
-    private:
-        GCData* gc_data;
-    };
+        private:
+            GCData *gc_data;
+        };
 
-
+    } // namespace gc
 } // namespace shaka
 
 #endif //SHAKA_SCHEME_GCNODE_HPP

@@ -5,25 +5,31 @@
 #ifndef SHAKA_SCHEME_GCLIST_HPP
 #define SHAKA_SCHEME_GCLIST_HPP
 
-#include "shaka_scheme/system/gc/GCData.hpp"
-
 namespace shaka {
 
-    class GCList {
+    namespace gc {
 
-    public:
-        GCList();
-        ~GCList();
+        class GCData;
 
-        bool is_empty();
-        int get_size();
-        void add_data(GCData *data);
-        void sweep();
+        class GCList {
+        public:
 
-    private:
-        GCData *head;
-        int size;
+            GCList();
+            ~GCList();
+            GCList(const GCList& other) = delete;
+            GCList(GCList&& other);
 
-    };
+            bool is_empty();
+            int get_size() const;
+            void add_data(GCData *data);
+            void sweep();
+
+        private:
+            void swap(GCList& list1, GCList& list2);
+
+            int list_size;
+            GCData *head;
+        };
+    }
 }
 #endif //SHAKA_SCHEME_GCLIST_HPP

@@ -76,6 +76,7 @@ set(SOURCE_FILES
         src/shaka_scheme/system/gc/GCData.cpp
         src/shaka_scheme/system/gc/GCList.cpp
         src/shaka_scheme/system/gc/GCNode.cpp
+        src/shaka_scheme/system/gc/GC.cpp
         src/shaka_scheme/runtime/stdproc/boolean.cpp
         src/shaka_scheme/system/base/Bytevector.cpp
         src/shaka_scheme/system/base/Character.cpp

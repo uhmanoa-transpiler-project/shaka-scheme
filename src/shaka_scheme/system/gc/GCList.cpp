@@ -4,67 +4,92 @@
 
 #include "shaka_scheme/system/gc/GCData.hpp"
 #include "shaka_scheme/system/gc/GCList.hpp"
+#include <utility>
 
 namespace shaka {
 
-    GCList::GCList() {
-        this->size = 0;
-        this->head = nullptr;
-    }
+    namespace gc {
 
-    GCList::~GCList() {
-        GCData *conductor = this->head;
+        GCList::GCList() :
+            list_size(0),
+            head(nullptr) {}
 
-        while(conductor != nullptr) {
-            GCData *temp = conductor;
-            conductor = conductor->get_next();
-            delete temp;
-            this->size--;
+        GCList::~GCList() {
+            GCData *conductor = this->head;
+
+            while (conductor != nullptr) {
+                GCData *temp = conductor;
+                conductor = conductor->get_next();
+                delete temp;
+            }
         }
-    }
+    
+        GCList::GCList(GCList&& other) :
+            list_size(0),
+            head(nullptr) {
+            swap(*this, other);
+        }
 
-    bool GCList::is_empty() {
-        return this->size == 0 && this->head == nullptr;
-    }
+        bool GCList::is_empty() {
+            return this->list_size == 0 && this->head == nullptr;
+        }
 
-    int GCList::get_size() {
-        return this->size;
-    }
+        int GCList::get_size() const {
+            return this->list_size;
+        }
 
-    void GCList::add_data(GCData *data) {
-        data->set_next(head);
-        this->head = data;
-        this->size++;
-    }
+        void GCList::add_data(GCData *data) {
+            data->set_next(head);
+            this->head = data;
+            this->list_size++;
+        }
 
-    void GCList::sweep() {
-        GCData *prev = nullptr;
-        GCData *curr = this->head;
+        void GCList::sweep() {
+            GCData *prev = nullptr;
+            GCData *curr = this->head;
 
-        if(this->is_empty()) return;
+            //If the GCList is empty, return the list
+            if (this->is_empty()) {
+                return;
+            }
 
-        while(curr != nullptr) {
-            if(!curr->is_marked()) {
-                if(curr == this->head) {
-                    head = head->get_next();
-                    GCData *temp = curr;
+            //While the GCList is not empty, traverse the list
+            while (curr != nullptr) {
+
+                //If the current GCData is not marked, remove it from GCList
+                if (!curr->is_marked()) {
+
+                    //Check if the head GCData object in GCList is an
+                  // unmarked object
+                    if (curr == this->head) {
+                        head = head->get_next();
+                        GCData *temp = curr;
+                        curr = curr->get_next();
+                        delete temp;
+                        this->list_size--;
+
+                    //Remove the GCData object if it is unmarked
+                    } else {
+                        prev->set_next(curr->get_next());
+                        GCData *temp = curr;
+                        curr = curr->get_next();
+                        delete temp;
+                        this->list_size--;
+                    }
+
+                    //If the GCData object is marked, unmark it then move on
+                } else {
+                    curr->unmark();
+                    prev = curr;
                     curr = curr->get_next();
-                    delete temp;
-                    this->size--;
-                }
-                else {
-                    prev->set_next(curr->get_next());
-                    GCData *temp = curr;
-                    curr = curr->get_next();
-                    delete temp;
-                    this->size--;
                 }
             }
-            else {
-                curr->unmark();
-                prev = curr;
-                curr = curr->get_next();
-            }
+        }
+        
+        void GCList::swap(GCList& list1, GCList& list2) {
+            using std::swap;
+            swap(list1.list_size, list2.list_size);
+            swap(list1.head, list2.head);
         }
     }
 }

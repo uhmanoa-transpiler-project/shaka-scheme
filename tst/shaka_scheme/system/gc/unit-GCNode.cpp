@@ -5,19 +5,26 @@
 #include <gmock/gmock.h>
 #include "shaka_scheme/system/gc/GCData.hpp"
 #include "shaka_scheme/system/gc/GCNode.hpp"
+#include "shaka_scheme/system/gc/GC.hpp"
 
 /**
  * @Test: test_arrow_operator
  */
 TEST (GCNodeUnitTest, test_constructor) {
 
-    //Given: You construct a GCNode as follows
-    shaka::GCData* gcd = new shaka::GCData(shaka::Data(shaka::Number(5)));
-    shaka::GCNode gcn(gcd);
+    //Given: You constructed a GC and a GCData
+
+    shaka::gc::GC garbage_collector;
+
+    shaka::gc::GCData *gcd = garbage_collector.create_data(shaka::Number(5));
+    
+    //When: You wrap the GCData in a GCNode
+    
+    shaka::gc::GCNode gcn(gcd);
 
     //Then: the data in gcn is equal to 5
+    
     ASSERT_EQ(gcn->get<shaka::Number>(), shaka::Number(5));
-
 }
 
 /**
@@ -25,9 +32,15 @@ TEST (GCNodeUnitTest, test_constructor) {
  */
 TEST (GCNodeUnitTest, test_dreference) {
 
-    //Given: You construct a GCNode as follows
-    shaka::GCData* gcd = new shaka::GCData(shaka::Data(shaka::Number(5)));
-    shaka::GCNode gcn(gcd);
+    //Given: You constructed a GC and a GCData
+
+    shaka::gc::GC garbage_collector;
+
+    shaka::gc::GCData *gcd = garbage_collector.create_data(shaka::Number(5));
+
+    //When: You wrap the GCData in a GCNode
+    
+    shaka::gc::GCNode gcn(gcd);
     
     //Then: the data in gcn is equal to 5
     ASSERT_EQ((*gcn).get<shaka::Number>(), shaka::Number(5));
