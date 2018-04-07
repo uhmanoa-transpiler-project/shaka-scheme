@@ -5,6 +5,8 @@
 #include <gmock/gmock.h>
 #include "shaka_scheme/system/base/Environment.hpp"
 #include "shaka_scheme/system/base/Data.hpp"
+#include "shaka_scheme/system/gc/GC.hpp"
+#include "shaka_scheme/system/gc/init_gc.hpp"
 
 using namespace shaka;
 
@@ -12,6 +14,8 @@ using namespace shaka;
  * @brief Test: Constructor with null pointer and parent pointer
  */
 TEST(EnvironmentUnitTest, parent_constructor) {
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
   // Given: an environment with parent as null pointer.
   Environment e(nullptr);
 
@@ -33,6 +37,8 @@ TEST(EnvironmentUnitTest, parent_constructor) {
  * @brief Test: Parent Getter
  */
 TEST(EnvironmentUnitTest, get_parent) {
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
   // Given: a pointer to a parent Environment
   //        environment with parent as null pointer.
   Environment e(nullptr);
@@ -55,6 +61,8 @@ TEST(EnvironmentUnitTest, get_parent) {
  * @brief Test: Parent Setter
  */
 TEST(EnvironmentUnitTest, set_parent) {
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
   // Given: a pointer to a parent Environment.
   //        a child Environment with parent initialized to null pointer.
   auto parent = std::make_shared<Environment>(nullptr);
@@ -71,6 +79,8 @@ TEST(EnvironmentUnitTest, set_parent) {
  * @brief Test: Value Setter
  */
 TEST(EnvironmentUnitTest, set_value) {
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
   // Given: an environment with parent initialized to the null pointer.
   //        a Symbol
   //        a Value
@@ -89,6 +99,8 @@ TEST(EnvironmentUnitTest, set_value) {
  * @brief Test: Value Getter with Success
  */
 TEST(EnvironmentUnitTest, get_value_success) {
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
   // Given: an environment, key and value
   Environment e(nullptr);
   Symbol key1("x");
@@ -118,6 +130,8 @@ TEST(EnvironmentUnitTest, get_value_success) {
  * @brief Test: Value Getter with Failure
  */
 TEST(EnvironmentUnitTest, get_value_invalid_key_failure) {
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
   // Given: an environment and key
   Environment e(nullptr);
   Symbol key("x");
@@ -132,6 +146,8 @@ TEST(EnvironmentUnitTest, get_value_invalid_key_failure) {
  * @brief Test: Environment contains Symbol
  */
 TEST(EnvironmentUnitTest, contains) {
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
   // Given: an environment and different symbols and values
   Environment e(nullptr);
   Symbol key1("x");
@@ -154,6 +170,8 @@ TEST(EnvironmentUnitTest, contains) {
  * @brief Test: Symbol defined in Environment or Parent Environment
  */
 TEST(EnvironmentUnitTest, is_defined) {
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
   // Given: a child environment, parent environment, different symbols and
   //        values
   Environment child(nullptr);
@@ -187,6 +205,8 @@ TEST(EnvironmentUnitTest, is_defined) {
  * @brief Test: Environment keys getter
  */
 TEST(EnvironmentUnitTest, get_keys) {
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
   // Given: an environment with defined symbols and values
   Environment e(nullptr);
   Symbol key1("x");
@@ -211,6 +231,8 @@ TEST(EnvironmentUnitTest, get_keys) {
  * @brief Test: Environment bindings getter
  */
 TEST(EnvironmentUnitTest, get_bindings) {
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
   // Given: an environment with a symbol/data binding
   Environment e(nullptr);
   Symbol key1("x");

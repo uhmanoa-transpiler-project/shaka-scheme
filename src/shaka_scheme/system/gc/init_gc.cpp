@@ -3,15 +3,16 @@
 //
 
 #include "shaka_scheme/system/gc/init.hpp"
+#include "shaka_scheme/system/gc/GC.hpp"
+#include "shaka_scheme/system/base/DataPair.hpp"
 
 namespace shaka {
     namespace gc {
 
-        NodePtrFactory create_node;
-
-        NodePtrFactory init_create_node(GC& gc) {
+        void init_create_node(GC& gc) {
             create_node = [&gc](const Data& data) {
-                return gc.create_data(data);
+
+                return GCNode(gc.create_data(data));
             };
         }
     }

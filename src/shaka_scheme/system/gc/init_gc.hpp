@@ -14,12 +14,9 @@ namespace shaka {
 
         class GC;
         using NodePtr = GCNode;
-        using NodePtrFactory = std::function<NodePtr(const Data&)>;
 
-        NodePtrFactory init_create_node(GC& gc);
-
-
-
+        void init_create_node(GC& gc);
+    
     }
 }
 

@@ -4,6 +4,8 @@
 
 #include <gmock/gmock.h>
 #include "shaka_scheme/system/vm/compiler/Compiler.hpp"
+#include "shaka_scheme/system/gc/GC.hpp"
+#include "shaka_scheme/system/gc/init_gc.hpp"
 
 using namespace shaka;
 using namespace core;
@@ -12,6 +14,8 @@ using namespace core;
  * @brief Test: compile() changing symbols to 'refer' instructions
  */
 TEST(CompilerUnitTest, is_symbol_test) {
+  gc::GC garbage_collector;
+  gc::init_create_node(garbage_collector);
   // Given: A symbol "a"
   Symbol var("a");
   Data var_data(var);
@@ -31,6 +35,8 @@ TEST(CompilerUnitTest, is_symbol_test) {
  * @brief Test: compile() changing quote expressions to 'constant' instructions
  */
 TEST(CompilerUnitTest, quote_test) {
+  gc::GC garbage_collector;
+  gc::init_create_node(garbage_collector);
   Compiler compiler;
 
   // Given: The expression (quote "Hello")
@@ -55,6 +61,8 @@ TEST(CompilerUnitTest, quote_test) {
  * @brief Test: compile() changing lambda expressions to 'close' instructions
  */
 TEST(CompilerUnitTest, lambda_test) {
+  gc::GC garbage_collector;
+  gc::init_create_node(garbage_collector);
   Compiler compiler;
   Data x_data(Symbol("x"));
   Data y_data(Symbol("y"));
@@ -129,6 +137,8 @@ TEST(CompilerUnitTest, lambda_test) {
  * @brief Test: compile() changing if expressions to 'test' instructions
  */
 TEST(CompilerUnitTest, if_test) {
+  gc::GC garbage_collector;
+  gc::init_create_node(garbage_collector);
   Compiler compiler;
   Data x_data(Symbol("x"));
   Data y_data(Symbol("y"));
@@ -166,6 +176,8 @@ TEST(CompilerUnitTest, if_test) {
  * @brief Test: compile() changing set expressions to 'assign' instructions
  */
 TEST(CompilerUnitTest, set_test) {
+  gc::GC garbage_collector;
+  gc::init_create_node(garbage_collector);
   Compiler compiler;
   NodePtr set_bang = create_node(Data(Symbol("set!")));
   Data x_data(Symbol("x"));
@@ -189,6 +201,8 @@ TEST(CompilerUnitTest, set_test) {
  * @brief Test: compile() changing call/cc expressions to 'frame' instructions
  */
 TEST(CompilerUnitTest, call_cc_test) {
+  gc::GC garbage_collector;
+  gc::init_create_node(garbage_collector);
   Compiler compiler;
 
   // Given: The expression (lambda (k) (k 'a) 'b)
@@ -224,6 +238,8 @@ TEST(CompilerUnitTest, call_cc_test) {
  * @brief Test: compile() changing applications to 'frame' instructions
  */
 TEST(CompilerUnitTest, application_test) {
+  gc::GC garbage_collector;
+  gc::init_create_node(garbage_collector);
   Compiler compiler;
   Data x_data(Symbol("x"));
   Data y_data(Symbol("y"));
@@ -251,6 +267,8 @@ TEST(CompilerUnitTest, application_test) {
  * @brief Test: compile() changing constants to 'constant' instructions
  */
 TEST(CompilerUnitTest, constant_test) {
+  gc::GC garbage_collector;
+  gc::init_create_node(garbage_collector);
   Compiler compiler;
   Data hello(String("hello"));
 
