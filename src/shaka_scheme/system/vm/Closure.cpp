@@ -35,7 +35,8 @@ Closure::Closure(Callable cl, bool arity) {
 
 Closure::Closure() {
   env = std::make_shared<Environment>(nullptr);
-  func_body = std::make_shared<Data>();
+  //func_body = std::make_shared<Data>();
+  func_body = create_node(Data());
   variable_list = std::vector<shaka::Symbol>(0);
   callable = nullptr;
   frame = std::make_shared<CallFrame>();

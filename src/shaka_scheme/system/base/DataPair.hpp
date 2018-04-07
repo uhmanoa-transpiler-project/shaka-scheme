@@ -6,12 +6,16 @@
 #define SHAKA_SCHEME_DATAPAIR_HPP
 
 #include <memory>
+#include <functional>
+
+#include "shaka_scheme/system/gc/GCNode.hpp"
 
 namespace shaka {
 
 class Data;
 
-using NodePtr = std::shared_ptr<Data>;
+//using NodePtr = std::shared_ptr<Data>;
+using NodePtr = gc::GCNode;
 
 /**
  * @brief Creates a managed NodePtr from an object of Data.
@@ -24,7 +28,9 @@ using NodePtr = std::shared_ptr<Data>;
  * or reference counting, we trust that all managed objects will either be
  * managed by user-supplied logic in this function, or through
  */
-NodePtr create_node(const Data& data);
+std::shared_ptr<Data> create_node_shared_ptr(const Data& data);
+
+extern std::function<NodePtr(const Data&)> create_node;
 
 /**
  * @brief The data representation of a Scheme pair.
