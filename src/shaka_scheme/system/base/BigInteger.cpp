@@ -2,7 +2,7 @@
 // Created by Jared Shimabukuro on 3/3/18.
 //
 
-#include "shaka_scheme/system/base/jshima_BigInteger.hpp"
+#include "shaka_scheme/system/base/BigInteger.hpp"
 #include "shaka_scheme/system/base/Rational.hpp"
 #include "shaka_scheme/system/base/Real.hpp"
 

@@ -3,7 +3,7 @@
 //
 
 #include <gmock/gmock.h>
-#include "shaka_scheme/system/base/jshima_BigInteger.hpp"
+#include "shaka_scheme/system/base/BigInteger.hpp"
 
 TEST(BigInteger, test_default_constructor) {
     shaka::BigInteger n0;
