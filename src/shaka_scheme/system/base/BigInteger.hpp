@@ -5,7 +5,10 @@
 #ifndef SHAKA_SCHEME_BIGINTEGER_HPP
 #define SHAKA_SCHEME_BIGINTEGER_HPP
 
+#include <iostream>
 #include <string>
+#include <vector>
+#include <cstdint>
 
 namespace shaka {
 
@@ -41,6 +44,13 @@ namespace shaka {
          * @param val input string
          */
         BigInteger(std::string val);
+
+        /**
+         * @brief Constructor whose value is initialized to a given vector of 64-bit unsigned integers
+         * @param sign boolean value indicating if the integer is positive or negative
+         * @param val vector of 64-bit unsigned integers
+         */
+        BigInteger(bool s, std::vector<std::uint64_t> val);
 
         /**
          * @brief Implicit type conversion operator for BigInteger -> Rational
@@ -153,10 +163,15 @@ namespace shaka {
          */
         friend bool operator!=(const BigInteger& lhs, const BigInteger& rhs);
 
-        std::string get_value() const;
+        std::string get_str_value() const;
+        std::vector<std::uint64_t> get_value() const;
+        bool get_sign() const;
 
     private:
-        std::string value;
+        std::vector<std::uint64_t> value;
+        bool sign;
+        std::string str_value;
+
     };
 
 } // namespace shaka
