@@ -1,21 +1,26 @@
 #include <iostream>
 #include <limits> // for std::numeric_limits for std::cin.ignore()
 #include <vector>
-#include <shaka_scheme/runtime/stdproc/numbers_arithmetic.hpp>
-
+#include "shaka_scheme/system/lexer/rules/init.hpp"
+#include "shaka_scheme/runtime/stdproc/numbers_arithmetic.hpp"
 #include "shaka_scheme/system/exceptions/BaseException.hpp"
 #include "shaka_scheme/system/exceptions/TypeException.hpp"
 #include "shaka_scheme/system/vm/HeapVirtualMachine.hpp"
 #include "shaka_scheme/system/vm/compiler/Compiler.hpp"
 #include "shaka_scheme/system/vm/strings.hpp"
 #include "shaka_scheme/system/lexer/rules/rule_token.hpp"
-#include "shaka_scheme/system/lexer/rules/init.hpp"
 #include "shaka_scheme/system/parser/parser_definitions.hpp"
 #include "shaka_scheme/system/parser/syntax_rules/macro_engine.hpp"
+#include "shaka_scheme/system/gc/GC.hpp"
+#include "shaka_scheme/system/gc/init_gc.hpp"
+#include "shaka_scheme/system/base/DataPair.hpp"
 
 int main() {
+  using namespace shaka;
   // Given: the lexer rules are initialized
   shaka::lexer::rules::init_lexer_rules();
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
 
   std::cout << "Welcome to Shaka Scheme!" << std::endl;
 
