@@ -2,8 +2,8 @@
 // Created by mortrax on 3/26/18.
 //
 
-#ifndef SHAKA_SCHEME_INIT_HPP
-#define SHAKA_SCHEME_INIT_HPP
+#ifndef SHAKA_SCHEME_INIT_GC_HPP
+#define SHAKA_SCHEME_INIT_GC_HPP
 
 #include <functional>
 #include "shaka_scheme/system/gc/GCNode.hpp"
@@ -20,4 +20,4 @@ namespace shaka {
     }
 }
 
-#endif //SHAKA_SCHEME_INIT_HPP
+#endif //SHAKA_SCHEME_INIT_GC_HPP
