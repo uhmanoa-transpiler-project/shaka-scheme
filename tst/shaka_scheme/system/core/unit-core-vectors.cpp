@@ -31,7 +31,7 @@ TEST(VectorsUnitTest, list_to_vector_3_elements) {
 /**
  * @brief Test: Testing (list->vector l)
  */
-TEST(VectorsUnitTest, vector_to_list_2_elements) {
+TEST(VectorsUnitTest, vector_to_list_3_elements) {
   using namespace shaka;
   const auto& c = shaka::create_node;
 
