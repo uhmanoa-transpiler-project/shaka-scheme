@@ -10,7 +10,7 @@ namespace core {
  */
 NodePtr list_to_vector(NodePtr list) {
   // Find the length of the list.
-  std::size_t length = core::length(list);
+  std::size_t length = shaka::core::length(list);
   shaka::Vector vector(length);
   // Copy the elements from the list over.
   for (std::size_t i = 0; i < length; ++i) {
@@ -35,7 +35,7 @@ NodePtr vector_to_list(NodePtr vector) {
   // For each item in the vector, starting from the back, cons it onto the
   // null list.
   for (std::size_t i = vec.length(); i > 0; --i) {
-    node = core::cons(create_node(*vec[i-1]), node);
+    node = shaka::core::cons(create_node(*vec[i-1]), node);
   }
   return node;
 }
