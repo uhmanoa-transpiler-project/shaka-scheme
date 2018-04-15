@@ -20,11 +20,13 @@ namespace shaka {
 
             GCNode();
             GCNode(GCData *data);
+            GCNode(const GCNode& other);
             ~GCNode();
 
             Data &operator*() const;
             Data *operator->() const;
 
+            Data *get() const;
             operator bool() const;
 
             friend bool operator==(const GCNode& lhs, const GCNode& rhs);
