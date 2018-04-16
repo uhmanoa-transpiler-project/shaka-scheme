@@ -7,8 +7,16 @@
 
 #include "shaka_scheme/system/base/Number.hpp"
 #include "shaka_scheme/system/base/Data.hpp"
+#include "shaka_scheme/system/base/DataPair.hpp"
+#include "shaka_scheme/system/gc/init_gc.hpp"
+#include "shaka_scheme/system/gc/GC.hpp"
+
+using namespace shaka;
+
 
 TEST(BooleanProceduresUnitTest, notbool) {
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
 
   using Args = std::deque<shaka::NodePtr>;;
 
@@ -49,6 +57,9 @@ TEST(BooleanProceduresUnitTest, notbool) {
 
 TEST(BooleanProceduresUnitTest, checkbool) {
 
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
+
   using Args = std::deque<shaka::NodePtr>;;
 
   // Given: Boolean arguments that are true and false
@@ -86,6 +97,9 @@ TEST(BooleanProceduresUnitTest, checkbool) {
 }
 
 TEST(BooleanProceduresUnitTest, alltf) {
+
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
 
   using Args = std::deque<shaka::NodePtr>;
 

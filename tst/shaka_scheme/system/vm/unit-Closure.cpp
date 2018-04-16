@@ -7,6 +7,8 @@
 #include "shaka_scheme/system/vm/CallFrame.hpp"
 #include "shaka_scheme/system/core/lists.hpp"
 #include "shaka_scheme/system/vm/strings.hpp"
+#include "shaka_scheme/system/gc/GC.hpp"
+#include "shaka_scheme/system/gc/init_gc.hpp"
 
 using namespace shaka;
 
@@ -15,6 +17,8 @@ using namespace shaka;
  * @brief Test: Constructor usage for constructing generic closure
  */
 TEST(ClosureUnitTest, constructor) {
+  gc::GC garbage_collector;
+  gc::init_create_node(garbage_collector);
 
   // Given: A pointer to an environment with no bindings
 
@@ -63,6 +67,8 @@ TEST(ClosureUnitTest, constructor) {
  * @brief Test: Usage of extend_environment method
  */
 TEST(ClosureUnitTest, extend_environment) {
+  gc::GC garbage_collector;
+  gc::init_create_node(garbage_collector);
 
   // Given: A pointer to an environment with no bindings
 
@@ -117,6 +123,8 @@ TEST(ClosureUnitTest, extend_environment) {
  * @brief Test: Using the specialized constructor for NativeClosures
  */
 TEST(ClosureUnitTest, native_constructor) {
+  gc::GC garbage_collector;
+  gc::init_create_node(garbage_collector);
 
     // Given: A NativeClosure constructed with the specialized Constructor
 
@@ -148,6 +156,8 @@ TEST(ClosureUnitTest, native_constructor) {
  * @brief Test: Using the call method for a NativeClosure string-append
  */
 TEST(ClosureUnitTest, native_closure) {
+  gc::GC garbage_collector;
+  gc::init_create_node(garbage_collector);
 
   // Given: A pointer to an environment with no bindings
 
@@ -202,6 +212,8 @@ TEST(ClosureUnitTest, native_closure) {
  * @brief Test: Creation of a Continuation closure
  */
 TEST(ClosureUnitTest, continuation_closure) {
+  gc::GC garbage_collector;
+  gc::init_create_node(garbage_collector);
 
   // Given: A pointer to an environment with no bindings
 
@@ -262,6 +274,8 @@ TEST(ClosureUnitTest, continuation_closure) {
  * @brief Test: Closure functionality with a variadic lambda
  */
 TEST(ClosureUnitTest, variadic_lambda) {
+  gc::GC garbage_collector;
+  gc::init_create_node(garbage_collector);
 
   // Simulation of the behavior of a procedure such as (lambda x x)
 

@@ -3,6 +3,8 @@
 //
 #include <gmock/gmock.h>
 #include <shaka_scheme/system/core/types.hpp>
+#include "shaka_scheme/system/gc/GC.hpp"
+#include "shaka_scheme/system/gc/init_gc.hpp"
 
 
 
@@ -10,6 +12,8 @@
  * @brief Test: Testing (boolean?)
  */
 TEST(TypesUnitTest, is_boolean) {
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
   using namespace shaka;
 
   // Given: a boolean node and a null list
@@ -28,6 +32,8 @@ TEST(TypesUnitTest, is_boolean) {
  * @brief Test: Testing (string?)
  */
 TEST(TypesUnitTest, is_string) {
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
   using namespace shaka;
 
   // Given: a string node and a null list
@@ -46,6 +52,8 @@ TEST(TypesUnitTest, is_string) {
  * @brief Test: Testing (symbol?)
  */
 TEST(TypesUnitTest, is_symbol) {
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
   using namespace shaka;
 
   // Given: a symbol node and a null list
@@ -65,6 +73,8 @@ TEST(TypesUnitTest, is_symbol) {
  * predicate for detecting "unspecified" values.
  */
 TEST(TypesUnitTest, is_unspecified) {
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
   using namespace shaka;
 
   // Given: an unspecified value node and a null list
@@ -83,6 +93,8 @@ TEST(TypesUnitTest, is_unspecified) {
  * @brief Test: Testing (eqv?)
  */
 TEST(TypesUnitTest, is_eqv) {
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
   using namespace shaka;
 
   // Given: two distinct nodes with the same string value.

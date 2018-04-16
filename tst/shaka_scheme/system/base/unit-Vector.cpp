@@ -4,11 +4,16 @@
 #include <shaka_scheme/system/base/DataPair.hpp>
 
 #include <shaka_scheme/system/exceptions/IndexOutOfBoundsException.hpp>
+#include "shaka_scheme/system/gc/GC.hpp"
+#include "shaka_scheme/system/gc/init_gc.hpp"
 
+using namespace shaka;
 /**
  * @brief Test: Constructors for Vector.
  */
 TEST(VectorUnitTest, constructors) {
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
   // Given: a size k and an element fill to construct with.
   std::size_t k       = 8;
   shaka::NodePtr fill = create_node(shaka::String("HelloWorld"));
@@ -41,6 +46,8 @@ TEST(VectorUnitTest, constructors) {
  * @brief Test: operator[] for Vector
  */
 TEST(VectorUnitTest, element_access) {
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
   // Given: a Vector with 4 elements
   shaka::Vector bv(4);
 
@@ -66,6 +73,8 @@ TEST(VectorUnitTest, element_access) {
  * @brief Test: copy for Vector
  */
 TEST(VectorUnitTest, copy) {
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
 
   const auto& c = shaka::create_node;
   // Given: a Vector of size 3 with all elements as Number(1).
@@ -95,6 +104,8 @@ TEST(VectorUnitTest, copy) {
  * @brief Test: move for Vector
  */
 TEST(VectorUnitTest, move) {
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
 
   const auto& c = shaka::create_node;
   // Given: a Vector of size 3 with all elements as Number(1)

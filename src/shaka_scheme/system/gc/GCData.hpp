@@ -4,7 +4,6 @@
 
 #ifndef SHAKA_SCHEME_GCDATA_HPP
 #define SHAKA_SCHEME_GCDATA_HPP
-
 #include "shaka_scheme/system/base/Data.hpp"
 
 class GC;

@@ -17,7 +17,8 @@ shaka::CallFrame::CallFrame(shaka::Expression ret,
   next_frame(next_frame) {}
 
 shaka::CallFrame::CallFrame() {
-  return_expression = std::make_shared<Data>();
+  //return_expression = std::make_shared<Data>();
+  return_expression = create_node(Data());
   env = std::make_shared<Environment>(nullptr);
   value_rib = std::deque<NodePtr>(0);
   next_frame = nullptr;

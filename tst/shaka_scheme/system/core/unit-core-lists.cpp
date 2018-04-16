@@ -6,12 +6,15 @@
 
 #include <string>
 #include <sstream>
-
+#include "shaka_scheme/system/gc/GC.hpp"
+#include "shaka_scheme/system/gc/init_gc.hpp"
 
 /**
  * @brief Test: Testing (car) for list
  */
 TEST(ListsUnitTest, car) {
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
   using namespace shaka;
   // Given: a pair of data put into a NodePtr
   DataPair pair(
@@ -34,6 +37,8 @@ TEST(ListsUnitTest, car) {
  * @brief Test: Testing (cdr) for list
  */
 TEST(ListsUnitTest, cdr) {
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
   using namespace shaka;
   // Given: a pair of data put into a NodePtr
   DataPair pair(
@@ -57,6 +62,8 @@ TEST(ListsUnitTest, cdr) {
  * @brief Test: (cons) for pairs
  */
 TEST(ListsUnitTest, cons) {
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
   using namespace shaka;
   // Given: an arbitrary structure of improper and proper lists
   // '(#t . "Hello world") bar)
@@ -86,6 +93,8 @@ TEST(ListsUnitTest, cons) {
  * @brief Test: (list) for lists
  */
 TEST(ListsUnitTest, list) {
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
   using namespace shaka;
   // Given: three symbols
   NodePtr a = create_node(Symbol("a"));
@@ -108,6 +117,8 @@ TEST(ListsUnitTest, list) {
  * @brief Test: (length) for lists
  */
 TEST(ListsUnitTest, length_success) {
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
   using namespace shaka;
   // Given: three symbols
   NodePtr a = create_node(Symbol("a"));
@@ -131,6 +142,8 @@ TEST(ListsUnitTest, length_success) {
  * @brief Test: (append) with no arguments
  */
 TEST(ListsUnitTest, append_0_args_success) {
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
   using namespace shaka;
   // When: you call (append) with no arguments
   NodePtr node = core::append();
@@ -142,6 +155,8 @@ TEST(ListsUnitTest, append_0_args_success) {
  * @brief Test: (append x) with 1 argument
  */
 TEST(ListsUnitTest, append_1_args_success) {
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
   using namespace shaka;
 
   // Given: a single node of data
@@ -158,6 +173,8 @@ TEST(ListsUnitTest, append_1_args_success) {
  * @brief Test: (append list second) for single item
  */
 TEST(ListsUnitTest, append_2_args_single_item_success) {
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
   using namespace shaka;
 
   // Given: a list of data
@@ -186,6 +203,8 @@ TEST(ListsUnitTest, append_2_args_single_item_success) {
  * @brief Test: (append list second) for proper list
  */
 TEST(ListsUnitTest, append_2_args_proper_list_success) {
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
   using namespace shaka;
 
   // Given: a list of data
@@ -218,6 +237,8 @@ TEST(ListsUnitTest, append_2_args_proper_list_success) {
  * @brief Test: (append list second) for improper list
  */
 TEST(ListsUnitTest, append_2_args_improper_list_success) {
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
   using namespace shaka;
 
   // Given: a list of data
@@ -251,6 +272,8 @@ TEST(ListsUnitTest, append_2_args_improper_list_success) {
  * @brief Test: (append list second) for improper list
  */
 TEST(ListsUnitTest, append_2_args_first_argument_not_proper_list_failure) {
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
   using namespace shaka;
 
   // Given: a first argument that is an improper list
@@ -279,6 +302,8 @@ TEST(ListsUnitTest, append_2_args_first_argument_not_proper_list_failure) {
  * @brief Test: (append list second) for 3 or more arguments
  */
 TEST(ListsUnitTest, append_3_args_success) {
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
   using namespace shaka;
 
   // Given: a list of data

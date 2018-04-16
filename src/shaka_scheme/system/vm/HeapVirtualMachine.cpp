@@ -5,7 +5,6 @@
 #include "shaka_scheme/system/vm/HeapVirtualMachine.hpp"
 #include "shaka_scheme/system/core/lists.hpp"
 
-
 namespace shaka {
 
 HeapVirtualMachine::~HeapVirtualMachine() {}
@@ -165,9 +164,9 @@ void HeapVirtualMachine::evaluate_assembly_instruction() {
 
     // Create the function body for the continuation
 
-    NodePtr call_frame = std::make_shared<Data>(*this->frame);
-    NodePtr nuate = std::make_shared<Data>(Symbol("nuate"));
-    NodePtr var = std::make_shared<Data>(Symbol("kont_v000"));
+    NodePtr call_frame = create_node(*this->frame);
+    NodePtr nuate = create_node(Symbol("nuate"));
+    NodePtr var = create_node(Symbol("kont_v000"));
 
     // Create the variable list
 
@@ -180,7 +179,7 @@ void HeapVirtualMachine::evaluate_assembly_instruction() {
     NodePtr func_body = core::list(nuate, call_frame, var);
     EnvPtr empty_env = std::make_shared<Environment>(nullptr);
     NodePtr continuation =
-        std::make_shared<Data>(
+        create_node(
             Closure(
                 empty_env,
                 func_body,

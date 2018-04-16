@@ -7,6 +7,8 @@
 #include "shaka_scheme/system/vm/HeapVirtualMachine.hpp"
 #include "shaka_scheme/system/core/lists.hpp"
 #include "shaka_scheme/system/vm/strings.hpp"
+#include "shaka_scheme/system/gc/GC.hpp"
+#include "shaka_scheme/system/gc/init_gc.hpp"
 
 using namespace shaka;
 
@@ -14,16 +16,18 @@ using namespace shaka;
  * @brief Test: evaluate_assembly_instruction() with (halt) as exp
  */
 TEST(HeapVirtualMachineUnitTest, evaluate_halt) {
+  gc::GC garbage_collector;
+  gc::init_create_node(garbage_collector);
 
   // Given: An accumulator that holds a NodePtr with symbol 'result
   Symbol acc_value("result");
-  NodePtr accumulator = std::make_shared<Data>(acc_value);
+  NodePtr accumulator = create_node(acc_value);
 
   // Given: An assembly instruction of the form (halt)
   Symbol instruction("halt");
   Data instruction_data(instruction);
   DataPair instruction_pair(instruction_data);
-  NodePtr expression = std::make_shared<Data>(instruction_pair);
+  NodePtr expression = create_node(instruction_pair);
 
   // Given: A pointer to an Environment with a null parent pointer
   EnvPtr env = std::make_shared<Environment>(nullptr);
@@ -46,6 +50,8 @@ TEST(HeapVirtualMachineUnitTest, evaluate_halt) {
  * @brief Test: evaluate_assembly_instruction() with (refer var x) as exp
  */
 TEST(HeapVirtualMachineUnitTest, evaluate_refer) {
+  gc::GC garbage_collector;
+  gc::init_create_node(garbage_collector);
   // Given: An assembly instruction of the form (refer a (halt))
   Symbol instruction("refer");
   Symbol var("a");
@@ -60,7 +66,7 @@ TEST(HeapVirtualMachineUnitTest, evaluate_refer) {
   Data instruction_data(instruction);
   DataPair refer_var_x(instruction_data, var_x_pair);
 
-  NodePtr expression = std::make_shared<Data>(refer_var_x);
+  NodePtr expression = create_node(refer_var_x);
 
   // Given: A pointer to Environment containing a binding for the symbol 'a
   EnvPtr env = std::make_shared<Environment>(nullptr);
@@ -94,6 +100,8 @@ TEST(HeapVirtualMachineUnitTest, evaluate_refer) {
  * @brief Test: evaluate_assembly_instruction() with (constant obj x) as exp
  */
 TEST(HeapVirtualMachineUnitTest, evaluate_constant) {
+  gc::GC garbage_collector;
+  gc::init_create_node(garbage_collector);
   // Given: An assembly instruction of the form (constant "Hello" (halt))
 
   Symbol instruction("constant");
@@ -110,7 +118,7 @@ TEST(HeapVirtualMachineUnitTest, evaluate_constant) {
   Data instruction_data(instruction);
   DataPair constant_obj_x(instruction_data, constant_obj_pair);
 
-  NodePtr expression = std::make_shared<Data>(constant_obj_x);
+  NodePtr expression = create_node(constant_obj_x);
 
   // Given: A pointer to an empty environment frame
 
@@ -148,10 +156,12 @@ TEST(HeapVirtualMachineUnitTest, evaluate_constant) {
  * @brief Test: evaluate_assembly_instruction() with (test then else) as exp
  */
 TEST(HeapVirtualMachineUnitTest, evaluate_test_else) {
+  gc::GC garbage_collector;
+  gc::init_create_node(garbage_collector);
 
   // Given: An Accumulator that is the symbol #f
 
-  NodePtr accumulator = std::make_shared<Data>(Boolean(false));
+  NodePtr accumulator = create_node(Boolean(false));
 
   // Given: A then expression of the form (constant "then" (halt))
   Symbol then_inst("constant");
@@ -170,7 +180,7 @@ TEST(HeapVirtualMachineUnitTest, evaluate_test_else) {
 
   DataPair const_obj_halt(then_inst_data, obj_halt_pair);
 
-  NodePtr expr = std::make_shared<Data>(const_obj_halt);
+  NodePtr expr = create_node(const_obj_halt);
 
   // Given: An else expression of the form (constant "else" (halt))
 
@@ -185,7 +195,7 @@ TEST(HeapVirtualMachineUnitTest, evaluate_test_else) {
 
   DataPair const_else_obj_halt(else_inst_data, else_obj_halt_pair);
 
-  NodePtr expr2 = std::make_shared<Data>(const_else_obj_halt);
+  NodePtr expr2 = create_node(const_else_obj_halt);
 
   // Given: An assembly instruction of the form (test then else)
 
@@ -197,7 +207,7 @@ TEST(HeapVirtualMachineUnitTest, evaluate_test_else) {
 
   DataPair test_then_else(instruction_data, then_else_pair);
 
-  NodePtr expression = std::make_shared<Data>(test_then_else);
+  NodePtr expression = create_node(test_then_else);
 
   // Given: An EnvPtr that points to an empty environment
 
@@ -239,10 +249,12 @@ TEST(HeapVirtualMachineUnitTest, evaluate_test_else) {
  * @brief Test: evaluate_assembly_instruction() with (test then else) as exp
  */
 TEST(HeapVirtualMachineUnitTest, evaluate_test_then) {
+  gc::GC garbage_collector;
+  gc::init_create_node(garbage_collector);
 
   // Given: An Accumulator that is the boolean #t
 
-  NodePtr accumulator = std::make_shared<Data>(Boolean(true));
+  NodePtr accumulator = create_node(Boolean(true));
 
   // Given: A then expression of the form (constant "then" (halt))
   Symbol then_inst("constant");
@@ -261,7 +273,7 @@ TEST(HeapVirtualMachineUnitTest, evaluate_test_then) {
 
   DataPair const_obj_halt(then_inst_data, obj_halt_pair);
 
-  NodePtr expr = std::make_shared<Data>(const_obj_halt);
+  NodePtr expr = create_node(const_obj_halt);
 
   // Given: An else expression of the form (constant "else" (halt))
 
@@ -276,7 +288,7 @@ TEST(HeapVirtualMachineUnitTest, evaluate_test_then) {
 
   DataPair const_else_obj_halt(else_inst_data, else_obj_halt_pair);
 
-  NodePtr expr2 = std::make_shared<Data>(const_else_obj_halt);
+  NodePtr expr2 = create_node(const_else_obj_halt);
 
   // Given: An assembly instruction of the form (test then else)
 
@@ -288,7 +300,7 @@ TEST(HeapVirtualMachineUnitTest, evaluate_test_then) {
 
   DataPair test_then_else(instruction_data, then_else_pair);
 
-  NodePtr expression = std::make_shared<Data>(test_then_else);
+  NodePtr expression = create_node(test_then_else);
 
   // Given: An EnvPtr that points to an empty environment
 
@@ -330,10 +342,12 @@ TEST(HeapVirtualMachineUnitTest, evaluate_test_then) {
  * @brief Test: evaluate_assembly_instruction() with (assign var x) as exp
  */
 TEST(HeapVirtualMachineUnitTest, evaluate_assign) {
+  gc::GC garbage_collector;
+  gc::init_create_node(garbage_collector);
 
   // Given: An Accumulator with the Symbol("accumulator");
 
-  Accumulator acc = std::make_shared<Data>(Symbol("accumulator"));
+  Accumulator acc = create_node(Symbol("accumulator"));
 
   // Given: An assembly instruction of the form (assign a (halt))
   Symbol instruction("assign");
@@ -349,7 +363,7 @@ TEST(HeapVirtualMachineUnitTest, evaluate_assign) {
 
   DataPair assign_var_halt(instruction_data, var_halt_pair);
 
-  NodePtr expression = std::make_shared<Data>(assign_var_halt);
+  NodePtr expression = create_node(assign_var_halt);
 
   // Given: An EnvPtr that points to an environment with a binding for 'a
 
@@ -383,10 +397,12 @@ TEST(HeapVirtualMachineUnitTest, evaluate_assign) {
  * @brief Test: evaluate_assembly_instruction() with (frame x ret) as exp
  */
 TEST(HeapVirtualMachineUnitTest, evaluate_frame) {
+  gc::GC garbage_collector;
+  gc::init_create_node(garbage_collector);
 
   // Given: An Accumulator containing the Symbol("finale")
 
-  Accumulator accumulator = std::make_shared<Data>(Symbol("finale"));
+  Accumulator accumulator = create_node(Symbol("finale"));
 
   // Given: An assembly instruction of the form (frame (halt) (halt))
 
@@ -403,14 +419,14 @@ TEST(HeapVirtualMachineUnitTest, evaluate_frame) {
 
   DataPair frame_halt_halt(frame_data, halt_halt);
 
-  NodePtr expression = std::make_shared<Data>(frame_halt_halt);
+  NodePtr expression = create_node(frame_halt_halt);
 
   // Given: An EnvPtr with bindings [a : "Hello", b : "World"]
 
   EnvPtr env = std::make_shared<Environment>(nullptr);
 
-  env->set_value(Symbol("a"), std::make_shared<Data>(String("Hello")));
-  env->set_value(Symbol("b"), std::make_shared<Data>(String("World")));
+  env->set_value(Symbol("a"), create_node(String("Hello")));
+  env->set_value(Symbol("b"), create_node(String("World")));
 
   // Given: A ValueRib containing strings "RVal1" "RVal2" "RVal3"
 
@@ -499,6 +515,8 @@ TEST(HeapVirtualMachineUnitTest, evaluate_frame) {
  * @brief Test: evaluate_assembly_instruction() with (argument x) as exp
  */
 TEST(HeapVirtualMachineUnitTest, evaluate_argument) {
+  gc::GC garbage_collector;
+  gc::init_create_node(garbage_collector);
 
   // Given: An Accumulator containing the symbol 'banana
 
@@ -557,6 +575,8 @@ TEST(HeapVirtualMachineUnitTest, evaluate_argument) {
  * @brief Test: evaluate_assembly_instruction() with (return) as exp
  */
 TEST(HeapVirtualMachineUnitTest, evaluate_return) {
+  gc::GC garbage_collector;
+  gc::init_create_node(garbage_collector);
 
   // Given: An Accumulator containing the symbol 'finale
 
@@ -644,10 +664,12 @@ TEST(HeapVirtualMachineUnitTest, evaluate_return) {
  * @brief Test: evaluate_assembly_instruction() w/ (close vars body x) as expr
  */
 TEST(HeapVirtualMachineUnitTest, evaluate_close) {
+  gc::GC garbage_collector;
+  gc::init_create_node(garbage_collector);
 
   // Given: An empty accumulator
 
-  Accumulator acc = std::make_shared<Data>();
+  Accumulator acc = create_node(Data());
 
   // Given: An assembly instruction of the form...
   // (close (a) (refer a (halt)) (halt))
@@ -732,6 +754,8 @@ TEST(HeapVirtualMachineUnitTest, evaluate_close) {
  * @brief Test: evaluate_assembly_instruction() with (conti x) as expr
  */
 TEST(HeapVirtualMachineUnitTest, evaluate_conti) {
+  gc::GC garbage_collector;
+  gc::init_create_node(garbage_collector);
 
   // Given: An assembly instruction of the form (conti (halt))
 
@@ -821,6 +845,8 @@ TEST(HeapVirtualMachineUnitTest, evaluate_conti) {
  * @brief Test: evaluate_assembly_instruction() with (apply) as expr
  */
 TEST(HeapVirtualMachineUnitTest, eval_apply) {
+  gc::GC garbage_collector;
+  gc::init_create_node(garbage_collector);
 
   // Given: A native-closure to wrap the append method for strings
 
@@ -1053,6 +1079,8 @@ TEST(HeapVirtualMachineUnitTest, eval_apply) {
  * @brief Test: evaluate_assembly_instruction method with (nuate s var) as expr
  */
 TEST(HeapVirtualMachineUnitTest, eval_nuate) {
+  gc::GC garbage_collector;
+  gc::init_create_node(garbage_collector);
 
   // Given: A closure that represents the procedure (lambda (k) (k 'a) 'b)
 
@@ -1234,6 +1262,8 @@ TEST(HeapVirtualMachineUnitTest, eval_nuate) {
  * @brief Test: The difference between standard closure vs. continuation
  */
 TEST(HeapVirtualMachineUnitTest, closure_vs_continuation) {
+  gc::GC garbage_collector;
+  gc::init_create_node(garbage_collector);
   // Given: A closure that represents the procedure (lambda (k) (k 'a) 'b)
 
   EnvPtr env = std::make_shared<Environment>(nullptr);

@@ -13,7 +13,8 @@ namespace shaka {
 
 class CallFrame;
 class Data;
-using NodePtr = std::shared_ptr<Data>;
+//using NodePtr = std::shared_ptr<Data>;
+using NodePtr = gc::GCNode;
 
 using EnvPtr = std::shared_ptr<Environment>;
 using FramePtr = std::shared_ptr<CallFrame>;
