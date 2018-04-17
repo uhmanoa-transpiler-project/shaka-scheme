@@ -4,6 +4,7 @@
 
 #include "shaka_scheme/system/gc/GCNode.hpp"
 #include "shaka_scheme/system/gc/GCData.hpp"
+#include <algorithm>
 
 namespace shaka {
 
@@ -17,7 +18,19 @@ GCNode::GCNode(GCData * data) {
 
 GCNode::GCNode(const GCNode& other) : gc_data(other.gc_data) {}
 
+GCNode::GCNode(GCNode&& other) : gc_data(other.gc_data) {
+  other.gc_data = nullptr;
+}
+
 GCNode::~GCNode() {}
+
+void swap(GCNode& lhs, GCNode& rhs) {
+  std::swap(lhs.gc_data, rhs.gc_data);
+}
+
+GCNode& GCNode::operator=(GCNode other) {
+  swap(*this, other);
+}
 
 Data& GCNode::operator*() const {
   return this->gc_data->get_data();
