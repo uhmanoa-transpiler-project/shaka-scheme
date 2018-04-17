@@ -49,9 +49,15 @@ void mark_node(const GCNode& node) {
   case shaka::Data::Type::CLOSURE: {
     // If the argument is a closure, mark its environment, frame, and expression
     Closure c = node->get<Closure>();
-    mark_call_frame(*c.get_call_frame());
-    mark_environment(*c.get_environment());
-    mark_expression(c.get_function_body());
+    if (c.get_call_frame() != nullptr) {
+      mark_call_frame(*c.get_call_frame());
+    }
+    if (c.get_environment() != nullptr) {
+      mark_environment(*c.get_environment());
+    }
+    if (c.get_function_body() != nullptr) {
+      mark_expression(c.get_function_body());
+    }
     break;
   }
   case shaka::Data::Type::CALL_FRAME: {
