@@ -58,7 +58,7 @@ void mark_node(const GCNode& node) {
     // If the argument is a call frame, mark its contents
     mark_call_frame(node->get<CallFrame>());
     break;
-  }q
+  }
   default:
     break;
 
