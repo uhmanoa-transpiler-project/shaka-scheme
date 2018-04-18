@@ -8,19 +8,19 @@
 namespace shaka {
 namespace gc {
 
-static void mark_accumulator(Accumulator a) {
+void mark_accumulator(const Accumulator& a) {
 }
 
-static void mark_expression(Expression e) {
+void mark_expression(const Expression& e) {
 }
 
-static void mark_environment(Environment env) {
+void mark_environment(const Environment& env) {
 }
 
-static void mark_call_frame(CallFrame f) {
+void mark_call_frame(const CallFrame& f) {
 }
 
-static void mark_value_rib(ValueRib vr) {
+void mark_value_rib(const ValueRib& vr) {
 }
 
 void mark(const HeapVirtualMachine& hvm) {
