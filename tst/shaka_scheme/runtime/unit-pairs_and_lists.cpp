@@ -180,6 +180,8 @@ TEST(PairsAndListsUnitTest, set_cdr){
  */
 TEST(PairsAndListsUnitTest, is_null) {
   using Args = std::deque<shaka::NodePtr>;
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
   Args args{
           shaka::create_node(shaka::Data())
   };
@@ -192,6 +194,8 @@ TEST(PairsAndListsUnitTest, is_null) {
  */
 TEST(PairsAndListsUnitTest, is_list){
   using Args = std::deque<shaka::NodePtr>;
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
 
   Args args {
       shaka::create_node(shaka::Number(1)),
@@ -207,8 +211,10 @@ TEST(PairsAndListsUnitTest, is_list){
  * @brief Tests the make-list function
  */
 TEST(PairsAndListsUnitTest, make_list){
-
   using Args = std::deque<shaka::NodePtr>;
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
+
   // Given: an argument of type NUMBER
   Args args {shaka::create_node(shaka::Number(3))};
   Args result {shaka::stdproc::impl::make_list(args)};
@@ -243,6 +249,8 @@ TEST(PairsAndListsUnitTest, make_list){
  */
 TEST(PairsAndListsUnitTest, list){
   using Args = std::deque<shaka::NodePtr>;
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
 
   // Given: an empty argument list
   Args null_args {};
@@ -267,6 +275,8 @@ TEST(PairsAndListsUnitTest, list){
  */
 TEST(PairsAndListsUnitTest, length){
   using Args = std::deque<shaka::NodePtr>;
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
 
   // Given: a set of numbers
   Args args  {shaka::create_node(shaka::Number(1)),
@@ -288,6 +298,8 @@ TEST(PairsAndListsUnitTest, length){
  */
 TEST(PairsAndListsUnitTest, append){
   using Args = std::deque<shaka::NodePtr>;
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
 
   // Given: no arguments
   Args empty_append_args {};
@@ -369,6 +381,8 @@ TEST(PairsAndListsUnitTest, append){
  */
 TEST(PairsAndListsUnitTest, reverse){
   using Args = std::deque<shaka::NodePtr>;
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
 
   // Given: 2 lists of numbers, one in reverse of the other
   Args args {shaka::create_node(shaka::Number(1)),
@@ -410,6 +424,9 @@ TEST(PairsAndListsUnitTest, reverse){
  */
 TEST(PairsAndListsUnitTest, list_tail){
   using Args = std::deque<shaka::NodePtr>;
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
+
   // Given: 2 lists, 1-5 and 3-5
   Args list_args {shaka::create_node(shaka::Number(1)),
                   shaka::create_node(shaka::Number(2)),
@@ -457,6 +474,8 @@ TEST(PairsAndListsUnitTest, list_tail){
  */
 TEST(PairsAndListsUnitTest, list_ref) {
   using Args = std::deque<shaka::NodePtr>;
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
 
   // Given: a list of arguments
   Args list_args{shaka::create_node(shaka::Number(1)),
@@ -487,6 +506,9 @@ TEST(PairsAndListsUnitTest, list_ref) {
  */
 TEST(PairsAndListsUnitTest, list_set){
   using Args = std::deque<shaka::NodePtr>;
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
+
   // Given: 2 lists, 1,2,10 and 1-3
   Args list_args {shaka::create_node(shaka::Number(1)),
                   shaka::create_node(shaka::Number(2)),
@@ -533,6 +555,8 @@ TEST(PairsAndListsUnitTest, list_set){
  */
 TEST(PairsAndListsUnitTest, list_copy) {
   using Args = std::deque<shaka::NodePtr>;
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
 
   // Given: a list of numeric arguments
   Args list_args{shaka::create_node(shaka::Number(1)),
