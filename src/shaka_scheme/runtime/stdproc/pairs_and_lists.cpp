@@ -7,9 +7,6 @@
 namespace shaka {
 namespace stdproc {
 
-using Args = std::deque<NodePtr>;
-
-using Callable = std::function<std::deque<NodePtr>(std::deque<NodePtr>)>;
 namespace impl {
 
 //(pair? ...)
@@ -48,9 +45,8 @@ Args car(Args args) {
                                 "car: Cannot return the car of"
                                     "an empty list");
   }
-  DataPair dp{create_node(Data(
-      DataPair(args[0])))};
-  return {create_node(Data(dp.car()))};
+
+  return {create_node(*args[0]->get<DataPair>().car())};
 }
 
 //(cdr ...)
@@ -66,9 +62,8 @@ Args cdr(Args args) {
                                 "cdr: Cannot return the cdr of"
                                     "an empty list");
   }
-  DataPair dp{create_node(Data(
-      DataPair(args[0])))};
-  return {create_node(Data(dp.cdr()))};
+
+  return {create_node(*args[0]->get<DataPair>().cdr())};
 }
 
 //(set-car! ...)
@@ -120,10 +115,12 @@ Args is_list(Args args) {
                                 "list?: Invalid number of arguments for "
                                     "procedure");
   }
-  return {create_node(Data(Boolean(
-      ((args[0]->get_type() == Data::Type::DATA_PAIR) &&
-          (args[0]->get<DataPair>().cdr()->get_type() == Data::Type::DATA_PAIR))
-  )))};
+  if (args[0]->get_type() != Data::Type::DATA_PAIR) {
+    throw InvalidInputException(27,
+                                "list?: Invalid number of arguments for "
+                                    "procedure");
+  }
+  return {create_node(Data(Boolean(core::is_proper_list(args[0]))))};
 }
 
 //(make-list ...)
@@ -424,5 +421,30 @@ Args list_copy(Args args) {
 }
 
 } // namespace impl
+
+Callable is_pair = impl::is_pair;
+Callable cons = impl::cons;
+Callable car = impl::car;
+Callable cdr = impl::cdr;
+Callable set_car = impl::set_car;
+Callable set_cdr = impl::set_cdr;
+Callable is_null = impl::is_null;
+Callable is_list = impl::is_list;
+Callable make_list = impl::make_list;
+Callable list = impl::list;
+Callable length = impl::length;
+Callable append = impl::append;
+Callable reverse = impl::reverse;
+Callable list_tail = impl::list_tail;
+Callable list_ref = impl::list_ref;
+Callable list_set = impl::list_set;
+//Callable memq = impl::memq;
+//Callable memv = impl::memv;
+//Callable member = impl::member;
+//Callable assq = impl::assq;
+//Callable assv = impl::assv;
+//Callable assoc = impl::assoc;
+Callable list_copy = impl::list_copy;
+
 } // namespace stdproc
 } // namespace shaka

@@ -44,6 +44,7 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 # SHAKA SCHEME
 ################################################################################
 set(SOURCE_FILES
+
         src/shaka_scheme/system/base/Data.cpp
         src/shaka_scheme/system/base/Boolean.cpp
         src/shaka_scheme/system/base/String.cpp
@@ -78,12 +79,15 @@ set(SOURCE_FILES
         src/shaka_scheme/system/gc/GCNode.cpp
         src/shaka_scheme/system/gc/GC.cpp
         src/shaka_scheme/runtime/stdproc/boolean.cpp
+        src/shaka_scheme/runtime/stdproc/pairs_and_lists.cpp
+
         src/shaka_scheme/system/base/Bytevector.cpp
         src/shaka_scheme/system/base/Character.cpp
         src/shaka_scheme/system/base/Vector.cpp
+
         )
 
-add_library(${SHAKA_SCHEME_LIBRARY_NAME} SHARED ${SOURCE_FILES} src/shaka_scheme/runtime/stdproc/pairs_and_lists.cpp)
+add_library(${SHAKA_SCHEME_LIBRARY_NAME} SHARED ${SOURCE_FILES})
 target_compile_options(${SHAKA_SCHEME_LIBRARY_NAME} PRIVATE -Wall -Wextra
         -pedantic)
 # Copy the shared library DLL/dynamic library file also into the

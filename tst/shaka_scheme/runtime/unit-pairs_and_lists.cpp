@@ -178,15 +178,12 @@ TEST(PairsAndListsUnitTest, is_list){
   using Args = std::deque<shaka::NodePtr>;
 
   Args args {
-      shaka::create_node(shaka::DataPair(
-          shaka::create_node(shaka::Number(1)),
-          shaka::create_node(shaka::DataPair(
-              shaka::create_node(shaka::Number(2)),
-              shaka::create_node(shaka::Number(3))
-          ))
-      ))
+      shaka::create_node(shaka::Number(1)),
+      shaka::create_node(shaka::Number(2)),
+      shaka::create_node(shaka::Number(3))
   };
-  Args result {shaka::stdproc::impl::is_list(args)};
+  Args list {shaka::stdproc::impl::list(args)};
+  Args result {shaka::stdproc::impl::is_list(list)};
   ASSERT_EQ(result[0]->get<shaka::Boolean>(), shaka::Boolean(true));
 }
 

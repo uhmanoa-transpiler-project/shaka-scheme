@@ -95,29 +95,29 @@ Args list_copy(Args args);
 
 } // namespace impl
 
-Callable is_pair = impl::is_pair;
-Callable cons = impl::cons;
-Callable car = impl::car;
-Callable cdr = impl::cdr;
-Callable set_car = impl::set_car;
-Callable set_cdr = impl::set_cdr;
-Callable is_null = impl::is_null;
-Callable is_list = impl::is_list;
-Callable make_list = impl::make_list;
-Callable list = impl::list;
-Callable length = impl::length;
-Callable append = impl::append;
-Callable reverse = impl::reverse;
-Callable list_tail = impl::list_tail;
-Callable list_ref = impl::list_ref;
-Callable list_set = impl::list_set;
-//Callable memq = impl::memq;
-//Callable memv = impl::memv;
-//Callable member = impl::member;
-//Callable assq = impl::assq;
-//Callable assv = impl::assv;
-//Callable assoc = impl::assoc;
-Callable list_copy = impl::list_copy;
+extern Callable is_pair;
+extern Callable cons;
+extern Callable car;
+extern Callable cdr;
+extern Callable set_car;
+extern Callable set_cdr;
+extern Callable is_null;
+extern Callable is_list;
+extern Callable make_list;
+extern Callable list;
+extern Callable length;
+extern Callable append;
+extern Callable reverse;
+extern Callable list_tail;
+extern Callable list_ref;
+extern Callable list_set;
+//extern Callable memq;
+//extern Callable memv;
+//extern Callable member;
+//extern Callable assq;
+//extern Callable assv;
+//extern Callable assoc;
+extern Callable list_copy;
 
 } // namespace stdproc
 } // namespace shaka
