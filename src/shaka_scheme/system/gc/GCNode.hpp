@@ -5,32 +5,45 @@
 #ifndef SHAKA_SCHEME_GCNODE_HPP
 #define SHAKA_SCHEME_GCNODE_HPP
 
-#include "shaka_scheme/system/base/Data.hpp"
-#include "shaka_scheme/system/base/DataPair.hpp"
-#include "shaka_scheme/system/gc/GCData.hpp"
+#include "mark_procedures.hpp"
 
 namespace shaka {
+class Data;
 
-    namespace gc {
-
+namespace gc {
+class GCData;
 /**
  * @brief Defines the type of GCNode, the object which will
  * wrap over GCData, providing a managed interface to Data
  */
-        class GCNode {
-        public:
+class GCNode {
+public:
 
-            GCNode(GCData *data);
-            ~GCNode();
+  GCNode();
+  GCNode(GCData * data);
+  GCNode(const GCNode& other);
+  GCNode(GCNode&& other);
+  ~GCNode();
 
-            Data &operator*();
-            Data *operator->();
+  Data& operator*() const;
+  Data * operator->() const;
 
-        private:
-            GCData *gc_data;
-        };
+  Data * get() const;
+  operator bool() const;
 
-    } // namespace gc
+  GCNode& operator=(GCNode other);
+
+  friend bool operator==(const GCNode& lhs, const GCNode& rhs);
+  friend bool operator!=(const GCNode& lhs, const GCNode& rhs);
+
+  friend void mark_node(const GCNode& node);
+  friend void swap(GCNode& lhs, GCNode& rhs);
+
+private:
+  GCData * gc_data;
+};
+
+} // namespace gc
 } // namespace shaka
 
 #endif //SHAKA_SCHEME_GCNODE_HPP

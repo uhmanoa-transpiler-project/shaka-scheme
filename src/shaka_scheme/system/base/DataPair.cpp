@@ -4,12 +4,22 @@
 
 #include "shaka_scheme/system/base/DataPair.hpp"
 #include "shaka_scheme/system/base/Data.hpp"
+#include "shaka_scheme/system/gc/GCNode.hpp"
+#include "shaka_scheme/system/gc/GC.hpp"
+#include "shaka_scheme/system/gc/init_gc.hpp"
 
 namespace shaka {
 
-NodePtr create_node(const Data& data) {
+std::shared_ptr<Data> create_node_shared_ptr(const Data& data) {
   return std::make_shared<Data>(data);
 }
+
+std::function<gc::GCNode(const Data&)> create_node;
+/* =
+    [](const Data& data) {
+      return create_node_shared_ptr(data);
+    };
+*/
 
 void swap (shaka::DataPair& lhs, shaka::DataPair& rhs) {
   using std::swap;

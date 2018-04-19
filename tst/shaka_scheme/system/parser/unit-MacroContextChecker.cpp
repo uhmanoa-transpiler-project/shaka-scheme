@@ -4,6 +4,8 @@
 #include "shaka_scheme/system/parser/parser_definitions.hpp"
 #include "shaka_scheme/system/vm/HeapVirtualMachine.hpp"
 #include "shaka_scheme/system/parser/syntax_rules/macro_engine.hpp"
+#include "shaka_scheme/system/gc/GC.hpp"
+#include "shaka_scheme/system/gc/init_gc.hpp"
 
 using namespace shaka::core;
 using namespace shaka::macro;
@@ -11,6 +13,8 @@ using namespace shaka;
 
 
 TEST(MacroContext, setup_vm) {
+  gc::GC garbage_collector;
+  gc::init_create_node(garbage_collector);
   const auto& c = create_node;
   NodePtr acc = create_node(Symbol("hi"));
 
@@ -77,6 +81,8 @@ TEST(MacroContext, other) {
   using namespace shaka::parser;
   using namespace shaka;
 
+  gc::GC garbage_collector;
+  gc::init_create_node(garbage_collector);
   lexer::rules::init_lexer_rules();
   // Given: an input string
   //std::string buf = "(lambda (x) (+ x z) (lambda (y) (- y a)) (lambda (q)

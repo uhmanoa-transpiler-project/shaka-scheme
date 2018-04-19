@@ -6,11 +6,17 @@
 #include "shaka_scheme/runtime/stdproc/numbers_arithmetic.hpp"
 #include "shaka_scheme/system/base/Data.hpp"
 #include "shaka_scheme/system/vm/Closure.hpp"
+#include "shaka_scheme/system/gc/GC.hpp"
+#include "shaka_scheme/system/gc/init_gc.hpp"
+#include "shaka_scheme/system/base/DataPair.hpp"
 
+using namespace shaka;
 /**
  * @brief Test: Built in add procedure functionality
  */
 TEST(NumberProceduresUnitTest, add) {
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
   using Args = std::deque<shaka::NodePtr>;
 
   // Given: Numeric arguments that are 5 and 7
@@ -36,6 +42,8 @@ TEST(NumberProceduresUnitTest, add) {
 }
 
 TEST(NumberProceduresUnitTest, multiply) {
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
   using Args = std::deque<shaka::NodePtr>;
 
   // Given: Numeric argumetns that are 0.5, 20, and 1/2

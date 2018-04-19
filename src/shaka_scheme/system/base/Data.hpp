@@ -16,6 +16,7 @@
 #include "shaka_scheme/system/base/PrimitiveFormMarker.hpp"
 #include "shaka_scheme/system/vm/Closure.hpp"
 #include "shaka_scheme/system/vm/CallFrame.hpp"
+#include "shaka_scheme/system/gc/GCNode.hpp"
 
 
 #include <memory>
@@ -36,7 +37,8 @@ class PrimitiveFormMarker;
 
 class Data;
 
-using NodePtr = std::shared_ptr<Data>;
+//using NodePtr = std::shared_ptr<Data>;
+using NodePtr = gc::GCNode;
 
 /**
  * @brief The basic sum type or variant type of all possible Scheme data types.

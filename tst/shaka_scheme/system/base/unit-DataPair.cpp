@@ -3,6 +3,8 @@
 //
 #include "shaka_scheme/system/base/DataPair.hpp"
 #include "shaka_scheme/system/base/Data.hpp"
+#include "shaka_scheme/system/gc/GC.hpp"
+#include "shaka_scheme/system/gc/init_gc.hpp"
 
 #include <gmock/gmock.h>
 
@@ -10,6 +12,8 @@
  * @brief Test: Constructor and car().
  */
 TEST(DataPairUnitTest, single_constructor_and_cdr) {
+    shaka::gc::GC garbage_collector;
+    shaka::gc::init_create_node(garbage_collector);
     // Given: Data initialized to a (String, null list)
     shaka::String str("Hello world");
     shaka::Data data(str);
@@ -29,6 +33,8 @@ TEST(DataPairUnitTest, single_constructor_and_cdr) {
  * @brief Test: dotted pair and cdr().
  */
 TEST(DataPairUnitTest, double_constructor_and_cdr) {
+    shaka::gc::GC garbage_collector;
+    shaka::gc::init_create_node(garbage_collector);
     // Given: two Datas containing different symbols
     shaka::Symbol sym0("foo");
     shaka::Symbol sym1("bar");
@@ -47,6 +53,8 @@ TEST(DataPairUnitTest, double_constructor_and_cdr) {
 }
 
 TEST(DataPairUnitTest, set_car) {
+    shaka::gc::GC garbage_collector;
+    shaka::gc::init_create_node(garbage_collector);
     // Given: a DataPair initialized to (#t, #f)
     shaka::DataPair pair(
         shaka::Data(shaka::Boolean(true)),
@@ -65,6 +73,8 @@ TEST(DataPairUnitTest, set_car) {
 }
 
 TEST(DataPairUnitTest, set_cdr) {
+    shaka::gc::GC garbage_collector;
+    shaka::gc::init_create_node(garbage_collector);
     // Given: a DataPair initialized to (#t, #f)
     shaka::DataPair pair(
         shaka::Data(shaka::Boolean(true)),

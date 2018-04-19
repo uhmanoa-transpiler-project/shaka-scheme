@@ -4,10 +4,16 @@
 
 #include <gmock/gmock.h>
 #include "shaka_scheme/runtime/stdproc/pairs_and_lists.hpp"
+
+#include "shaka_scheme/system/gc/GC.hpp"
+#include "shaka_scheme/system/gc/init_gc.hpp"
+
 /**
  * @brief Tests the is-pair? function
  */
 TEST(PairsAndListsUnitTest, is_pair) {
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
   using Args = std::deque<shaka::NodePtr>;
 
   // Given: numeric arguments 5 and 5
@@ -31,6 +37,8 @@ TEST(PairsAndListsUnitTest, is_pair) {
  */
 TEST(PairsAndListsUnitTest, cons) {
   using Args = std::deque<shaka::NodePtr>;
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
 
   // Given: numeric arguments 1 and 2 as an Args
   Args pair1{
@@ -59,6 +67,8 @@ TEST(PairsAndListsUnitTest, cons) {
  */
 TEST(PairsAndListsUnitTest, car){
   using Args = std::deque<shaka::NodePtr>;
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
 
   // Given: arguments of a string and a number
   Args args{
@@ -81,6 +91,8 @@ TEST(PairsAndListsUnitTest, car){
  */
 TEST(PairsAndListsUnitTest, cdr){
   using Args = std::deque<shaka::NodePtr>;
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
 
   // Given: a string and a numeric argument
   Args args {
@@ -103,6 +115,8 @@ TEST(PairsAndListsUnitTest, cdr){
  */
 TEST(PairsAndListsUnitTest, set_car){
   using Args = std::deque<shaka::NodePtr>;
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
 
   // Given: the numeric arguments 1 and 2
   Args args {
@@ -134,6 +148,8 @@ TEST(PairsAndListsUnitTest, set_car){
  */
 TEST(PairsAndListsUnitTest, set_cdr){
   using Args = std::deque<shaka::NodePtr>;
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
 
   // Given: The numeric arguments 1 and 2
   Args args {
