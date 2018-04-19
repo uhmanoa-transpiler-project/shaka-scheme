@@ -203,4 +203,43 @@ namespace shaka {
         return this->sign;
     }
 
+    // Credit to Sanfoundry for the C++ implementation of the Schonhage-Strassen Algorithm
+    // https://www.sanfoundry.com/cpp-program-implement-schonhage-strassen-algorithm-multiplication-two-numbers/
+    std::string BigInteger::schonhageStrassen(std::uint64_t x, std::uint64_t y, int n, int m)
+    {
+
+        int linearConvolution[n + m - 1];
+        for (int i = 0; i < (n + m - 1); i++)
+            linearConvolution[i] = 0;
+
+        std::uint64_t p = x;
+        for (int i = 0; i < m; i++)
+        {
+            x = p;
+            for (int j = 0; j < n; j++)
+            {
+                linearConvolution[i + j] += (y % 10) * (x % 10);
+                x /= 10;
+            }
+            y /= 10;
+        }
+
+        std::uint64_t product = 0;
+        std::int64_t nextCarry = 0, base = 1;
+        std::string bigProduct = "";
+
+        for (int i = 0; i < n + m - 1; i++)
+        {
+            linearConvolution[i] += nextCarry;
+            if(i < n + m - 2)
+                bigProduct.insert(0, std::to_string((linearConvolution[i] % 10)));
+            // product = product + (base * (linearConvolution[i] % 10));
+            nextCarry = linearConvolution[i] / 10;
+            // base *= 10;
+        }
+
+        std::cout << bigProduct << std::endl;
+        return bigProduct;
+    }
+
 } // namespace shaka

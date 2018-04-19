@@ -214,3 +214,19 @@ TEST(BigInteger, test_really_really_big_number) {
     ASSERT_EQ(n3.get_value(), bigNum);
     ASSERT_EQ(n3.get_str_value(), n1.get_str_value());
 }
+
+/**
+ * @brief Test: Implementation of the Schonage-Strassen Algorithm
+ * (Credit to Sanfoundry for the C++ implementation of the Schonage-Strassen Algorithm
+ * https://www.sanfoundry.com/cpp-program-implement-schonhage-strassen-algorithm-multiplication-two-numbers/)
+ */
+TEST(BigInteger, Schonhage_Strassen) {
+    std::string num = "1234567890123456789";
+    std::uint64_t n1 = 1234567890123456789;
+    std::uint64_t n2 = 9876543210987654321;
+    shaka::BigInteger n;
+
+    std::string product = n.schonhageStrassen(n1,n2,num.length()+1,num.length()+1);
+    ASSERT_EQ(product, "12193263113702179522374638011112635269");
+
+}
