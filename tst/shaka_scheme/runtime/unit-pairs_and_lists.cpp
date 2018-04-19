@@ -213,7 +213,7 @@ TEST(PairsAndListsUnitTest, is_list){
   };
   Args list {shaka::stdproc::impl::list(args)};
 
-  Args result {shaka::stdproc::impl::is_list(args)};
+  Args result {shaka::stdproc::impl::is_list(list)};
   ASSERT_EQ(result[0]->get<shaka::Boolean>(), shaka::Boolean(true));
 }
 
