@@ -8,6 +8,7 @@
 #include "shaka_scheme/system/base/Number.hpp"
 #include "shaka_scheme/system/base/Data.hpp"
 #include "shaka_scheme/system/exceptions/TypeException.hpp"
+#include "shaka_scheme/system/core/lists.hpp"
 
 #include <cmath>
 #include <functional>
@@ -24,100 +25,100 @@ using Callable = std::function<std::deque<NodePtr>(std::deque<NodePtr>)>;
 namespace impl {
 
 //(pair? ...)
-Args is_pair(Args args){
-  if (args.size() != 1) {
-    throw InvalidInputException(1,
-                                "pair?: Invalid number of arguments for "
-                                    "procedure");
-  }
-  return {shaka::create_node(shaka::Data(shaka::Boolean(
-      args[0]->get_type() == Data::Type::DATA_PAIR)))};
-}
+Args is_pair(Args args);
 
 //(cons ...)
-Args cons(Args args) {
-  if (args.size() != 2) {
-    throw InvalidInputException(2,
-                                "cons: Invalid number of arguments for "
-                                    "procedure");
-  }
-  return {shaka::create_node(shaka::DataPair(shaka::Data(*args[0]),
-                                             shaka::Data(*args[1])))
-  };
-};
+Args cons(Args args);
 
 //(car ...)
-Args car(Args args) {
-
-  if (args[0]->get_type() != Data::Type::DATA_PAIR) {
-    throw InvalidInputException(3,
-                                "car: Type of given argument is not "
-                                    "DATA_PAIR");
-  }
-  if (args[0]->get_type() == Data::Type::NULL_LIST) {
-    throw InvalidInputException(4,
-                                "car: Cannot return the car of"
-                                    "an empty list");
-  }
-  shaka::DataPair dp {shaka::create_node(shaka::Data(
-      shaka::DataPair(args[0])))};
-  return {shaka::create_node(shaka::Data(dp.car()))};
-}
+Args car(Args args);
 
 //(cdr ...)
-Args cdr(Args args) {
+Args cdr(Args args);
 
-  if (args[0]->get_type() != Data::Type::DATA_PAIR) {
-    throw InvalidInputException(5,
-                                "cdr: Type of given argument is not "
-                                    "DATA_PAIR");
-  }
-  if (args[0]->get_type() == Data::Type::NULL_LIST) {
-    throw InvalidInputException(6,
-                                "cdr: Cannot return the cdr of"
-                                    "an empty list");
-  }
-  shaka::DataPair dp {shaka::create_node(shaka::Data(
-      shaka::DataPair(args[0])))};
-  return {shaka::create_node(shaka::Data(dp.cdr()))};
-}
 //(set-car! ...)
-Args set_car(Args args){
-  if(args[0]->get_type() != Data::Type::DATA_PAIR){
-    throw InvalidInputException(10,
-                                "set-car!: Type of given argument is not "
-                                    "DATA_PAIR");
-  }
-  if(args.size() != 2){
-    throw InvalidInputException(11,
-                                "set-car!: Invalid number of arguments given");
-  }
-  args[0]->get<DataPair>().set_car(args[1]);
-  return {create_unspecified()};
-}
+Args set_car(Args args);
 
 //(set-cdr! ...)
-Args set_cdr(Args args){
-  if(args[0]->get_type() != Data::Type::DATA_PAIR){
-    throw InvalidInputException(12,
-                                "set-cdr!: Type of given argument is not "
-                                    "DATA_PAIR");
-  }
-  if(args.size() != 2){
-    throw InvalidInputException(13,
-                                "set-cdr!: Invalid number of arguments given");
-  }
-  args[0]->get<DataPair>().set_cdr(args[1]);
-  return {create_unspecified()};
-}
+Args set_cdr(Args args);
+
+//(null? ...)
+Args is_null(Args args);
+
+//(list? ...)
+Args is_list(Args args);
+
+//(make-list ...)
+Args make_list(Args args);
+
+//(list ...)
+Args list(Args args);
+
+//(length ...)
+Args length(Args args);
+
+//(append ...)
+Args append(Args args);
+
+//(reverse ...)
+Args reverse(Args args);
+
+//(list-tail ...)
+Args list_tail(Args args);
+
+//(list-ref ...)
+Args list_ref(Args args);
+
+//(list-set! ...)
+Args list_set(Args args);
+
+//(memq ...)
+Args memq(Args args);
+
+//(memv ...)
+Args memv(Args args);
+
+//(member ...)
+Args member(Args args);
+
+//(assq ...)
+Args assq(Args args);
+
+//(assv ...)
+Args assv(Args args);
+
+//(assoc ...)
+Args assoc(Args args);
+
+//(list-copy ...)
+Args list_copy(Args args);
+
 } // namespace impl
 
-Callable is_pair = impl::is_pair;
-Callable cons = impl::cons;
-Callable car = impl::car;
-Callable cdr = impl::cdr;
-Callable set_car = impl::set_car;
-Callable set_cdr = impl::set_cdr;
+extern Callable is_pair;
+extern Callable cons;
+extern Callable car;
+extern Callable cdr;
+extern Callable set_car;
+extern Callable set_cdr;
+extern Callable is_null;
+extern Callable is_list;
+extern Callable make_list;
+extern Callable list;
+extern Callable length;
+extern Callable append;
+extern Callable reverse;
+extern Callable list_tail;
+extern Callable list_ref;
+extern Callable list_set;
+//extern Callable memq;
+//extern Callable memv;
+//extern Callable member;
+//extern Callable assq;
+//extern Callable assv;
+//extern Callable assoc;
+extern Callable list_copy;
+
 } // namespace stdproc
 } // namespace shaka
 
