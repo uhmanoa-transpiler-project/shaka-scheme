@@ -1,11 +1,20 @@
-#include <gmock/gmock.h>
+
+
 #include <shaka_scheme/system/core/vectors.hpp>
 #include <shaka_scheme/system/base/DataPair.hpp>
+
+#include <shaka_scheme/system/gc/GC.hpp>
+#include <shaka_scheme/system/gc/init_gc.hpp>
+
+#include <gmock/gmock.h>
 
 /**
  * @brief Test: Testing (list->vector l)
  */
 TEST(VectorsUnitTest, list_to_vector_3_elements) {
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
+
   using namespace shaka;
   const auto& c = shaka::create_node;
 
@@ -32,6 +41,9 @@ TEST(VectorsUnitTest, list_to_vector_3_elements) {
  * @brief Test: Testing (list->vector l)
  */
 TEST(VectorsUnitTest, vector_to_list_3_elements) {
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
+
   using namespace shaka;
   const auto& c = shaka::create_node;
 
