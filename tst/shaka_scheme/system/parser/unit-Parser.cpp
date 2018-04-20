@@ -57,6 +57,9 @@ TEST(ParserUnitTest, set) {
  * @brief Test: parse vector expression
  */
 TEST(ParserUnitTest, vector) {
+  gc::GC garbage_collector;
+  gc::init_create_node(garbage_collector);
+
   // Given: the lexer rules are initialized
   lexer::rules::init_lexer_rules();
 
@@ -104,6 +107,9 @@ TEST(ParserUnitTest, vector) {
  * parsed result
  */
 TEST(ParserUnitTest, bytevector_success) {
+  gc::GC garbage_collector;
+  gc::init_create_node(garbage_collector);
+
   // Given: the lexer rules are initialized
   lexer::rules::init_lexer_rules();
 
@@ -125,6 +131,9 @@ TEST(ParserUnitTest, bytevector_success) {
  * @brief Test: parse invalid bytevector expression with negative integer
  */
 TEST(ParserUnitTest, bytevector_negative_integer_element_failure) {
+  gc::GC garbage_collector;
+  gc::init_create_node(garbage_collector);
+
   // Given: the lexer rules are initialized
   lexer::rules::init_lexer_rules();
 
@@ -145,6 +154,9 @@ TEST(ParserUnitTest, bytevector_negative_integer_element_failure) {
  * @brief Test: parse invalid bytevector expression with non-Number elements
  */
 TEST(ParserUnitTest, bytevector_non_number_element_failure) {
+  gc::GC garbage_collector;
+  gc::init_create_node(garbage_collector);
+
   // Given: the lexer rules are initialized
   lexer::rules::init_lexer_rules();
 
