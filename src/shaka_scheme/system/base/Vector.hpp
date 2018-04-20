@@ -1,6 +1,8 @@
 #ifndef SHAKA_SCHEME_CORE_BASE_VECTOR_HPP
 #define SHAKA_SCHEME_CORE_BASE_VECTOR_HPP
 
+#include <shaka_scheme/system/gc/GCNode.hpp>
+
 #include <initializer_list>
 #include <cctype>
 #include <memory>
@@ -9,7 +11,8 @@ namespace shaka {
 
 class Data;
 
-using NodePtr = std::shared_ptr<Data>;
+//using NodePtr = std::shared_ptr<Data>;
+using NodePtr = gc::GCNode;
 
 class Vector {
   NodePtr* arr;
