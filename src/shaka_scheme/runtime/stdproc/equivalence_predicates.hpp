@@ -8,6 +8,8 @@
 #include "shaka_scheme/system/base/Number.hpp"
 #include "shaka_scheme/system/base/Data.hpp"
 #include "shaka_scheme/system/exceptions/TypeException.hpp"
+#include "shaka_scheme/system/exceptions/InvalidInputException.hpp"
+//#include "shaka_scheme/system/base/"
 
 #include <cmath>
 #include <functional>
@@ -24,15 +26,36 @@ using Callable = std::function<std::deque<NodePtr>(std::deque<NodePtr>)>;
 
 namespace impl {
 
-Args is_eqv(Args);
-Args is_eq(Args);
-Args is_equal(Args);
+/**
+ * @brief Implementation of eqv? an Equivalence Predicate
+ * @param args List of arguments from a Shaka Scheme function call to eqv?
+ * @return Returns if the two datas are equivalent to each other (will return
+ * false on lists)
+ */
+Args is_eqv(Args args);
+
+/**
+ * @brief Implementation of eq? an Equivalence Predicate
+ * @param args List of arguments from a Shaka Scheme function call to eq?
+ * @return Returns if the two datas are equivalent to each other (follows the
+ * same standard as eqv in this implementation)
+ */
+Args is_eq(Args args);
+
+/**
+ * @brief Implementation of equal an Equivalence Predicate
+ * @param args List of arguments from a Shaka Scheme function call to equal?
+ * @return Returns if the two items passed are equivalent to each other. Will
+ * recursively compare two lists together for equivalence
+ */
+Args is_equal(Args args);
 
 } // namespace impl
 
-Callable eqv = impl::is_eqv;
-Callable eq = impl::is_eq;
-Callable equal = impl::is_equal;
+
+extern Callable eqv;
+extern Callable eq;
+extern Callable equal;
 
 } // namespace stdproc
 } // namespace shaka

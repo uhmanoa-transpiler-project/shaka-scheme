@@ -89,6 +89,7 @@ set(SOURCE_FILES
         src/shaka_scheme/system/gc/init_gc.cpp
         src/shaka_scheme/system/base/BigInteger.cpp
         src/shaka_scheme/system/gc/mark_procedures.cpp
+        src/shaka_scheme/runtime/stdproc/equivalence_predicates.cpp
         )
 
 add_library(${SHAKA_SCHEME_LIBRARY_NAME} SHARED ${SOURCE_FILES})
@@ -97,10 +98,10 @@ target_compile_options(${SHAKA_SCHEME_LIBRARY_NAME} PRIVATE -Wall -Wextra
 # Copy the shared library DLL/dynamic library file also into the
 # bin/tst/ folder so that the tests will also be able to find and link to it.
 add_custom_command(TARGET ${SHAKA_SCHEME_LIBRARY_NAME}
-POST_BUILD
-COMMAND ${CMAKE_COMMAND} -E copy
-$<TARGET_FILE:${SHAKA_SCHEME_LIBRARY_NAME}>
-"${CMAKE_BINARY_DIR}/bin/tst/${CMAKE_SHARED_LIBRARY_PREFIX}${SHAKA_SCHEME_LIBRARY_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX}")
+        POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy
+        $<TARGET_FILE:${SHAKA_SCHEME_LIBRARY_NAME}>
+        "${CMAKE_BINARY_DIR}/bin/tst/${CMAKE_SHARED_LIBRARY_PREFIX}${SHAKA_SCHEME_LIBRARY_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX}")
 
 ################################################################################
 # TEST EXTERNAL LIBRARIES

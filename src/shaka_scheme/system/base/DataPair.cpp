@@ -28,7 +28,7 @@ void swap (shaka::DataPair& lhs, shaka::DataPair& rhs) {
   swap(lhs.right, rhs.right);
 }
 
-} // namespace shska
+} // namespace shaka
 
 shaka::DataPair::DataPair() :
   left(create_node(Data())),
