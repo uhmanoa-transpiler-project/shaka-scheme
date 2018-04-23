@@ -15,6 +15,7 @@ void mark_expression(const Expression& e) {
 }
 
 void mark_environment(const Environment& env) {
+
 }
 
 void mark_call_frame(const CallFrame& f) {
