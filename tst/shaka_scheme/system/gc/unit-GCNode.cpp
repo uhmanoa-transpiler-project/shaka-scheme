@@ -74,3 +74,33 @@ TEST (GCNodeUnitTest, test_get_method) {
 
   ASSERT_TRUE(num1.get() == env->get_value(shaka::Symbol("num1")).get());
 }
+
+/**
+ * @Test: Test assignment operator of GCNode
+ */
+TEST (GCNodeUnitTest, test_assignment_operator) {
+  // Given: You have created a garbage collector object
+
+  shaka::gc::GC garbage_collector;
+
+  // Given: You have bound create_node() to this garbage collector
+
+  shaka::gc::init_create_node(garbage_collector);
+
+  // Given: You have created a GCNode using create_node();
+
+  shaka::NodePtr node = shaka::create_node(shaka::Data(shaka::Number(5)));
+
+  // When: You assign this node to a separate NodePtr reference
+
+  shaka::NodePtr copy_node = node;
+
+  // Then: The contents of the two NodePtrs should be the same
+
+  ASSERT_EQ(node->get<shaka::Number>(), copy_node->get<shaka::Number>());
+
+  // Then: The two NodePtrs should point to the same Data object
+
+  ASSERT_EQ(node.get(), copy_node.get());
+
+}
