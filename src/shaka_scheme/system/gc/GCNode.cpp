@@ -30,6 +30,7 @@ void swap(GCNode& lhs, GCNode& rhs) {
 
 GCNode& GCNode::operator=(GCNode other) {
   swap(*this, other);
+  return *this;
 }
 
 Data& GCNode::operator*() const {
