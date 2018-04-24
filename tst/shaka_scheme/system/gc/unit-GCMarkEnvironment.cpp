@@ -30,15 +30,16 @@ TEST(GCMarkEnvironmentTest, mark_environment) {
   e.set_value(key2, value2);
   e.set_value(key3, value3);
 
-  //std::cout << "The size of GC is " << garbage_collector.get_size() <<
-           // std::endl;
+  // Then: The number of objects in the GC's managed memory is 3
 
-  // Then: The number of objects in the GC's managed memory is 27 due to
-  // calls to copy constructors
+  ASSERT_EQ(garbage_collector.get_size(), 3);
 
-  //ASSERT_EQ(garbage_collector.get_size(), 3);
+  // When: You invoke mark_environment, and then run a sweep
 
-  // When: You invoke the mark_environment function
+  shaka::gc::mark_environment(e);
+  garbage_collector.sweep();
 
-  // Then:
+  // Then: The number of objects in the GC's managed memory is still 3
+
+  ASSERT_EQ(garbage_collector.get_size(), 3);
 }
