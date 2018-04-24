@@ -15,7 +15,10 @@ void mark_expression(const Expression& e) {
 }
 
 void mark_environment(const Environment& env) {
-
+  for(auto it = env.get_bindings().begin(); it != env.get_bindings().end();
+      it++) {
+    mark_node(it->second);
+  }
 }
 
 void mark_call_frame(const CallFrame& f) {
