@@ -69,7 +69,7 @@ TEST(GCMarkEnvironmentTest, mark_environment_rebinding) {
   e.set_value(key3, value3);
   e.modify_value(key1, value4);
 
-  // Then: The number of objects in the GC's managed memory is 3
+  // Then: The number of objects in the GC's managed memory is 4
 
   ASSERT_EQ(garbage_collector.get_size(), 4);
 
@@ -78,7 +78,7 @@ TEST(GCMarkEnvironmentTest, mark_environment_rebinding) {
   shaka::gc::mark_environment(e);
   garbage_collector.sweep();
 
-  // Then: The number of objects in the GC's managed memory is still 3
+  // Then: The number of objects in the GC's managed memory becomes 3
 
   ASSERT_EQ(garbage_collector.get_size(), 3);
 }
