@@ -9,3 +9,5 @@ macro_shaka_scheme_test(unit-GC)
 macro_shaka_scheme_test(unit-GCInit)
 
 macro_shaka_scheme_test(unit-GCMark)
+
+macro_shaka_scheme_test(unit-GCMarkEnvironment)
