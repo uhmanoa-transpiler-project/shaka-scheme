@@ -14,6 +14,9 @@
 #include "shaka_scheme/system/base/IEnvironment.hpp"
 #include "shaka_scheme/system/base/DataPair.hpp"
 #include "shaka_scheme/system/base/PrimitiveFormMarker.hpp"
+#include "shaka_scheme/system/base/Vector.hpp"
+#include "shaka_scheme/system/base/Bytevector.hpp"
+
 #include "shaka_scheme/system/vm/Closure.hpp"
 #include "shaka_scheme/system/vm/CallFrame.hpp"
 #include "shaka_scheme/system/gc/GCNode.hpp"
@@ -32,6 +35,9 @@ class Environment;
 class DataPair;
 class UserStructData;
 class Closure;
+class Vector;
+class Bytevector;
+
 class CallFrame;
 class PrimitiveFormMarker;
 
@@ -56,7 +62,9 @@ public:
     CLOSURE,
     CALL_FRAME,
     NULL_LIST,
-    PRIMITIVE_FORM
+    PRIMITIVE_FORM,
+    VECTOR,
+    BYTEVECTOR
   };
 private:
   Type type_tag;
@@ -70,6 +78,8 @@ private:
     shaka::Closure closure;
     shaka::CallFrame call_frame;
     shaka::PrimitiveFormMarker primitive_form;
+    shaka::Vector vector;
+    shaka::Bytevector bytevector;
   };
 
 public:
@@ -112,6 +122,16 @@ public:
   Data(shaka::PrimitiveFormMarker other) {
     new(&primitive_form) shaka::PrimitiveFormMarker(other);
     this->type_tag = Type::PRIMITIVE_FORM;
+  }
+
+  Data(shaka::Vector other) {
+    new(&vector) shaka::Vector(other);
+    this->type_tag = Type::VECTOR;
+  }
+
+  Data(shaka::Bytevector other) {
+    new(&bytevector) shaka::Bytevector(other);
+    this->type_tag = Type::BYTEVECTOR;
   }
 
   /**
@@ -163,6 +183,8 @@ template<> shaka::Closure& shaka::Data::get<shaka::Closure>();
 template<> shaka::CallFrame& shaka::Data::get<shaka::CallFrame>();
 template<> shaka::PrimitiveFormMarker& shaka::Data::get<shaka::PrimitiveFormMarker>();
 template<> shaka::Number& shaka::Data::get<shaka::Number>();
+template<> shaka::Vector& shaka::Data::get<shaka::Vector>();
+template<> shaka::Bytevector& shaka::Data::get<shaka::Bytevector>();
 
 std::ostream& operator<<(std::ostream& lhs, shaka::Data rhs);
 

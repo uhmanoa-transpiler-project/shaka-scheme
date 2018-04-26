@@ -42,6 +42,14 @@ shaka::Data::Data(const shaka::Data& other) :
     new(&primitive_form) shaka::PrimitiveFormMarker(other.primitive_form);
     break;
   }
+  case shaka::Data::Type::VECTOR: {
+    new(&vector) shaka::Vector(other.vector);
+    break;
+  }
+  case shaka::Data::Type::BYTEVECTOR: {
+    new(&bytevector) shaka::Bytevector(other.bytevector);
+    break;
+  }
 
 //  case shaka::Data::Type::DATA_NODE: {
 //    new(&data_node) std::shared_ptr<shaka::DataNode>(other.data_node);
@@ -97,6 +105,14 @@ shaka::Data::~Data() {
   }
   case shaka::Data::Type::PRIMITIVE_FORM: {
     this->primitive_form.~PrimitiveFormMarker();
+    break;
+  }
+  case shaka::Data::Type::VECTOR: {
+    this->vector.~Vector();
+    break;
+  }
+  case shaka::Data::Type::BYTEVECTOR: {
+    this->bytevector.~Bytevector();
     break;
   }
 //  case shaka::Data::Type::ENVIRONMENT: {
@@ -176,6 +192,22 @@ shaka::Number& shaka::Data::get<shaka::Number>() {
   return this->number;
 }
 
+template<>
+shaka::Vector& shaka::Data::get<shaka::Vector>() {
+  if (this->get_type() != Type::VECTOR) {
+    throw shaka::TypeException(10, "Could not get() Vector from Data");
+  }
+  return this->vector;
+}
+
+template<>
+shaka::Bytevector& shaka::Data::get<shaka::Bytevector>() {
+  if (this->get_type() != Type::BYTEVECTOR) {
+    throw shaka::TypeException(10, "Could not get() Bytevector from Data");
+  }
+  return this->bytevector;
+}
+
 namespace shaka {
 
 std::ostream& operator<<(std::ostream& lhs, shaka::Data rhs) {
@@ -230,6 +262,30 @@ std::ostream& operator<<(std::ostream& lhs, shaka::Data rhs) {
   case shaka::Data::Type::PRIMITIVE_FORM: {
     PrimitiveFormMarker& temp = rhs.get<PrimitiveFormMarker>();
     lhs << temp;
+    break;
+  }
+  case shaka::Data::Type::VECTOR: {
+    Vector& temp = rhs.get<Vector>();
+    lhs << "#(";
+    if (temp.length() >= 1) {
+      for (std::size_t i = 0; i < temp.length() - 1; ++i) {
+        lhs << *temp[i] << ' ';
+      }
+      lhs << temp[temp.length()-1];
+    }
+    lhs << ")";
+    break;
+  }
+  case shaka::Data::Type::BYTEVECTOR: {
+    Bytevector& temp = rhs.get<Bytevector>();
+    lhs << "#u8(";
+    if (temp.length() >= 1) {
+      for (std::size_t i = 0; i < temp.length() - 1; ++i) {
+        lhs << temp[i] << ' ';
+      }
+      lhs << temp[temp.length()-1];
+    }
+    lhs << ")";
     break;
   }
 
