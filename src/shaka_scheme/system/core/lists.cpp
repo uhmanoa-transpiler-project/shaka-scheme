@@ -163,14 +163,14 @@ NodePtr reverse_helper(const NodePtr left, const NodePtr right) {
 }
 
 NodePtr reverse(NodePtr first) {
-  if (first->get_type() != shaka::Data::Type::DATA_PAIR) {
-    return create_node(*first);
+  NodePtr head {first};
+  // Create an null list.
+  NodePtr rev_head {shaka::create_node(shaka::Data())};
+  while (head->get_type() != Data::Type::NULL_LIST) {
+    rev_head = core::cons(head->get<shaka::DataPair>().car(), rev_head);
+    head = head->get<shaka::DataPair>().cdr();
   }
-  if (core::is_null_list(core::cdr(first)))  {
-    return core::list(core::car(first));
-  } else {
-    return shaka::core::reverse_helper(core::car(first), reverse(core::cdr(first)));
-  }
+  return rev_head;
 }
 
 
