@@ -25,10 +25,10 @@ set(CMAKE_CXX_STANDARD 11)
 set(SHAKA_SCHEME_MAJOR_VERSION 0)
 set(SHAKA_SCHEME_MINOR_VERSION 1)
 set(SHAKA_SCHEME_LIBRARY_NAME
-        "shaka-scheme-${SHAKA_SCHEME_MAJOR_VERSION}.$\
+"shaka-scheme-${SHAKA_SCHEME_MAJOR_VERSION}.$\
 {SHAKA_SCHEME_MINOR_VERSION}")
 set(SHAKA_SCHEME_REPL_NAME
-        "shaka-scheme-repl-${SHAKA_SCHEME_MAJOR_VERSION}.$\
+"shaka-scheme-repl-${SHAKA_SCHEME_MAJOR_VERSION}.$\
 {SHAKA_SCHEME_MINOR_VERSION}")
 
 include_directories(./src)
@@ -89,11 +89,12 @@ set(SOURCE_FILES
         src/shaka_scheme/system/gc/init_gc.cpp
         src/shaka_scheme/system/base/BigInteger.cpp
         src/shaka_scheme/system/gc/mark_procedures.cpp
+        src/shaka_scheme/runtime/stdproc/equivalence_predicates.cpp
         )
 
 add_library(${SHAKA_SCHEME_LIBRARY_NAME} SHARED ${SOURCE_FILES})
 target_compile_options(${SHAKA_SCHEME_LIBRARY_NAME} PRIVATE -Wall -Wextra
-        -pedantic)
+-pedantic)
 # Copy the shared library DLL/dynamic library file also into the
 # bin/tst/ folder so that the tests will also be able to find and link to it.
 add_custom_command(TARGET ${SHAKA_SCHEME_LIBRARY_NAME}
