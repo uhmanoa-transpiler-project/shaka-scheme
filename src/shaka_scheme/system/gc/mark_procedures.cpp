@@ -9,9 +9,11 @@ namespace shaka {
 namespace gc {
 
 void mark_accumulator(const Accumulator& a) {
+  mark_node(a);
 }
 
 void mark_expression(const Expression& e) {
+  mark_node(e);
 }
 
 void mark_environment(const Environment& env) {
@@ -25,6 +27,9 @@ void mark_call_frame(const CallFrame& f) {
 }
 
 void mark_value_rib(const ValueRib& vr) {
+  for(auto it = vr.begin(); it != vr.end(); it++) {
+    mark_node(*it);
+  }
 }
 
 void mark(const HeapVirtualMachine& hvm) {
