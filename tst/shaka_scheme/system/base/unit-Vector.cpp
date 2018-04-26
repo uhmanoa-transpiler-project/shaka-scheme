@@ -2,6 +2,7 @@
 
 #include <shaka_scheme/system/base/Vector.hpp>
 #include <shaka_scheme/system/base/DataPair.hpp>
+#include <shaka_scheme/system/base/Data.hpp>
 
 #include <shaka_scheme/system/exceptions/IndexOutOfBoundsException.hpp>
 #include "shaka_scheme/system/gc/GC.hpp"

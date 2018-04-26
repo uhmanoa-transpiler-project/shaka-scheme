@@ -3,6 +3,7 @@
 #include <vector>
 #include "shaka_scheme/system/lexer/rules/init.hpp"
 #include "shaka_scheme/runtime/stdproc/numbers_arithmetic.hpp"
+#include "shaka_scheme/runtime/stdproc/equivalence_predicates.hpp"
 #include "shaka_scheme/system/exceptions/BaseException.hpp"
 #include "shaka_scheme/system/exceptions/TypeException.hpp"
 #include "shaka_scheme/system/vm/HeapVirtualMachine.hpp"
@@ -134,6 +135,22 @@ int main() {
   top_level->set_value(
       shaka::Symbol("display"),
       create_node(display_datum));
+
+  shaka::Closure eqv_closure(shaka::stdproc::eqv, false);
+  top_level->set_value(
+      shaka::Symbol("eqv?"),
+      create_node(eqv_closure));
+
+  shaka::Closure eq_closure(shaka::stdproc::eq, false);
+  top_level->set_value(
+      shaka::Symbol("eq?"),
+      create_node(eq_closure));
+
+  shaka::Closure equal_closure(shaka::stdproc::equal, false);
+  top_level->set_value(
+      shaka::Symbol("equal?"),
+      create_node(equal_closure));
+
 
   shaka::ValueRib vr;
 

@@ -7,6 +7,8 @@
 
 #include "shaka_scheme/system/lexer/rules/rule_token.hpp"
 #include "shaka_scheme/system/core/lists.hpp"
+#include "shaka_scheme/system/core/vectors.hpp"
+#include "shaka_scheme/system/base/Character.hpp"
 
 #include <deque>
 
@@ -62,6 +64,8 @@ using DataConstructor = std::function<NodePtr(ParserResult)>;
 ParserResult parse_simple(ParserInput& in);
 
 ParserResult parse_list(ParserInput& in);
+ParserResult parse_vector(ParserInput& in);
+ParserResult parse_bytevector(ParserInput& in);
 ParserResult parse_datum(ParserInput& in);
 
 } // namespace shaka
