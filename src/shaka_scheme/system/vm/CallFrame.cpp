@@ -25,19 +25,19 @@ shaka::CallFrame::CallFrame() {
 }
 
 
-shaka::Expression shaka::CallFrame::get_next_expression() {
+shaka::Expression shaka::CallFrame::get_next_expression() const {
   return return_expression;
 }
 
-shaka::EnvPtr shaka::CallFrame::get_environment_pointer() {
+shaka::EnvPtr shaka::CallFrame::get_environment_pointer() const {
   return env;
 }
 
-shaka::ValueRib shaka::CallFrame::get_value_rib() {
+shaka::ValueRib shaka::CallFrame::get_value_rib() const {
   return value_rib;
 }
 
-shaka::FramePtr shaka::CallFrame::get_next_frame() {
+shaka::FramePtr shaka::CallFrame::get_next_frame() const {
   return next_frame;
 }
 
