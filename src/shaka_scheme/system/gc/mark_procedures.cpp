@@ -24,6 +24,23 @@ void mark_environment(const Environment& env) {
 }
 
 void mark_call_frame(const CallFrame& f) {
+  EnvPtr env = f.get_environment_pointer();
+  if (env != nullptr) {
+    mark_environment(*env);
+  }
+
+  NodePtr expression = f.get_next_expression();
+  if (expression != nullptr) {
+    mark_expression(expression);
+  }
+
+  ValueRib vr = f.get_value_rib();
+  mark_value_rib(vr);
+
+  FramePtr next = f.get_next_frame();
+  if (next != nullptr) {
+    mark_call_frame(*next);
+  }
 }
 
 void mark_value_rib(const ValueRib& vr) {
@@ -35,8 +52,14 @@ void mark_value_rib(const ValueRib& vr) {
 void mark(const HeapVirtualMachine& hvm) {
   mark_accumulator(hvm.get_accumulator());
   mark_expression(hvm.get_expression());
-  mark_environment(*hvm.get_environment());
-  mark_call_frame(*hvm.get_call_frame());
+  EnvPtr env = hvm.get_environment();
+  if (env != nullptr) {
+    mark_environment(*hvm.get_environment());
+  }
+  FramePtr f = hvm.get_call_frame();
+  if (f != nullptr) {
+    mark_call_frame(*hvm.get_call_frame());
+  }
   mark_value_rib(hvm.get_value_rib());
 }
 
@@ -57,7 +80,7 @@ void mark_node(const GCNode& node) {
   }
   case shaka::Data::Type::CLOSURE: {
     // If the argument is a closure, mark its environment, frame, and expression
-    Closure c = node->get<Closure>();
+    Closure& c = node->get<Closure>();
     if (c.get_call_frame() != nullptr) {
       mark_call_frame(*c.get_call_frame());
     }
@@ -74,15 +97,20 @@ void mark_node(const GCNode& node) {
     mark_call_frame(node->get<CallFrame>());
     break;
   }
+  case shaka::Data::Type::VECTOR: {
+    // If the argument is a Vector, mark its contents
+    shaka::Vector& v = node->get<shaka::Vector>();
+    for (int i = 0; i < v.length(); i++) {
+      mark_node(v[i]);
+    }
+  }
+  case shaka::Data::Type::BYTEVECTOR: {
+    // Since ByteVector simply wraps an unsigned char *, no recursive work
+    // is required here
+    break;
+  }
   default:
     break;
-
-  /*
-   * The following two cases will be added when the respective classes
-   * have been rolled into the Data variant class
-   * case shaka::Data::Type::VECTOR
-   * case shaka::Data::Type::BYTE_VECTOR
-   */
   }
 }
 
