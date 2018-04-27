@@ -15,6 +15,7 @@
 #include "shaka_scheme/system/gc/GC.hpp"
 #include "shaka_scheme/system/gc/init_gc.hpp"
 #include "shaka_scheme/system/base/DataPair.hpp"
+#include "shaka_scheme/system/gc/mark_procedures.hpp"
 
 int main() {
   using namespace shaka;
@@ -195,6 +196,9 @@ int main() {
       } while (shaka::core::car(hvm.get_expression())->get<shaka::Symbol>() !=
           shaka::Symbol("halt"));
       std::cout << *hvm.get_accumulator() << std::endl;
+      shaka::gc::mark(hvm);
+      mark_node(halt_instruction);
+      garbage_collector.sweep();
     } catch (shaka::InvalidInputException e) {
       std::cerr << "InvalidInputException: " << e.what() << std::endl;
     } catch (shaka::TypeException e) {
