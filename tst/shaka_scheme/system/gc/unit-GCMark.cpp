@@ -147,3 +147,35 @@ TEST(GCMarkUnitTest, mark_closure_object) {
   ASSERT_EQ(closure_node->get<shaka::Closure>().get_variable_list(),
             c.get_variable_list());
 }
+
+/**
+ * @Test: mark_node() on a shaka::Vector
+ */
+TEST(GCMarkUnitTest, mark_vector_object) {
+  //Given: You have constructed a GC object and bound it to create_node()
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
+
+  // Given: You have constructed a shaka::Vector as follows
+
+  shaka::NodePtr node1 = shaka::create_node(shaka::Number(1));
+  shaka::NodePtr node2 = shaka::create_node(shaka::Number(2));
+  shaka::NodePtr node3 = shaka::create_node(shaka::DataPair(node1, node2));
+
+  shaka::Vector v{node1, node2, node3};
+
+  shaka::NodePtr vector_node = shaka::create_node(v);
+
+  // When: You call mark on vector_node and sweep on the GC
+  shaka::gc::mark_node(vector_node);
+  garbage_collector.sweep();
+
+  // Then: The number of objects in GC memory is 6
+
+  ASSERT_EQ(garbage_collector.get_size(), 6);
+
+  // Then: The number of objects in vector_node is 3
+
+  ASSERT_EQ(vector_node->get<shaka::Vector>().length(), 3);
+
+}
