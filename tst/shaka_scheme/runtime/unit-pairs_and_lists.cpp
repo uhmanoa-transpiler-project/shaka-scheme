@@ -12,9 +12,10 @@
  * @brief Tests the is-pair? function
  */
 TEST(PairsAndListsUnitTest, is_pair) {
+  using Args = std::deque<shaka::NodePtr>;
+
   shaka::gc::GC garbage_collector;
   shaka::gc::init_create_node(garbage_collector);
-  using Args = std::deque<shaka::NodePtr>;
 
   // Given: numeric arguments 5 and 5
   Args pair {
@@ -37,6 +38,7 @@ TEST(PairsAndListsUnitTest, is_pair) {
  */
 TEST(PairsAndListsUnitTest, cons) {
   using Args = std::deque<shaka::NodePtr>;
+
   shaka::gc::GC garbage_collector;
   shaka::gc::init_create_node(garbage_collector);
 
@@ -67,6 +69,7 @@ TEST(PairsAndListsUnitTest, cons) {
  */
 TEST(PairsAndListsUnitTest, car){
   using Args = std::deque<shaka::NodePtr>;
+
   shaka::gc::GC garbage_collector;
   shaka::gc::init_create_node(garbage_collector);
 
@@ -91,6 +94,7 @@ TEST(PairsAndListsUnitTest, car){
  */
 TEST(PairsAndListsUnitTest, cdr){
   using Args = std::deque<shaka::NodePtr>;
+
   shaka::gc::GC garbage_collector;
   shaka::gc::init_create_node(garbage_collector);
 
@@ -115,6 +119,7 @@ TEST(PairsAndListsUnitTest, cdr){
  */
 TEST(PairsAndListsUnitTest, set_car){
   using Args = std::deque<shaka::NodePtr>;
+
   shaka::gc::GC garbage_collector;
   shaka::gc::init_create_node(garbage_collector);
 
@@ -148,6 +153,7 @@ TEST(PairsAndListsUnitTest, set_car){
  */
 TEST(PairsAndListsUnitTest, set_cdr){
   using Args = std::deque<shaka::NodePtr>;
+
   shaka::gc::GC garbage_collector;
   shaka::gc::init_create_node(garbage_collector);
 
@@ -180,8 +186,10 @@ TEST(PairsAndListsUnitTest, set_cdr){
  */
 TEST(PairsAndListsUnitTest, is_null) {
   using Args = std::deque<shaka::NodePtr>;
+
   shaka::gc::GC garbage_collector;
   shaka::gc::init_create_node(garbage_collector);
+
   Args args{
           shaka::create_node(shaka::Data())
   };
@@ -194,6 +202,7 @@ TEST(PairsAndListsUnitTest, is_null) {
  */
 TEST(PairsAndListsUnitTest, is_list){
   using Args = std::deque<shaka::NodePtr>;
+
   shaka::gc::GC garbage_collector;
   shaka::gc::init_create_node(garbage_collector);
 
@@ -203,6 +212,7 @@ TEST(PairsAndListsUnitTest, is_list){
       shaka::create_node(shaka::Number(3))
   };
   Args list {shaka::stdproc::impl::list(args)};
+
   Args result {shaka::stdproc::impl::is_list(list)};
   ASSERT_EQ(result[0]->get<shaka::Boolean>(), shaka::Boolean(true));
 }
@@ -211,6 +221,7 @@ TEST(PairsAndListsUnitTest, is_list){
  * @brief Tests the make-list function
  */
 TEST(PairsAndListsUnitTest, make_list){
+
   using Args = std::deque<shaka::NodePtr>;
   shaka::gc::GC garbage_collector;
   shaka::gc::init_create_node(garbage_collector);
@@ -249,6 +260,7 @@ TEST(PairsAndListsUnitTest, make_list){
  */
 TEST(PairsAndListsUnitTest, list){
   using Args = std::deque<shaka::NodePtr>;
+
   shaka::gc::GC garbage_collector;
   shaka::gc::init_create_node(garbage_collector);
 
@@ -275,6 +287,7 @@ TEST(PairsAndListsUnitTest, list){
  */
 TEST(PairsAndListsUnitTest, length){
   using Args = std::deque<shaka::NodePtr>;
+
   shaka::gc::GC garbage_collector;
   shaka::gc::init_create_node(garbage_collector);
 
@@ -298,6 +311,7 @@ TEST(PairsAndListsUnitTest, length){
  */
 TEST(PairsAndListsUnitTest, append){
   using Args = std::deque<shaka::NodePtr>;
+
   shaka::gc::GC garbage_collector;
   shaka::gc::init_create_node(garbage_collector);
 
@@ -381,6 +395,7 @@ TEST(PairsAndListsUnitTest, append){
  */
 TEST(PairsAndListsUnitTest, reverse){
   using Args = std::deque<shaka::NodePtr>;
+
   shaka::gc::GC garbage_collector;
   shaka::gc::init_create_node(garbage_collector);
 
@@ -424,6 +439,7 @@ TEST(PairsAndListsUnitTest, reverse){
  */
 TEST(PairsAndListsUnitTest, list_tail){
   using Args = std::deque<shaka::NodePtr>;
+
   shaka::gc::GC garbage_collector;
   shaka::gc::init_create_node(garbage_collector);
 
@@ -474,6 +490,7 @@ TEST(PairsAndListsUnitTest, list_tail){
  */
 TEST(PairsAndListsUnitTest, list_ref) {
   using Args = std::deque<shaka::NodePtr>;
+
   shaka::gc::GC garbage_collector;
   shaka::gc::init_create_node(garbage_collector);
 
@@ -506,6 +523,7 @@ TEST(PairsAndListsUnitTest, list_ref) {
  */
 TEST(PairsAndListsUnitTest, list_set){
   using Args = std::deque<shaka::NodePtr>;
+
   shaka::gc::GC garbage_collector;
   shaka::gc::init_create_node(garbage_collector);
 
@@ -547,7 +565,164 @@ TEST(PairsAndListsUnitTest, list_set){
   ASSERT_EQ(
       (shaka::stdproc::impl::list_ref(list3))[0]->get<shaka::Number>(),
       (shaka::stdproc::impl::list_ref(compare_list3))[0]->get<shaka::Number>());
+}
 
+TEST(PairsAndListsUnitTest, memq) {
+  using Args = std::deque<shaka::NodePtr>;
+
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
+
+  //Given: numeric arguments as a proper list
+  Args num_list_args{shaka::create_node(shaka::Data(shaka::Number(1))),
+                     shaka::create_node(shaka::Data(shaka::Number(2))),
+                     shaka::create_node(shaka::Data(shaka::Number(3))),
+                     shaka::create_node(shaka::Data(shaka::Number(4))),
+                     shaka::create_node(shaka::Data(shaka::Number(5)))};
+  Args num_list{shaka::stdproc::impl::list(num_list_args)};
+
+  //Given: the number 3 and the  numeric arguments list head
+  Args num_memq_args{shaka::create_node(shaka::Data(shaka::Number(3))),
+                     num_list[0]};
+
+  //When: memq is called on num_memq_args
+  //Then: the result should be the list (3 4 5)
+  Args num_result{shaka::stdproc::impl::memq(num_memq_args)};
+
+  ASSERT_EQ(num_result[0]->get<shaka::DataPair>().car()->get<shaka::Number>(),
+            shaka::Number(3));
+  ASSERT_EQ(num_result[0]->get<shaka::DataPair>().cdr()->
+      get<shaka::DataPair>().car()->
+      get<shaka::Number>(),
+            shaka::Number(4));
+  ASSERT_EQ(num_result[0]->get<shaka::DataPair>().cdr()->
+      get<shaka::DataPair>().cdr()->
+      get<shaka::DataPair>().car()->
+      get<shaka::Number>(),
+            shaka::Number(5));
+
+  //Given: character arguments as a proper list
+  Args char_list_args{shaka::create_node(shaka::Data(shaka::Symbol("a"))),
+                      shaka::create_node(shaka::Data(shaka::Symbol("b"))),
+                      shaka::create_node(shaka::Data(shaka::Symbol("c"))),
+                      shaka::create_node(shaka::Data(shaka::Symbol("d")))};
+  Args char_list{shaka::stdproc::impl::list(char_list_args)};
+
+  //Given: the number 3 and the character arguments list head
+  Args char_memq_fail_args{shaka::create_node(shaka::Data(shaka::Number(3))),
+                           char_list[0]};
+
+  //When: memq is called on char_memq_fail_args
+  //Then: the result should be the shaka::Boolean(false)
+  Args char_fail_result{shaka::stdproc::impl::memq(char_memq_fail_args)};
+
+  ASSERT_EQ(char_fail_result[0]->get<shaka::Boolean>(), shaka::Boolean(false));
+
+  //Given: the symbol "c" and the character arguments list head
+
+  Args char_memq_pass_args{shaka::create_node(shaka::Data(shaka::Symbol("c"))),
+                           char_list[0]};
+
+  //When: memq is called on char_memq_pass_args
+  //Then: the result should be the list ("c" "d")
+  Args char_pass_result{shaka::stdproc::impl::memq(char_memq_pass_args)};
+
+  ASSERT_EQ(char_pass_result[0]->get<shaka::DataPair>().car()->
+      get<shaka::Symbol>(),
+            shaka::Symbol("c"));
+  ASSERT_EQ(char_pass_result[0]->get<shaka::DataPair>().cdr()->
+      get<shaka::DataPair>().car()->
+      get<shaka::Symbol>(),
+            shaka::Symbol("d"));
+
+  //Given: the symbol "D" and the character arguments list head
+  Args char_memq_fail_args2{shaka::create_node(shaka::Data(shaka::Symbol("D"))),
+                           char_list[0]};
+
+  //When: memq is called on char_memq_fail_args2
+  //Then: the result should be the shaka::Boolean(false)
+  Args char_fail_result2{shaka::stdproc::impl::memq(char_memq_fail_args2)};
+
+  ASSERT_EQ(char_fail_result2[0]->get<shaka::Boolean>(), shaka::Boolean(false));
+}
+
+TEST(PairsAndListsUnitTest, memv){
+  using Args = std::deque<shaka::NodePtr>;
+
+  shaka::gc::GC garbage_collector;
+  shaka::gc::init_create_node(garbage_collector);
+
+  //Given: numeric arguments as a proper list
+  Args num_list_args{shaka::create_node(shaka::Data(shaka::Number(1))),
+                     shaka::create_node(shaka::Data(shaka::Number(2))),
+                     shaka::create_node(shaka::Data(shaka::Number(3))),
+                     shaka::create_node(shaka::Data(shaka::Number(4))),
+                     shaka::create_node(shaka::Data(shaka::Number(5)))};
+  Args num_list{shaka::stdproc::impl::list(num_list_args)};
+
+  //Given: the number 3 and the  numeric arguments list head
+  Args num_memv_args{shaka::create_node(shaka::Data(shaka::Number(3))),
+                     num_list[0]};
+
+  //When: memv is called on num_memq_args
+  //Then: the result should be the list (3 4 5)
+  Args num_result{shaka::stdproc::impl::memv(num_memv_args)};
+
+  ASSERT_EQ(num_result[0]->get<shaka::DataPair>().car()->get<shaka::Number>(),
+            shaka::Number(3));
+  ASSERT_EQ(num_result[0]->get<shaka::DataPair>().cdr()->
+      get<shaka::DataPair>().car()->
+      get<shaka::Number>(),
+            shaka::Number(4));
+  ASSERT_EQ(num_result[0]->get<shaka::DataPair>().cdr()->
+      get<shaka::DataPair>().cdr()->
+      get<shaka::DataPair>().car()->
+      get<shaka::Number>(),
+            shaka::Number(5));
+
+  //Given: character arguments as a proper list
+  Args char_list_args{shaka::create_node(shaka::Data(shaka::Symbol("a"))),
+                      shaka::create_node(shaka::Data(shaka::Symbol("b"))),
+                      shaka::create_node(shaka::Data(shaka::Symbol("c"))),
+                      shaka::create_node(shaka::Data(shaka::Symbol("d")))};
+  Args char_list{shaka::stdproc::impl::list(char_list_args)};
+
+  //Given: the number 3 and the character arguments list head
+  Args char_memv_fail_args{shaka::create_node(shaka::Data(shaka::Number(3))),
+                           char_list[0]};
+
+  //When: memv is called on char_memv_fail_args
+  //Then: the result should be the shaka::Boolean(false)
+  Args char_fail_result{shaka::stdproc::impl::memv(char_memv_fail_args)};
+
+  ASSERT_EQ(char_fail_result[0]->get<shaka::Boolean>(), shaka::Boolean(false));
+
+  //Given: the symbol "c" and the character arguments list head
+
+  Args char_memv_pass_args{shaka::create_node(shaka::Data(shaka::Symbol("c"))),
+                           char_list[0]};
+
+  //When: memv is called on char_memv_pass_args
+  //Then: the result should be the list ("c" "d")
+  Args char_pass_result{shaka::stdproc::impl::memv(char_memv_pass_args)};
+
+  ASSERT_EQ(char_pass_result[0]->get<shaka::DataPair>().car()->
+      get<shaka::Symbol>(),
+            shaka::Symbol("c"));
+  ASSERT_EQ(char_pass_result[0]->get<shaka::DataPair>().cdr()->
+      get<shaka::DataPair>().car()->
+      get<shaka::Symbol>(),
+            shaka::Symbol("d"));
+
+  //Given: the symbol "D" and the character arguments list head
+  Args char_fail_args2{shaka::create_node(shaka::Data(shaka::Symbol("D"))),
+                            char_list[0]};
+
+  //When: memv is called on char_fail_args2
+  //Then: the result should be the shaka::Boolean(false)
+  Args char_fail_result2{shaka::stdproc::impl::memv(char_fail_args2)};
+
+  ASSERT_EQ(char_fail_result2[0]->get<shaka::Boolean>(), shaka::Boolean(false));
 }
 
 /**
@@ -555,6 +730,7 @@ TEST(PairsAndListsUnitTest, list_set){
  */
 TEST(PairsAndListsUnitTest, list_copy) {
   using Args = std::deque<shaka::NodePtr>;
+
   shaka::gc::GC garbage_collector;
   shaka::gc::init_create_node(garbage_collector);
 

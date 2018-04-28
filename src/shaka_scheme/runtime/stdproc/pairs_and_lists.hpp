@@ -9,6 +9,7 @@
 #include "shaka_scheme/system/base/Data.hpp"
 #include "shaka_scheme/system/exceptions/TypeException.hpp"
 #include "shaka_scheme/system/core/lists.hpp"
+#include "shaka_scheme/runtime/stdproc/equivalence_predicates.hpp"
 
 #include <cmath>
 #include <functional>
@@ -111,8 +112,8 @@ extern Callable reverse;
 extern Callable list_tail;
 extern Callable list_ref;
 extern Callable list_set;
-//extern Callable memq;
-//extern Callable memv;
+extern Callable memq;
+extern Callable memv;
 //extern Callable member;
 //extern Callable assq;
 //extern Callable assv;

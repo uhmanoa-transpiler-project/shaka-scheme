@@ -7,6 +7,10 @@
 namespace shaka {
 namespace stdproc {
 
+using Args = std::deque<NodePtr>;
+
+using Callable = std::function<std::deque<NodePtr>(std::deque<NodePtr>)>;
+
 namespace impl {
 
 //(pair? ...)
@@ -28,7 +32,7 @@ Args cons(Args args) {
                                     "procedure");
   }
   return {create_node(Data(DataPair(Data(*args[0]),
-                               Data(*args[1]))))
+                                    Data(*args[1]))))
   };
 }
 
@@ -115,6 +119,7 @@ Args is_list(Args args) {
                                 "list?: Invalid number of arguments for "
                                     "procedure");
   }
+
   if (args[0]->get_type() != Data::Type::DATA_PAIR) {
     throw InvalidInputException(27,
                                 "list?: Invalid number of arguments for "
@@ -224,12 +229,12 @@ Args append(Args args) {
     // Set the list to an empty list
     list = core::append();
   }
-  // Else if one arg is given
+    // Else if one arg is given
   else if (args.size() == 1) {
     // Set the list to itself
     list = core::append(args[0]);
   }
-  // Else
+    // Else
   else {
     // Set list to the list provided
     list = args[0];
@@ -248,16 +253,16 @@ Args append(Args args) {
 Args reverse(Args args) {
   // If anything but a single argument is given
   //  Throw an error
-  if(args.size() != 1){
+  if (args.size() != 1) {
     throw InvalidInputException(17,
                                 "reverse: Invalid number of arguments given");
   }
   // If the argument is not of type DATA_PAIR
   //  Throw an error
-  if(args[0]->get_type() != Data::Type::DATA_PAIR){
+  if (args[0]->get_type() != Data::Type::DATA_PAIR) {
     throw InvalidInputException(18,
-                            "reverse: Given argument is not of type "
-                                "DATA_PAIR");
+                                "reverse: Given argument is not of type "
+                                    "DATA_PAIR");
   }
   // Return the reverse of the list
   return {core::reverse(args[0])};
@@ -274,14 +279,14 @@ Args list_tail(Args args) {
   }
   // If the first argument is not a DataPair
   //  Throw an error
-  if (args[0]->get_type() != Data::Type::DATA_PAIR){
+  if (args[0]->get_type() != Data::Type::DATA_PAIR) {
     throw InvalidInputException(20,
                                 "list_tail: First argument must be of type "
                                     "DATA_PAIR");
   }
   // If the second argument is not a number
   //  Throw an error
-  if (args[1]->get_type() != Data::Type::NUMBER){
+  if (args[1]->get_type() != Data::Type::NUMBER) {
     throw InvalidInputException(21,
                                 "list_tail: Second argument must be of type "
                                     "NUMBER");
@@ -289,12 +294,12 @@ Args list_tail(Args args) {
 //if the second argument is not an integer or above 0 throw error
 
   // Create a node at the head of the list
-  NodePtr list {args[0]};
+  NodePtr list{args[0]};
   // For the number of times given by the second argument
-  for(int i = 0; i < args[1]->get<Number>(); i++){
+  for (int i = 0; i < args[1]->get<Number>(); i++) {
     // If the number argument's value exceeds the length of the list argument
     //  Throw an error
-    if(list->get<DataPair>().cdr()->get_type() == Data::Type::NULL_LIST)
+    if (list->get<DataPair>().cdr()->get_type() == Data::Type::NULL_LIST)
       throw InvalidInputException(22,
                                   "list_tail: Given index is not within "
                                       "bounds of the list");
@@ -302,21 +307,21 @@ Args list_tail(Args args) {
     list = list->get<DataPair>().cdr();
   }
   // Return the new head of the list
-  Args result {list};
+  Args result{list};
   return result;
 }
 
 //(list-ref ...)
 Args list_ref(Args args) {
-  if(args.size() > 2 || args.empty()){
+  if (args.size() > 2 || args.empty()) {
     throw InvalidInputException(16,
                                 "list-ref: Invalid number of arguments");
   }
   NodePtr place = args[0];
-  for(int i = 0; i < args[1]->get<Number>(); i++){
+  for (int i = 0; i < args[1]->get<Number>(); i++) {
     place = place->get<DataPair>().cdr();
   }
-  Args result {place->get<DataPair>().car()};
+  Args result{place->get<DataPair>().car()};
   return result;
 }
 
@@ -331,14 +336,14 @@ Args list_set(Args args) {
   }
   // If the first argument is not a DataPair
   //  Throw an error
-  if (args[0]->get_type() != Data::Type::DATA_PAIR){
+  if (args[0]->get_type() != Data::Type::DATA_PAIR) {
     throw InvalidInputException(24,
                                 "list_set: First argument must be of type "
                                     "DATA_PAIR");
   }
   // If the second argument is not a number
   //  Throw an error
-  if (args[1]->get_type() != Data::Type::NUMBER){
+  if (args[1]->get_type() != Data::Type::NUMBER) {
     throw InvalidInputException(25,
                                 "list_set: Second argument must be of type "
                                     "NUMBER");
@@ -346,12 +351,12 @@ Args list_set(Args args) {
 //if the second argument is not an integer or above 0 throw error
 
   // Create a node at the head of the list
-  NodePtr list {args[0]};
+  NodePtr list{args[0]};
   // For the number of times given by the second argument
-  for(int i = 0; i < args[1]->get<Number>() - 1; i++){
+  for (int i = 0; i < args[1]->get<Number>() - 1; i++) {
     // If the number argument's value exceeds the length of the list argument
     //  Throw an error
-    if(list->get<DataPair>().cdr()->get_type() == Data::Type::NULL_LIST)
+    if (list->get<DataPair>().cdr()->get_type() == Data::Type::NULL_LIST)
       throw InvalidInputException(26,
                                   "list_set: Given index is not within "
                                       "bounds of the list");
@@ -361,19 +366,128 @@ Args list_set(Args args) {
   // Set the car of the head to the desired value given in args
   list->get<DataPair>().set_car(args[2]);
   // Return the new list
-  Args result {args[0]};
+  Args result{args[0]};
   return result;
 }
 
-/*
 //(memq ...)
-Args memq(Args args) {}
+Args memq(Args args) {
+  //if something besides 2 args are given
+  //throw an error
+  if (args.size() != 2) {
+    throw InvalidInputException(28,
+                                "memq: Invalid number of arguments given");
+  }
+  //if the second argument isn't a list
+  //throw an error
+  if (args[1]->get_type() != Data::Type::DATA_PAIR) {
+    throw InvalidInputException(29,
+                                "memq: Second argument is not of type "
+                                    "DATA_PAIR");
+  }
+  //create a NodePtr at the head of the list
+  NodePtr head = args[1];
+  //while the head points to another DataPair
+  while (head->get_type() == Data::Type::DATA_PAIR) {
+    //create an Args of the head's car value and the symbol to be located
+    Args memq_args{head->get<DataPair>().car(), args[0]};
+    //if the two are equal
+    if (stdproc::impl::is_eq(memq_args)[0]->get<Boolean>() == Boolean(true)) {
+      //if the head's car is not an empty list
+      if (head->get<DataPair>().car()->get_type() != Data::Type::NULL_LIST) {
+        //return the head of the sublist
+        return {Args{head}};
+      }
+    }
+      //else iterate to the head's cdr
+    else {
+      head = head->get<DataPair>().cdr();
+    }
+  }
+  //if no sublist is found, return false
+  return {create_node(Boolean(false))};
+}
 
 //(memv ...)
-Args memv(Args args) {}
+Args memv(Args args) {
+  //if something besides 2 args are given
+  //throw an error
+  if (args.size() != 2) {
+    throw InvalidInputException(30,
+                                "memv: Invalid number of arguments given");
+  }
+  // If the first argument is not a DataPair
+  //  Throw an error
+  if (args[1]->get_type() != Data::Type::DATA_PAIR) {
+    throw InvalidInputException(31,
+                                "memv: Second argument is not of type "
+                                    "DATA_PAIR");
+  }
+  //create a NodePtr at the head of the list
+  NodePtr head = args[1];
+  //while the head points to another DataPair
+  while (head->get_type() == Data::Type::DATA_PAIR) {
+    //create an Args of the head's car value and the symbol to be located
+    Args memv_args{head->get<DataPair>().car(), args[0]};
+    //if the two are equivalent
+    if (stdproc::impl::is_eqv(memv_args)[0]->get<Boolean>() == Boolean(true)) {
+      //if the head's car is not an empty list
+      if (head->get<DataPair>().car()->get_type() != Data::Type::NULL_LIST) {
+        //return the head of the sublist
+        return {Args{head}};
+      }
+    }
+      //else iterate to the head's cdr
+    else {
+      head = head->get<DataPair>().cdr();
+    }
+  }
+  //if no sublist is found, return false
+  return {create_node(Boolean(false))};
+}
 
+/*
 //(member ...)
-Args member(Args args) {}
+Args member(Args args) {
+  if (args.size() > 3 || args.size() < 2) {
+    throw InvalidInputException(31,
+                                "memv: Invalid number of arguments given");
+  }
+  // If given 2 arguments, the function automatically uses eq
+  NodePtr head = args[1];
+  if (args.size() == 2) {
+    while (head->get_type() == Data::Type::DATA_PAIR) {
+      Args args{head->get<DataPair>().car(), args[0]};
+      if (stdproc::impl::is_equal(args)[0]) {
+        //if the head's car is not an empty list
+        if (head->get<DataPair>().car()->get_type() != Data::Type::NULL_LIST) {
+          //return the head of the sublist
+          return {Args{head}};
+        } else {
+          head = head->get<DataPair>().cdr();
+        }
+      }
+    }
+  }
+    //If given 3 arguments, we use the third argument as our method of
+    // comparison
+  else {
+    while (head->get_type() == Data::Type::DATA_PAIR) {
+      Args args{head->get<DataPair>().car(), args[0]};
+      if (function.call(args)[0]->get<Boolean>() == Boolean(true)) {
+        //if the head's car is not an empty list
+        if (head->get<DataPair>().car()->get_type() != Data::Type::NULL_LIST) {
+          //return the head of the sublist
+          return {Args{head}};
+        } else {
+          head = head->get<DataPair>().cdr();
+        }
+      }
+      Args result{create_node(Boolean(false))};
+      return result;
+    }
+  }
+}
 
 //(assq ...)
 Args assq(Args args) {}
@@ -384,6 +498,7 @@ Args assv(Args args) {}
 //(assoc ...)
 Args assoc(Args args) {}
 */
+
 //(list-copy ...)
 Args list_copy(Args args) {
   /**
@@ -392,12 +507,12 @@ Args list_copy(Args args) {
 
   // If something else besides a list is given
   //  Return a copy of the argument given
-  if(args[0]->get_type() != Data::Type::DATA_PAIR){
-    Args result {shaka::create_node(*args[0])};
+  if (args[0]->get_type() != Data::Type::DATA_PAIR) {
+    Args result{shaka::create_node(*args[0])};
     return result;
   }
   // Create a variable at the head of the list and an Args list
-  NodePtr head {args[0]};
+  NodePtr head{args[0]};
   Args list_args;
 
   // While the cdr of the head is a DataPair
@@ -409,10 +524,10 @@ Args list_copy(Args args) {
   }
   // If the final cdr is a NullList (proper list)
   //  Push a copy of the car value of head onto the Args list
-  if(head->get<DataPair>().cdr()->get_type() == Data::Type::NULL_LIST){
+  if (head->get<DataPair>().cdr()->get_type() == Data::Type::NULL_LIST) {
     list_args.push_back(create_node(Data(*head->get<DataPair>().car())));
   }
-  // Else push a copy of the head onto the Args list (improper list)
+    // Else push a copy of the head onto the Args list (improper list)
   else {
     list_args.push_back(create_node(Data(*head)));
   }
@@ -438,13 +553,13 @@ Callable reverse = impl::reverse;
 Callable list_tail = impl::list_tail;
 Callable list_ref = impl::list_ref;
 Callable list_set = impl::list_set;
-//Callable memq = impl::memq;
-//Callable memv = impl::memv;
+Callable memq = impl::memq;
+Callable memv = impl::memv;
 //Callable member = impl::member;
 //Callable assq = impl::assq;
 //Callable assv = impl::assv;
 //Callable assoc = impl::assoc;
 Callable list_copy = impl::list_copy;
 
-} // namespace stdproc
-} // namespace shaka
+}//namespace stdproc
+}//namespace shaka
