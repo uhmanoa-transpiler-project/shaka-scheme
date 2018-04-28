@@ -167,24 +167,24 @@ namespace shaka {
         std::vector<std::uint64_t> get_value() const;
         bool get_sign() const;
 
-        /**
-         * @brief Implementation of the Schonage-Strassen Algorithm for BigInteger Multiplication
-         * (Credit to Sanfoundry for the C++ implementation of the Schonage-Strassen Algorithm:
-         * https://www.sanfoundry.com/cpp-program-implement-schonhage-strassen-algorithm-multiplication-two-numbers/)
-         * @param x The first uint64_t operand
-         * @param y The second uint64_t operand
-         * @param n The size of x
-         * @param m The size of y
-         * @return The product of x and y
-         */
-        std::string schonhageStrassen(std::uint64_t x, std::uint64_t y, int n, int m);
-
     private:
         std::vector<std::uint64_t> value;
         bool sign;
         std::string str_value;
 
     };
+
+    /**
+        * @brief Implementation of the Schonage-Strassen Algorithm for BigInteger Multiplication
+        * (Credit to Sanfoundry for the C++ implementation of the Schonage-Strassen Algorithm:
+        * https://www.sanfoundry.com/cpp-program-implement-schonhage-strassen-algorithm-multiplication-two-numbers/)
+        * @param x The first string operand
+        * @param y The second string operand
+        * @param n The size of x
+        * @param m The size of y
+        * @return The product of x and y
+        */
+    std::string schonhageStrassen(std::string x, std::string y, int n, int m);
 
 } // namespace shaka
 #endif //SHAKA_SCHEME_BIGINTEGER_HPP
