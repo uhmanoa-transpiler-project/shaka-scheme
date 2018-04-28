@@ -118,16 +118,11 @@ namespace shaka {
     }
 
     BigInteger operator*(const BigInteger& lhs, const BigInteger& rhs) {
-        BigInteger result;
+        std::string LOperand = lhs.get_str_value();
+        std:: string ROperand = rhs.get_str_value();
+        std::string product = schonhageStrassen(LOperand, ROperand, LOperand.length()+1, ROperand.length()+1);
 
-        /**
-         * @todo Implement the Karatsuba Algorithm:
-         * https://brilliant.org/wiki/karatsuba-algorithm/
-         */
-
-        //Consider the SS Algorithm: https://tonjanee.home.xs4all.nl/SSAdescription.pdf
-        //SSA related: http://www.ams.org/publicoutreach/feature-column/fcarc-multiplication
-
+        BigInteger result(product);
         return result;
     }
 
@@ -201,6 +196,58 @@ namespace shaka {
 
     bool BigInteger::get_sign() const {
         return this->sign;
+    }
+
+    // Credit to Sanfoundry for the C++ implementation of the Schonhage-Strassen Algorithm
+    // https://www.sanfoundry.com/cpp-program-implement-schonhage-strassen-algorithm-multiplication-two-numbers/
+    std::string schonhageStrassen(std::string x, std::string y, int n, int m)
+    {
+        bool signX = false, signY = false;
+        int linearConvolution[n + m - 1];
+
+        for (int i = 0; i < (n + m - 1); i++) {
+            linearConvolution[i] = 0;
+        }
+        if (x[0] == '-') {
+            signX = true;
+            x.erase(0,1);
+            n--;
+        }
+
+        if (y[0] == '-') {
+            signY = true;
+            y.erase(0,1);
+            m--;
+        }
+        int xNum = n - 2;
+        int yNum = m - 2;
+
+        for (int i = 0; i < m - 1; i++)
+        {
+            for (int j = 0; j < n - 1; j++)
+            {
+                linearConvolution[i + j] += (std::stoi(y.substr(yNum - i,1)) * std::stoi(x.substr(xNum - j,1)));
+            }
+        }
+
+        std::int64_t nextCarry = 0;
+        std::string bigProduct = "";
+
+        for (int i = 0; i < n + m - 1; i++)
+        {
+            linearConvolution[i] += nextCarry;
+            if(i < n + m - 2)
+                bigProduct.insert(0, std::to_string((linearConvolution[i] % 10)));
+            nextCarry = linearConvolution[i] / 10;
+        }
+
+        if (signX && signY || !signX && !signY)
+            return bigProduct;
+
+        else {
+            bigProduct.insert(0,"-");
+            return bigProduct;
+        }
     }
 
 } // namespace shaka

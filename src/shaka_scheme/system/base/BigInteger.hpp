@@ -174,5 +174,17 @@ namespace shaka {
 
     };
 
+    /**
+        * @brief Implementation of the Schonage-Strassen Algorithm for BigInteger Multiplication
+        * (Credit to Sanfoundry for the C++ implementation of the Schonage-Strassen Algorithm:
+        * https://www.sanfoundry.com/cpp-program-implement-schonhage-strassen-algorithm-multiplication-two-numbers/)
+        * @param x The first string operand
+        * @param y The second string operand
+        * @param n The size of x
+        * @param m The size of y
+        * @return The product of x and y
+        */
+    std::string schonhageStrassen(std::string x, std::string y, int n, int m);
+
 } // namespace shaka
 #endif //SHAKA_SCHEME_BIGINTEGER_HPP

@@ -141,6 +141,22 @@ TEST(BigInteger, test_vector_constructor_negative) {
 }
 
 /**
+ * @brief Test: '*' operand (multiplication) for BigInteger
+ */
+TEST(BigInteger, test_multiplication) {
+    // Given: Two BigIntegers with varying values
+    shaka::BigInteger n1("1234567890123456789012345678901234567890");
+    shaka::BigInteger n2("9876543210987654321098765432109876543210");
+
+    // When: The two BigIntegers are multiplied using the '*' operand
+    shaka::BigInteger product = n1 * n2;
+
+    // Then: The result should be the product of the two BigIntegers
+    ASSERT_EQ(product.get_str_value(),
+              "12193263113702179522618503273386678859448712086533622923332237463801111263526900");
+}
+
+/**
  * @brief Test: Constructors for BigInteger given a really, really big number
  */
 TEST(BigInteger, test_really_really_big_number) {
@@ -213,4 +229,22 @@ TEST(BigInteger, test_really_really_big_number) {
     ASSERT_TRUE(n3.get_sign());
     ASSERT_EQ(n3.get_value(), bigNum);
     ASSERT_EQ(n3.get_str_value(), n1.get_str_value());
+}
+
+/**
+ * @brief Test: Implementation of the Schonage-Strassen Algorithm
+ * (Credit to Sanfoundry for the C++ implementation of the Schonage-Strassen Algorithm
+ * https://www.sanfoundry.com/cpp-program-implement-schonhage-strassen-algorithm-multiplication-two-numbers/)
+ */
+TEST(BigInteger, Schonhage_Strassen) {
+    // Given: Two strings of big integers
+    std::string num1 = "1234567890123456789012345678901234567890";
+    std::string num2 = "-9876543210987654321098765432109876543210";
+
+    // When: The Schonhage-Strassen Algorithm is applied to the two strings
+    std::string product = shaka::schonhageStrassen(num1,num2,num1.length()+1,num2.length()+1);
+
+    // Then: The result should be equal to the product of the two big integers
+    ASSERT_EQ(product, "-12193263113702179522618503273386678859448712086533622923332237463801111263526900");
+
 }
