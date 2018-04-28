@@ -49,27 +49,27 @@ public:
    * @brief Getter method for next_expression (return address)
    * @return The contents of the next expression field
    */
-  Expression get_next_expression();
+  Expression get_next_expression() const;
 
 
   /**
    * @brief Getter method for the active environment
    * @return The contents of the environment field (EnvPtr)
    */
-  EnvPtr get_environment_pointer();
+  EnvPtr get_environment_pointer() const;
 
   /**
    * @brief Getter method for the value rib
    * @return The vector of the arugments evaluated thus far in the CallFrame
    */
-  ValueRib get_value_rib();
+  ValueRib get_value_rib() const;
 
 
   /**
    * @brief Getter method for the pointer to the ControlStack
    * @return The contents of the next_frame field (rest of ControlStack)
    */
-  FramePtr get_next_frame();
+  FramePtr get_next_frame() const;
 
   /**
    * @brief Setter method for the expression field (return address)
